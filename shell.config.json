@@ -1,0 +1,5 @@
+{
+  "appName": "Corpdesk PWA",
+  "themeConfig": "/themes/default/theme.json",
+  "defaultModule": "sys/cd-user"
+}

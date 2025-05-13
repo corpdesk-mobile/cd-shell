@@ -1,0 +1,26 @@
+:root {
+  --cd-primary-color: #1976d2;
+  --cd-secondary-color: #eeeeee;
+  --cd-accent-color: #ff4081;
+  --cd-background-color: #ffffff;
+  --cd-text-color: #000000;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--cd-background-color);
+  color: var(--cd-text-color);
+}
+
+#cd-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--cd-primary-color);
+}
+
+#cd-logo {
+  height: 40px;
+  margin-right: 10px;
+}

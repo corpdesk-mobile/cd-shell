@@ -1,0 +1,12 @@
+{
+  "name": "Default Theme",
+  "colors": {
+    "primary": "#1976d2",
+    "secondary": "#eeeeee",
+    "accent": "#ff4081",
+    "background": "#ffffff",
+    "text": "#000000"
+  },
+  "font": "Arial, sans-serif",
+  "logo": "/themes/default/logo.png"
+}
