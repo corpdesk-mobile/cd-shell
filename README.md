@@ -1,6 +1,6 @@
 # 📦 Corpdesk Shell (`cd-shell`)
 
-**Corpdesk Shell** is the runtime environment responsible for loading and executing independent Corpdesk modules (apps) at runtime. It acts as a lightweight host that dynamically loads modules from local files, remote URLs, or a central registry.
+**Corpdesk Shell** is the runtime environment for PWA application responsible for loading and executing independent Corpdesk modules (apps) at runtime. It acts as a lightweight host that dynamically loads modules from local files, remote URLs, or a central registry.
 
 ---
 
