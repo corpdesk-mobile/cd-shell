@@ -1,0 +1,7 @@
+{
+  "moduleId": "cd-user",
+  "moduleName": "User Management",
+  "moduleGuid": "user-guid-123",
+  "ctx": "sys",
+  "version": "1.0.0"
+}

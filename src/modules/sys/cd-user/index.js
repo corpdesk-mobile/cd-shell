@@ -1,8 +1,5 @@
-import { SignInController } from './controllers/sign-in.controller.js';
-import { SignUpController } from './controllers/sign-up.controller.js';
-
-const ctlSignIn = new SignInController();
-const ctlSignUp = new SignUpController();
+import { ctlSignIn } from './sign-in.controller.js';
+import { ctlSignUp } from './sign-up.controller.js';
 
 export const cdUserModule = {
   ctx: 'sys',
@@ -21,3 +18,5 @@ export const cdUserModule = {
     }
   ]
 };
+
+export const module = cdUserModule;
