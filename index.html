@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Corpdesk Shell</title>
-  <!-- app global styles -->
-<link rel="stylesheet" href="src/assets/css/index.css" />
-<!-- Theme layout structure (public path) -->
-<link rel="stylesheet" href="/themes/common/base.css">
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-/>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Corpdesk Shell</title>
+    <!-- app global styles -->
+    <link rel="stylesheet" href="src/assets/css/index.css" />
+    <!-- Theme layout structure (public path) -->
+    <link rel="stylesheet" href="/themes/common/base.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <!-- <body>
   <header id="cd-header">
     <img id="cd-logo" alt="Logo" />
     <span id="cd-app-name">Corpdesk Shell</span>
@@ -21,5 +25,18 @@
   <main id="content"></main>
 
   <script type="module" src="/src/bootstrap/bootstrap.ts"></script>
-</body>
+</body> -->
+  <body>
+    <header id="cd-header">
+      <img id="cd-logo" alt="Logo" />
+      <span id="cd-app-name">Corpdesk Shell</span>
+    </header>
+
+    <div id="cd-layout">
+      <aside id="cd-sidebar"></aside>
+      <main id="cd-main-content"></main>
+    </div>
+
+    <script type="module" src="/src/bootstrap/bootstrap.ts"></script>
+  </body>
 </html>

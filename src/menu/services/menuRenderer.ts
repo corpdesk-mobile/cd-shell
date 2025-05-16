@@ -8,7 +8,7 @@ let currentAdapter: any = null;
 export function renderMenuWithSystem(
   menu: MenuItem[],
   theme: ITheme,
-  containerId = "sidebar"
+  containerId = "cd-sidebar"
 ) {
   logger.debug("Starting renderMenuWithSystem()");
   logger.debug("renderMenuWithSystem()/01");

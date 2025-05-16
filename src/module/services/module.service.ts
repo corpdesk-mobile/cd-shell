@@ -30,7 +30,7 @@ export async function loadModule(ctx: string, moduleId: string): Promise<ICdModu
   }
 
   // Render default template
-  document.getElementById("content")!.innerHTML = moduleInfo.template;
+  document.getElementById("cd-main-content")!.innerHTML = moduleInfo.template;
 
   return moduleInfo;
   

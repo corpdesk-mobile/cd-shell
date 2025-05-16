@@ -79,6 +79,36 @@ export class MetisMenuAdapter implements IMenuAdapter {
     // Cleanup logic for MetisMenu if needed
   }
 
+  //   private transformForMetisMenu(root: Element): void {
+  //     root.classList.remove("cd-menu-root");
+  //     root.classList.add("metismenu");
+  //     root.setAttribute("id", "menu");
+
+  //     root.querySelectorAll(".cd-menu-item").forEach((li) => {
+  //       const label = li.querySelector(".cd-menu-label");
+  //       const route = li.getAttribute("data-route") || "#";
+  //       const hasChildren = li.querySelector("ul");
+
+  //       // Replace span with <a>
+  //       if (label) {
+  //         const a = document.createElement("a");
+  //         a.innerHTML = label.innerHTML;
+  //         a.href = hasChildren ? "#" : `/${route}`;
+  //         if (hasChildren) {
+  //           a.classList.add("has-arrow");
+  //           a.setAttribute("aria-expanded", "false");
+  //         }
+  //         label.replaceWith(a);
+  //       }
+
+  //       // Remove helper classes
+  //       li.classList.remove("cd-menu-item");
+  //     });
+
+  //     root.querySelectorAll("ul.cd-submenu").forEach((ul) => {
+  //       ul.classList.remove("cd-submenu");
+  //     });
+  //   }
   private transformForMetisMenu(root: Element): void {
     root.classList.remove("cd-menu-root");
     root.classList.add("metismenu");
@@ -94,14 +124,20 @@ export class MetisMenuAdapter implements IMenuAdapter {
         const a = document.createElement("a");
         a.innerHTML = label.innerHTML;
         a.href = hasChildren ? "#" : `/${route}`;
+
         if (hasChildren) {
           a.classList.add("has-arrow");
           a.setAttribute("aria-expanded", "false");
+
+          // Add Font Awesome icon
+          const icon = document.createElement("i");
+          icon.classList.add("menu-arrow", "fa-solid", "fa-chevron-right");
+          a.appendChild(icon);
         }
+
         label.replaceWith(a);
       }
 
-      // Remove helper classes
       li.classList.remove("cd-menu-item");
     });
 

@@ -5,6 +5,12 @@
   margin: 0;
 }
 
+.metismenu ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin: 0;
+}
+
 .metismenu li {
   position: relative;
 }
@@ -23,21 +29,24 @@
   color: var(--menu-hover-color, #000);
 }
 
-.metismenu .has-arrow::after {
-  content: "▸";
-  float: right;
-  transform: rotate(0deg);
-  transition: transform 0.2s ease;
-}
-
 .metismenu .mm-active > a.has-arrow::after {
   transform: rotate(90deg);
 }
 
-.metismenu .mm-collapse {
-  display: none;
+.metismenu .has-arrow::after {
+  content: none;
 }
 
-.metismenu .mm-active .mm-collapse {
-  display: block;
+.metismenu .menu-arrow {
+  float: right;
+  transition: transform 0.3s ease;
+}
+
+.metismenu .mm-active > .has-arrow .menu-arrow {
+  transform: rotate(90deg);
+}
+
+.metismenu .mm-collapse {
+  transition: height 0.3s ease;
+  overflow: hidden;
 }

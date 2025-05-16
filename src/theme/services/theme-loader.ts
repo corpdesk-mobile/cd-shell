@@ -44,7 +44,7 @@ function isAuthorized(authGuid: string): boolean {
 
 export function applyTheme(themeId: string, theme: ITheme) {
   if (!theme.layout.sidebar?.visible) {
-    const sidebar = document.getElementById("sidebar");
+    const sidebar = document.getElementById("cd-sidebar");
     if (sidebar) sidebar.style.display = "none";
   }
   // Apply CSS variables
