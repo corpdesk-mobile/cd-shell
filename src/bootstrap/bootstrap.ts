@@ -3,6 +3,7 @@ import { loadShellConfig } from "../config/shell.config";
 import { loadThemeConfig } from "../config/themeConfig";
 import { renderPlainMenu } from "../menu/services/menuRenderer";
 import { loadModule } from "../module/services/module.service";
+import { loadTheme } from "../theme/services/theme-loader";
 import { logger } from "../utils/logger";
 
 export async function bootstrapShell() {
@@ -49,6 +50,9 @@ export async function bootstrapShell() {
     await loadModule(ctx, moduleId);
     logger.debug("bootstrapShell()/11:");
   }
+
+  // load theme
+  loadTheme('default')
 
   
 

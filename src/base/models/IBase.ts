@@ -1,13 +1,18 @@
 export interface ShellConfig {
   appName: string;
   fallbackTitle: string;
-  themeConfig: string;
+  themeConfig: ThemeConfig;
   defaultModulePath: string;
   defaultLanguage?: string;
-  logLevel?: 'debug' | 'info' | 'warn' | 'error';
+  logLevel?: "debug" | "info" | "warn" | "error";
   logToFile?: boolean;
   logFilePath?: string;
   logFileName?: string;
   logFileMaxSize?: number;
   logFileMaxFiles?: number;
+}
+
+export interface ThemeConfig {
+  currentThemePath: string;
+  accessibleThemes: string[];
 }

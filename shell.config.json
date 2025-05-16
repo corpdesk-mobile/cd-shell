@@ -3,7 +3,7 @@
   "fallbackTitle": "Corpdesk PWA",
   "appVersion": "1.0.0",
   "appDescription": "Corpdesk PWA",
-  "themeConfig": "/themes/default/theme.json",
+  "themeConfig":  {"currentThemePath": "/themes/default/theme.json","accessibleThemes":["default", "dark", "contrast"]},
    "defaultModulePath": "sys/cd-user",
   "logLevel": "debug"
 }

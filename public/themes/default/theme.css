@@ -1,0 +1,7 @@
+/* themes/default/theme.css */
+.theme-default {
+  --cd-background-color: white;
+  --cd-text-color: black;
+  --cd-primary-color: #007bff;
+  /* etc */
+}
