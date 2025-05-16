@@ -1,12 +1,14 @@
 import { ShellConfig } from "../base/models/IBase";
 import { loadShellConfig } from "../config/shell.config";
 import { loadThemeConfig } from "../config/themeConfig";
-import { renderPlainMenu } from "../menu/services/menuRenderer";
+import { renderMenuWithSystem } from "../menu/services/menuRenderer";
 import { loadModule } from "../module/services/module.service";
+import { ITheme } from "../theme/models/themes.model";
 import { loadTheme } from "../theme/services/theme-loader";
 import { logger } from "../utils/logger";
 
 export async function bootstrapShell() {
+  logger.setLevel("debug");
   logger.debug("starting bootstrapShell()");
   logger.debug("bootstrapShell()/01:");
   const shellConfig: ShellConfig = await loadShellConfig();
@@ -47,16 +49,32 @@ export async function bootstrapShell() {
     logger.debug("bootstrapShell()/ctx:", ctx);
     logger.debug("bootstrapShell()/moduleId:", moduleId);
     logger.debug("bootstrapShell()/10:");
-    await loadModule(ctx, moduleId);
+    
+    // 👉 Render menu
+    const moduleInfo = await loadModule(ctx, moduleId);
+    if (moduleInfo.menu) {
+      logger.debug("loadModule()/menu:", moduleInfo.menu);
+      // 👉 Render menu
+      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
+      if (!resTheme.ok) {
+        const errorText = await resTheme.text();
+        throw new Error(
+          `Theme fetch failed: ${resTheme.status} ${resTheme.statusText}. Body: ${errorText}`
+        );
+      }
+      const theme = (await resTheme.json()) as ITheme;
+      logger.debug("loadModule()/theme:", theme);
+      renderMenuWithSystem(moduleInfo.menu, theme);
+    } else {
+      logger.debug("loadModule()/no menu to render");
+    }
     logger.debug("bootstrapShell()/11:");
   }
 
   // load theme
-  loadTheme('default')
-
-  
-
+  loadTheme("default");
 }
 
-
-await bootstrapShell();
+bootstrapShell().catch((err) => {
+  console.error("[BOOTSTRAP ERROR]", err);
+});

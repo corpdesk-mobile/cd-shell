@@ -4,3 +4,9 @@ export interface MenuItem {
   icon?: string;
   children?: MenuItem[];
 }
+
+export interface IMenuAdapter {
+  name: string;
+  initialize(containerId: string, themeName: string): void;
+  destroy?(): void;
+}

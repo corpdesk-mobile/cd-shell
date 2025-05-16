@@ -1,12 +1,27 @@
 {
   "name": "Default Theme",
+  "id": "default",
+  "logo": "/themes/default/logo.png",
+  "font": "Arial, sans-serif",
   "colors": {
-    "primary": "#1976d2",
     "secondary": "#eeeeee",
     "accent": "#ff4081",
-    "background": "#ffffff",
-    "text": "#000000"
+    "background": "white",
+    "text": "black",
+    "primary": "#007bff"
   },
-  "font": "Arial, sans-serif",
-  "logo": "/themes/default/logo.png"
+  "layout": {
+    "header": {
+      "visible": true,
+      "showNotifications": true,
+      "showUserDropdown": true
+    },
+    "sidebar": {
+      "visible": true,
+      "menu": { "menuSystem": "metismenu"}
+    },
+    "footer": {
+      "visible": false
+    }
+  }
 }

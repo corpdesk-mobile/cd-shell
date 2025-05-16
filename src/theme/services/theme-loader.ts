@@ -31,9 +31,7 @@ export async function loadTheme(themeId: string = "default") {
     throw new Error(`User is not authorized to use theme: ${theme.name}`);
   }
 
-  
-
-  applyTheme('default', theme);
+  applyTheme("default", theme);
 
   console.debug("Theme loaded successfully:", themeId);
 }
@@ -44,7 +42,11 @@ function isAuthorized(authGuid: string): boolean {
   return true;
 }
 
-export function applyTheme(themeId: string, theme:ITheme) {
+export function applyTheme(themeId: string, theme: ITheme) {
+  if (!theme.layout.sidebar?.visible) {
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar) sidebar.style.display = "none";
+  }
   // Apply CSS variables
   Object.entries(theme.colors).forEach(([key, value]) => {
     document.documentElement.style.setProperty(`--cd-${key}-color`, value);

@@ -2,23 +2,22 @@
 
 import { bootstrapShell } from './bootstrap/bootstrap';
 import { loadShellConfig } from './config/shell.config';
-import { loadTheme } from './theme/theme-loader';
-import { loadDefaultModule } from './bootstrap/moduleManager';
 import { ShellConfig } from './base/models/IBase';
+import { loadTheme } from './theme/services/theme-loader';
 
 export async function startShell(): Promise<void> {
   console.log('🟢 Starting PWA-OS (cd-shell)...');
 
-  const config  = await loadShellConfig();
-  console.log('📄 Shell config loaded:', config);
+  const shellConfig  = await loadShellConfig();
+  console.log('📄 Shell config loaded:', shellConfig);
 
-  await loadTheme(config.themeConfig);
-  console.log('🎨 Theme applied:', config.themeConfig);
+  await loadTheme(shellConfig.themeConfig.currentThemePath);
+  console.log('🎨 Theme applied:', shellConfig.themeConfig);
 
-  await loadDefaultModule(config.defaultModule);
-  console.log('📦 Default module loaded:', config.defaultModule);
+  // await loadDefaultModule(config.defaultModule);
+  // console.log('📦 Default module loaded:', config.defaultModule);
 
-  await bootstrapShell(config);
+  await bootstrapShell();
   console.log('✅ Shell bootstrapped successfully');
 }
 

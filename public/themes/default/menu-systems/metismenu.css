@@ -1,0 +1,43 @@
+/* Basic menu structure */
+.metismenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metismenu li {
+  position: relative;
+}
+
+.metismenu a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: var(--menu-text-color, #333);
+  font-weight: 500;
+}
+
+.metismenu a:hover,
+.metismenu a:focus {
+  background-color: var(--menu-hover-bg, #f0f0f0);
+  color: var(--menu-hover-color, #000);
+}
+
+.metismenu .has-arrow::after {
+  content: "▸";
+  float: right;
+  transform: rotate(0deg);
+  transition: transform 0.2s ease;
+}
+
+.metismenu .mm-active > a.has-arrow::after {
+  transform: rotate(90deg);
+}
+
+.metismenu .mm-collapse {
+  display: none;
+}
+
+.metismenu .mm-active .mm-collapse {
+  display: block;
+}

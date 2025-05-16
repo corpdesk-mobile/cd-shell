@@ -8,7 +8,7 @@ import { ICdModule } from "../models/module.model";
 // Preload all modules using glob
 const modules = import.meta.glob("/src/modules/**/index.js");
 
-export async function loadModule(ctx: string, moduleId: string): Promise<void> {
+export async function loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
   const expectedPathFragment = `/src/modules/${ctx}/${moduleId}/index.js`;
   logger.debug("loadModule()/expectedPathFragment:", expectedPathFragment);
 
@@ -32,13 +32,7 @@ export async function loadModule(ctx: string, moduleId: string): Promise<void> {
   // Render default template
   document.getElementById("content")!.innerHTML = moduleInfo.template;
 
-  // 👉 Render menu
-    if (moduleInfo.menu) {
-        logger.debug("loadModule()/rendering menu:", moduleInfo.menu);
-        renderPlainMenu(moduleInfo.menu, 'sidebar')
-    } else {
-        logger.debug("loadModule()/no menu to render");
-    }
+  return moduleInfo;
   
 }
 
