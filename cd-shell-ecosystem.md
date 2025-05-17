@@ -33,7 +33,7 @@ src/
 
 ## Development Workflow
 
-```
+```mermaid
 graph TD
     A[Start with cd-cli] --> B[cd-cli register]
     B --> C[cd-cli generate module <module-name>]
@@ -45,7 +45,7 @@ graph TD
     H --> I[cd-cli publish]
 ```
 ## Runtime Architecture
-```
+```mermaid
 graph TB
     A[cd-shell] --> B[cd-user Module]
     A --> C[Theme Engine]
