@@ -33,6 +33,7 @@ src/
 
 ## Development Workflow
 
+```
 graph TD
     A[Start with cd-cli] --> B[cd-cli register]
     B --> C[cd-cli generate module <module-name>]
@@ -42,9 +43,9 @@ graph TD
     F --> G[Test with cd-shell]
     G --> H[cd-cli login]
     H --> I[cd-cli publish]
-
+```
 ## Runtime Architecture
-
+```
 graph TB
     A[cd-shell] --> B[cd-user Module]
     A --> C[Theme Engine]
@@ -54,6 +55,7 @@ graph TB
     E --> G[__template()]
     E --> H[__setup()]
     E --> I[__processFormData()]
+```
 
 ## Example SignInController
 
