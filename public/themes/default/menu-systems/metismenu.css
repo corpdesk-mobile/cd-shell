@@ -16,7 +16,9 @@
 }
 
 .metismenu a {
-  display: block;
+  display: flex; /* ✅ Use flex to align icon + label */
+  align-items: center;
+  gap: 0.5rem; /* ✅ spacing between icon and label */
   padding: 10px 15px;
   text-decoration: none;
   color: var(--menu-text-color, #333);
@@ -29,24 +31,23 @@
   color: var(--menu-hover-color, #000);
 }
 
+.metismenu i {
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.metismenu .menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .metismenu .mm-active > a.has-arrow::after {
   transform: rotate(90deg);
 }
 
-.metismenu .has-arrow::after {
-  content: none;
-}
-
+/* Optional: icon arrow at the end */
 .metismenu .menu-arrow {
-  float: right;
-  transition: transform 0.3s ease;
-}
-
-.metismenu .mm-active > .has-arrow .menu-arrow {
-  transform: rotate(90deg);
-}
-
-.metismenu .mm-collapse {
-  transition: height 0.3s ease;
-  overflow: hidden;
+  margin-left: auto;
+  font-size: 0.8em;
 }

@@ -18,7 +18,11 @@
     },
     "sidebar": {
       "visible": true,
-      "menu": { "menuSystem": "metismenu"}
+      "menu": {
+        "menuSystem": "metismenu",
+        "iconSize": 14,
+        "iconColor": "#444"
+      }
     },
     "footer": {
       "visible": false

@@ -33,11 +33,108 @@ export function renderMenuWithSystem(
 
 export function renderPlainMenu(
   menu: MenuItem[],
-  containerId: string = "sidebar"
+  containerId: string = "sidebar",
+  cdToken?: string
 ) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = `<ul class="cd-menu-root">${renderMenuHtml(menu)}</ul>`;
+  // Attach handlers to <li> elements
+  attachClickHandlers(container, menu, cdToken);
+}
+
+function attachClickHandlers(
+  container: HTMLElement,
+  menu: MenuItem[],
+  cdToken?: string
+) {
+  const items = container.querySelectorAll(".cd-menu-item");
+  let index = 0;
+
+  function walkMenu(menu: MenuItem[], parentEl: Element | HTMLElement) {
+    for (const item of menu) {
+      const li = items[index++];
+      if (li) {
+        li.addEventListener("click", (e) => {
+          e.stopPropagation();
+          onMenuClick(item, cdToken);
+        });
+      }
+      if (item.children?.length) {
+        walkMenu(item.children, li);
+      }
+    }
+  }
+
+  walkMenu(menu, container);
+}
+
+function onMenuClick(item: MenuItem, cdToken?: string) {
+  logger.debug("onMenuClick()/01:", item);
+  logger.debug("onMenuClick()/item:", item);
+  logger.debug("Menu clicked:", item.label);
+
+  if (item.itemType === "action") {
+    logger.debug("onMenuClick()/02:", item);
+    if (item.action) {
+      logger.debug("Executing action for item:", item.label);
+      item.action();
+      return;
+    }
+  }
+
+  if (item.itemType === "template") {
+    logger.debug("onMenuClick()/03:", item);
+    if (item.template) {
+      logger.debug("Loading template for item:", item.label);
+      loadResource({ cdToken, item });
+      return;
+    }
+  }
+
+  logger.debug("onMenuClick()/04:", item);
+  // Fallback to route if present
+  if (item.itemType === "route" && item.route) {
+    logger.debug(`Navigating to route: ${item.route}`);
+    if (item.route) {
+      window.location.hash = item.route;
+    }
+  }
+}
+
+function loadResource(options: { cdToken?: string; item?: MenuItem } = {}) {
+  logger.debug("loadResource()/01:");
+  const { cdToken, item } = options;
+
+  // Example authorization guard (placeholder)
+  const isAuthorized = true; // Replace with real logic
+  if (!isAuthorized) {
+    logger.debug("loadResource()/02:");
+    logger.warn("Access denied for", item?.label);
+    return;
+  }
+
+  if (item?.template) {
+    logger.debug("loadResource()/03:");
+    const html =
+      typeof item.template === "function" ? item.template() : item.template;
+    logger.debug("Loaded HTML:", html);
+    const contentEl = document.getElementById("cd-main-content");
+    if (contentEl) {
+      logger.debug("loadResource()/04:");
+      contentEl.innerHTML = html;
+      const controller = item.controller;
+      if (controller?.__setup && typeof controller.__setup === "function") {
+        controller.__setup(); // 🔁 safely attach event listeners
+      }
+    }
+  }
+
+  // Optional lifecycle hook
+  if (window.cdShell?.lifecycle?.onViewLoaded) {
+    logger.debug("loadResource()/05:");
+    window.cdShell.lifecycle.onViewLoaded(item, cdToken);
+  }
 }
 
 /**
@@ -45,12 +142,20 @@ export function renderPlainMenu(
  * @param menu - The menu items to render.
  * @returns The rendered HTML string.
  */
+
 function renderMenuHtml(menu: MenuItem[]): string {
   return menu
     .map((item) => {
       const hasChildren = item.children && item.children.length > 0;
+      const route = item.route || "";
+      const encodedIcon = item.icon ? btoa(JSON.stringify(item.icon)) : "";
+
       return `
-        <li class="cd-menu-item" data-route="${item.route || ""}">
+        <li 
+          class="cd-menu-item" 
+          data-route="${route}" 
+          ${encodedIcon ? `data-icon="${encodedIcon}"` : ""}
+        >
           <span class="cd-menu-label">${item.label}</span>
           ${
             hasChildren

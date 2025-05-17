@@ -51,19 +51,17 @@ export interface IThemeSidebar {
 }
 
 export interface IThemeMenu {
-  menuSystem?:
-    | "metismenu"
-    | "plain"
-    | "custom"
-    | "material-design"
-    | "bootstrap";
+  menuSystem?: "metismenu" | "plain" | "custom" | "material-design" | "bootstrap";
   menuType?: "vertical" | "horizontal";
   menuPosition?: "top" | "bottom" | "left" | "right";
   menuWidth?: string;
   menuHeight?: string;
   menuBackground?: string;
   menuTextColor?: string;
+  iconSize?: number; // e.g., 14
+  iconColor?: string; // e.g., "#444"
 }
+
 export interface IThemeAds {
   enabled: boolean;
   position: "top" | "bottom" | "left" | "right";

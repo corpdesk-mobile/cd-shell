@@ -49,7 +49,7 @@ export async function bootstrapShell() {
     logger.debug("bootstrapShell()/ctx:", ctx);
     logger.debug("bootstrapShell()/moduleId:", moduleId);
     logger.debug("bootstrapShell()/10:");
-    
+
     // 👉 Render menu
     const moduleInfo = await loadModule(ctx, moduleId);
     if (moduleInfo.menu) {
@@ -73,6 +73,21 @@ export async function bootstrapShell() {
 
   // load theme
   loadTheme("default");
+
+  // toggle menu visibility
+  const burger = document.getElementById("cd-burger")!;
+  const sidebar = document.getElementById("cd-sidebar")!;
+  const overlay = document.getElementById("cd-overlay")!;
+
+  burger.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("hidden");
+  });
+
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    overlay.classList.add("hidden");
+  });
 }
 
 bootstrapShell().catch((err) => {
