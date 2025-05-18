@@ -39,12 +39,14 @@ graph TD
     B --> C[cd-cli generate module <module-name>]
     C --> D[cd-cli generate controller <controllers>]
     D --> E[Edit controller/template files]
-    E --> F[cd-cli run (via vite)]
+    E --> F[cd-cli run using Vite]
     F --> G[Test with cd-shell]
     G --> H[cd-cli login]
     H --> I[cd-cli publish]
 ```
+
 ## Runtime Architecture
+
 ```mermaid
 graph TB
     A[cd-shell] --> B[cd-user Module]
@@ -52,9 +54,9 @@ graph TB
     A --> D[Menu Loader]
     B --> E[SignInController]
     B --> F[SignUpController]
-    E --> G[__template()]
-    E --> H[__setup()]
-    E --> I[__processFormData()]
+    E --> G[__template]
+    E --> H[__setup]
+    E --> I[__processFormData]
 ```
 
 ## Example SignInController
