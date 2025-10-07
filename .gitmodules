@@ -1,0 +1,6 @@
+[submodule "src/CdShell/app/cd-geo"]
+	path = src/CdShell/app/cd-geo
+	url = git@github.com:empservices/cd-geo.git
+[submodule "src/CdShell/app/coops"]
+	path = src/CdShell/app/coops
+	url = git@github.com:empservices/coops.git
