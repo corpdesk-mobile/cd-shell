@@ -1,0 +1,31 @@
+{
+  "name": "Default Theme",
+  "id": "default",
+  "logo": "/themes/default/logo.png",
+  "font": "Arial, sans-serif",
+  "colors": {
+    "secondary": "#eeeeee",
+    "accent": "#ff4081",
+    "background": "white",
+    "text": "black",
+    "primary": "#007bff"
+  },
+  "layout": {
+    "header": {
+      "visible": true,
+      "showNotifications": true,
+      "showUserDropdown": true
+    },
+    "sidebar": {
+      "visible": true,
+      "menu": {
+        "menuSystem": "metismenu",
+        "iconSize": 14,
+        "iconColor": "#444"
+      }
+    },
+    "footer": {
+      "visible": false
+    }
+  }
+}

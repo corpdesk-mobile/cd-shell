@@ -1,0 +1,24 @@
+export var AppType;
+(function (AppType) {
+    AppType["Frontend"] = "frontend";
+    AppType["Api"] = "api";
+    AppType["CdApi"] = "cd-api";
+    AppType["CdApiModule"] = "cd-module";
+    AppType["PushServer"] = "push-server";
+    AppType["Cli"] = "cli";
+    AppType["CdCli"] = "cd-cli";
+    AppType["Pwa"] = "pwa";
+    AppType["DesktopPwa"] = "desktop-pwa";
+    AppType["Mobile"] = "mobile";
+    AppType["MobileHybrid"] = "mobile-hybrid";
+    AppType["MobileNative"] = "mobile-native";
+    AppType["Desktop"] = "desktop";
+    AppType["Iot"] = "iot";
+    AppType["Game"] = "game";
+    AppType["Embedded"] = "embedded";
+    AppType["Robotics"] = "robotics";
+    AppType["Plugin"] = "plugin";
+    AppType["Microservice"] = "microservice";
+    AppType["SDN"] = "sdn";
+    AppType["CbO"] = "cbo";
+})(AppType || (AppType = {}));

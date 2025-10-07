@@ -1,0 +1,197 @@
+// import { SqliteStore } from "../store/SqliteStore";
+// import { ConsumerModel } from "../entities/ConsumerModel";
+import { CD_FX_FAIL, } from '../../base/i-base.js';
+import { ConsumerModel } from '../models/consumer.model.js';
+import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+import { GenericService } from '../../base/generic-service.js';
+// import { Logger } from 'winston';
+import { CompanyService } from './company.service.js';
+export class ConsumerService extends GenericService {
+    // b = new BaseService<ConsumerModel>();
+    // logger: Logger;
+    // defaultDs = config.ds.sqlite;
+    // Define validation rules
+    cRules = {
+        required: ['consumerName', 'consumerTypeGuid', 'consumerGuid'],
+        noDuplicate: ['consumerName', 'consumerTypeGuid'],
+    };
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // ADAPTATION FROM GENERIC SERVICE
+    constructor() {
+        super(ConsumerModel);
+        // this.logger = new Logger();
+    }
+    /**
+     * Validate input before processing create
+     * If generated automatically, should depend on cdRules/create
+     */
+    async validateCreate(pl) {
+        const retState = true;
+        // Ensure required fields exist
+        for (const field of this.cRules.required) {
+            if (!pl[field]) {
+                return {
+                    data: false,
+                    state: false,
+                    message: `Missing required field: ${field}`,
+                };
+            }
+        }
+        // Check for duplicates
+        const query = {
+            where: {
+                companyId: pl.companyId,
+            },
+        };
+        const serviceInput = {
+            serviceModel: ConsumerModel,
+            docName: 'Validate Duplicate Consumer',
+            dSource: 1,
+            cmd: { query },
+        };
+        const existingRecords = await this.b.read(null, null, serviceInput);
+        if ('state' in existingRecords && 'data' in existingRecords) {
+            if (!existingRecords.state || !existingRecords.data) {
+                return { data: false, state: false, message: 'Validation failed' };
+            }
+            if (existingRecords.data.length > 0) {
+                return { data: true, state: true, message: 'Validation passed' };
+            }
+            else {
+                return { data: false, state: false, message: 'Validation failed' };
+            }
+        }
+        return { data: false, state: false, message: 'Validation failed' };
+    }
+    /**
+     * Fetch newly created record by guid
+     */
+    async afterCreate(pl) {
+        const query = {
+            where: { consumerGuid: pl.consumerGuid },
+        };
+        const serviceInput = {
+            serviceModel: ConsumerModel,
+            docName: 'Fetch Created Consumer',
+            dSource: 1,
+            cmd: { query },
+        };
+        const retResult = await this.b.read(null, null, serviceInput);
+        if ('state' in retResult) {
+            return retResult;
+        }
+        else {
+            return CD_FX_FAIL;
+        }
+    }
+    async getConsumer(q) {
+        // Validate query input
+        if (!q || !q.where || Object.keys(q.where).length === 0) {
+            return {
+                data: null,
+                state: false,
+                message: 'Invalid query: "where" condition is required',
+            };
+        }
+        const serviceInput = {
+            serviceModel: ConsumerModel,
+            docName: 'ConsumerService::getConsumer',
+            cmd: {
+                action: 'find',
+                query: q,
+            },
+            dSource: 1,
+        };
+        try {
+            const retResult = await this.b.read(null, null, serviceInput);
+            if ('state' in retResult) {
+                return retResult;
+            }
+            else {
+                return CD_FX_FAIL;
+            }
+        }
+        catch (e) {
+            CdLog.error(`ConsumerService.getConsumer() - Error: ${e.message}`);
+            return {
+                data: null,
+                state: false,
+                message: `Error retrieving Consumer: ${e.message}`,
+            };
+        }
+    }
+    beforeUpdate(q) {
+        if (q.update.CoopEnabled === '') {
+            q.update.CoopEnabled = null;
+        }
+        return q;
+    }
+    async getConsumerI(req, res, q) {
+        console.info('ConsumerService::getConsumerI()/query:', { query: q });
+        const serviceInput = {
+            serviceInstance: this,
+            serviceModel: ConsumerModel,
+            docName: 'ConsumerService::getConsumerI',
+            cmd: {
+                action: 'find',
+                query: q,
+            },
+            dSource: 1,
+        };
+        const resultConsumer = await this.read(req, res, serviceInput);
+        if (!resultConsumer.state || !resultConsumer.data) {
+            return null;
+        }
+        return resultConsumer.data;
+    }
+    async getCompanyData(req, res, consGuid) {
+        const svCompany = new CompanyService();
+        console.log('moduleman/create::getCompanyData()/coGuid:', consGuid);
+        const serviceInput = {
+            serviceInstance: this,
+            serviceModel: ConsumerModel,
+            docName: 'CompanyService::getCompanyData',
+            cmd: {
+                action: 'find',
+                query: { where: { consumerGuid: consGuid } },
+            },
+            dSource: 1,
+        };
+        const resultConsumer = await this.read(req, res, serviceInput);
+        if (!resultConsumer.state || !resultConsumer.data) {
+            return null;
+        }
+        const consumerData = resultConsumer.data;
+        return await svCompany.getCompanyI(req, res, {
+            where: { companyId: consumerData[0].companyId },
+        });
+    }
+    getConsumerByGuid$(req, res, consmGuid) {
+        // console.info('starting getConsumerByGuid(req, res, consmGuid)');
+        const serviceInput = {
+            serviceInstance: this,
+            serviceModel: ConsumerModel,
+            docName: 'ConsumerService::getConsumerByGuid',
+            cmd: {
+                action: 'find',
+                query: { where: { consumerGuid: consmGuid } },
+            },
+            dSource: 1,
+        };
+        return this.b.read$(req, res, serviceInput);
+    }
+    async getConsumerByGuid(req, res, consmGuid) {
+        // console.info('starting getConsumerByGuid(req, res, consmGuid)');
+        const serviceInput = {
+            serviceInstance: this,
+            serviceModel: ConsumerModel,
+            docName: 'ConsumerService::getConsumerByGuid',
+            cmd: {
+                action: 'find',
+                query: { where: { consumerGuid: consmGuid } },
+            },
+            dSource: 1,
+        };
+        return this.b.read(req, res, serviceInput);
+    }
+}

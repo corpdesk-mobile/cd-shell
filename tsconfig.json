@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
     "target": "ESNext",
-    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "experimentalDecorators": true,
+    "moduleResolution": "Node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "outDir": "dist",
-    "include": ["src/**/*.ts"],
-  }
+    "outDir": "dist-ts",
+    "rootDir": "src",
+    "noEmit": false,
+    "allowJs": false,
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "dist-ts"]
 }

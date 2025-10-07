@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-10-06T11:44:31.125Z",
+  "modules": [
+    {
+      "domain": "sys",
+      "moduleId": "cd-user",
+      "controllers": [
+        "session.controller.js",
+        "sign-in.controller.js",
+        "user.controller.js"
+      ],
+      "viewPath": "/home/emp-12/cd-shell/src/CdShell/sys/cd-user/view",
+      "status": "synced"
+    }
+  ]
+}

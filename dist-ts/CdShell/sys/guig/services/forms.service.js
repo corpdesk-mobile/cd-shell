@@ -1,0 +1,16 @@
+// import { logger } from "../../CdShell/utils/logger";
+export async function processFormData(formData, formId, cdToken) {
+    return new Promise((resolve, reject) => {
+        const form = document.getElementById(formId);
+        if (!form) {
+            reject(new Error(`Form with ID ${formId} not found`));
+            return;
+        }
+        const data = Object.fromEntries(formData.entries());
+        // this.logger.debug("Form data processed:", data);
+        // Simulate an API call
+        setTimeout(() => {
+            resolve(data);
+        }, 1000);
+    });
+}

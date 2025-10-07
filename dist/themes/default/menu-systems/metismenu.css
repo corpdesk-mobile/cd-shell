@@ -1,0 +1,53 @@
+/* Basic menu structure */
+.metismenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metismenu ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin: 0;
+}
+
+.metismenu li {
+  position: relative;
+}
+
+.metismenu a {
+  display: flex; /* ✅ Use flex to align icon + label */
+  align-items: center;
+  gap: 0.5rem; /* ✅ spacing between icon and label */
+  padding: 10px 15px;
+  text-decoration: none;
+  color: var(--menu-text-color, #333);
+  font-weight: 500;
+}
+
+.metismenu a:hover,
+.metismenu a:focus {
+  background-color: var(--menu-hover-bg, #f0f0f0);
+  color: var(--menu-hover-color, #000);
+}
+
+.metismenu i {
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.metismenu .menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metismenu .mm-active > a.has-arrow::after {
+  transform: rotate(90deg);
+}
+
+/* Optional: icon arrow at the end */
+.metismenu .menu-arrow {
+  margin-left: auto;
+  font-size: 0.8em;
+}
