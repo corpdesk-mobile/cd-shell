@@ -19,3 +19,7 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Ignore everything in app except the .gitkeep
+src/CdCli/app/*
+!src/CdCli/app/.gitkeep
