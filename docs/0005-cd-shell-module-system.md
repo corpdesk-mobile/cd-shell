@@ -403,48 +403,12 @@ async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
 
 ---
 
-## 6. Ecosystem Context
 
-* **cd-shell** (frontend) — Runtime integration of modules.
-* **cd-api** (backend) — Backend counterpart, ensuring full-stack modularity.
-* **cd-cli** — Tooling for scaffolding, managing, and linking modules.
-* **AI agents (future)** — Auto-generate complete modules (client + backend).
 
 ---
 
-## 7. Key Takeaways
 
-* **Every module exports an `ICdModule`.**
-* **Modules are discovered and loaded dynamically.**
-* **Install/uninstall at runtime is a core requirement.**
-* **Frontend ↔ backend symmetry is mandatory.**
-* **Automation and AI integration are part of the vision.**
-
----
-
-👉 George, would you like me to now **expand this into a boilerplate `index.ts` template** that every new module can follow (with comments explaining each field)? That would serve as a ready-to-use **developer reference**.
-
----
-
-Date: 2025-09-26, Time: 16:18
-
----
-
-Excellent — this is now a mature enough stage to document the **Corpdesk Module Runtime Design** from source-to-runtime level.
-Here’s a **developer documentation draft** that incorporates all your notes and adds detailed structure, rationale, and flow explanations.
-
----
-
-## 🧩 Corpdesk Module Runtime Design
-
-### 1. Overview
-
-The **Corpdesk runtime architecture** is designed to support modular, dynamic loading of components both in development and production.
-The system compiles TypeScript-based module sources into runtime-compatible JavaScript files, which can then be dynamically discovered and loaded during runtime—similar in spirit to Angular’s component and template system, but with independent runtime modularity.
-
----
-
-## 2. Build-to-Execution Workflow
+## 6. Build-to-Execution Workflow
 
 ### **Step 1 — Build**
 
@@ -492,7 +456,7 @@ The runtime flow proceeds as follows:
 
 ---
 
-## 3. Directory and File Structure
+## 7. Directory and File Structure
 
 ```
 src/
@@ -535,7 +499,7 @@ This separation mirrors the Angular architectural pattern while keeping runtime 
 
 ---
 
-## 4. Module Loader (`module.service.ts`)
+## 8. Module Loader (`module.service.ts`)
 
 ### Purpose
 
@@ -556,7 +520,7 @@ The **ModuleService** is responsible for:
 
 ---
 
-## 5. Controller Architecture
+## 9. Controller Architecture
 
 Each controller class in the source directory must extend:
 
@@ -586,7 +550,7 @@ export abstract class CdShellController {
 
 ---
 
-## 6. Runtime Controller Format
+## 10. Runtime Controller Format
 
 After the build and post-build transformation, each controller is converted into a runtime-compatible structure such as:
 
@@ -631,7 +595,7 @@ export const ctlSignIn = {
 
 ---
 
-## 7. `post-build.js` — Runtime Controller Processor
+## 11. `post-build.js` — Runtime Controller Processor
 
 ### Purpose
 
@@ -650,7 +614,7 @@ This allows developers to confirm that newly generated files are from the **curr
 
 ---
 
-## 8. Design Principles
+## 12. Design Principles
 
 | Principle                 | Description                                                                                |
 | ------------------------- | ------------------------------------------------------------------------------------------ |
@@ -661,15 +625,28 @@ This allows developers to confirm that newly generated files are from the **curr
 
 ---
 
-## 9. Future Enhancements
+## 13. Future Enhancements
 
 * **Hot Reload Support:** Allow runtime refresh of updated modules without full rebuild.
 * **Module Federation (Frontend & Backend):** Dynamic installation of modules post-deployment.
 * **Descriptor-Driven Instantiation:** Integration with `CdModuleDescriptorService` for metadata-based runtime assembly.
 
+## 6. Ecosystem Context
+
+* **cd-shell** (frontend) — Runtime integration of modules.
+* **cd-api** (backend) — Backend counterpart, ensuring full-stack modularity.
+* **cd-cli** — Tooling for scaffolding, managing, and linking modules.
+* **AI agents (future)** — Auto-generate complete modules (client + backend).
+
 ---
 
-Would you like me to format this into a **developer handbook layout** (markdown or docx) with headers, diagrams, and code sections for inclusion in Corpdesk documentation?
+## 14. Key Takeaways
+
+* **Every module exports an `ICdModule`.**
+* **Modules are discovered and loaded dynamically.**
+* **Install/uninstall at runtime is a core requirement.**
+* **Frontend ↔ backend symmetry is mandatory.**
+* **Automation and AI integration are part of the vision.**
 
 ---
 

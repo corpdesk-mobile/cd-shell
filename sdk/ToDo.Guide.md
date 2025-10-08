@@ -3031,11 +3031,13 @@ async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
 
 /////////////////////////////////////////////////////////////
 
-Check the document docs/0005-cd-shell-module-system.md
+Check the document docs/0005-cd-shell-module-system.md in the repository: https://github.com/corpdesk-mobile/cd-shell.
 You can focus on the section 'Developer Guide: Module Implementation'.
-After you have gottent the whole context, notice the expected format of controllers in the src/CdShell/sys/cd-user/view as per section '6. Runtime Controller Format'
-At the moment, the transpiled controllers in src/CdShell/sys/cd-user/view is in exported classes (which is not correct)
+After you have gotten the whole context, notice the expected format of controllers in the src/CdShell/sys/cd-user/view as per section '10. Runtime Controller Format'.
+At the moment, the transpiled controllers in src/CdShell/sys/cd-user/view is in exported classes (which is not correct).
 Note that src/CdShell/sys/cd-user/view is just a sample of any 'view' directory for any module.
+Then look at the scripts/post-build.js, which is responsible for transpiling to src/CdShell/sys/cd-user/view.
+It needs to be review and refactored to produce the right format of controllers for runtime.
 
 
 
