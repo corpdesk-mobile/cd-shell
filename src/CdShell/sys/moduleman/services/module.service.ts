@@ -139,6 +139,10 @@ export class ModuleService {
         // Initialize controller if defined
         if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
 
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
         // Timestamp log
         const now = new Date();
         console.log(

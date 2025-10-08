@@ -2,7 +2,7 @@ Got it 👍 — I’ll treat **module loading** just like I did for the **menu s
 
 ---
 
-# 📖 Developer Guide: Module Loading in `cd-shell`
+# 📖 Developer Guide: Module Loading Overview
 
 ## 1. Principles of Design
 
@@ -197,7 +197,7 @@ Perfect 🙌 — thanks for sharing the `ICdModule` definition. That clears up t
 
 ---
 
-# 📖 Developer Guide: Module Loading in `cd-shell`
+# 📖 Developer Guide: Module Implementation
 
 ## 1. Principles of Design
 
@@ -244,31 +244,102 @@ export interface ICdModule {
 
 ## 3. Module Loading Process
 
-The **`loadModule`** function orchestrates discovery and runtime integration:
+The **`loadModule`** method in ModuleService class orchestrates discovery and runtime integration:
 
 ```ts
-export async function loadModule(
-  ctx: string,
-  moduleId: string
-): Promise<ICdModule> {
-  const expectedPath = `/src/modules/${ctx}/${moduleId}/index.js`;
-  const pathKey = Object.keys(modules).find((key) =>
-    key.includes(expectedPath)
-  );
-  if (!pathKey) throw new Error(`Module not found: ${ctx}/${moduleId}`);
+async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+    this.logger.debug("ModuleService::loadModule()/01:");
 
-  const loader = modules[pathKey];
-  const mod = (await loader()) as { module: ICdModule };
-  const moduleInfo = mod.module;
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
 
-  // Render default template into shell
-  if (moduleInfo.template) {
-    document.getElementById("cd-main-content")!.innerHTML =
-      moduleInfo.template;
+    // --- Step 1: Compute normalized target fragment ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug(
+      "[ModuleService] expectedPathFragment:",
+      expectedFragment
+    );
+
+    // --- Step 2: Vite (Browser) Mode ---
+    if (isVite) {
+      // The expectedFragment is calculated as: "src/CdShell/sys/cd-user/view/index.js"
+
+      // Find the correct key from the modules map
+      const pathKey = Object.keys(this.modules).find((key) => {
+        // Normalizes key: removes a leading './' OR a leading '/' (if present).
+        // This makes the key match the expectedFragment ("src/CdShell/...")
+        const normalizedKey = key.replace(/^\.?\//, "");
+
+        return normalizedKey === expectedFragment;
+      });
+
+      if (!pathKey) {
+        console.error(
+          "[ModuleService] Available module keys:",
+          Object.keys(this.modules)
+        );
+        throw new Error(
+          `[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`
+        );
+      }
+
+      try {
+        const loader = this.modules[pathKey];
+        const mod = (await loader()) as { module: ICdModule };
+        const moduleInfo = mod.module;
+
+        if (!moduleInfo)
+          throw new Error(`Missing 'module' export in: ${pathKey}`);
+
+        // Inject module template into the DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+
+        // Initialize controller if defined
+        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
+
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
+        // Timestamp log
+        const now = new Date();
+        console.log(
+          `[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+        );
+
+        return moduleInfo;
+      } catch (err) {
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory
+      .replace(/\\/g, "/")
+      .replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(
+        `[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+      );
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
   }
-
-  return moduleInfo;
-}
 ```
 
 ### Workflow
@@ -521,27 +592,27 @@ After the build and post-build transformation, each controller is converted into
 
 ```js
 export const ctlSignIn = {
+  username: "",
+  password: "",
+
   __template() {
-    return `<form id="signInForm" class="cd-sign-in">
+    return `
+      <form class="cd-sign-in">
         <h1 class="cd-heading">Sign In</h1>
-        <label for="username">Username</label>
-        <input id="username" type="text" cd-model="username" required />
 
-        <label for="password">Password</label>
-        <input id="password" type="password" cd-model="password" required />
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
 
-        <button type="submit" class="cd-button">Sign In</button>
-      </form>`;
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
   },
 
   __setup() {
     console.log("[cd-user] Controller setup complete");
-  },
-
-  __processFormData() {
-    const username = document.querySelector('[cd-model="username"]').value || "";
-    const password = document.querySelector('[cd-model="password"]').value || "";
-    return { username, password };
   },
 
   auth() {

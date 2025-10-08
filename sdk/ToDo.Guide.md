@@ -2719,7 +2719,327 @@ export const ctlSignIn = {
   },
 };
 4. How post-build.js is meant to process the runtime controllers.
-The above process is very important
+The above process is very important\
+
+////////////////////////////////////////
+
+I need some assistance with syncing my project with git repository:
+The cause could be associated wit the fact that I initially created sample directories for app modules.
+I remembered to include app modules in .gitignore and have .gitkeep in the various directories.
+Below is the git status:
+```sh
+emp-12@emp-12 ~/cd-shell (main)> git status
+On branch main
+Your branch is ahead of 'origin/main' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+  (commit or discard the untracked or modified content in submodules)
+        modified:   src/CdShell/app/cd-geo (modified content, untracked content)
+        modified:   src/CdShell/app/coops (modified content, untracked content)
+
+no changes added to commit (use "git add" and/or "git commit -a")
+emp-12@emp-12 ~/cd-shell (main)> 
+```
+
+////////////////////////////////////////////////
+Looks like they have their own git tracking.
+This is how the design should be.
+All directories in app modules are expected to be independent repositories.
+How do I proceed?
+```sh
+emp-12@emp-12 ~/cd-shell (main)> ls -la src/CdShell/app/cd-geo
+total 80
+drwxrwxr-x 7 emp-12 emp-12  4096 Oct  7 22:36 ./
+drwxrwxr-x 5 emp-12 emp-12  4096 Oct  5 11:00 ../
+drwxrwxr-x 2 emp-12 emp-12  4096 Jun  2 08:34 controllers/
+-rwxrwxr-x 1 emp-12 emp-12   957 Jun  5 14:06 generate-index.sh*
+drwxrwxr-x 8 emp-12 emp-12  4096 Oct  7 22:39 .git/
+-rw-rw-r-- 1 emp-12 emp-12     0 Jun  9 01:19 .gitkeep
+-rw-rw-r-- 1 emp-12 emp-12  1351 Jun  8 14:17 index.ts
+drwxrwxr-x 2 emp-12 emp-12  4096 Jun  2 08:34 models/
+-rw-rw-r-- 1 emp-12 emp-12     0 Jun  2 08:34 notes
+-rw-rw-r-- 1 emp-12 emp-12 36877 Aug 13 17:12 notes_mapping_counties_to_regions
+-rw-rw-r-- 1 emp-12 emp-12     9 Jun  2 08:34 README.md
+drwxrwxr-x 2 emp-12 emp-12  4096 Jun  2 08:34 services/
+drwxrwxr-x 2 emp-12 emp-12  4096 Oct  5 17:25 view/
+emp-12@emp-12 ~/cd-shell (main)> ls -la src/CdShell/app/coops
+total 164
+drwxrwxr-x 8 emp-12 emp-12  4096 Oct  7 22:37  ./
+drwxrwxr-x 5 emp-12 emp-12  4096 Oct  5 11:00  ../
+-rw-rw-r-- 1 emp-12 emp-12   390 Dec 27  2024  asdap.service
+-rw-rw-r-- 1 emp-12 emp-12   757 Dec 27  2024  asdap-service.sh
+-rw-rw-r-- 1 emp-12 emp-12   390 Dec 27  2024  asdap-sio.service
+-rw-rw-r-- 1 emp-12 emp-12  1261 Dec 27  2024  config.ts
+drwxrwxr-x 2 emp-12 emp-12  4096 Dec 27  2024  controllers/
+drwxrwxr-x 5 emp-12 emp-12  4096 Dec 27  2024  extra/
+-rwxrwxr-x 1 emp-12 emp-12   957 Jun  5 14:07  generate-index.sh*
+drwxrwxr-x 8 emp-12 emp-12  4096 Oct  7 22:39  .git/
+-rw-rw-r-- 1 emp-12 emp-12     0 Jun  9 01:19  .gitkeep
+-rw-rw-r-- 1 emp-12 emp-12  1239 Jun  8 14:31  index.ts
+drwxrwxr-x 2 emp-12 emp-12  4096 Dec 27  2024  models/
+-rw-rw-r-- 1 emp-12 emp-12     0 May 31 20:04  module.json
+-rw-rw-r-- 1 emp-12 emp-12  4191 Dec 27  2024  notes
+-rw-rw-r-- 1 emp-12 emp-12     8 Dec 27  2024  README.md
+-rw-rw-r-- 1 emp-12 emp-12 92368 Dec 27  2024  sample-data.json
+drwxrwxr-x 2 emp-12 emp-12  4096 Dec 27  2024  services/
+-rw-rw-r-- 1 emp-12 emp-12  2589 Dec 27  2024 'standard economic-indicators'
+drwxrwxr-x 2 emp-12 emp-12  4096 Oct  5 17:25  view/
+emp-12@emp-12 ~/cd-shell (main)> 
+```
+
+//////////////////////////////////////
+While we are able to now load the initial pagey, there is important process that is not working as expected.
+The compiled codes that is being acessed by the module loader (src/CdShell/sys/cd-user/view/index.js) was hard coded developed for testing.
+We currently expect 
+1. the controller at 
+src/CdShell/sys/cd-user/controllers/sign-in.controller.ts 
+to compile at: dist-ts/CdShell/sys/cd-user/controllers/sign-in.controller.js
+Which is happening correctly.
+2. During post-build, the compiled file dist-ts/CdShell/sys/cd-user/controllers/sign-in.controller.js should be transpiled into required format in the directory:
+src/CdShell/sys/cd-user/view/index.js
+for module loader to find it for actuall page rendering. (This is not happening)
+
+Summary of process:
+  - build via 'npm run build'
+    - process compilation to dist-ts
+    - vite compiles to dist
+    - execute scripts/post-build.js
+  - index.html calls app.ts
+  - app.ts calls main.ts
+  - main.ts calls module loader
+  - run 'npm run preview
+
+You can access the repository for lates codes:https://github.com/corpdesk-mobile/cd-shell
+Try to look at the source codes and figure why the file:
+dist-ts/CdShell/sys/cd-user/controllers/sign-in.controller.js is not transpiling to 
+src/CdShell/sys/cd-user/view/index.js
+The responsible file is scripts/post-build.js
+But you may have to also look at the package.json/script and other related files.
+
+///////////////////////////////////////////
+We have worked on loadModule() method. There is some aspect of it that was designed earlier but we did not deal with it.
+We are developing a system much like Angular directives.
+It is being controlled by a class called CdDirectiveBinder.
+In the loadModule() below you will notice the line:
+// Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
+I have shared the implementation of CdDirectiveBinder.
+Also in the shared implementation of src/CdShell/sys/cd-user/controllers/sign-in.controller.ts below, you will notice cd-model and cd-click.
+Study how the design is implementand from the information below and generate a developer guide in the context of 'Corpdesk CdShell Directives developer guide'.
+
+## 🧩 1. Core Philosophy Recap
+
+The CdDirectiveBinder acts as the bridge between:
+
+The Controller → logical methods and state.
+
+The Template (HTML) → event triggers and bindings.
+
+And in Corpdesk, we follow explicit behavior binding:
+
+No automatic form submissions, no hidden behavior — all logic is controller-driven.
+
+
+| Feature                                 | Description                                      |
+| --------------------------------------- | ------------------------------------------------ |
+| **cd-click**                            | Binds click events to controller methods.        |
+| **cd-model**                            | Two-way binding for inputs (value ↔ controller). |
+| **cd-hover** *(future)*                 | Bind hover-in/out handlers.                      |
+| **cd-show / cd-hide** *(future)*        | Conditional rendering toggles.                   |
+| **cd-class** *(future)*                 | Dynamic class binding.                           |
+| **cd-loading / cd-disabled** *(future)* | State-aware UI attributes.                       |
+
+
+
+
+// src/CdShell/sys/base/cd-directive-binder.ts
+```ts
+export class CdDirectiveBinder {
+  controller;
+  constructor(controller:any) {
+    this.controller = controller;
+  }
+
+  bind(rootElement: Document | HTMLElement = document): void {
+    if (!rootElement) return;
+
+    // --- cd-click ---
+    rootElement.querySelectorAll("[cd-click]").forEach((el) => {
+      const methodName = el.getAttribute("cd-click");
+      const method = this.controller[methodName];
+      if (typeof method === "function") {
+        el.addEventListener("click", method.bind(this.controller));
+      }
+    });
+
+    // --- cd-model ---
+    rootElement.querySelectorAll("[cd-model]").forEach((el) => {
+      const modelKey = el.getAttribute("cd-model");
+
+      // Initialize input value from controller (if exists)
+      if (this.controller[modelKey] !== undefined && el instanceof HTMLInputElement) {
+        el.value = this.controller[modelKey];
+      }
+
+      // Update controller value on input change
+      el.addEventListener("input", (e) => {
+        this.controller[modelKey] = (e.target as HTMLInputElement).value;
+      });
+    });
+  }
+
+  unbind(rootElement = document) {
+    // optional cleanup: we can later add teardown logic if needed
+  }
+}
+```
+
+// src/CdShell/sys/cd-user/controllers/sign-in.controller.ts
+```js
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
+  },
+};
+```
+
+// ModuleService.loadModule()
+```ts
+async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+    this.logger.debug("ModuleService::loadModule()/01:");
+
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
+
+    // --- Step 1: Compute normalized target fragment ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug(
+      "[ModuleService] expectedPathFragment:",
+      expectedFragment
+    );
+
+    // --- Step 2: Vite (Browser) Mode ---
+    if (isVite) {
+      // The expectedFragment is calculated as: "src/CdShell/sys/cd-user/view/index.js"
+
+      // Find the correct key from the modules map
+      const pathKey = Object.keys(this.modules).find((key) => {
+        // Normalizes key: removes a leading './' OR a leading '/' (if present).
+        // This makes the key match the expectedFragment ("src/CdShell/...")
+        const normalizedKey = key.replace(/^\.?\//, "");
+
+        return normalizedKey === expectedFragment;
+      });
+
+      if (!pathKey) {
+        console.error(
+          "[ModuleService] Available module keys:",
+          Object.keys(this.modules)
+        );
+        throw new Error(
+          `[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`
+        );
+      }
+
+      try {
+        const loader = this.modules[pathKey];
+        const mod = (await loader()) as { module: ICdModule };
+        const moduleInfo = mod.module;
+
+        if (!moduleInfo)
+          throw new Error(`Missing 'module' export in: ${pathKey}`);
+
+        // Inject module template into the DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+
+        // Initialize controller if defined
+        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
+
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
+        // Timestamp log
+        const now = new Date();
+        console.log(
+          `[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+        );
+
+        return moduleInfo;
+      } catch (err) {
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory
+      .replace(/\\/g, "/")
+      .replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(
+        `[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+      );
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
+  }
+```
+
+/////////////////////////////////////////////////////////////
+
+Check the document docs/0005-cd-shell-module-system.md
+You can focus on the section 'Developer Guide: Module Implementation'.
+After you have gottent the whole context, notice the expected format of controllers in the src/CdShell/sys/cd-user/view as per section '6. Runtime Controller Format'
+At the moment, the transpiled controllers in src/CdShell/sys/cd-user/view is in exported classes (which is not correct)
+Note that src/CdShell/sys/cd-user/view is just a sample of any 'view' directory for any module.
+
+
+
+
 
 
 
@@ -2770,3 +3090,7 @@ Documentation:
 Classing the codes:
 - convert the codes from function to classes (Done)
 - Make sure the process can compile all the codes into dist-ts
+
+- update of documentation for 
+  - module loading (doc0005)
+  - directives (doc0007)

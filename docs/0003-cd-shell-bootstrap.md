@@ -66,7 +66,11 @@ The shell starts from `index.html` and then runs `bootstrapShell()` from `bootst
 
    * Ensures a consistent fallback or base layer.
 
-7. **Enable Sidebar Interactions**
+7. **Apply directive bindings**
+
+   * Inject directives to controll UI interface behaviour.
+
+8. **Enable Sidebar Interactions**
 
    * Burger button (`#cd-burger`) toggles sidebar visibility.
    * Overlay (`#cd-overlay`) closes sidebar when clicked.
