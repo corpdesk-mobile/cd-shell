@@ -1,4 +1,4 @@
-import { BaseService } from '../../../sys/base/base.service.js';
+import { BaseService } from '../../../sys/base/base.service';
 import { CdController } from '../../../sys/base/cd.controller.js';
 // import { CdController } from '../../../sys/base/cd.controller.js';
 import { CoopMemberService } from '../services/coop-member.service.js';

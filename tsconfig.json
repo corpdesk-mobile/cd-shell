@@ -14,5 +14,10 @@
     "types": ["vite/client"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "dist-ts"]
+  "exclude": [
+    "node_modules", 
+    "dist", 
+    "dist-ts",
+    "src/CdShell/**/view/**"
+  ] 
 }

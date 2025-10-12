@@ -1,11 +1,11 @@
-import { BaseService } from '../../../sys/base/base.service.js';
+import { BaseService } from '../../../sys/base/base.service';
 // import { CdService } from '../../../sys/base/cd.service';
-import { SessionService } from '../../../sys/cd-user/services/session.service.js';
-import { CdGeoPhysicalTypeModel } from '../models/cd-geo-physical-type.model.js';
+import { SessionService } from '../../../sys/cd-user/services/session.service';
+import { CdGeoPhysicalTypeModel } from '../models/cd-geo-physical-type.model';
 // import { CdGeoPhysicalTypeViewModel, siGet } from '../models/cd-geo-physical-type-view.model';
 // import { CdGeoPhysicalTypeViewModel } from '../models/cd-geo-physical-type-view.model';
 // import { siGet } from '../../../sys/base/base.model';
-// import { Logging } from '../../../sys/base/winston.log.js';
+// import { Logging } from '../../../sys/base/winston.log';
 export class CdGeoPhysicalTypeService {
     // logger: Logging;
     b; // instance of BaseService

@@ -1,24 +1,29 @@
-// import { io } from 'socket.io-client';
-import { Observable } from 'rxjs';
-import config from '../../../../config.js';
-export class CdPushController {
-    socket;
-    url = '';
-    constructor() {
-        // this.socket = io(`${environment.HOST}:` + environment.SOCKET_IO_PORT);
-        // this.socket = io.connect('https://localhost', {secure: true});
-        this.url = `${config.push.serverHost}:` + config.push.serverPort;
-        // this.socket = io(this.url);
-    }
-    listen(eventName) {
-        return new Observable(subscriber => {
-            this.socket.on(eventName, data => {
-                subscriber.next(data);
-            });
-        });
-    }
-    emit(eventName, data) {
-        console.log(`starting CdPushController::emit()`);
-        this.socket.emit(eventName, data);
-    }
-}
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
+  },
+};

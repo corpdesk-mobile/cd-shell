@@ -12,7 +12,7 @@ import {
   EntityMetadata,
   getConnection,
 } from "typeorm";
-import { SessionService } from "../cd-user/services/session.service.js";
+import { SessionService } from "../cd-user/services/session.service";
 import * as Lá from "lodash";
 import {
   AbstractBaseService,
@@ -34,30 +34,24 @@ import {
   type IRespInfo,
   type IServiceInput,
   type ISessResp,
-} from "./i-base.js";
-import { SessionModel } from "../cd-user/models/session.model.js";
-// import { RedisService } from "./redis-service.js";
-import { EntityAdapter } from "../utils/entity-adapter.js";
+} from "./i-base";
+import { SessionModel } from "../cd-user/models/session.model";
+import { EntityAdapter } from "../utils/entity-adapter";
 import config from "../../../config";
 import { v4 as uuidv4 } from "uuid";
-// import { Logger } from "winston";
 import moment from "moment";
-// // import { Logging } from "./winston.log.js";
-import CdLog from '../cd-comm/controllers/cd-logger.controller.js';
-import { DocModel } from "../moduleman/models/doc.model.js";
+import { DocModel } from "../moduleman/models/doc.model";
 import { DocService } from "../moduleman/services/doc.service";
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
+import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { createClient } from "redis";
 import { from, Observable } from "rxjs";
-import { SocketStore } from "../cd-push/models/cd-push-socket.model.js";
-import { QueryBuilderHelper } from "../utils/query-builder-helper.js";
-// import { TypeOrmDatasource } from "./type-orm-connect.js";
-import { toKebabCase, toPascalCase } from "../utils/cd-naming.util.js";
+import { SocketStore } from "../cd-push/models/cd-push-socket.model";
+import { QueryBuilderHelper } from "../utils/query-builder-helper";
+import { toKebabCase, toPascalCase } from "../utils/cd-naming.util";
 import { inspect } from "util";
-import { HttpService } from "./http.service.js";
+import { HttpService } from "./http.service";
 import chalk from "chalk";
-import { CdControllerDescriptor } from "../dev-descriptor/index.js";
-import { FxEventEmitter } from "./fx-event-emitter.js";
+import { FxEventEmitter } from "./fx-event-emitter";
 
 const USER_ANON = 1000;
 const INVALID_REQUEST = "invalid request";

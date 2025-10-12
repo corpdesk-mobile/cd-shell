@@ -1,9 +1,29 @@
-// import { CONFIG_FILE_PATH } from '../../../../config.js';
-// import CdCliVaultController from '../../cd-cli/controllers/cd-cli-vault.controller.js';
-import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-// // import { CdCliProfileController } from '../../cd-cli/controllers/cd-cli-profile.cointroller.js';
-export class SessonController {
-    init(debugLevel) {
-        CdLog.setDebugLevel(debugLevel);
-    }
-}
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
+  },
+};

@@ -1,16 +1,29 @@
-// // import { CdCliProfileController } from '../../cd-cli/controllers/cd-cli-profile.cointroller.js';
-// import CdCliVaultController from '../../cd-cli/controllers/cd-cli-vault.controller.js';
-// import { VAULT_DIRECTORY } from '../../cd-cli/models/cd-cli-vault.model.js';
-import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { SessonController } from './session.controller.js';
-import { fileURLToPath } from 'node:url';
-const __filename = fileURLToPath(import.meta.url);
-export class UserController {
-    // svServer = new HttpService();
-    ctlSession = new SessonController();
-    // ctlCdCliProfile = new CdCliProfileController();
-    // private SESSION_FILE_STORE = join(__dirname, SESSION_FILE_STORE);
-    init(debugLevel) {
-        CdLog.setDebugLevel(debugLevel);
-    }
-}
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
+  },
+};

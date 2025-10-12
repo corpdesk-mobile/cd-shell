@@ -1,5 +1,5 @@
-import { BaseService } from '../../../sys/base/base.service.js';
-import { CdGeoPhysicalTypeService } from '../services/cd-geo-physical-type.service.js';
+import { BaseService } from '../../../sys/base/base.service';
+import { CdGeoPhysicalTypeService } from '../services/cd-geo-physical-type.service';
 export class CdGeoPhysicalTypeController {
     b;
     svCdGeoPhysicalType;

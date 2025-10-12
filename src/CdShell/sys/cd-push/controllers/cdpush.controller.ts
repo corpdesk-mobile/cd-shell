@@ -1,6 +1,6 @@
 // import { io } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import config from '../../../../config.js';
+import config from '../../../../config';
 
 export class CdPushController {
     socket: any;

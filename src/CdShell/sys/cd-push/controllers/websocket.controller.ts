@@ -1,10 +1,6 @@
-import { ObjectLiteral } from 'typeorm';
-import { BaseService } from '../../base/base.service.js';
-import { DocModel } from '../../moduleman/models/doc.model.js';
-import { WebsocketService } from '../services/websocket.service.js';
-import { CdPushSocketModel } from '../models/cd-push-socket.model.js';
-import { GenericService } from '../../base/generic-service.js';
-import { IServiceInput } from '../../base/i-base.js';
+import { BaseService } from '../../base/base.service';
+import { WebsocketService } from '../services/websocket.service';
+import { CdPushSocketModel } from '../models/cd-push-socket.model';
 
 export class WebSocketController {
   b: BaseService<CdPushSocketModel>;

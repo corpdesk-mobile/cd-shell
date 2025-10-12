@@ -1,5 +1,5 @@
-import { BaseService } from '../../base/base.service.js';
-import { WebsocketService } from '../services/websocket.service.js';
+import { BaseService } from '../../base/base.service';
+import { WebsocketService } from '../services/websocket.service';
 export class WebSocketController {
     b;
     svWebSocket = new WebsocketService();

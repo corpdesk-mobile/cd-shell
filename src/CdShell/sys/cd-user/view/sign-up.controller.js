@@ -1,5 +1,29 @@
-export const ctlSignUp = {
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
   __template() {
-    return '<div><h1>Sign Up</h1><script>console.log("SignUp Loaded")</script></div>';
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
   },
 };

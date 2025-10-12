@@ -10,7 +10,7 @@ export const DEFAULT_SESS = {
 // config.cdApiLocal
 export default {
     env: {
-        app: 'cd-shell', // or 'cd-cli', or 'cd-api'
+        app: "cd-shell", // or 'cd-cli', or 'cd-api'
         debug: true,
     },
     // ds: {
@@ -20,19 +20,19 @@ export default {
     // db: mysqlConfig,
     // db2: mysqlConfig2,
     // sqliteConfigFx: sqliteConfigFx,
-    cdApiLocal: 'cd-api-local',
-    cdGitConfig: 'cd-git-config',
+    cdApiLocal: "cd-api-local",
+    cdGitConfig: "cd-git-config",
     profiles: {
         // used only by cd-cli
         cdApiLocal: {
-            endpoint: 'https://localhost:3001/api',
+            endpoint: "https://localhost:3001/api",
         },
     },
     cdSession: DEFAULT_SESS,
     meta: {
-        name: 'cd-cli',
-        version: '1.0.0',
-        description: 'Your description here',
+        name: "cd-cli",
+        version: "1.0.0",
+        description: "Your description here",
         showHelpAfterError: true,
     },
     preferences: {
@@ -41,9 +41,9 @@ export default {
         },
         backUp: [
             {
-                profileName: 'cd-git-config',
-                field: 'details.gitAccess.gitHubToken',
-                useLocal: { state: false, storePath: '~/.cd-cli/' },
+                profileName: "cd-git-config",
+                field: "details.gitAccess.gitHubToken",
+                useLocal: { state: false, storePath: "~/.cd-cli/" },
                 useWeb3: { state: false }, // yet to be defined
                 useCloud: { state: false }, // yet to be defined
             },
@@ -61,7 +61,7 @@ export default {
     cacheTtl: process.env.CACHE_TTL,
     emailUsers: [
         {
-            name: 'ASDAP',
+            name: "ASDAP",
             email: process.env.EMAIL_ADDRESS,
             user: process.env.EMAIL_USERNAME,
             pass: process.env.EMAIL_PASSWORD,
@@ -71,16 +71,44 @@ export default {
             },
         },
     ],
+    viteWorkspacePath: '/home/emp-12/cd-shell/src',
+    // viteHttpsServer: {
+    //   https: {
+    //     key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
+    //     cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
+    //   },
+    //   port: 5173,
+    //   host: "localhost",
+    //   open: true,
+    // },
+    viteHttpServer: {
+        open: true,
+        port: 4173,
+    },
+    // cdApi: {
+    //   endpoint: `https://${process.env.API_HOST_NAME}:${process.env.API_PORT}${process.env.API_ROUTE}`,
+    //   serverHost: process.env.API_HOST_NAME,
+    //   serverPort: process.env.API_PORT,
+    //   entryPoint: process.env.API_ROUTE,
+    //   timeout: 15000,
+    // },
     cdApi: {
-        endpoint: 'https://localhost:3001/api',
+        endpoint: `https://localhost:3001/api`,
         serverHost: 'localhost',
         serverPort: '3001',
         entryPoint: '/api',
         timeout: 15000,
     },
+    cdSio: {
+        endpoint: `https://localhost:3002`,
+        serverHost: `localhost`,
+        serverPort: `3002`,
+        entryPoint: `/socket.io`,
+        timeout: 15000,
+    },
     push: {
         mode: process.env.PUSH_MODE,
-        serverHost: 'https://146.190.165.51',
+        serverHost: "https://146.190.165.51",
         serverPort: process.env.SIO_PORT,
         redisHost: process.env.REDIS_HOST,
         redisPort: process.env.REDIS_PORT,
@@ -94,7 +122,7 @@ export default {
             },
             {
                 port: 6381,
-                host: '146.190.157.42',
+                host: "146.190.157.42",
             },
         ],
         /**
@@ -103,9 +131,9 @@ export default {
         sentinalOptions: {
             sentinels: [
                 { host: process.env.REDIS_HOST, port: Number(process.env.REDIS_PORT) },
-                { host: 'asdap.net', port: Number(process.env.REDIS_PORT) },
+                { host: "asdap.net", port: Number(process.env.REDIS_PORT) },
             ],
-            name: 'master01',
+            name: "master01",
         },
     },
     modules: {
@@ -123,8 +151,8 @@ export function disableModelSyncing() {
 }
 export function mailConfig(username, password) {
     return {
-        mailService: 'cloudmailin',
-        host: 'zohomail.com',
+        mailService: "cloudmailin",
+        host: "zohomail.com",
         port: 587,
         secure: false,
         requireTLS: true,

@@ -1,9 +1,12 @@
+// import { config } from "process";
+import config from "../../../../config";
 import { BaseService, ICdResponse } from "../../base";
 import { CdShellController } from "../../base/cd-shell.controller";
 import { ConsumerModel } from "../../moduleman/models/consumer.model";
 import { UserModel } from "../models/user.model";
 
 export class SignInController extends CdShellController {
+  workspacePath = config.viteWorkspacePath;
   private b = new BaseService();
 
   template(): string {
@@ -16,7 +19,7 @@ export class SignInController extends CdShellController {
         <label for="password">Password</label>
         <input id="password" type="password" cd-model="password" required />
 
-        <button type="submit" class="cd-button">Sign In</button>
+        <button type="submit" class="cd-button">Sign In x</button>
       </form>
     `;
   }

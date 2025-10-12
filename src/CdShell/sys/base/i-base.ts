@@ -751,6 +751,17 @@ export interface ICommConversationSub {
   cdObjId: CdObjId;
 }
 
+export interface CdObjId {
+  appId: string;
+  ngModule: string | null;
+  resourceName: string | null;
+  resourceGuid: string | null;
+  jwtToken: string | null;
+  socket: any;
+  socketId?: string;
+  commTrack: CommTrack | null;
+}
+
 // export interface CommTrack {
 //     initTime: number | null,
 //     relayTime: number | null,
@@ -775,16 +786,7 @@ export interface CommTrack {
   savedTime?: number | string | null;
 }
 
-export interface CdObjId {
-  appId: string;
-  ngModule: string | null;
-  resourceName: string | null;
-  resourceGuid: string | null;
-  jwtToken: string | null;
-  socket: any;
-  socketId?: string;
-  commTrack: CommTrack | null;
-}
+
 
 export enum StorageType {
   CdObjId = 0,
