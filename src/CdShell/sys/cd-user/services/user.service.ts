@@ -8,16 +8,17 @@ import {
   IQuery,
   IServiceInput,
 } from '../../base/i-base.js';
+import { DocModel } from '../../moduleman/models/doc.model.js';
 import { UserModel } from '../models/user.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
 import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
-import { DocModel } from '../../moduleman/models/doc.model.js';
+
 // import { ProfileServiceHelper } from '../../utils/profile-service-helper.js';
 
-export class UserService extends GenericService<UserModel> {
-  // private b = new BaseService<UserModel>();
+export class UserService /* extends GenericService<UserModel> */ {
+  b = new BaseService<UserModel>();
 
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -29,7 +30,7 @@ export class UserService extends GenericService<UserModel> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(UserModel);
+    // super(UserModel);
   }
 
   /**
@@ -162,7 +163,7 @@ export class UserService extends GenericService<UserModel> {
       },
       dSource: 1,
     };
-    return await this.read(req, res, serviceInput);
+    return await this.b.read(req, res, serviceInput);
   }
 
   async existingUserProfile(req, res, cuid) {

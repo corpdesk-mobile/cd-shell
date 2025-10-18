@@ -3,8 +3,11 @@ import config from "../../../../config";
 import { BaseService } from "../../base";
 import { CdShellController } from "../../base/cd-shell.controller";
 export class SignInController extends CdShellController {
-    workspacePath = config.viteWorkspacePath;
-    b = new BaseService();
+    constructor() {
+        super(...arguments);
+        this.workspacePath = config.viteWorkspacePath;
+        this.b = new BaseService();
+    }
     template() {
         return `
       <form id="signInForm" class="cd-sign-in">

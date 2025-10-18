@@ -1,36 +1,17 @@
 import { BaseService } from '../../../sys/base/base.service.js';
-// import { CdService } from '../../../sys/base/cd.service';
 import { SessionService } from '../../../sys/cd-user/services/session.service.js';
 import { CoopStatRefModel } from '../models/coop-stat-ref.model.js';
-// import { CoopStatRefModel, siGet } from '../models/coop-view.model';
 import { CoopTypeModel } from '../models/coop-type.model.js';
-// import { CoopStatRefModel } from '../models/coop-stat-ref-view.model';
-// import { siGet } from '../../../sys/base/base.model';
-// import { CdGeoLocationService } from '../../cd-geo/services/cd-geo-location.service';
-// import { Logging } from '../../../sys/base/winston.log.js';
-// import { siGet } from '../models/coop-stat-view.model';
 export class CoopStatRefService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    sessDataExt;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['coopStatRefName', 'coopStatRefDescription'],
-        noDuplicate: ['coopStatRefName'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['coopStatRefName', 'coopStatRefDescription'],
+            noDuplicate: ['coopStatRefName'],
+        };
         // super();
         this.b = new BaseService();
         // this.logger = new Logging();

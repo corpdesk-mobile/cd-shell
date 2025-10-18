@@ -1,8 +1,6 @@
 import { BaseService } from '../../../sys/base/base.service.js';
 import { CdGeoLocationService } from '../services/cd-geo-location.service.js';
 export class CdGeoLocationController {
-    b;
-    svCdGeoLocation;
     constructor() {
         this.b = new BaseService();
         this.svCdGeoLocation = new CdGeoLocationService();

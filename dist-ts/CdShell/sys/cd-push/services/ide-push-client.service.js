@@ -111,8 +111,8 @@
 //           pushed: false,
 //           delivered: false,
 //           completed: false,
-//           relayTime: 0, 
-//           pushTime: 0, 
+//           relayTime: 0,
+//           pushTime: 0,
 //           deliveryTime: 0
 //         },
 //       },
@@ -131,8 +131,8 @@
 //           pushed: false,
 //           delivered: false,
 //           completed: false,
-//           relayTime: 0, 
-//           pushTime: 0, 
+//           relayTime: 0,
+//           pushTime: 0,
 //           deliveryTime: 0
 //         },
 //         isNotification: false,
@@ -177,30 +177,31 @@
  * POC: IDE-to-browser synchronization via cd-push
  * -------------------------------------------------------------
  */
-import { io } from 'socket.io-client';
-import chokidar from 'chokidar';
-import { v4 as uuidv4 } from 'uuid';
-import CdLog from '../../cd-comm/controllers/cd-logger.controller';
+import { io } from "socket.io-client";
+import chokidar from "chokidar";
+import { v4 as uuidv4 } from "uuid";
+import CdLog from "../../cd-comm/controllers/cd-logger.controller";
+import config from "../../../../config";
+import { SioClientService } from "./sio-client.service";
+// import { config } from 'process';
 // IMPORTANT: Update this URL to your existing Socket.IO server address
-const SOCKET_SERVER_URL = 'http://localhost:3000';
-const SOURCE_DIR = './src';
+const SOCKET_SERVER_URL = "http://localhost:3000";
+const SOURCE_DIR = "./src";
 const socket = io(SOCKET_SERVER_URL);
 let watcher = chokidar.watch(SOURCE_DIR, {
     ignored: /(node_modules|dist|temp)/, // Ignore common folders
-    persistent: true
+    persistent: true,
 });
 export class IdePushClientService {
-    apiBaseUrl;
-    workspacePath;
-    appId;
-    socket = null;
-    connected = false;
-    namespace = '/';
-    constructor(apiBaseUrl, workspacePath, appId = 'test-app-guid') {
-        this.apiBaseUrl = apiBaseUrl;
-        this.workspacePath = workspacePath;
-        this.appId = appId;
-        CdLog.info('Initializing IdePushClientService...');
+    constructor() {
+        this.socket = null;
+        this.svSio = new SioClientService();
+        this.connected = false;
+        this.namespace = "/";
+        this.apiBaseUrl = config.cdSio.endpoint;
+        this.workspacePath = config.viteWorkspacePath;
+        this.appId = "";
+        CdLog.info("Initializing IdePushClientService...");
         this.initialize();
     }
     /**
@@ -216,28 +217,25 @@ export class IdePushClientService {
      */
     async connect() {
         if (this.connected && this.socket) {
-            CdLog.debug('Socket already connected');
+            CdLog.debug("Socket already connected");
             return;
         }
         const endpoint = `${this.apiBaseUrl}${this.namespace}`;
         CdLog.info(`Attempting to connect to ${endpoint}...`);
         this.socket = io(endpoint, {
-            transports: ['websocket'],
+            path: "/socket.io",
+            transports: ["websocket"],
             reconnectionAttempts: 5,
             reconnectionDelay: 1500,
-            auth: {
-                appId: this.appId,
-                clientType: 'IDE',
-            },
         });
-        this.socket.on('connect', () => {
+        this.socket.on("connect", () => {
             this.connected = true;
             CdLog.success(`Connected successfully as ${this.socket?.id}`);
         });
-        this.socket.on('connect_error', (err) => {
+        this.socket.on("connect_error", (err) => {
             CdLog.error(`Connection failed: ${err.message}`);
         });
-        this.socket.on('disconnect', (reason) => {
+        this.socket.on("disconnect", (reason) => {
             this.connected = false;
             CdLog.warning(`Disconnected: ${reason}`);
         });
@@ -247,27 +245,27 @@ export class IdePushClientService {
      */
     setupListeners() {
         if (!this.socket) {
-            CdLog.error('Cannot setup listeners: socket is null');
+            CdLog.error("Cannot setup listeners: socket is null");
             return;
         }
-        this.socket.on('ide-push-ack', (ack) => {
-            CdLog.info('Received ACK from server:', ack);
+        this.socket.on("ide-push-ack", (ack) => {
+            CdLog.info("Received ACK from server:", ack);
         });
-        this.socket.on('ide-push-notify', (payload) => {
-            CdLog.info('Received IDE push notification:', payload);
+        this.socket.on("ide-push-notify", (payload) => {
+            CdLog.info("Received IDE push notification:", payload);
         });
-        this.socket.on('ide-push-command', (cmd) => {
+        this.socket.on("ide-push-command", (cmd) => {
             CdLog.info(`Received command: ${cmd.action}`, cmd);
             // TODO: Implement live-reload or remote actions here
         });
-        CdLog.info('Socket listeners initialized successfully');
+        CdLog.info("Socket listeners initialized successfully");
     }
     /**
      * Initialize file watcher for save events
      */
     initializeFileWatcher() {
         if (!this.workspacePath) {
-            CdLog.error('Workspace path not provided for file watcher');
+            CdLog.error("Workspace path not provided for file watcher");
             return;
         }
         CdLog.info(`Watching workspace for changes: ${this.workspacePath}`);
@@ -276,11 +274,11 @@ export class IdePushClientService {
             persistent: true,
             ignoreInitial: true,
         });
-        watcher.on('change', (filePath) => {
+        watcher.on("change", (filePath) => {
             CdLog.info(`Detected file change: ${filePath}`);
             this.sendSaveEvent(filePath);
         });
-        watcher.on('error', (error) => {
+        watcher.on("error", (error) => {
             CdLog.error(`Watcher error: ${error}`);
         });
     }
@@ -289,7 +287,7 @@ export class IdePushClientService {
      */
     sendSaveEvent(filePath) {
         if (!this.socket || !this.connected) {
-            CdLog.error('Socket not connected. Call connect() first.');
+            CdLog.error("Socket not connected. Call connect() first.");
             return;
         }
         const guid = uuidv4();
@@ -298,10 +296,10 @@ export class IdePushClientService {
             subTypeId: 1,
             cdObjId: {
                 appId: this.appId,
-                ngModule: 'IdePushClientService',
-                resourceName: 'IDE',
+                ngModule: "IdePushClientService",
+                resourceName: "IDE",
                 resourceGuid: guid,
-                jwtToken: '',
+                jwtToken: "",
                 socket: this.socket,
                 socketId: this.socket.id,
                 commTrack: {
@@ -312,7 +310,7 @@ export class IdePushClientService {
                     completed: false,
                     relayTime: 0,
                     pushTime: 0,
-                    deliveryTime: 0
+                    deliveryTime: 0,
                 },
             },
         };
@@ -320,9 +318,9 @@ export class IdePushClientService {
             pushData: {
                 appId: this.appId,
                 pushGuid: guid,
-                triggerEvent: 'ide-save',
-                emittEvent: 'ide-push-save',
-                token: '',
+                triggerEvent: "ide-save",
+                emittEvent: "ide-push-save",
+                token: "",
                 pushRecepients: [sender],
                 commTrack: {
                     initTime: Number(new Date()),
@@ -332,7 +330,7 @@ export class IdePushClientService {
                     completed: false,
                     relayTime: 0,
                     pushTime: 0,
-                    deliveryTime: 0
+                    deliveryTime: 0,
                 },
                 isNotification: false,
                 isAppInit: false,
@@ -341,8 +339,22 @@ export class IdePushClientService {
             resp: null,
         };
         CdLog.info(`Emitting save event for file: ${filePath}`);
-        this.socket.emit('ide-push-save', payload, (ack) => {
-            CdLog.success('Server acknowledged IDE push', ack);
+        this.socket.emit("ide-push-save", payload, (ack) => {
+            CdLog.success("Server acknowledged IDE push", ack);
+        });
+    }
+    sendSioMessage(envl) {
+        // this.logger.info('cd-user/LoginComponent::sendSioMessage/envl:', envl);
+        this.svSio.sendMessageV2(envl.pushData.triggerEvent, envl).subscribe({
+            next: (response) => {
+                console.log('Message sent successfully:', response);
+            },
+            error: (error) => {
+                console.error('Error sending message:', error);
+            },
+            complete: () => {
+                console.log('Message sending complete');
+            }
         });
     }
     /**
@@ -351,12 +363,12 @@ export class IdePushClientService {
     disconnect() {
         if (watcher) {
             watcher.close();
-            CdLog.info('File watcher stopped');
+            CdLog.info("File watcher stopped");
         }
         if (this.socket) {
             this.socket.disconnect();
             this.connected = false;
-            CdLog.info('Disconnected from cd-api');
+            CdLog.info("Disconnected from cd-api");
         }
     }
 }
@@ -366,11 +378,11 @@ export class IdePushClientService {
  * -------------------------------------------------------------
  */
 (async () => {
-    const apiUrl = 'http://localhost:3000'; // cd-api endpoint
-    const workspaceDir = '/path/to/your/project/src'; // 👈 Replace with actual workspace path
-    const client = new IdePushClientService(apiUrl, workspaceDir);
+    // const apiUrl = config.cdSio.endpoint; // cd-api endpoint
+    // const workspaceDir = config.viteWorkspacePath; // 👈 Replace with actual workspace path
+    const client = new IdePushClientService();
     // Optional: test manual save trigger
     setTimeout(() => {
-        client.sendSaveEvent('/workspace/sample.ts');
+        client.sendSaveEvent("/workspace/sample.ts");
     }, 5000);
 })();

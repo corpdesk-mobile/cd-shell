@@ -7,26 +7,16 @@ import { CdGeoTypeModel } from '../models/cd-geo-type.model.js';
 // import { siGet } from '../../../sys/base/base.model';
 // import { Logging } from '../../../sys/base/winston.log.js';
 export class CdGeoTypeService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName = 'CdGeoTypeModel';
-    sessModel;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['cd_geo_proximity_name'],
-        noDuplicate: ['cd_geo_proximity_name'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        this.modelName = 'CdGeoTypeModel';
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['cd_geo_proximity_name'],
+            noDuplicate: ['cd_geo_proximity_name'],
+        };
         // super();
         this.b = new BaseService();
         // this.logger = new Logging();

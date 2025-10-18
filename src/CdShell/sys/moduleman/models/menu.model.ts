@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from "../../../sys/utils/orm-shim";
 import { v4 as uuidv4 } from 'uuid';
 import { validateOrReject } from 'class-validator';
+import { MenuViewModel } from "./menu-view.model";
 
 @Entity({
   name: 'menu',
@@ -176,4 +178,15 @@ export interface IMenuAdapter {
   name: string;
   initialize(containerId: string, themeName: string): void;
   destroy?(): void;
+}
+
+export interface ISelectedMenu {
+  moduleMenuData?: MenuViewModel[];
+  selectedItem: MenuViewModel;
+  selectedId?: number;
+}
+
+export interface IMenuRelations {
+  menuParent: MenuViewModel;
+  menuChildren: MenuViewModel[];
 }

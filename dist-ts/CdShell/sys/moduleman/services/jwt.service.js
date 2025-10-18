@@ -2,20 +2,21 @@
 // import { JwtModel } from "../entities/JwtModel";
 import { CD_FX_FAIL } from '../../base/i-base.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 import { JwtModel } from '../models/jwt.model.js';
 export class JwtService extends GenericService {
-    // private b = new BaseService<JwtModel>();
-    // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['jwtName', 'jwtTypeGuid', 'jwtGuid'],
-        noDuplicate: ['jwtName', 'jwtTypeGuid'],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(JwtModel);
+        super();
+        this.b = new BaseService();
+        // defaultDs = config.ds.sqlite;
+        // Define validation rules
+        this.cRules = {
+            required: ['jwtName', 'jwtTypeGuid', 'jwtGuid'],
+            noDuplicate: ['jwtName', 'jwtTypeGuid'],
+        };
     }
     /**
      * Validate input before processing create

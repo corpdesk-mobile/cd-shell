@@ -6,19 +6,19 @@ import dayjs from 'dayjs';
 // let chalk: any;
 class CdLog {
     // Default debug level (0 means no logs, 4 means all logs will be displayed)
-    static debugLevel = 0;
+    static { this.debugLevel = 0; }
     constructor() {
         this.init();
     }
     init() { }
     // Define log levels
-    static LOG_LEVELS = {
+    static { this.LOG_LEVELS = {
         NONE: 0,
         ERROR: 1,
         WARNING: 2,
         INFO: 3,
         DEBUG: 4,
-    };
+    }; }
     // Method to format the log message with timestamp
     static formatMessage(level, message) {
         const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');

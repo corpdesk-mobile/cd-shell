@@ -191,11 +191,6 @@ export var ModuleScope;
 })(ModuleScope || (ModuleScope = {}));
 /** Fields managed by backend that must not be supplied by client */
 export const MANAGED_FIELDS = ['Guid', 'docId', 'Enabled'];
-export var StorageType;
-(function (StorageType) {
-    StorageType[StorageType["CdObjId"] = 0] = "CdObjId";
-    StorageType[StorageType["IAppState"] = 1] = "IAppState";
-})(StorageType || (StorageType = {}));
 export const DEFAULT_COMM_TRACK = {
     initTime: null,
     relayTime: null,

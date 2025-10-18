@@ -1,7 +1,9 @@
 // import { ValidationRules } from "./i-base";
 export class ValidationRulesBuilder {
-    rules = {};
-    existenceMap = {};
+    constructor() {
+        this.rules = {};
+        this.existenceMap = {};
+    }
     require(...fields) {
         this.rules.required = [...(this.rules.required || []), ...fields];
         return this;

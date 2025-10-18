@@ -2,9 +2,6 @@ import { BaseService } from '../../../sys/base/base.service.js';
 import { CoopTypeService } from '../services/coop-type.service.js';
 import { CoopStatPublicFilterService } from '../services/coop-stat-public-filter.service.js';
 export class CoopStatPublicFilterController {
-    b;
-    svCoopStatPublicFilter;
-    svCoopType;
     constructor() {
         this.b = new BaseService();
         this.svCoopStatPublicFilter = new CoopStatPublicFilterService();

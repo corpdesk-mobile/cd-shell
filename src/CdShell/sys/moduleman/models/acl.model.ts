@@ -1,6 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from "../../../sys/utils/orm-shim";
 import { v4 as uuidv4 } from 'uuid';
 import { validateOrReject } from 'class-validator';
+import { AclModuleViewModel } from "./acl-module-view.model";
+import { Observable } from "rxjs";
 
 @Entity({
   name: 'acl',
@@ -127,4 +130,9 @@ export class AclModel {
   // async validate() {
   //     await validateOrReject(this);
   // }
+}
+
+export interface IAllowedModules {
+  modules$: Observable<AclModuleViewModel[]>;
+  modulesCount: number;
 }

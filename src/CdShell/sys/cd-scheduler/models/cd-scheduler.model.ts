@@ -1,7 +1,4 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
     Generated,
     BeforeInsert,
     BeforeUpdate,
@@ -9,6 +6,7 @@ import {
     Not,
     UpdateDateColumn
 } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from "../../../sys/utils/orm-shim";
 import { v4 as uuidv4 } from 'uuid';
 import { BaseDescriptor, BashScriptDescriptor, EnvironmentDescriptor, MigrationDescriptor, TestingFrameworkDescriptor } from '../../dev-descriptor/index.js';
 import { CdFxReturn, CdFxStateLevel, FxStateSemantics, ICdRequest } from '../../base/i-base.js';

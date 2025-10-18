@@ -1,8 +1,6 @@
 import { Like } from 'typeorm';
 import { EntityAdapter } from './entity-adapter.js';
 export class QueryBuilderHelper {
-    repository;
-    entityAdapter;
     constructor(repository) {
         this.repository = repository;
         this.entityAdapter = new EntityAdapter();

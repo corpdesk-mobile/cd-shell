@@ -1,6 +1,5 @@
 import { getConnection } from 'typeorm';
 export class EntityAdapter {
-    mappings;
     constructor() {
         this.mappings = {};
     }

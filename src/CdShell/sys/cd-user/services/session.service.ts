@@ -7,14 +7,13 @@ import {
   CdFxReturn,
   IQuery,
   IServiceInput,
-  ISessionDataExt,
   ISessResp,
 } from '../../base/i-base.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
 import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
-import { SessionModel } from '../models/session.model.js';
+import { ISessionDataExt, SessionModel } from '../models/session.model.js';
 // // import { Logging } from '../../base/winston.log.js';
 // import { RedisService } from '../../base/redis-service.js';
 import { UserModel } from '../models/user.model.js';
@@ -24,7 +23,7 @@ import { UserService } from './user.service.js';
 import { ConsumerService } from '../../moduleman/services/consumer.service.js';
 
 export class SessionService extends GenericService<SessionModel> {
-  // private b = new BaseService<SessionModel>();
+  private b = new BaseService<SessionModel>();
 
   // logger: Logging = new Logging();
   // private redisService: RedisService;
@@ -60,7 +59,7 @@ export class SessionService extends GenericService<SessionModel> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(SessionModel);
+    super();
     // this.redisService = new RedisService();
   }
 

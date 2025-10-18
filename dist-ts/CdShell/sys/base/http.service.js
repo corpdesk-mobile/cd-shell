@@ -106,11 +106,9 @@ import axios from "axios";
 import { inspect } from "util";
 import config from "../../../config.js";
 export class HttpService {
-    cfg;
-    instances = new Map();
-    cdApiAxiosConfig;
     constructor(cfg = config) {
         this.cfg = cfg;
+        this.instances = new Map();
     }
     get env() {
         return this.cfg.env || { app: "cd-shell", debug: false };

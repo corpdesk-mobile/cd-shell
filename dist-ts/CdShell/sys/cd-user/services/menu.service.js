@@ -1,14 +1,8 @@
 import { CacheContainer } from 'node-ts-cache';
 import { MemoryStorage } from 'node-ts-cache-storage-memory';
 import { map, mergeMap, of, bufferCount, tap, forkJoin, switchMap, defaultIfEmpty, } from 'rxjs';
-// import { SessionService } from '../../cd-user/services/session.service.js';
 import { AclService } from '../../moduleman/services/acl.service.js';
-// import { GroupMemberService } from '../../cd-user/services/group-member.service.js';
 import { BaseService } from '../../base/base.service.js';
-// import { MenuModel } from '../models/menu.model';
-// import { CdObjService } from './cd-obj.service';
-// import { CdObjModel } from '../models/cd-obj.model';
-// import { Logging } from '../../base/winston.log.js';
 import { MenuModel } from '../../moduleman/models/menu.model.js';
 import { CdObjService } from '../../moduleman/services/cd-obj.service.js';
 import { CdObjModel } from '../../moduleman/models/cd-obj.model.js';
@@ -17,23 +11,16 @@ import { GroupMemberService } from './group-member.service.js';
 import { SessionService } from './session.service.js';
 const menuCache = new CacheContainer(new MemoryStorage());
 export class MenuService {
-    // logger: Logging;
-    b;
-    srvGroup;
-    srvGroupMember;
-    srvAcl;
-    cuid;
-    userGroupsArr = [];
-    menuArrDb = [];
-    serviceModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['menuName', 'menuParentId'],
-        noDuplicate: ['menuName', 'menuParentId'],
-    };
     constructor() {
+        this.userGroupsArr = [];
+        this.menuArrDb = [];
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['menuName', 'menuParentId'],
+            noDuplicate: ['menuName', 'menuParentId'],
+        };
         this.b = new BaseService();
         // this.logger = new Logging();
         this.srvGroupMember = new GroupMemberService();

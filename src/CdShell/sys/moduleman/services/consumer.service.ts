@@ -19,7 +19,7 @@ import { CompanyModel } from '../models/company.model.js';
 import { Observable } from 'rxjs';
 
 export class ConsumerService extends GenericService<ObjectLiteral> {
-  // b = new BaseService<ConsumerModel>();
+  b = new BaseService<ConsumerModel>();
   // logger: Logger;
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -31,7 +31,7 @@ export class ConsumerService extends GenericService<ObjectLiteral> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(ConsumerModel);
+    super();
     // this.logger = new Logger();
   }
 

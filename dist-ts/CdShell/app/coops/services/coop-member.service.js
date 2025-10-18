@@ -5,23 +5,15 @@ import { SessionService } from '../../../sys/cd-user/services/session.service.js
 import { CoopMemberModel, } from '../models/coop-member.model.js';
 import { CoopModel } from '../models/coop.model.js';
 import { CoopMemberTypeModel } from '../models/coop-member-type.model.js';
-// import { Logging } from '../../../sys/base/winston.log.js';
 export class CoopMemberService {
-    // logger: Logging;
-    b;
-    cdToken;
-    serviceModel;
-    srvSess;
-    validationCreateParams;
-    mergedProfile;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['userId', 'coopId', 'coopMemberTypeId'],
-        noDuplicate: ['userId', 'coopId', 'coopMemberTypeId'],
-    };
     constructor() {
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['userId', 'coopId', 'coopMemberTypeId'],
+            noDuplicate: ['userId', 'coopId', 'coopMemberTypeId'],
+        };
         // this.logger = new Logging();
         this.b = new BaseService();
         // this.serviceModel = new CoopMemberModel();

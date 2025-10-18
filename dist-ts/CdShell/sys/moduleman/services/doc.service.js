@@ -7,17 +7,17 @@ import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 import { DocTypeModel } from '../models/doc-type.model.js';
 export class DocService extends GenericService {
-    //   private b = new BaseService<DocModel>();
-    // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['docName', 'docFrom', 'docTypeId', 'companyId'],
-        noDuplicate: [],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(DocModel);
+        super();
+        this.b = new BaseService();
+        // defaultDs = config.ds.sqlite;
+        // Define validation rules
+        this.cRules = {
+            required: ['docName', 'docFrom', 'docTypeId', 'companyId'],
+            noDuplicate: [],
+        };
     }
     /**
      * Validate input before processing create

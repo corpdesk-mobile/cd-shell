@@ -1,22 +1,23 @@
-// import { SqliteStore } from "../store/SqliteStore";
-// import { CompanyModel } from "../entities/CompanyModel";
-import { CD_FX_FAIL } from '../../base/i-base.js';
-import { CompanyModel } from '../models/company.model.js';
+// import { ObjectLiteral } from 'typeorm';
+// import { CD_FX_FAIL, CdFxReturn, IQuery } from '../../base/i-base.js';
+import { GenericService } from '../../base';
+import { BaseService } from '../../base/base.service.js';
+// Concrete imports
+import { CompanyModel } from '../models/company.model';
+import { CD_FX_FAIL } from '../../base/i-base';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { GenericService } from '../../base/generic-service.js';
 export class CompanyService extends GenericService {
-    // b = new BaseService<CompanyModel>();
-    serviceModel = CompanyModel;
-    // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['companyName', 'companyTypeGuid', 'companyGuid'],
-        noDuplicate: ['companyName', 'companyTypeGuid'],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(CompanyModel);
+        super();
+        this.b = new BaseService();
+        this.serviceModel = CompanyModel;
+        // Define validation rules
+        this.cRules = {
+            required: ['companyName', 'companyTypeGuid', 'companyGuid'],
+            noDuplicate: ['companyName', 'companyTypeGuid'],
+        };
     }
     /**
      * Validate input before processing create

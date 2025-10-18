@@ -7,26 +7,15 @@ import { CdGeoPoliticalTypeModel } from '../models/cd-geo-political-type.model.j
 // import { siGet } from '../../../sys/base/base.model';
 // import { Logging } from '../../../sys/base/winston.log.js';
 export class CdGeoPoliticalTypeService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['cd_geo_physical_type_name'],
-        noDuplicate: ['cd-geo-political-typeName'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['cd_geo_physical_type_name'],
+            noDuplicate: ['cd-geo-political-typeName'],
+        };
         // super()
         this.b = new BaseService();
         // this.logger = new Logging();

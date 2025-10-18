@@ -4,148 +4,151 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 import { ViewEntity, ViewColumn } from 'typeorm';
 let CoopMemberViewModel = class CoopMemberViewModel {
-    coopMemberId;
-    coopMemberGuid;
-    coopMemberName;
-    coopMemberEnabled;
-    coopMemberTypeId;
-    coopMemberTypeGuid;
-    coopActive;
-    coopMemberProfile;
-    userId;
-    userGuid;
-    userName;
-    email;
-    mobile;
-    gender;
-    birthDate;
-    postalAddr;
-    fName;
-    mName;
-    lName;
-    nationalId;
-    passportId;
-    userEnabled;
-    zipCode;
-    activationKey;
-    userTypeId;
-    coopId;
-    coopGuid;
-    coopName;
-    companyId;
-    companyName;
-    companyTypeId;
-    cdGeoLocationId;
-    cdGeoLocationName;
-    cdGeoPoliticalTypeName;
-    cdGeoPoliticalParentId;
 };
 __decorate([
-    ViewColumn({ name: 'coop_member_id' })
+    ViewColumn({ name: 'coop_member_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "coopMemberId", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_member_guid' })
+    ViewColumn({ name: 'coop_member_guid' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "coopMemberGuid", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_member_name' })
+    ViewColumn({ name: 'coop_member_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "coopMemberName", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_member_enabled' })
+    ViewColumn({ name: 'coop_member_enabled' }),
+    __metadata("design:type", Boolean)
 ], CoopMemberViewModel.prototype, "coopMemberEnabled", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_member_type_id' })
+    ViewColumn({ name: 'coop_member_type_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "coopMemberTypeId", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_member_type_guid' })
+    ViewColumn({ name: 'coop_member_type_guid' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "coopMemberTypeGuid", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_active' })
+    ViewColumn({ name: 'coop_active' }),
+    __metadata("design:type", Boolean)
 ], CoopMemberViewModel.prototype, "coopActive", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_member_profile' })
+    ViewColumn({ name: 'coop_member_profile' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "coopMemberProfile", void 0);
 __decorate([
-    ViewColumn({ name: 'user_id' })
+    ViewColumn({ name: 'user_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "userId", void 0);
 __decorate([
-    ViewColumn({ name: 'user_guid' })
+    ViewColumn({ name: 'user_guid' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "userGuid", void 0);
 __decorate([
-    ViewColumn({ name: 'user_name' })
+    ViewColumn({ name: 'user_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "userName", void 0);
 __decorate([
-    ViewColumn({ name: 'email' })
+    ViewColumn({ name: 'email' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "email", void 0);
 __decorate([
-    ViewColumn({ name: 'mobile' })
+    ViewColumn({ name: 'mobile' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "mobile", void 0);
 __decorate([
-    ViewColumn({ name: 'gender' })
+    ViewColumn({ name: 'gender' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "gender", void 0);
 __decorate([
-    ViewColumn({ name: 'birth_date' })
+    ViewColumn({ name: 'birth_date' }),
+    __metadata("design:type", Date)
 ], CoopMemberViewModel.prototype, "birthDate", void 0);
 __decorate([
-    ViewColumn({ name: 'postal_addr' })
+    ViewColumn({ name: 'postal_addr' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "postalAddr", void 0);
 __decorate([
-    ViewColumn({ name: 'f_name' })
+    ViewColumn({ name: 'f_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "fName", void 0);
 __decorate([
-    ViewColumn({ name: 'm_name' })
+    ViewColumn({ name: 'm_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "mName", void 0);
 __decorate([
-    ViewColumn({ name: 'l_name' })
+    ViewColumn({ name: 'l_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "lName", void 0);
 __decorate([
-    ViewColumn({ name: 'national_id' })
+    ViewColumn({ name: 'national_id' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "nationalId", void 0);
 __decorate([
-    ViewColumn({ name: 'passport_id' })
+    ViewColumn({ name: 'passport_id' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "passportId", void 0);
 __decorate([
-    ViewColumn({ name: 'user_enabled' })
+    ViewColumn({ name: 'user_enabled' }),
+    __metadata("design:type", Boolean)
 ], CoopMemberViewModel.prototype, "userEnabled", void 0);
 __decorate([
-    ViewColumn({ name: 'zip_code' })
+    ViewColumn({ name: 'zip_code' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "zipCode", void 0);
 __decorate([
-    ViewColumn({ name: 'activation_key' })
+    ViewColumn({ name: 'activation_key' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "activationKey", void 0);
 __decorate([
-    ViewColumn({ name: 'user_type_id' })
+    ViewColumn({ name: 'user_type_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "userTypeId", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_id' })
+    ViewColumn({ name: 'coop_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "coopId", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_guid' })
+    ViewColumn({ name: 'coop_guid' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "coopGuid", void 0);
 __decorate([
-    ViewColumn({ name: 'coop_name' })
+    ViewColumn({ name: 'coop_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "coopName", void 0);
 __decorate([
-    ViewColumn({ name: 'company_id' })
+    ViewColumn({ name: 'company_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "companyId", void 0);
 __decorate([
-    ViewColumn({ name: 'company_name' })
+    ViewColumn({ name: 'company_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "companyName", void 0);
 __decorate([
-    ViewColumn({ name: 'company_type_id' })
+    ViewColumn({ name: 'company_type_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "companyTypeId", void 0);
 __decorate([
-    ViewColumn({ name: 'cd_geo_location_id' })
+    ViewColumn({ name: 'cd_geo_location_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "cdGeoLocationId", void 0);
 __decorate([
-    ViewColumn({ name: 'cd_geo_location_name' })
+    ViewColumn({ name: 'cd_geo_location_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "cdGeoLocationName", void 0);
 __decorate([
-    ViewColumn({ name: 'cd_geo_political_type_name' })
+    ViewColumn({ name: 'cd_geo_political_type_name' }),
+    __metadata("design:type", String)
 ], CoopMemberViewModel.prototype, "cdGeoPoliticalTypeName", void 0);
 __decorate([
-    ViewColumn({ name: 'cd_geo_political_parent_id' })
+    ViewColumn({ name: 'cd_geo_political_parent_id' }),
+    __metadata("design:type", Number)
 ], CoopMemberViewModel.prototype, "cdGeoPoliticalParentId", void 0);
 CoopMemberViewModel = __decorate([
     ViewEntity({

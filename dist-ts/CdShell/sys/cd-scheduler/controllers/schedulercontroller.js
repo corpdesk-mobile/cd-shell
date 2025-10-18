@@ -1,7 +1,6 @@
 // import { BaseService } from '../../base/base.service';
 import { BaseService } from "../../base/base.service.js";
 export class SchedulerController {
-    b;
     constructor() {
         this.b = new BaseService();
     }

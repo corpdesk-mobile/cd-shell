@@ -1,6 +1,7 @@
 // import { SqliteStore } from "../store/SqliteStore";
 // import { SessionModel } from "../entities/SessionModel";
 import { CD_FX_FAIL, } from '../../base/i-base.js';
+import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 import { SessionModel } from '../models/session.model.js';
@@ -10,38 +11,37 @@ import { UserModel } from '../models/user.model.js';
 import { UserService } from './user.service.js';
 import { ConsumerService } from '../../moduleman/services/consumer.service.js';
 export class SessionService extends GenericService {
-    // private b = new BaseService<SessionModel>();
-    // logger: Logging = new Logging();
-    // private redisService: RedisService;
-    sessModel = new SessionModel();
-    sessIsSet = false;
-    sessData = {
-        cuid: 1000,
-        cdToken: '',
-        consumerGuid: '',
-        deviceNetId: null,
-        userData: null,
-    };
-    sessResp = {
-        cd_token: '',
-        jwt: null,
-        ttl: 600,
-    };
-    currentUserData = new UserModel();
-    currentUserProfile;
-    currentSessData = [];
-    currentConsumerData = [];
-    currentCompanyData = [];
-    // // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['sessionName', 'sessionTypeGuid', 'sessionGuid'],
-        noDuplicate: ['sessionName', 'sessionTypeGuid'],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(SessionModel);
+        super();
+        this.b = new BaseService();
+        // logger: Logging = new Logging();
+        // private redisService: RedisService;
+        this.sessModel = new SessionModel();
+        this.sessIsSet = false;
+        this.sessData = {
+            cuid: 1000,
+            cdToken: '',
+            consumerGuid: '',
+            deviceNetId: null,
+            userData: null,
+        };
+        this.sessResp = {
+            cd_token: '',
+            jwt: null,
+            ttl: 600,
+        };
+        this.currentUserData = new UserModel();
+        this.currentSessData = [];
+        this.currentConsumerData = [];
+        this.currentCompanyData = [];
+        // // defaultDs = config.ds.sqlite;
+        // Define validation rules
+        this.cRules = {
+            required: ['sessionName', 'sessionTypeGuid', 'sessionGuid'],
+            noDuplicate: ['sessionName', 'sessionTypeGuid'],
+        };
         // this.redisService = new RedisService();
     }
     /**

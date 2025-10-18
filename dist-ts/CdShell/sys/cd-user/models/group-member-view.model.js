@@ -4,110 +4,113 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 import { ViewEntity, ViewColumn } from 'typeorm';
 let GroupMemberViewModel = class GroupMemberViewModel {
-    groupId;
-    groupGuid;
-    groupName;
-    memberName;
-    groupDescription;
-    groupOwnerId;
-    docId;
-    groupTypeId;
-    moduleGuid;
-    companyId;
-    groupIsPublic;
-    groupEnabled;
-    groupMemberId;
-    memberGuid;
-    groupGuidParent;
-    cdObjTypeId;
-    userIdMember;
 };
 __decorate([
     ViewColumn({
         name: 'group_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "groupId", void 0);
 __decorate([
     ViewColumn({
         name: 'group_guid',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "groupGuid", void 0);
 __decorate([
     ViewColumn({
         name: 'group_name',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "groupName", void 0);
 __decorate([
     ViewColumn({
         name: 'member_name',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "memberName", void 0);
 __decorate([
     ViewColumn({
         name: 'group_description',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "groupDescription", void 0);
 __decorate([
     ViewColumn({
         name: 'group_owner_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "groupOwnerId", void 0);
 __decorate([
     ViewColumn({
         name: 'doc_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "docId", void 0);
 __decorate([
     ViewColumn({
         name: 'group_type_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "groupTypeId", void 0);
 __decorate([
     ViewColumn({
         name: 'module_guid',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "moduleGuid", void 0);
 __decorate([
     ViewColumn({
         name: 'company_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "companyId", void 0);
 __decorate([
     ViewColumn({
         name: 'group_is_public',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "groupIsPublic", void 0);
 __decorate([
     ViewColumn({
         name: 'group_enabled',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "groupEnabled", void 0);
 __decorate([
     ViewColumn({
         name: 'group_member_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "groupMemberId", void 0);
 __decorate([
     ViewColumn({
         name: 'member_guid',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "memberGuid", void 0);
 __decorate([
     ViewColumn({
         name: 'group_guid_parent',
-    })
+    }),
+    __metadata("design:type", String)
 ], GroupMemberViewModel.prototype, "groupGuidParent", void 0);
 __decorate([
     ViewColumn({
         name: 'cd_obj_type_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "cdObjTypeId", void 0);
 __decorate([
     ViewColumn({
         name: 'user_id_member',
-    })
+    }),
+    __metadata("design:type", Number)
 ], GroupMemberViewModel.prototype, "userIdMember", void 0);
 GroupMemberViewModel = __decorate([
     ViewEntity({

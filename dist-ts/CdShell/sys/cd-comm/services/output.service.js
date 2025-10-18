@@ -3,9 +3,8 @@ import { SessionService } from '../../cd-user/services/session.service.js';
 import { CdPdf } from '../../utils/pdf.js';
 import { PdfModel } from '../models/pdf.model.js';
 export class OutputService {
-    b;
-    serviceModel = new PdfModel();
     constructor() {
+        this.serviceModel = new PdfModel();
         this.b = new BaseService();
     }
     async generatePdf(req, res) {

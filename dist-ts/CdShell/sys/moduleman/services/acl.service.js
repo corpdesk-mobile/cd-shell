@@ -5,41 +5,26 @@ import { ConsumerService } from './consumer.service.js';
 import { AclUserViewModel } from '../models/acluserview.model.js';
 import { AclModuleViewModel } from '../models/acl-module-view.model.js';
 import { AclModuleMemberViewModel } from '../models/acl-module-member-view.model.js';
-// import { Logging } from '../../base/winston.log.js';
 /**
  * AclService is used by Corpdesk api to manage privilege access to modules.
  * Modules use MenuModel as handles to its facilities. So menus are also subject to AclService
  */
 export class AclService {
-    // logger: Logging;
-    b;
-    nestedMembers = [];
-    aclRet;
-    cuid;
-    arrDoc;
-    moduleIndexName;
-    staticModel;
-    validated;
-    aclCtx;
-    currentModule;
-    srvSess;
-    srvConsumer;
-    consumerGuid;
-    consumer;
-    isPublicModule = (m) => m.moduleIsPublic;
-    trimmedModule = (m) => {
-        return {
-            moduleGuid: m.moduleGuid,
-            moduleEnabled: m.moduleEnabled,
-            moduleIsPublic: m.moduleIsPublic,
-            moduleId: m.moduleId,
-            moduleName: m.moduleName,
-            isSysModule: m.isSysModule,
-            moduleTypeId: m.moduleTypeId,
-            groupGuid: m.groupGuid,
-        };
-    };
     constructor() {
+        this.nestedMembers = [];
+        this.isPublicModule = (m) => m.moduleIsPublic;
+        this.trimmedModule = (m) => {
+            return {
+                moduleGuid: m.moduleGuid,
+                moduleEnabled: m.moduleEnabled,
+                moduleIsPublic: m.moduleIsPublic,
+                moduleId: m.moduleId,
+                moduleName: m.moduleName,
+                isSysModule: m.isSysModule,
+                moduleTypeId: m.moduleTypeId,
+                groupGuid: m.groupGuid,
+            };
+        };
         this.b = new BaseService();
         // this.logger = new Logging();
         this.srvSess = new SessionService();

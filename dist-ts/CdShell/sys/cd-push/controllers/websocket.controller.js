@@ -1,9 +1,8 @@
 import { BaseService } from '../../base/base.service';
 import { WebsocketService } from '../services/websocket.service';
 export class WebSocketController {
-    b;
-    svWebSocket = new WebsocketService();
     constructor() {
+        this.svWebSocket = new WebsocketService();
         this.b = new BaseService();
         this.svWebSocket = new WebsocketService();
     }

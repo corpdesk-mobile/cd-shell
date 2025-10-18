@@ -3,7 +3,9 @@
  * Works for HttpFxEvents, UI notifications, and other reactive interactions.
  */
 export class FxEventEmitter {
-    listeners = [];
+    constructor() {
+        this.listeners = [];
+    }
     /**
      * Subscribe to events.
      * @param handler Function to be called when an event is emitted.

@@ -1,7 +1,6 @@
 import { BaseService } from '../../base/base.service.js';
 import { NodemailerService } from './nodemailerservice.js';
 export class MailService {
-    b;
     constructor() {
         this.b = new BaseService();
     }

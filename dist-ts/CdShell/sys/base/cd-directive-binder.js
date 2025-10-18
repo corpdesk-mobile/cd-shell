@@ -1,6 +1,5 @@
 // src/CdShell/core/directives/cd-directive-binder.js
 export class CdDirectiveBinder {
-    controller;
     constructor(controller) {
         this.controller = controller;
     }

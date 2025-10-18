@@ -25,8 +25,8 @@ import { ObjectLiteral } from 'typeorm';
 export class GroupService extends GenericService<ObjectLiteral> {
   cdToken!: string;
   srvSess: SessionService = new SessionService();
-  // b: BaseService<GroupModel>;
-  declare b: BaseService<ObjectLiteral>; // 👈 Allowing it to work with any entity
+  b: BaseService<GroupModel>;
+  // declare b: BaseService<ObjectLiteral>; // 👈 Allowing it to work with any entity
   serviceModel: GroupModel;
 
   /*
@@ -39,7 +39,7 @@ export class GroupService extends GenericService<ObjectLiteral> {
   uRules: any[] = [];
   dRules: any[] = [];
   constructor() {
-    super(GroupModel);
+    super();
     this.b = new BaseService();
     this.serviceModel = new GroupModel();
   }
@@ -166,9 +166,9 @@ export class GroupService extends GenericService<ObjectLiteral> {
     console.log('GroupService::createPalsGroup()/01');
     // const svGroup = new GroupService()
     const svConsumer = new ConsumerService();
-    svConsumer.b = this.b;
+    // svConsumer.b = this.b;
     const svCompany = new CompanyService();
-    svCompany.b = this.b;
+    // svCompany.b = this.b;
     // const svSess = new SessionService()
     let coId = -1;
     let consGuid = '';

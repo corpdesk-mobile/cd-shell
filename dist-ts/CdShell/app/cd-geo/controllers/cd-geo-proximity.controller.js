@@ -1,8 +1,6 @@
 import { BaseService } from '../../../sys/base/base.service.js';
 import { CdGeoProximityService } from '../services/cd-geo-proximity.service.js';
 export class CdGeoProximityController {
-    b;
-    svCdGeoProximity;
     constructor() {
         this.b = new BaseService();
         this.svCdGeoProximity = new CdGeoProximityService();

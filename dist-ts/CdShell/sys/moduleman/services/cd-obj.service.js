@@ -3,20 +3,20 @@
 import { CD_FX_FAIL } from '../../base/i-base.js';
 import { CdObjModel } from '../models/cd-obj.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 export class CdObjService extends GenericService {
-    // private b = new BaseService<CdObjModel>();
-    serviceModel;
-    // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['cdObjName', 'cdObjTypeGuid', 'cdObjGuid'],
-        noDuplicate: ['cdObjName', 'cdObjTypeGuid'],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(CdObjModel);
+        super();
+        this.b = new BaseService();
+        // defaultDs = config.ds.sqlite;
+        // Define validation rules
+        this.cRules = {
+            required: ['cdObjName', 'cdObjTypeGuid', 'cdObjGuid'],
+            noDuplicate: ['cdObjName', 'cdObjTypeGuid'],
+        };
     }
     // async create(req, res, serviceInput: IServiceInput<CdObjModel>) {
     //   console.log("CdObjService::create()/01");

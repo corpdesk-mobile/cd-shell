@@ -8,26 +8,15 @@ import { CoopStatViewModel } from '../models/coop-stat-view.model.js';
 // import { Logging } from '../../../sys/base/winston.log.js';
 import { CoopModel } from '../models/coop.model.js';
 export class CoopTypeService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['coopTypeName'],
-        noDuplicate: ['coopTypeName'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['coopTypeName'],
+            noDuplicate: ['coopTypeName'],
+        };
         // super();
         this.b = new BaseService();
         // this.logger = new Logging();

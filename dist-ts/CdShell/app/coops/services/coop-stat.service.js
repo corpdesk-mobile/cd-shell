@@ -1,33 +1,18 @@
-// import cloneDeep from 'lodash.clonedeep'; // Ensure lodash.clonedeep is installed
 import { BaseService } from '../../../sys/base/base.service.js';
-// import { CdService } from '../../../sys/base/cd.service';
 import { SessionService } from '../../../sys/cd-user/services/session.service.js';
 import { CoopStatModel } from '../models/coop-stat.model.js';
-// import { CoopStatViewModel, siGet } from '../models/coop-view.model';
 import { CoopTypeModel } from '../models/coop-type.model.js';
 import { CoopStatViewModel } from '../models/coop-stat-view.model.js';
 export class CoopStatService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    sessDataExt;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['coopStatName', 'coopTypeId', 'coopStatDateLabel'],
-        noDuplicate: ['coopStatName', 'coopStatDateLabel'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['coopStatName', 'coopTypeId', 'coopStatDateLabel'],
+            noDuplicate: ['coopStatName', 'coopStatDateLabel'],
+        };
         // super();
         this.b = new BaseService();
         // this.logger = new Logging();

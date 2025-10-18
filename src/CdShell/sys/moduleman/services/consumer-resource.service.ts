@@ -24,9 +24,10 @@ import { ConsumerModel } from '../models/consumer.model.js';
 import { CdObjModel } from '../models/cd-obj.model.js';
 import { GenericService } from '../../base/generic-service.js';
 import { CompanyModel } from '../models/company.model.js';
+import { CdGeoProximityModel } from '../../../app/cd-geo/index.js';
 
 export class ConsumerResourceService extends GenericService<ConsumerResourceModel> {
-  // b: BaseService<CdGeoProximityService>; // instance of BaseService
+  b: BaseService<CdGeoProximityModel>; // instance of BaseService
   cdToken!: string;
   srvSess!: SessionService;
   srvUser!: UserService;
@@ -46,7 +47,7 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
   dRules!: any[];
 
   constructor() {
-    super(ConsumerResourceModel);
+    super();
     this.b = new BaseService();
     this.serviceModel = new ConsumerResourceModel();
   }

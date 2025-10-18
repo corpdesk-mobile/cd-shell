@@ -7,26 +7,15 @@ import { CdGeoPhysicalTypeModel } from '../models/cd-geo-physical-type.model';
 // import { siGet } from '../../../sys/base/base.model';
 // import { Logging } from '../../../sys/base/winston.log';
 export class CdGeoPhysicalTypeService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['cd_geo_physical_type_name'],
-        noDuplicate: ['cd-geo-physical-typeName'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['cd_geo_physical_type_name'],
+            noDuplicate: ['cd-geo-physical-typeName'],
+        };
         // super()
         this.b = new BaseService();
         // this.logger = new Logging();

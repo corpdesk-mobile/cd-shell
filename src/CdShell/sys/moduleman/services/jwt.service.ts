@@ -11,7 +11,7 @@ import { DocModel } from '../models/doc.model.js';
 import { JwtModel } from '../models/jwt.model.js';
 
 export class JwtService extends GenericService<JwtModel> {
-  // private b = new BaseService<JwtModel>();
+  private b = new BaseService<JwtModel>();
 
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -23,7 +23,7 @@ export class JwtService extends GenericService<JwtModel> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(JwtModel);
+    super();
   }
 
   /**

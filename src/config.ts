@@ -85,7 +85,7 @@ export default {
       },
     },
   ],
-  viteWorkspacePath: '/home/emp-12/cd-shell/src',
+  viteWorkspacePath: "/home/emp-12/cd-shell/src",
   // viteHttpsServer: {
   //   https: {
   //     key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
@@ -108,9 +108,9 @@ export default {
   // },
   cdApi: {
     endpoint: `https://localhost:3001/api`,
-    serverHost: 'localhost',
-    serverPort: '3001',
-    entryPoint: '/api',
+    serverHost: "localhost",
+    serverPort: "3001",
+    entryPoint: "/api",
     timeout: 15000,
   },
   cdSio: {
@@ -122,6 +122,7 @@ export default {
   },
   push: {
     mode: process.env.PUSH_MODE,
+    wsMode: 'sio',
     serverHost: "https://146.190.165.51",
     serverPort: process.env.SIO_PORT,
     redisHost: process.env.REDIS_HOST,
@@ -149,6 +150,12 @@ export default {
       ],
       name: "master01",
     },
+  },
+  devSync: {
+    storageType: "memory", // or 'file', 'redis'
+    sioEndpoint: "wss://cd-sio-server",
+    appId: "vite-dev-instance",
+    autoInitialize: true,
   },
   modules: {
     sys: {

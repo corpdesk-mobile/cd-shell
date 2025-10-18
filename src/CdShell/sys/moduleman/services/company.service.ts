@@ -1,18 +1,30 @@
-// import { SqliteStore } from "../store/SqliteStore";
-// import { CompanyModel } from "../entities/CompanyModel";
 
-import { ObjectLiteral } from 'typeorm';
-import { CD_FX_FAIL, CdFxReturn, IQuery } from '../../base/i-base.js';
-import { CompanyModel } from '../models/company.model.js';
-import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+// import { ObjectLiteral } from 'typeorm';
+// import { CD_FX_FAIL, CdFxReturn, IQuery } from '../../base/i-base.js';
+
+// import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+// import { CompanyModel } from '../models/company.model.js';
+// import { GenericService } from '../../base/generic-service.js';
+// import { BaseService } from '../../base/base.service.js';
+
+// import config from '../../../../config.js';
+//////////////////////////////////////////////////
+
+// import type { GenericService } from '../../base/generic-service.js';
+import type { ObjectLiteral } from '../../utils/orm-shim';
+import { GenericService } from '../../base';
 import { BaseService } from '../../base/base.service.js';
-import config from '../../../../config.js';
-import { GenericService } from '../../base/generic-service.js';
+import type { CdFxReturn, IQuery } from '../../base/i-base';
+
+// Concrete imports
+import { CompanyModel } from '../models/company.model';
+import { CD_FX_FAIL } from '../../base/i-base';
+import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+
 
 export class CompanyService extends GenericService<ObjectLiteral> {
-  // b = new BaseService<CompanyModel>();
+  b = new BaseService<CompanyModel>();
   serviceModel = CompanyModel;
-  // defaultDs = config.ds.sqlite;
   // Define validation rules
   cRules: any = {
     required: ['companyName', 'companyTypeGuid', 'companyGuid'],
@@ -22,7 +34,7 @@ export class CompanyService extends GenericService<ObjectLiteral> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(CompanyModel);
+    super();
   }
 
   /**

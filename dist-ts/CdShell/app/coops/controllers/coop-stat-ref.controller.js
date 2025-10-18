@@ -2,9 +2,6 @@ import { BaseService } from '../../../sys/base/base.service.js';
 import { CoopTypeService } from '../services/coop-type.service.js';
 import { CoopStatRefService } from '../services/coop-stat-ref.service.js';
 export class CoopStatRefController {
-    b;
-    svCoopStatRef;
-    svCoopType;
     constructor() {
         this.b = new BaseService();
         this.svCoopStatRef = new CoopStatRefService();

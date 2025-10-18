@@ -1,7 +1,9 @@
 import { MetisMenuAdapter } from "./metismenu-adaptor.service";
 // import { logger } from "../../../utils/logger";
 export class MenuService {
-    currentAdapter = null;
+    constructor() {
+        this.currentAdapter = null;
+    }
     renderMenuWithSystem(menu, theme, containerId = "cd-sidebar") {
         // this.logger.debug("Starting renderMenuWithSystem()");
         // this.logger.debug("renderMenuWithSystem()/01");

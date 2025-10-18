@@ -4,104 +4,101 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 import { ColumnNumericTransformer } from '../../../sys/base/i-base.js';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from "../../../sys/utils/orm-shim";
 import { v4 as uuidv4 } from 'uuid';
 // import { ColumnNumericTransformer } from '../../../sys/base/base.model';
 let CoopStatModel = class CoopStatModel {
-    coopStatId;
-    coopStatGuid;
-    coopStatName;
-    coopStatDescription;
-    docId;
-    coopTypeId;
-    cdGeoLocationId;
-    coopCount;
-    coopMembersCount;
-    coopSavesShares;
-    coopLoans;
-    coopAssets;
-    coopMemberPenetration;
-    coopStatDateLabel;
-    coopWoccu;
-    coopReserves;
-    coopStatRefId;
-    coopStatEnabled;
-    coopStatDisplay;
 };
 __decorate([
     PrimaryGeneratedColumn({
         name: 'coop_stat_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopStatId", void 0);
 __decorate([
     Column({
         name: 'coop_stat_guid',
         length: 36,
         default: uuidv4(),
-    })
+    }),
+    __metadata("design:type", String)
 ], CoopStatModel.prototype, "coopStatGuid", void 0);
 __decorate([
     Column({
         name: 'coop_stat_name',
         length: 50,
         nullable: true,
-    })
+    }),
+    __metadata("design:type", String)
 ], CoopStatModel.prototype, "coopStatName", void 0);
 __decorate([
     Column({
         name: 'coop_stat_description',
         length: 60,
         default: null,
-    })
+    }),
+    __metadata("design:type", String)
 ], CoopStatModel.prototype, "coopStatDescription", void 0);
 __decorate([
     Column({
         name: 'doc_id',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "docId", void 0);
 __decorate([
     Column({
         name: 'coop_type_id',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopTypeId", void 0);
 __decorate([
     Column({
         name: 'cd_geo_location_id',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "cdGeoLocationId", void 0);
 __decorate([
     Column({
         name: 'coop_count',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopCount", void 0);
 __decorate([
     Column({
         name: 'coop_members_count',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopMembersCount", void 0);
 __decorate([
     Column({
         name: 'coop_saves_shares',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopSavesShares", void 0);
 __decorate([
     Column({
         name: 'coop_loans',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopLoans", void 0);
 __decorate([
     Column({
         name: 'coop_assets',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopAssets", void 0);
 __decorate([
     Column('numeric', {
@@ -110,43 +107,50 @@ __decorate([
         scale: 2,
         default: null,
         transformer: new ColumnNumericTransformer(),
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopMemberPenetration", void 0);
 __decorate([
     Column({
         name: 'coop_stat_date_label',
         default: null,
-    })
+    }),
+    __metadata("design:type", String)
 ], CoopStatModel.prototype, "coopStatDateLabel", void 0);
 __decorate([
     Column('boolean', {
         name: 'coop_woccu',
         default: null,
-    })
+    }),
+    __metadata("design:type", Boolean)
 ], CoopStatModel.prototype, "coopWoccu", void 0);
 __decorate([
     Column({
         name: 'coop_reserves',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopReserves", void 0);
 __decorate([
     Column({
         name: 'coop_stat_ref_id',
         default: null,
-    })
+    }),
+    __metadata("design:type", Number)
 ], CoopStatModel.prototype, "coopStatRefId", void 0);
 __decorate([
     Column('boolean', {
         name: 'coop_stat_enabled',
         default: null,
-    })
+    }),
+    __metadata("design:type", Boolean)
 ], CoopStatModel.prototype, "coopStatEnabled", void 0);
 __decorate([
     Column('boolean', {
         name: 'coop_stat_display',
         default: null,
-    })
+    }),
+    __metadata("design:type", Boolean)
 ], CoopStatModel.prototype, "coopStatDisplay", void 0);
 CoopStatModel = __decorate([
     Entity({

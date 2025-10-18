@@ -3,8 +3,9 @@ import MetisMenu from "metismenujs";
 import { loadStyle } from "../../../utils/load-style.service";
 import { loadScript } from "../../../utils/load-script.service";
 export class MetisMenuAdapter {
-    name;
-    instance = null;
+    constructor() {
+        this.instance = null;
+    }
     async initialize(containerId, themeName) {
         // Dynamically load style and script
         await loadStyle("https://cdn.jsdelivr.net/npm/metismenujs/dist/metismenujs.min.css");

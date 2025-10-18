@@ -8,26 +8,16 @@ import { CdGeoViewModel } from '../models/cd-geo-view.model.js';
 // import { siGet } from '../../../sys/base/base.model';
 // import { Logging } from '../../../sys/base/winston.log.js';
 export class CdGeoService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName = 'CdGeoModel';
-    sessModel;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['cd-geoName', 'cdGeoTypeId', 'cdGeoDateLabel'],
-        noDuplicate: ['cdGeoName', 'cdGeoDateLabel'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        this.modelName = 'CdGeoModel';
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['cd-geoName', 'cdGeoTypeId', 'cdGeoDateLabel'],
+            noDuplicate: ['cdGeoName', 'cdGeoDateLabel'],
+        };
         // super();
         this.b = new BaseService();
         this.serviceModel = new CdGeoModel();

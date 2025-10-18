@@ -8,20 +8,18 @@ import { UserModel } from '../models/user.model.js';
 import { SessionService } from './session.service.js';
 import { GenericService } from '../../base/generic-service.js';
 export class GroupService extends GenericService {
-    cdToken;
-    srvSess = new SessionService();
-    serviceModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['groupName', 'groupTypeId'],
-        noDuplicate: ['groupName', 'groupOwnerId'],
-    };
-    uRules = [];
-    dRules = [];
     constructor() {
-        super(GroupModel);
+        super();
+        this.srvSess = new SessionService();
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['groupName', 'groupTypeId'],
+            noDuplicate: ['groupName', 'groupOwnerId'],
+        };
+        this.uRules = [];
+        this.dRules = [];
         this.b = new BaseService();
         this.serviceModel = new GroupModel();
     }
@@ -143,9 +141,9 @@ export class GroupService extends GenericService {
         console.log('GroupService::createPalsGroup()/01');
         // const svGroup = new GroupService()
         const svConsumer = new ConsumerService();
-        svConsumer.b = this.b;
+        // svConsumer.b = this.b;
         const svCompany = new CompanyService();
-        svCompany.b = this.b;
+        // svCompany.b = this.b;
         // const svSess = new SessionService()
         let coId = -1;
         let consGuid = '';

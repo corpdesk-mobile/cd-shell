@@ -11,7 +11,7 @@ import { GenericService } from '../../base/generic-service.js';
 import { SessionService } from '../../cd-user/services/session.service.js';
 
 export class CdObjService extends GenericService<CdObjModel> {
-  // private b = new BaseService<CdObjModel>();
+  private b = new BaseService<CdObjModel>();
   serviceModel?: CdObjModel;
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -23,7 +23,7 @@ export class CdObjService extends GenericService<CdObjModel> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(CdObjModel);
+    super();
   }
 
   // async create(req, res, serviceInput: IServiceInput<CdObjModel>) {

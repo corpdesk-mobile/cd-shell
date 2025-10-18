@@ -1,7 +1,6 @@
 import { MessageClient } from 'cloudmailin';
 import { CdPushController } from '../../cd-push/controllers/cdpush.controller.js';
 export class CloudmailinService {
-    cdPush;
     constructor() {
         this.cdPush = new CdPushController();
     }

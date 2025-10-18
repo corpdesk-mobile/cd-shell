@@ -11,7 +11,7 @@ import { GenericService } from '../../base/generic-service.js';
 import { DocTypeModel } from '../models/doc-type.model.js';
 
 export class DocService extends GenericService<DocModel> {
-  //   private b = new BaseService<DocModel>();
+    private b = new BaseService<DocModel>();
 
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -23,7 +23,7 @@ export class DocService extends GenericService<DocModel> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(DocModel);
+    super();
   }
 
   /**

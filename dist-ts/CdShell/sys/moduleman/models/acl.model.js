@@ -4,63 +4,43 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from "../../../sys/utils/orm-shim";
 import { v4 as uuidv4 } from 'uuid';
 let AclModel = class AclModel {
-    aclId;
-    aclGuid;
-    aclName;
-    cdObjTypeGuid;
-    // @IsInt()
-    lastSyncDate;
-    // @IsInt()
-    lastModificationDate;
-    // @IsInt()
-    parentModuleGuid;
-    // @IsInt()
-    parentClassGuid;
-    // @IsInt()
-    parentObj;
-    // @IsInt()
-    cdObjDispName;
-    // @IsInt()
-    docId;
-    // @IsInt()
-    showName;
-    // @IsInt()
-    icon;
-    // @IsInt()
-    showIcon;
-    // @IsInt()
-    currVal;
-    // @IsInt()
-    enabled;
 };
 __decorate([
     PrimaryGeneratedColumn({
         name: 'acl_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], AclModel.prototype, "aclId", void 0);
 __decorate([
     Column({
         name: 'acl_guid',
         length: 36,
         default: uuidv4(),
-    })
+    }),
+    __metadata("design:type", String)
 ], AclModel.prototype, "aclGuid", void 0);
 __decorate([
     Column('varchar', {
         name: 'acl_name',
         length: 50,
         nullable: true,
-    })
+    }),
+    __metadata("design:type", String)
 ], AclModel.prototype, "aclName", void 0);
 __decorate([
     Column('char', {
         name: 'acl_type_guid',
         length: 60,
         default: null,
-    })
+    }),
+    __metadata("design:type", String)
 ], AclModel.prototype, "cdObjTypeGuid", void 0);
 __decorate([
     Column('datetime', {
@@ -68,6 +48,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "lastSyncDate", void 0);
 __decorate([
     Column('datetime', {
@@ -75,6 +57,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "lastModificationDate", void 0);
 __decorate([
     Column({
@@ -82,6 +66,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "parentModuleGuid", void 0);
 __decorate([
     Column({
@@ -89,6 +75,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "parentClassGuid", void 0);
 __decorate([
     Column({
@@ -96,6 +84,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "parentObj", void 0);
 __decorate([
     Column('datetime', {
@@ -103,6 +93,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "cdObjDispName", void 0);
 __decorate([
     Column({
@@ -110,6 +102,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", Number)
 ], AclModel.prototype, "docId", void 0);
 __decorate([
     Column('bit', {
@@ -117,6 +111,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", Boolean)
 ], AclModel.prototype, "showName", void 0);
 __decorate([
     Column('varchar', {
@@ -124,6 +120,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "icon", void 0);
 __decorate([
     Column('bit', {
@@ -131,6 +129,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", Boolean)
 ], AclModel.prototype, "showIcon", void 0);
 __decorate([
     Column('varchar', {
@@ -138,6 +138,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", String)
 ], AclModel.prototype, "currVal", void 0);
 __decorate([
     Column('bit', {
@@ -145,6 +147,8 @@ __decorate([
         default: null,
     })
     // @IsInt()
+    ,
+    __metadata("design:type", Boolean)
 ], AclModel.prototype, "enabled", void 0);
 AclModel = __decorate([
     Entity({

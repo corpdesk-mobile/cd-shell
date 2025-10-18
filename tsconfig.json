@@ -3,6 +3,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "resolveJsonModule": true,

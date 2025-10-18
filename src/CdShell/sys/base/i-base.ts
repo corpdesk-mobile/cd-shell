@@ -1,11 +1,4 @@
-import { DataSource, DeleteResult, FindOptionsWhere, ObjectLiteral, UpdateResult } from 'typeorm';
-import { CompanyModel } from '../moduleman/models/company.model';
-import { ConsumerModel } from '../moduleman/models/consumer.model';
-import { SessionModel } from '../cd-user/models/session.model';
-import { IUserProfile, UserModel } from '../cd-user/models/user.model.js';
-import { MenuViewModel } from '../moduleman/models/menu-view.model.js';
-import { AclModuleViewModel } from '../moduleman/models/acl-module-view.model';
-import { Observable } from 'rxjs';
+import { DataSource, DeleteResult, FindOptionsWhere, ObjectLiteral, UpdateResult } from "../utils/orm-shim";
 
 export interface BaseServiceInterface<T> {
   create: (
@@ -753,7 +746,8 @@ export interface ICommConversationSub {
 
 export interface CdObjId {
   appId: string;
-  ngModule: string | null;
+  ngModule?: string | null;
+  cdModule?: string;
   resourceName: string | null;
   resourceGuid: string | null;
   jwtToken: string | null;
@@ -788,9 +782,19 @@ export interface CommTrack {
 
 
 
-export enum StorageType {
-  CdObjId = 0,
-  IAppState = 1,
+export declare enum StorageType {
+    CdObjId = 0,
+    IAppState = 1,
+    File = 2,
+    Redis = 3,
+    Local = 4,
+    Session = 5,
+    Memory = 6,
+    SqLite = 7,
+    MySQL = 8,
+    Postgres = 9,
+    MongoDb = 10,
+    IndexedDb = 11
 }
 
 export interface LsFilter {
@@ -907,22 +911,6 @@ export interface ILoginData {
   userData: IUserData;
 }
 
-export interface ISelectedMenu {
-  moduleMenuData?: MenuViewModel[];
-  selectedItem: MenuViewModel;
-  selectedId?: number;
-}
-
-export interface IAllowedModules {
-  modules$: Observable<AclModuleViewModel[]>;
-  modulesCount: number;
-}
-
-export interface IMenuRelations {
-  menuParent: MenuViewModel;
-  menuChildren: MenuViewModel[];
-}
-
 export interface IConsumer {
   consumerId: number | string;
   consumerGuid: string;
@@ -975,14 +963,6 @@ export interface ExecOptions {
   cwd?: string; // Optional working directory
   env?: NodeJS.ProcessEnv; // Optional environment variables
   mode?: 'sync' | 'async'; // Execution mode
-}
-
-export interface ISessionDataExt {
-  currentUser: UserModel;
-  currentUserProfile: IUserProfile;
-  currentSession: SessionModel;
-  currentConsumer: ConsumerModel;
-  currentCompany: CompanyModel;
 }
 
 export interface CreateIParams<T> {
@@ -1065,4 +1045,6 @@ export interface ThemeConfig {
   currentThemePath: string;
   accessibleThemes: string[];
 }
+
+
 

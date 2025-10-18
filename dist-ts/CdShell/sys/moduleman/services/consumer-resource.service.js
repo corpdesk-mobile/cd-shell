@@ -15,25 +15,16 @@ import { ConsumerModel } from '../models/consumer.model.js';
 import { CdObjModel } from '../models/cd-obj.model.js';
 import { GenericService } from '../../base/generic-service.js';
 export class ConsumerResourceService extends GenericService {
-    // b: BaseService<CdGeoProximityService>; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    sessModel;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['consumerGuid', 'cdObjGuid'],
-        noDuplicate: ['consumerGuid', 'cdObjGuid'],
-    };
-    uRules;
-    dRules;
     constructor() {
-        super(ConsumerResourceModel);
+        super();
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['consumerGuid', 'cdObjGuid'],
+            noDuplicate: ['consumerGuid', 'cdObjGuid'],
+        };
         this.b = new BaseService();
         this.serviceModel = new ConsumerResourceModel();
     }

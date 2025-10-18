@@ -9,24 +9,18 @@ import {
   share,
   forkJoin,
 } from 'rxjs';
-import { GroupMemberService } from '../../cd-user/services/group-member.service';
 import { BaseService } from '../../base/base.service.js';
 import { AclModel } from '../models/acl.model.js';
-import { DocModel } from '../models/doc.model.js';
 import {
-  IAclCtx,
-  ICdRequest,
   IQuery,
   IServiceInput,
-  ISessionDataExt,
 } from '../../base/i-base.js';
-import { ModuleService } from './module.service.js';
 import { SessionService } from '../../cd-user/services/session.service.js';
 import { ConsumerService } from './consumer.service.js';
 import { AclUserViewModel } from '../models/acluserview.model.js';
 import { AclModuleViewModel } from '../models/acl-module-view.model.js';
 import { AclModuleMemberViewModel } from '../models/acl-module-member-view.model.js';
-// import { Logging } from '../../base/winston.log.js';
+import { ISessionDataExt } from '../../cd-user/models/session.model';
 
 /**
  * AclService is used by Corpdesk api to manage privilege access to modules.

@@ -1,9 +1,5 @@
 // field-types.ts
 export class FieldType {
-    family;
-    dialect;
-    native;
-    options;
     constructor(family, // logical type family, e.g. "int", "string"
     dialect, // dialect/vendor, e.g. "mysql"
     native, // actual type, e.g. "INT", "VARCHAR(255)"

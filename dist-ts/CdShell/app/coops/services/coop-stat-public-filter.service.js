@@ -1,34 +1,19 @@
 import { BaseService } from '../../../sys/base/base.service.js';
 import { SessionService } from '../../../sys/cd-user/services/session.service.js';
 import { CoopStatPublicFilterModel, } from '../models/coop-stat-public-filter.model.js';
-// import { CoopStatPublicFilterModel, siGet } from '../models/coop-view.model';
 import { CoopTypeModel } from '../models/coop-type.model.js';
-// import { CoopStatPublicFilterModel } from '../models/coop_stat_public_filter-view.model';
-// import { Logging } from '../../../sys/base/winston.log.js';
 import { Between, FindOperator, LessThan, MoreThan, Not } from 'typeorm';
 import { GroupMemberService } from '../../../sys/cd-user/services/group-member.service.js';
 export class CoopStatPublicFilterService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    sessDataExt;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['coopStatPublicFilterName', 'coopStatPublicFilterDescription'],
-        noDuplicate: ['coopStatPublicFilterName'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['coopStatPublicFilterName', 'coopStatPublicFilterDescription'],
+            noDuplicate: ['coopStatPublicFilterName'],
+        };
         // super();
         this.b = new BaseService();
         // this.logger = new Logging();

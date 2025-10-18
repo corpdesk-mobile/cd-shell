@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { CompanyModel } from '../../moduleman/models/company.model.js';
+import { ConsumerModel } from '../../moduleman/models/consumer.model.js';
+import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
+import { IUserProfile, UserModel } from './user.model.js';
+
 
 @Entity({ name: 'session', synchronize: false })
 export class SessionModel {
@@ -58,4 +63,12 @@ export class SessionModel {
     // default: uuidv4()
   })
   consumerGuid?: string;
+}
+
+export interface ISessionDataExt {
+  currentUser: UserModel;
+  currentUserProfile: IUserProfile;
+  currentSession: SessionModel;
+  currentConsumer: ConsumerModel;
+  currentCompany: CompanyModel;
 }

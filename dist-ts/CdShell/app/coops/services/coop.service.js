@@ -18,31 +18,18 @@ import { Like } from 'typeorm';
 import { CdGeoLocationModel } from '../../cd-geo/models/cd-geo-location.model.js';
 import { QueryTransformer } from '../../../sys/utils/query-transformer.js';
 import { CdGeoLocationService } from '../../cd-geo/services/cd-geo-location.service.js';
-// import { QueryTransformer } from '../../../sys/utils/query-transformer';
 import { cloneDeep } from 'lodash';
 export class CoopService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    sessModel;
-    sessDataExt;
-    // moduleModel: ModuleModel;
-    arrLikeConditions = [];
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['coopName', 'coopTypeId'],
-        noDuplicate: ['coopName', 'coopTypeId'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // moduleModel: ModuleModel;
+        this.arrLikeConditions = [];
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['coopName', 'coopTypeId'],
+            noDuplicate: ['coopName', 'coopTypeId'],
+        };
         // super()
         this.b = new BaseService();
         // this.logger = new Logging();

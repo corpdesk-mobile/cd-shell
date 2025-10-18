@@ -4,92 +4,95 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 import { ViewEntity, ViewColumn } from 'typeorm';
 let ModuleViewModel = class ModuleViewModel {
-    moduleId;
-    moduleGuid;
-    moduleName;
-    moduleDescription;
-    moduleTypeId;
-    moduleIsPublic;
-    isSysModule;
-    docId;
-    moduleEnabled;
-    groupGuid;
-    groupName;
-    groupOwnerId;
-    groupTypeId;
-    companyId;
 };
 __decorate([
     ViewColumn({
         name: 'module_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], ModuleViewModel.prototype, "moduleId", void 0);
 __decorate([
     ViewColumn({
         name: 'module_guid',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "moduleGuid", void 0);
 __decorate([
     ViewColumn({
         name: 'module_name',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "moduleName", void 0);
 __decorate([
     ViewColumn({
         name: 'module_description',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "moduleDescription", void 0);
 __decorate([
     ViewColumn({
         name: 'module_type_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], ModuleViewModel.prototype, "moduleTypeId", void 0);
 __decorate([
     ViewColumn({
         name: 'module_is_public',
-    })
+    }),
+    __metadata("design:type", Number)
 ], ModuleViewModel.prototype, "moduleIsPublic", void 0);
 __decorate([
     ViewColumn({
         name: 'is_sys_module',
-    })
+    }),
+    __metadata("design:type", Number)
 ], ModuleViewModel.prototype, "isSysModule", void 0);
 __decorate([
     ViewColumn({
         name: 'doc_id',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "docId", void 0);
 __decorate([
     ViewColumn({
         name: 'module_enabled',
-    })
+    }),
+    __metadata("design:type", Object)
 ], ModuleViewModel.prototype, "moduleEnabled", void 0);
 __decorate([
     ViewColumn({
         name: 'group_guid',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "groupGuid", void 0);
 __decorate([
     ViewColumn({
         name: 'group_name',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "groupName", void 0);
 __decorate([
     ViewColumn({
         name: 'group_owner_id',
-    })
+    }),
+    __metadata("design:type", Object)
 ], ModuleViewModel.prototype, "groupOwnerId", void 0);
 __decorate([
     ViewColumn({
         name: 'group_type_id',
-    })
+    }),
+    __metadata("design:type", Number)
 ], ModuleViewModel.prototype, "groupTypeId", void 0);
 __decorate([
     ViewColumn({
         name: 'company_id',
-    })
+    }),
+    __metadata("design:type", String)
 ], ModuleViewModel.prototype, "companyId", void 0);
 ModuleViewModel = __decorate([
     ViewEntity({

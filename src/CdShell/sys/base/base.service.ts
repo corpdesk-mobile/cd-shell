@@ -2,6 +2,13 @@
 /* eslint-disable style/indent */
 /* eslint-disable style/brace-style */
 /* eslint-disable antfu/if-newline */
+
+import "../../../CdShell/sys/utils/process-shim"; // sets global process shim for browser
+
+// Conditional imports for Node.js vs Browser
+import { getEnvironment } from "../../../environment";
+const isNode = getEnvironment() === "node" || getEnvironment() === "cli";
+
 import {
   ObjectLiteral,
   DeepPartial,
@@ -12,7 +19,7 @@ import {
   EntityMetadata,
   getConnection,
 } from "typeorm";
-import { SessionService } from "../cd-user/services/session.service";
+// import { SessionService } from "../cd-user/services/session.service";
 import * as Lá from "lodash";
 import {
   AbstractBaseService,
@@ -41,16 +48,64 @@ import config from "../../../config";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { DocModel } from "../moduleman/models/doc.model";
-import { DocService } from "../moduleman/services/doc.service";
+// import { DocService } from "../moduleman/services/doc.service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { createClient } from "redis";
+// Query builder (use shim if needed)
+// import { QueryDeepPartialEntity } from "../../../CdShell/sys/utils/orm-shim";
+
+// import { createClient } from "redis";
+// Redis - conditional import
+let createClient: any = () => {
+  throw new Error("Redis not available in browser environment");
+};
+if (isNode) {
+  // Dynamic import for Node.js only
+  import("redis")
+    .then((redisModule) => {
+      createClient = redisModule.createClient;
+    })
+    .catch(() => {
+      console.warn("Redis module not available");
+    });
+}
+
 import { from, Observable } from "rxjs";
 import { SocketStore } from "../cd-push/models/cd-push-socket.model";
 import { QueryBuilderHelper } from "../utils/query-builder-helper";
 import { toKebabCase, toPascalCase } from "../utils/cd-naming.util";
-import { inspect } from "util";
+// import { inspect } from "util";
+// Util inspection - conditional
+let inspect: any = (obj: any) => JSON.stringify(obj, null, 2);
+if (isNode) {
+  import("util")
+    .then((utilModule) => {
+      inspect = utilModule.inspect;
+    })
+    .catch(() => {
+      // Fallback to JSON stringify
+    });
+}
+
 import { HttpService } from "./http.service";
-import chalk from "chalk";
+
+// import chalk from "chalk";
+// Chalk - conditional (Node.js only)
+let chalk: any = {
+  blue: (text: string) => text,
+  green: (text: string) => text,
+  red: (text: string) => text,
+  yellow: (text: string) => text,
+  // Add other chalk methods you use
+};
+if (isNode) {
+  import("chalk")
+    .then((chalkModule) => {
+      chalk = chalkModule.default || chalkModule;
+    })
+    .catch(() => {
+      console.warn("Chalk not available, using no-color fallback");
+    });
+}
 import { FxEventEmitter } from "./fx-event-emitter";
 
 const USER_ANON = 1000;
@@ -71,6 +126,7 @@ export class BaseService<
   };
   isRegRequest = false;
   // svSess: SessionService = new SessionService();
+  private _svSess: any;
   sess: SessionModel | any;
   // // logger: Logging;
 
@@ -124,9 +180,7 @@ export class BaseService<
       // console.log('BaseService::init()/this.models:', this.models);
     } catch (e) {
       console.log("BaseService::init()/02:");
-      console.log(
-        `BaseService::init() failed:${(e as Error).message}`
-      );
+      console.log(`BaseService::init() failed:${(e as Error).message}`);
       this.err.push(`BaseService::init() failed:${(e as Error).message}`);
     }
   }
@@ -159,6 +213,24 @@ export class BaseService<
       // }
       this.err.push((e as Error).toString());
     }
+  }
+
+  
+  public get svSess() {
+    // Dynamic import inside a getter ensures the dependency graph is 
+    // only loaded when this service is actually used, which helps break cycles.
+    // However, a simple synchronous getter is cleaner for *services*.
+
+    // If using synchronous code (recommended for services):
+    if (!this._svSess) {
+        // Use a local require/import or simple class instantiation
+        const { SessionService } = require("../cd-user/services/session.service");
+        this._svSess = new SessionService();
+        // Ensure you only instantiate the service, not import its file at the top.
+        // For now, let's just make it a local variable that is only used inside methods.
+        
+    }
+    return this._svSess;
   }
 
   initCdResp(): ICdResponse {
@@ -210,9 +282,7 @@ export class BaseService<
   async invokeCdRequest<T = any>(
     cdRequest?: ICdRequest
   ): Promise<CdFxReturn<T>> {
-    console.log(
-      "BaseService::invokeCdRequest() → Starting dispatch..."
-    );
+    console.log("BaseService::invokeCdRequest() → Starting dispatch...");
 
     if (!cdRequest) {
       return { state: false, message: "cdRequest is undefined or null." };
@@ -227,9 +297,7 @@ export class BaseService<
       const controllerkebab = toKebabCase(c);
       const modulePath = `../../${contextRoot}/${m}/controllers/${controllerkebab}.controller.js`;
 
-      console.log(
-        `BaseService::invokeCdRequest() → Importing: ${modulePath}`
-      );
+      console.log(`BaseService::invokeCdRequest() → Importing: ${modulePath}`);
 
       const importedModule = await import(modulePath);
       const ControllerClass = importedModule?.[controllerName];
@@ -449,6 +517,7 @@ export class BaseService<
       await this.setSess(req, res);
     }
     const dm: DocModel = new DocModel();
+    const { DocService } = await import("../moduleman/services/doc.service");
     const svDoc = new DocService();
     dm.docFrom = this.cuid; // current corpdesk user
     dm.docName = serviceInput.docName;
@@ -542,18 +611,8 @@ export class BaseService<
   async readSL(req, res, serviceInput: IServiceInput<T>): Promise<any> {
     try {
       this.initSqlite(req, res);
-      // const repo = this.sqliteConn.getRepository(serviceInput.serviceModel);
       await this.setRepo(serviceInput);
-      // this.setRepo(serviceInput.serviceModel)
       const repo: any = this.repo;
-      const svSess = new SessionService();
-      // const billRepository = this.sqliteConn.getRepository(BillModel)
-      // const allBills = await billRepository.find()
-      // console.log('allBills:', allBills)
-      // this.i.app_msg = '';
-      // this.setAppState(true, this.i, svSess.sessResp);
-      // this.cdResp.data = allBills;
-      // const r = await this.respond(req, res);
 
       let r: any = null;
       switch (serviceInput.cmd?.action) {
@@ -589,10 +648,7 @@ export class BaseService<
   }
 
   readCount$(req, res, serviceInput): Observable<any> {
-    console.log(
-      "BaseService::readCount$()/serviceInput:",
-      serviceInput
-    );
+    console.log("BaseService::readCount$()/serviceInput:", serviceInput);
     return from(this.readCount(req, res, serviceInput));
   }
 
@@ -888,9 +944,7 @@ export class BaseService<
   async updateSL(req, res, serviceInput: IServiceInput<T>) {
     console.log("BillService::updateSL()/01");
     await this.initSqlite(req, res);
-    const svSess = new SessionService();
-    // const repo: any = await this.sqliteConn.getRepository(serviceInput.serviceModel);
-    // this.setRepo(serviceInput.serviceModel)
+    const svSess = this.svSess;
     await this.setRepo(serviceInput);
     const repo: any = this.repo;
     const result = await repo.update(
@@ -1075,7 +1129,7 @@ export class BaseService<
   //////////////////////////////////////////////////////////////////////////////////////
 
   async serviceErr(req, res, e, eCode, lineNumber = null) {
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     try {
       svSess.sessResp.cd_token = req.post.dat.token;
     } catch (e) {
@@ -1244,10 +1298,7 @@ export class BaseService<
     // console.log('validateUnique()/propMap:', await propMap)
     // const strQueryItems = await this.getQueryItems(req, propMap, params)
     const strQueryItems = await this.getQueryItems(req, serviceInput);
-    console.log(
-      "BaseService::validateUnique()/strQueryItems:",
-      strQueryItems
-    );
+    console.log("BaseService::validateUnique()/strQueryItems:", strQueryItems);
     // convert the string items into JSON objects
     // const arrQueryItems = await strQueryItems.map(async (item) => {
     //     console.log('validateUnique()/item:', await item)
@@ -1257,10 +1308,7 @@ export class BaseService<
     // console.log('validateUnique()/arrQueryItems:', arrQueryItems)
     // const filterItems = await JSON.parse(strQueryItems)
     const filterItems = await strQueryItems;
-    console.log(
-      "BaseService::validateUnique()/filterItems:",
-      filterItems
-    );
+    console.log("BaseService::validateUnique()/filterItems:", filterItems);
     // execute the query
     const results = await baseRepository.count({
       where: await filterItems,
@@ -1314,10 +1362,7 @@ export class BaseService<
       params.controllerData,
       params.serviceInput.serviceInstance.cRules.noDuplicate
     );
-    console.log(
-      "BaseService::validateUniqueI()/filterItems:",
-      filterItems
-    );
+    console.log("BaseService::validateUniqueI()/filterItems:", filterItems);
     // execute the query
     const results = await baseRepository.count({
       where: await filterItems,
@@ -1351,10 +1396,7 @@ export class BaseService<
       "BaseService::duplicateFilter()/controllerData:",
       controllerData
     );
-    console.log(
-      "BaseService::duplicateFilter()/noDuplicate:",
-      noDuplicate
-    );
+    console.log("BaseService::duplicateFilter()/noDuplicate:", noDuplicate);
     const filteredData = {} as Partial<T>;
 
     for (const field of noDuplicate) {
@@ -1367,7 +1409,7 @@ export class BaseService<
   }
 
   async validateRequired(req, res, cRules): Promise<boolean> {
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     const rqFieldNames = cRules.required as string[];
     this.isInvalidFields = await rqFieldNames.filter((fieldName) => {
       if (!(fieldName in this.getPlData(req))) {
@@ -1516,8 +1558,7 @@ export class BaseService<
   }
 
   async setSess(req: any, res: any) {
-    // console.log('BaseService::setSess()/01');
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     if (await !this.cdToken) {
       // console.log('BaseService::setSess()/02');
       try {
@@ -1592,7 +1633,7 @@ export class BaseService<
     }
   }
 
-  async setAlertMessage(msg: string, svSess: SessionService, success: boolean) {
+  async setAlertMessage(msg: string, svSess: any, success: boolean) {
     this.i.app_msg = msg;
     this.err.push(this.i.app_msg);
     await this.setAppState(success, this.i, svSess.sessResp);
@@ -1878,7 +1919,7 @@ export class BaseService<
   ): Promise<any> {
     console.info("BaseService::getPlData()/01");
     let ret = null;
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     if (await this.validatePlData(req, extData)) {
       try {
         if (extData) {
@@ -1916,7 +1957,7 @@ export class BaseService<
   ): Promise<any> {
     console.info("BaseService::getPlQuery()/01");
     let ret = null;
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     if (await this.validatePlData(req, extData)) {
       try {
         if (extData) {
@@ -1997,7 +2038,7 @@ export class BaseService<
    * @param extData
    */
   async validatePlData(req, extData): Promise<boolean> {
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     let ret = false;
     if (extData) {
       if (extData in req.post.dat.f_vals[0]) {
@@ -2158,7 +2199,7 @@ export class BaseService<
     try {
       // const getRet = await this.redisClient.get(k);
       // const getRet = await this.svRedis.get(k);
-      const getRet = '';
+      const getRet = "";
       if (getRet) {
         ret.r = getRet;
       }
@@ -2201,7 +2242,8 @@ export class BaseService<
     console.log(
       `Error as BaseService::wsServiceErr, e: ${(e as Error).toString()} `
     );
-    const svSess = new SessionService();
+    
+    const svSess = this.svSess;
     if (cdToken) {
       svSess.sessResp.cd_token = cdToken;
     }
@@ -2218,35 +2260,12 @@ export class BaseService<
     this.cdResp.data = [];
   }
 
-  // async bFetch(req, res, serviceInput: IServiceInput<T>) {
-  //   try {
-  //     console.log('BaseService::fetch()/01');
-
-  //     const response = await fetch(
-  //       serviceInput.fetchInput.url,
-  //       serviceInput.fetchInput.optins,
-  //     );
-  //     const data = await response.json();
-  //     // console.log(JSON.stringify(data, null, 2));
-  //     return data;
-  //   } catch (e: any) {
-  //     this.err.push((e as Error).toString());
-  //     const i = {
-  //       messages: this.err,
-  //       code: 'BaseService:update',
-  //       app_msg: '',
-  //     };
-  //     // await this.setAppState(false, i, null);
-  //     await this.serviceErr(req, res, e, i.code);
-  //     return this.cdResp;
-  //   }
-  // }
 
   successResponse(req, res, result, appMsg = null) {
     if (appMsg) {
       this.i.app_msg = appMsg;
     }
-    const svSess = new SessionService();
+    const svSess = this.svSess;
     svSess.sessResp.cd_token = req.post.dat.token;
     svSess.sessResp.ttl = svSess.getTtl();
     this.setAppState(true, this.i, svSess.sessResp);
@@ -2463,7 +2482,7 @@ export class BaseService<
     model: any,
     value: any
   ): Promise<boolean> {
-    const svSess = new SessionService();
+    const svSess = this.svSess;
 
     if (value === undefined || value === null) {
       this.i.app_msg = `${field} is required for existence check`;
@@ -2510,7 +2529,7 @@ export class BaseService<
     existenceMap: { [field: string]: any }, // field: Model
     validationCreateParams: any // same as your existing usage
   ): Promise<boolean> {
-    const svSess = new SessionService();
+    const svSess = this.svSess;
 
     // Check required fields
     for (let field of rules.required || []) {

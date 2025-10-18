@@ -3,8 +3,6 @@ import { CdController } from '../../../sys/base/cd.controller.js';
 // import { CdController } from '../../../sys/base/cd.controller.js';
 import { CoopMemberService } from '../services/coop-member.service.js';
 export class CoopMemberController extends CdController {
-    b;
-    svCoopMember;
     constructor() {
         super();
         this.b = new BaseService();

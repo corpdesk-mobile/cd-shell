@@ -6,11 +6,12 @@ import { HttpService } from '../../base/http.service.js';
 import { EnvCreate, EnvPurge } from '../models/module.model.js';
 import { inspect } from 'node:util';
 export class ModuleRegisterService {
-    b = new BaseService();
-    http = new HttpService();
-    // ctlSession = new CdCliProfileController();
-    cdToken = '';
-    constructor() { }
+    constructor() {
+        this.b = new BaseService();
+        this.http = new HttpService();
+        // ctlSession = new CdCliProfileController();
+        this.cdToken = '';
+    }
     // async init() {
     //   const ctlSession = new SessonController();
     //   // const ctlCdCliProfile = new CdCliProfileController();

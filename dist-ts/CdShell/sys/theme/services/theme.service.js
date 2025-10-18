@@ -1,5 +1,4 @@
 export class ThemeService {
-    static currentTheme;
     static setActiveTheme(theme) {
         this.currentTheme = theme;
     }

@@ -1,4 +1,5 @@
-import { EntityTarget, ObjectLiteral } from 'typeorm';
+// import { EntityTarget, ObjectLiteral } from 'typeorm';
+import { ObjectLiteral } from '../utils/orm-shim.js';
 import { BaseService } from './base.service.js';
 import config from '../../../config.js';
 import {
@@ -9,12 +10,13 @@ import {
   IServiceInput,
 } from './i-base.js';
 
+
 export class GenericService<T extends ObjectLiteral> {
-  b: BaseService<T>;
+  // b: BaseService<T>;
   // protected // defaultDs = config.ds.sqlite;
 
-  constructor(private model: new () => T) {
-    this.b = new BaseService<T>();
+  constructor() {
+    // this.b = new BaseService<T>();
   }
 
   async create(
@@ -22,17 +24,9 @@ export class GenericService<T extends ObjectLiteral> {
     res,
     serviceInput: any,
   ): Promise<CdFxReturn<T | ObjectLiteral | null>> {
-    // const modelName =
-    //   typeof this.model === 'function' ? this.model.name : String(this.model);
-    // const serviceInput = {
-    //   serviceModel: this.model,
-    //   docName: `Create ${modelName}`,
-    //   dSource: 1,
-    //   data: pl,
-    // };
 
-
-    const result = await this.b.create(req, res, serviceInput);
+    const b = new BaseService<T>();
+    const result = await b.create(req, res, serviceInput);
 
     if ('state' in result && result.state) {
       return result as CdFxReturn<T | ObjectLiteral | null>;
@@ -46,7 +40,8 @@ export class GenericService<T extends ObjectLiteral> {
     res,
     createIParams: CreateIParams<T>,
   ): Promise<T | boolean> {
-    return await this.b.createI(req, res, createIParams);
+    const b = new BaseService<T>();
+    return await b.createI(req, res, createIParams);
   }
 
   async read(
@@ -60,8 +55,8 @@ export class GenericService<T extends ObjectLiteral> {
     //   cmd: { action: 'find', query: q },
     //   dSource: 1,
     // };
-
-    const result = await this.b.read(req, req, serviceInput);
+    const b = new BaseService<T>();
+    const result = await b.read(req, req, serviceInput);
 
     return 'state' in result ? result : CD_FX_FAIL;
   }
@@ -77,13 +72,14 @@ export class GenericService<T extends ObjectLiteral> {
     //   cmd: { action: 'update', query: q },
     //   dSource: 1,
     // };
-
-    const result = await this.b.update(req, req, serviceInput);
+    const b = new BaseService<T>();
+    const result = await b.update(req, req, serviceInput);
     return 'state' in result ? result : CD_FX_FAIL;
   }
 
   async updateI(req, res, createIParams: CreateIParams<T>): Promise<any> {
-    return this.b.updateI(req, res, createIParams);
+    const b = new BaseService<T>();
+    return b.updateI(req, res, createIParams);
   }
 
   async delete(
@@ -97,8 +93,8 @@ export class GenericService<T extends ObjectLiteral> {
     //   cmd: { action: 'delete', query: q },
     //   dSource: 1,
     // };
-
-    const result = await this.b.delete(req, req, serviceInput);
+    const b = new BaseService<T>();
+    const result = await b.delete(req, req, serviceInput);
     return 'state' in result ? result : CD_FX_FAIL;
   }
 }

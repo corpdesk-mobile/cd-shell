@@ -7,26 +7,16 @@ import { CdGeoLocationViewModel } from '../models/cd-geo-location-view.model.js'
 import { CdGeoPoliticalTypeModel } from '../models/cd-geo-political-type.model.js';
 import config from '../../../../config.js';
 export class CdGeoLocationService {
-    // logger: Logging;
-    b; // instance of BaseService
-    cdToken;
-    srvSess;
-    srvUser;
-    user;
-    serviceModel;
-    modelName;
-    // model = ;
-    // moduleModel: ModuleModel;
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['cdGeoLocationName', 'cdGeoPoliticalTypeId'],
-        noDuplicate: ['cdGeoLocationName', 'cdGeoPoliticalTypeId'],
-    };
-    uRules;
-    dRules;
     constructor() {
+        // model = ;
+        // moduleModel: ModuleModel;
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['cdGeoLocationName', 'cdGeoPoliticalTypeId'],
+            noDuplicate: ['cdGeoLocationName', 'cdGeoPoliticalTypeId'],
+        };
         // super();
         this.b = new BaseService();
         // this.logger = new Logging();

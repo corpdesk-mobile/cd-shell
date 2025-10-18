@@ -1,4 +1,12 @@
-import { SessionService } from "../cd-user/services/session.service";
+/* eslint-disable brace-style */
+/* eslint-disable style/indent */
+/* eslint-disable style/brace-style */
+/* eslint-disable antfu/if-newline */
+import "../../../CdShell/sys/utils/process-shim"; // sets global process shim for browser
+// Conditional imports for Node.js vs Browser
+import { getEnvironment } from "../../../environment";
+const isNode = getEnvironment() === "node" || getEnvironment() === "cli";
+// import { SessionService } from "../cd-user/services/session.service";
 import * as Lá from "lodash";
 import { AbstractBaseService, CdFxStateLevel, MANAGED_FIELDS, } from "./i-base";
 import { EntityAdapter } from "../utils/entity-adapter";
@@ -6,44 +14,94 @@ import config from "../../../config";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { DocModel } from "../moduleman/models/doc.model";
-import { DocService } from "../moduleman/services/doc.service";
-import { createClient } from "redis";
+// Query builder (use shim if needed)
+// import { QueryDeepPartialEntity } from "../../../CdShell/sys/utils/orm-shim";
+// import { createClient } from "redis";
+// Redis - conditional import
+let createClient = () => {
+    throw new Error("Redis not available in browser environment");
+};
+if (isNode) {
+    // Dynamic import for Node.js only
+    import("redis")
+        .then((redisModule) => {
+        createClient = redisModule.createClient;
+    })
+        .catch(() => {
+        console.warn("Redis module not available");
+    });
+}
 import { from } from "rxjs";
 import { QueryBuilderHelper } from "../utils/query-builder-helper";
 import { toKebabCase, toPascalCase } from "../utils/cd-naming.util";
-import { inspect } from "util";
+// import { inspect } from "util";
+// Util inspection - conditional
+let inspect = (obj) => JSON.stringify(obj, null, 2);
+if (isNode) {
+    import("util")
+        .then((utilModule) => {
+        inspect = utilModule.inspect;
+    })
+        .catch(() => {
+        // Fallback to JSON stringify
+    });
+}
 import { HttpService } from "./http.service";
-import chalk from "chalk";
+// import chalk from "chalk";
+// Chalk - conditional (Node.js only)
+let chalk = {
+    blue: (text) => text,
+    green: (text) => text,
+    red: (text) => text,
+    yellow: (text) => text,
+    // Add other chalk methods you use
+};
+if (isNode) {
+    import("chalk")
+        .then((chalkModule) => {
+        chalk = chalkModule.default || chalkModule;
+    })
+        .catch(() => {
+        console.warn("Chalk not available, using no-color fallback");
+    });
+}
 import { FxEventEmitter } from "./fx-event-emitter";
 const USER_ANON = 1000;
 const INVALID_REQUEST = "invalid request";
 export class BaseService extends AbstractBaseService {
-    err = []; // error messages
-    cuid = 1000;
-    cdToken = "";
-    cdResp; // cd response
-    pl;
-    i = {
-        messages: [],
-        code: "",
-        app_msg: "",
-    };
-    isRegRequest = false;
-    // svSess: SessionService = new SessionService();
-    sess;
-    // // logger: Logging;
-    fx = new FxEventEmitter();
-    redisClient;
-    // svRedis!: RedisService;
-    db;
-    ds = null;
-    sqliteConn;
-    repo;
-    isInvalidFields = [];
-    entityAdapter;
-    http = new HttpService();
     constructor() {
         super();
+        this.err = []; // error messages
+        this.cuid = 1000;
+        this.cdToken = "";
+        this.i = {
+            messages: [],
+            code: "",
+            app_msg: "",
+        };
+        this.isRegRequest = false;
+        // // logger: Logging;
+        this.fx = new FxEventEmitter();
+        this.ds = null;
+        this.isInvalidFields = [];
+        this.http = new HttpService();
+        this.intersectionLegacy = (arr1, arr2) => {
+            const res = []; // Explicitly define `res` as an array of `any`
+            for (const i of arr1) {
+                if (!arr2.includes(i)) {
+                    continue;
+                }
+                res.push(i);
+            }
+            return res;
+        };
+        this.intersectMany = (...arrs) => {
+            let res = arrs[0].slice();
+            for (let i = 1; i < arrs.length; i++) {
+                res = this.intersectionLegacy(res, arrs[i]);
+            }
+            return res;
+        };
         // // this.logger = new Logging();
         this.entityAdapter = new EntityAdapter();
         this.cdResp = this.initCdResp();
@@ -111,6 +169,20 @@ export class BaseService extends AbstractBaseService {
             // }
             this.err.push(e.toString());
         }
+    }
+    get svSess() {
+        // Dynamic import inside a getter ensures the dependency graph is 
+        // only loaded when this service is actually used, which helps break cycles.
+        // However, a simple synchronous getter is cleaner for *services*.
+        // If using synchronous code (recommended for services):
+        if (!this._svSess) {
+            // Use a local require/import or simple class instantiation
+            const { SessionService } = require("../cd-user/services/session.service");
+            this._svSess = new SessionService();
+            // Ensure you only instantiate the service, not import its file at the top.
+            // For now, let's just make it a local variable that is only used inside methods.
+        }
+        return this._svSess;
     }
     initCdResp() {
         return {
@@ -362,6 +434,7 @@ export class BaseService extends AbstractBaseService {
             await this.setSess(req, res);
         }
         const dm = new DocModel();
+        const { DocService } = await import("../moduleman/services/doc.service");
         const svDoc = new DocService();
         dm.docFrom = this.cuid; // current corpdesk user
         dm.docName = serviceInput.docName;
@@ -447,7 +520,8 @@ export class BaseService extends AbstractBaseService {
             await this.setRepo(serviceInput);
             // this.setRepo(serviceInput.serviceModel)
             const repo = this.repo;
-            const svSess = new SessionService();
+            // const { SessionService } = await import("../cd-user/services/session.service");
+            // const svSess = new SessionService();
             // const billRepository = this.sqliteConn.getRepository(BillModel)
             // const allBills = await billRepository.find()
             // console.log('allBills:', allBills)
@@ -718,6 +792,7 @@ export class BaseService extends AbstractBaseService {
     async updateSL(req, res, serviceInput) {
         console.log("BillService::updateSL()/01");
         await this.initSqlite(req, res);
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         // const repo: any = await this.sqliteConn.getRepository(serviceInput.serviceModel);
         // this.setRepo(serviceInput.serviceModel)
@@ -877,6 +952,7 @@ export class BaseService extends AbstractBaseService {
     }
     //////////////////////////////////////////////////////////////////////////////////////
     async serviceErr(req, res, e, eCode, lineNumber = null) {
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         try {
             svSess.sessResp.cd_token = req.post.dat.token;
@@ -1116,6 +1192,7 @@ export class BaseService extends AbstractBaseService {
         return filteredData;
     }
     async validateRequired(req, res, cRules) {
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         const rqFieldNames = cRules.required;
         this.isInvalidFields = await rqFieldNames.filter((fieldName) => {
@@ -1251,6 +1328,7 @@ export class BaseService extends AbstractBaseService {
     }
     async setSess(req, res) {
         // console.log('BaseService::setSess()/01');
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         if (await !this.cdToken) {
             // console.log('BaseService::setSess()/02');
@@ -1558,6 +1636,7 @@ export class BaseService extends AbstractBaseService {
     async getPlData(req, extData = null, fValsIndex = null) {
         console.info("BaseService::getPlData()/01");
         let ret = null;
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         if (await this.validatePlData(req, extData)) {
             try {
@@ -1596,6 +1675,7 @@ export class BaseService extends AbstractBaseService {
     async getPlQuery(req, extData = null, fValsIndex = null) {
         console.info("BaseService::getPlQuery()/01");
         let ret = null;
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         if (await this.validatePlData(req, extData)) {
             try {
@@ -1669,6 +1749,7 @@ export class BaseService extends AbstractBaseService {
      * @param extData
      */
     async validatePlData(req, extData) {
+        const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = new SessionService();
         let ret = false;
         if (extData) {
@@ -1812,7 +1893,7 @@ export class BaseService extends AbstractBaseService {
         try {
             // const getRet = await this.redisClient.get(k);
             // const getRet = await this.svRedis.get(k);
-            const getRet = '';
+            const getRet = "";
             if (getRet) {
                 ret.r = getRet;
             }
@@ -1852,7 +1933,7 @@ export class BaseService extends AbstractBaseService {
     }
     async wsServiceErr(e, eCode, cdToken = null) {
         console.log(`Error as BaseService::wsServiceErr, e: ${e.toString()} `);
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         if (cdToken) {
             svSess.sessResp.cd_token = cdToken;
         }
@@ -1893,7 +1974,8 @@ export class BaseService extends AbstractBaseService {
         if (appMsg) {
             this.i.app_msg = appMsg;
         }
-        const svSess = new SessionService();
+        // const { SessionService } = await import("../cd-user/services/session.service");
+        const svSess = this.svSess;
         svSess.sessResp.cd_token = req.post.dat.token;
         svSess.sessResp.ttl = svSess.getTtl();
         this.setAppState(true, this.i, svSess.sessResp);
@@ -1914,23 +1996,6 @@ export class BaseService extends AbstractBaseService {
     intersect(arrA, arrB, intersectionField) {
         return Lá.intersectionBy(arrA, arrB, intersectionField);
     }
-    intersectionLegacy = (arr1, arr2) => {
-        const res = []; // Explicitly define `res` as an array of `any`
-        for (const i of arr1) {
-            if (!arr2.includes(i)) {
-                continue;
-            }
-            res.push(i);
-        }
-        return res;
-    };
-    intersectMany = (...arrs) => {
-        let res = arrs[0].slice();
-        for (let i = 1; i < arrs.length; i++) {
-            res = this.intersectionLegacy(res, arrs[i]);
-        }
-        return res;
-    };
     isEmpty(value) {
         return value == null || value.length === 0;
     }
@@ -2075,7 +2140,7 @@ export class BaseService extends AbstractBaseService {
     //   }
     // }
     async exists(req, res, field, model, value) {
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         if (value === undefined || value === null) {
             this.i.app_msg = `${field} is required for existence check`;
             this.err.push(this.i.app_msg);
@@ -2112,7 +2177,7 @@ export class BaseService extends AbstractBaseService {
     async validateCreateGeneric(req, res, rules, existenceMap, // field: Model
     validationCreateParams // same as your existing usage
     ) {
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         // Check required fields
         for (let field of rules.required || []) {
             const value = this.getPlValue(req, field);

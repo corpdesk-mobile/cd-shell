@@ -1,10 +1,10 @@
 import { HttpFxEventType } from ".";
 import { FxEventEmitter } from "./fx-event-emitter";
 export class ProgressService {
-    fx = new FxEventEmitter();
-    uploadBar = document.getElementById("uploadProgressBar");
-    downloadBar = document.getElementById("downloadProgressBar");
     constructor() {
+        this.fx = new FxEventEmitter();
+        this.uploadBar = document.getElementById("uploadProgressBar");
+        this.downloadBar = document.getElementById("downloadProgressBar");
         this.fx.on((event) => this.handle(event));
     }
     handle(event) {

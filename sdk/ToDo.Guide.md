@@ -1,1644 +1,15 @@
+Next step:
+Study how sidebar is initializing itself to be a node in cd-sio network. We need something as close as possible.
 
+- method naming should be as close as possible with SidebarComponent implementations in Angular for consistency and developing coding standards for this design and implementation.
+- Goal should be such that a bulk of such repeated codes can be consolidated in some library that can then be easy to replicate.
 
-I am reviewing how scafolding in cd-cli works for corpdesk components.
-This is being done in view of reusing some of the codes for converting corpdesk controller to cd-shell runtime controller code.
-I would like you to do a developer code for the process listed below.
-You will first focus on this methods. We will then later go into the helper classes to see how they work and do documentation accordingly.
+Specific objectives should include impementations of:
 
-```ts
-async generateComponent(
-    artifactTypeDescriptor: CdControllerDescriptor | CdServiceDescriptor,
-    config: ComponentGenerationConfig,
-    moduleDescriptor: CdModuleDescriptor,
-    action: DevModeAction,
-  ): Promise<CdFxReturn<void>> {
-    try {
-      if (
-        !artifactTypeDescriptor.name ||
-        !artifactTypeDescriptor.dependencies ||
-        !artifactTypeDescriptor.fileName
-      ) {
-        return {
-          state: false,
-          data: undefined,
-          message: 'Componet data is not valid.',
-        };
-      }
-      config.componentName = artifactTypeDescriptor.name;
-      // --- 1. Validation ---
-      if (!artifactTypeDescriptor?.name) {
-        const msg = 'Descriptor missing name';
-        this.b.logWithContext(this, 'generateComponent:validation-fail', { msg }, 'error');
-        return { state: false, data: undefined, message: msg };
-      }
-
-      if (!Array.isArray(config.dependencyList)) {
-        const msg = 'Invalid dependencyList in config';
-        return { state: false, data: undefined, message: msg };
-      }
-
-      this.b.logWithContext(
-        this,
-        `gnerateComponent:artifactTypeDescriptor.dependencies:`,
-        artifactTypeDescriptor.dependencies,
-        'debug',
-      );
-
-      // --- 2. Process Dependencies ---
-      const depsResult = await this.processDependencies(
-        artifactTypeDescriptor.dependencies,
-        moduleDescriptor,
-      );
-      if (!depsResult.state) {
-        return {
-          state: false,
-          data: null,
-          message: depsResult.message || 'Failed to process dependencies',
-        };
-      }
-      const dependencies = depsResult.data;
-      this.b.logWithContext(this, `generateComponent:dependencies:`, dependencies, 'debug');
-
-      // --- 3. Build Import Block ---
-      const importBlock = this.groupImports(dependencies ?? []);
-      this.b.logWithContext(this, `generateComponent:importBlock:`, importBlock, 'debug');
-
-      const nameMap = this.prepareNameMap(artifactTypeDescriptor.name);
-      this.b.logWithContext(this, `generateComponent:nameMap:`, nameMap, 'debug');
-
-      /**
-       * --- 3. Build methods ---
-       */
-      const methodStubsResult = await this.svTemplateSnippet.buildMethodStubSnippets(
-        config.artifactType.slice(0, -1) as 'controller' | 'service' | 'model',
-        artifactTypeDescriptor.methods ?? [],
-        artifactTypeDescriptor.name,
-        this, // 👈 pass current instance
-        artifactTypeDescriptor,
-      );
-      this.b.logWithContext(
-        this,
-        `generateComponent:methodStubsResult:`,
-        methodStubsResult,
-        'debug',
-      );
-
-      if (methodStubsResult.state === CdFxStateLevel.Error) {
-        return {
-          state: false,
-          data: undefined,
-          message: methodStubsResult.message || 'Failed to build method stubs',
-        };
-      }
-
-      // --- 4. Assemble class using buildClass() ---
-      const primaryType = this.derivePrimaryComponentType(artifactTypeDescriptor.fileName);
-      if (!primaryType) {
-        return {
-          state: CdFxStateLevel.LogicalFailure,
-          message: 'Could not get the file name',
-        };
-      }
-
-      const classResult = await this.svTemplateSnippet.buildClass(
-        `${nameMap.Abcd}${toPascalCase(primaryType)}`,
-        artifactTypeDescriptor.attributes, // attributes (if any in future)
-        // constructorSnippetResult.data ?? '',
-        methodStubsResult.data ?? [],
-      );
-
-      if (classResult.state === CdFxStateLevel.Error) {
-        return {
-          state: false,
-          data: undefined,
-          message: classResult.message || 'Failed to build class',
-        };
-      }
-
-      const classCode = `${importBlock}\n\n${classResult.data}`;
-      // this.b.logWithContext(this, `generateComponent:classCode:`, classCode, 'debug');
-
-      // --- 5. PreWrite Validation ---
-      const structureErrorsResult = await this.svPreWriteValidator.validateStructure(classCode);
-      this.b.logWithContext(
-        this,
-        `generateComponent:structureErrorsResult:`,
-        structureErrorsResult,
-        'debug',
-      );
-
-      if (!structureErrorsResult?.state) {
-        return {
-          state: false,
-          data: undefined,
-          message: structureErrorsResult.message || 'Structure validation failed',
-        };
-      }
-
-      const casingErrorsResult = await this.svPreWriteValidator.validateCasing(classCode);
-      this.b.logWithContext(
-        this,
-        `generateComponent:casingErrorsResult:`,
-        casingErrorsResult,
-        'debug',
-      );
-
-      if (!casingErrorsResult?.state) {
-        return {
-          state: false,
-          data: undefined,
-          message: casingErrorsResult.message || 'Casing validation failed',
-        };
-      }
-
-      let finalCode = classCode;
-      const structureErrors = structureErrorsResult.data ?? [];
-      const casingErrors = casingErrorsResult.data ?? [];
-      if (structureErrors.length || casingErrors.length) {
-        if (this.svPreWriteValidator.autoCorrect) {
-          const autoCorrectResult = this.svPreWriteValidator.autoCorrect(classCode, [
-            ...structureErrors,
-            ...casingErrors,
-          ]);
-          finalCode =
-            autoCorrectResult instanceof Promise
-              ? ((await autoCorrectResult).data ?? classCode)
-              : (autoCorrectResult ?? classCode);
-        }
-      }
-
-      /**
-       * --- 6. Apply the method implementations to the finalCode scaffold. ---
-       * - substitute default methods with template reference
-       */
-      const finalImplementedCode = await this.applyComponentImplementations(
-        finalCode,
-        artifactTypeDescriptor,
-        moduleDescriptor,
-      );
-
-      this.b.logWithContext(
-        this,
-        `generateComponent:finalImplementedCode:`,
-        finalImplementedCode,
-        'debug',
-      );
-
-      this.b.logWithContext(
-        this,
-        `generateComponent:artifactTypeDescriptor.fileName:`,
-        artifactTypeDescriptor.fileName,
-        'debug',
-      );
-
-      config.componentDescriptor = artifactTypeDescriptor;
-
-      /**
-       * stop for observation before writing controllers
-       */
-      // if(artifactTypeDescriptor) {
-      //   throw new Error(`Process stoped for observation!`);
-      // }
-
-      /**
-       * stop for observation before writing controller types
-       */
-      // if (artifactTypeDescriptor && artifactTypeDescriptor.type === ComponentType.ControllerType) {
-      //   throw new Error(`Process stoped for observation!`);
-      // }
-
-      /**
-       * stop for observation before writing services
-       */
-      // if (artifactTypeDescriptor && artifactTypeDescriptor.type === ComponentType.Service) {
-      //   throw new Error(`Process stoped for observation!`);
-      // }
-
-      /**
-       * stop for observation before writing service type
-       */
-      // if (artifactTypeDescriptor && artifactTypeDescriptor.type === ComponentType.ServiceType) {
-      //   throw new Error(`Process stoped for observation!`);
-      // }
-
-      // --- 9. File Write ---
-      const writeResult = await this.writeFile(
-        config,
-        moduleDescriptor,
-        finalImplementedCode,
-        action,
-        artifactTypeDescriptor,
-      );
-      if (!writeResult.state) return writeResult;
-
-      return { state: true, data: undefined };
-    } catch (e) {
-      const actualMessage = (e as Error).message || 'Unknown error during generateComponent';
-      this.b.logWithContext(this, 'generateComponent:error', { e, actualMessage }, 'error');
-      return { state: false, data: undefined, message: actualMessage };
-    }
-  }
-```
-
-/////////////////////////////////////////////
-
-Based on the class below, do a specific developer documentation as a detail part of how buildMethodStubSnippets() works within the workflow you had just done.
+1. how dev-syc can register itself in readiness for bi-directional communication with the browser via cd-sio
+2. Once dev-sync is registered, it should be able to send a message. The message payload can be data every time save is invoked.
 
 ```ts
-export class TemplateSnippetService {
-  b = new BaseService();
-
-  async init(): Promise<void> {
-    this.b.logWithContext(this, 'init-start', {}, 'debug');
-    // reserved for async setup
-    this.b.logWithContext(this, 'init-complete', {}, 'debug');
-  }
-
-  async buildImportBlock(imports: string[] | null | undefined): Promise<CdFxReturn<string>> {
-    this.b.logWithContext(this, 'buildImportBlock:start', { imports }, 'debug');
-
-    if (!Array.isArray(imports)) {
-      const msg = 'Invalid imports array provided';
-      this.b.logWithContext(this, 'buildImportBlock:error', msg, 'error');
-      return { state: CdFxStateLevel.Error, data: '', message: msg };
-    }
-
-    const block = imports.join('\n');
-    this.b.logWithContext(this, 'buildImportBlock:complete', { block }, 'debug');
-    return { state: CdFxStateLevel.Success, data: block };
-  }
-
-  async buildConstructorSnippet(
-    type: 'controller' | 'service' | 'model',
-  ): Promise<CdFxReturn<string>> {
-    this.b.logWithContext(this, 'buildConstructorSnippet:start', { type }, 'debug');
-
-    let constructorCode: string;
-    let state: CdFxStateLevel = CdFxStateLevel.Success;
-
-    switch (type) {
-      case 'controller':
-        constructorCode = `  constructor() {\n    // TODO: initialize controller\n  }`;
-        break;
-      case 'service':
-        constructorCode = `  constructor() {\n    // TODO: initialize service\n  }`;
-        break;
-      case 'model':
-        constructorCode = `  constructor(initData?: Partial<this>) {\n    Object.assign(this, initData);\n  }`;
-        break;
-      default:
-        constructorCode = `  constructor() {}`;
-        state = CdFxStateLevel.Warning;
-        this.b.logWithContext(this, 'buildConstructorSnippet:warn', { type }, 'warn');
-    }
-
-    this.b.logWithContext(
-      this,
-      'buildConstructorSnippet:complete',
-      { type, constructorCode },
-      'debug',
-    );
-    return {
-      state,
-      data: constructorCode,
-      message: state === CdFxStateLevel.Warning ? 'Unknown type fallback' : null,
-    };
-  }
-
-  async buildMethodStubSnippets(
-    type: 'controller' | 'service' | 'model',
-    methods: FunctionDescriptor[],
-    baseName: string,
-    svGenComponentService: GenComponentService,
-    artifactDescriptor: CdControllerDescriptor | CdServiceDescriptor,
-  ): Promise<CdFxReturn<string[]>> {
-    this.b.logWithContext(this, 'buildMethodStubSnippets:start', { type, methods }, 'debug');
-
-    if (!Array.isArray(methods) || methods.length === 0) {
-      const msg = 'No valid FunctionDescriptor array provided';
-      this.b.logWithContext(this, 'buildMethodStubSnippets:error', msg, 'error');
-      return { state: CdFxStateLevel.Error, data: [], message: msg };
-    }
-
-    const nameMap = svGenComponentService.prepareNameMap(baseName);
-
-    const stubs = methods.map((method) => {
-      this.b.logWithContext(this, 'buildMethodStubSnippets:method', { method }, 'debug');
-      if (!method?.name) {
-        this.b.logWithContext(this, 'buildMethodStubSnippets:skip-invalid', { method }, 'warn');
-        return '';
-      }
-
-      // --- Fallback: generate generic stub ---
-      const visibility = method.scope?.visibility || 'public';
-      const isAsync = method.behavior?.isAsync || false;
-      const returnsPromise = method.behavior?.returnsPromise || false;
-
-      let visibilityPrefix = '';
-      if (visibility === 'private' || visibility === 'protected') {
-        visibilityPrefix = `${visibility} `;
-      }
-
-      // ✅ Fix Promise<Promise<...>> issue
-      let returnType: string;
-      if (returnsPromise) {
-        if (method.output?.returnType?.startsWith('Promise')) {
-          returnType = method.output.returnType;
-        } else {
-          returnType = `Promise<${method.output?.returnType || 'void'}>`;
-        }
-      } else {
-        returnType = method.output?.returnType || 'void';
-      }
-
-      const asyncPrefix = isAsync ? 'async ' : '';
-
-      // Handle parameters
-      const params = method.parameters
-        ? method.parameters.map((p) => `${p.name}: ${p.type}`).join(', ')
-        : '';
-
-      // ✅ Normalize method names to camelCase
-      // const methodName = this.toCamelCase(method.name);
-
-      let methodName = '';
-
-      if (method.name !== 'constructor') {
-        if (type === 'controller') {
-          methodName = this.toPascalCase(method.name);
-        }
-
-        if (type === 'service') {
-          methodName = this.toCamelCase(method.name);
-        }
-      }
-
-      if (method.name === 'constructor') {
-        methodName = method.name;
-      }
-
-      if (methodName === 'constructor') {
-        // Constructor special case
-        return (
-          `  // <<cd:method:constructor:start>>\n` +
-          `  constructor(${params}) {\n    // TODO: implement\n  }\n` +
-          `  // <<cd:method:constructor:end>>`
-        );
-      } else {
-        return (
-          `  // <<cd:method:${methodName}:start>>\n` +
-          `  ${visibilityPrefix}${asyncPrefix}${methodName}(${params}): ${returnType} {\n    // TODO: implement\n  }\n` +
-          `  // <<cd:method:${methodName}:end>>`
-        );
-      }
-    });
-
-    this.b.logWithContext(this, 'buildMethodStubSnippets:stubs', { stubs }, 'debug');
-    return { state: CdFxStateLevel.Success, data: stubs };
-  }
-
-  // --- helpers ---
-
-  private toPascalCase(str: string): string {
-    this.b.logWithContext(this, 'toPascalCase:start', { input: str }, 'debug');
-    if (typeof str !== 'string' || str.length === 0) {
-      this.b.logWithContext(this, 'toPascalCase:error', { input: str }, 'error');
-      return '';
-    }
-    const result = str.charAt(0).toUpperCase() + str.slice(1);
-    this.b.logWithContext(this, 'toPascalCase', { input: str, output: result }, 'debug');
-    return result;
-  }
-
-  async buildClass(
-    className: string | null | undefined,
-    attributes: ComponentAttributes[] | null | undefined,
-    // constructorCode: string,
-    methods: string[] | null | undefined,
-  ): Promise<CdFxReturn<string>> {
-    this.b.logWithContext(this, 'buildClass:start', { className, attributes, methods }, 'debug');
-
-    if (!className || typeof className !== 'string') {
-      const msg = 'Invalid className provided';
-      this.b.logWithContext(this, 'buildClass:error', msg, 'error');
-      return { state: CdFxStateLevel.Error, data: '', message: msg };
-    }
-    const safeAttributes = Array.isArray(attributes) ? this.formatAttributes(attributes) : [];
-
-    this.b.logWithContext(this, `TemplateSnippetService::buildClass()/safeAttributes:`, {safeAttributes}, 'debug')
-
-    // Filter out any constructor entries from the methods array
-    const safeMethods = Array.isArray(methods)
-      ? methods.filter((method) => !method.trim().startsWith('constructor('))
-      : [];
-    this.b.logWithContext(this, 'buildClass:safeMethods', { safeMethods }, 'debug');
-    const lines: string[] = [];
-    lines.push(`export class ${className} {`);
-
-    if (safeAttributes.length > 0) {
-      lines.push(safeAttributes.join('\n'));
-      lines.push('');
-    }
-
-    // if (constructorCode) {
-    //   lines.push(constructorCode);
-    //   lines.push('');
-    // }
-
-    if (safeMethods.length > 0) {
-      lines.push(safeMethods.join('\n\n'));
-    }
-
-    lines.push('}');
-    const code = lines.join('\n');
-    this.b.logWithContext(this, 'buildClass:complete', { className, code }, 'debug');
-    return { state: CdFxStateLevel.Success, data: code };
-  }
-
-  
-  private formatAttributes(attributes: ComponentAttributes[]): string[] {
-    return attributes.map((attr) => {
-      this.b.logWithContext(this, 'formatAttributes:attr', { attr }, 'debug');
-
-      let attrString = '';
-
-      if (attr.visibility) {
-        attrString += `${attr.visibility} `;
-      }
-
-      attrString += `${attr.name}`;
-
-      // rules special-case (cRules, uRules, dRules …)
-      const isRule =
-        typeof attr.name === 'string' &&
-        (attr.name.endsWith('Rules') || ['cRules', 'uRules', 'dRules'].includes(attr.name));
-
-      if (attr.type) {
-        attrString += `: ${isRule ? 'any' : attr.type}`;
-      }
-
-      // assign values
-      if (attr.value !== undefined) {
-        attrString += ` = ${JSON.stringify(attr.value)}`;
-      } else if (attr.defaultValue !== undefined) {
-        if (isRule && typeof attr.defaultValue === 'object') {
-          // pretty-print the rules object
-          const formattedObj = JSON.stringify(attr.defaultValue, null, 2)
-            .replace(/"([^"]+)":/g, '$1:') // remove quotes from keys
-            .replace(/"/g, `'`); // convert " → '
-          attrString += ` = ${formattedObj}`;
-        } else {
-          attrString += ` = ${JSON.stringify(attr.defaultValue)}`;
-        }
-      }
-
-      attrString += ';';
-
-      if (attr.isDependency) {
-        attrString = `\n  ${attrString}`;
-      }
-
-      return `  ${attrString}`;
-    });
-  }
-
-  private buildClassHeader(nameMap: any, type: string) {
-    return `export class ${nameMap.Abcd}${toPascalCase(type)} {`;
-  }
-
-}
-```
-
-/////////////////////////////////////////////////
-Having looked at how cd-cli scafolding works, we can brain storm around the following topics for cd-shell dev-to-runtime codes managent.
-I have below 3 serialized and labled illustrations.
-Based on experience of the process that we have just documented, we need to do something similar where
-1. The scafolding process always make reference to abstruct class for validation 
-2. There would be a method for syncing 2 and 3. The can be trigered by developer manually saving or cd-cli controlling cd-shell and trigers the sync method or similarly by ai agent.
-3. We can have a specific module in CdShell/sys that is dedicated to this management
-
-Visional objective:
-1. We need to think futuristic and beyond the traditional development proceses and expectation and take advantage of the emerging tools.
-2. Automation in the interest of DX should take front seat.
-Goal:
-  - raising the bar for live interactions with dev browser
-  - borrow from cd-cli code in terms of saving dev-code as objects during code tranpilation
-  - is it possible to make use of git state in a given file to manage auto updates
-  - how can we implement watcher that can update browser during development (this is a long term developer dream but is never talked about...and assumed to be imposible. I believe it just that few care to dare)
-  - taking advantage of cd-descriptors to manage dev-to-runtime process
-  - goal: live response in browser when developer code changes
-    - capacity to make changes vie (manaual, cd-cli or ai)
-    - capacity to run visual tests of functions for a given module which displays browser or device.
-
-
-
-// 1. Base constrain
-```ts
-// src/CdShell/sys/core/base-controller.ts
-export abstract class CdShellController {
-  abstract template(): string;
-  abstract setup(): void;
-  abstract processFormData(): Record<string, any>;
-
-  // optional: override for auth or other actions
-  auth?(data: any): void;
-
-  // lifecycle hooks
-  onInit?(): void;
-  onDestroy?(): void;
-}
-
-```
-
-// 2. Developer source
-```ts
-import { BaseService, ICdResponse } from "../../base";
-import { CdShellController } from "../../base/cd-shell.controller";
-import { ConsumerModel } from "../../moduleman/models/consumer.model";
-import { UserModel } from "../models/user.model";
-
-export class SignInController extends CdShellController {
-  private b = new BaseService();
-
-  template(): string {
-    return `
-      <form class="cd-sign-in">
-        <h1 class="cd-heading">Sign In</h1>
-
-        <label>Username</label>
-        <input cd-model="username" placeholder="Username" />
-
-        <label>Password</label>
-        <input cd-model="password" type="password" placeholder="Password" />
-
-        <button type="button" cd-click="auth">Sign In</button>
-      </form>
-    `;
-  }
-
-  setup(): void {
-    const form = document.getElementById("signInForm");
-    if (!form) return;
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const { username, password } = this.processFormData();
-      const data = {
-        user: { userName: username, password } as UserModel,
-        consumer: {
-          consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD",
-        } as ConsumerModel,
-      };
-      this.auth(data);
-    });
-  }
-
-  processFormData(): { username: string; password: string } {
-    const username =
-      (document.querySelector('[cd-model="username"]') as HTMLInputElement)
-        ?.value || "";
-    const password =
-      (document.querySelector('[cd-model="password"]') as HTMLInputElement)
-        ?.value || "";
-    return { username, password };
-  }
-
-  async auth(data: {
-    user: UserModel;
-    consumer: ConsumerModel;
-  }): Promise<void> {
-    console.log('starting SignInController:auth()')
-    console.log('SignInController:auth()/data:', data)
-    window.cdShell?.progress?.start("Signing in...");
-    try {
-      const request = this.b.buildBaseRequest(
-        { ctx: "Sys", name: "User" },
-        { name: "User" },
-        "Login",
-        { data: data.user, consumer: data.consumer },
-        null
-      );
-
-      const result = (await this.b.handleRequest(request)) as ICdResponse;
-      if (result.app_state.success) {
-        window.cdShell?.notify?.success("Login successful");
-        window.cdShell?.progress?.done();
-        // Proceed to dashboard or main shell load
-      } else {
-        window.cdShell?.notify?.error(
-          result.app_state.info.app_msg || "Login failed"
-        );
-      }
-    } catch (e: any) {
-      window.cdShell?.notify?.error(e.message || "Unexpected error");
-    } finally {
-      window.cdShell?.progress?.done();
-    }
-  }
-}
-
-```
-// 3. Runtime managed code
-```ts
-export const ctlSignIn = {
-  username: "",
-  password: "",
-
-  __template() {
-    return `
-      <form class="cd-sign-in">
-        <h1 class="cd-heading">Sign In</h1>
-
-        <label>Username</label>
-        <input cd-model="username" placeholder="Username" />
-
-        <label>Password</label>
-        <input cd-model="password" type="password" placeholder="Password" />
-
-        <button type="button" cd-click="auth">Sign In</button>
-      </form>
-    `;
-  },
-
-  __setup() {
-    console.log("[cd-user] Controller setup complete");
-  },
-
-  auth() {
-    console.log("Auth triggered with:", this.username, this.password);
-    alert(`Hello, ${this.username}!`);
-  },
-};
-```
-
-////////////////////////////////////////////////////
-I would like you to develop a technical documentation on how corpdesk cd-push module works.
-Below are illustrations showing how the push mechanism is used in between module federation modules to syc states.
-In particular the cd-user module has a login which returns state including user menu data when successful.
-The menu is rendered at the angual cd-shell module. So cd-user sync data with cd-shell via socket.io.client via cd-sio (backend socket.io server)
-Antually cd-sio is just cd-api running in the context of socket.io. Normally cd-api would running in port 3001 and cd-sio in port 3002
-
-Due to the limitations in amount of data I can sent at one go, I will be sending the illustrations one by one.
-Illustration 1: 
-socket.io.client residing in angular library
-// projects/core/src/lib/cd-push/sio-client.service.ts
-```ts
-
-@Injectable({
-  providedIn: 'root',
-})
-export class SioClientService {
-  env: any = null;
-  jwtToken = '';
-  socket: Socket;
-  public message$: BehaviorSubject<string> = new BehaviorSubject('');
-  pushDataList: ICdPushEnvelop[] = [];
-  constructor(
-    private logger: NGXLogger,
-  ) {
-  }
-
-  setEnv(env: any) {
-    this.env = env
-  }
-  /**
-   * - save resource in localStorag so it is sharable
-   * with other resources between different client entities
-   * - make call to the server to
-   *    - save resource in redis for reference by other remote clients
-   *    - the same records in redis will be reverenced for persistent socket connection
-   */
-  registerResource(rGuid: string) {
-    // this.resourceGuid = uuidv4();
-    const key = rGuid;
-    const value: CdObjId = {
-      appId: this.env.appId,
-      ngModule: 'UserModule',
-      resourceName: 'SessionService',
-      resourceGuid: rGuid,
-      jwtToken: '',
-      socket: null,
-      commTrack: {
-        initTime: Number(new Date()),
-        relayTime: null,
-        relayed: false,
-        pushed: false,
-        pushTime: null,
-        deliveryTime: null,
-        delivered: false,
-        completed: false,
-        completedTime: null
-      }
-    }
-
-    const env = {
-      ctx: 'Sys',
-      m: 'CdPush',
-      c: 'Websocket',
-      a: 'Create',
-      dat: {
-        f_vals: [
-          {
-            data: value
-          }
-        ],
-        token: ''
-      },
-      args: {}
-    }
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-
-
-  /**
-   * initiate listeners to various events involved
-   * in pushing message via push server
-   */
-  initSio(cls: any, action: any) {
-    console.log('cdUiLib::SioClientService::initSio()/01')
-    this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
-    console.log("cdUiLib::SioClientService::initSio()/this.socket:", this.socket)
-
-    // this.registerResource(rGuid)
-
-    /**
-     * injecting extra listeners from 
-     * implementing class
-     */
-    // extListiners(this);
-
-    if (action) {
-      this.listenSecure('push-registered-client', cls, action)
-        .subscribe((payLoadStr: any) => {
-          console.log('initSio::listenSecure/action=push-registered-client')
-          console.log('initSio::listenSecure/action=push-registered-client/payLoadStr:', payLoadStr)
-          action(cls, 'push-registered-client', payLoadStr)
-        })
-
-      this.listenSecure('push-msg-pushed', cls, action)
-        .subscribe((payLoadStr: any) => {
-          console.log('initSio::listenSecure/action=push-msg-pushed')
-          console.log('initSio::listenSecure/action=push-msg-pushed/payLoadStr:', payLoadStr)
-          action(cls, 'push-msg-pushed', payLoadStr)
-        })
-    }
-
-    /**
-     * Send receives 'push-msg-relayed' event when
-     * message has been received by server and pushed 
-     * to client. No action is expected from the sender
-     * listen for notification that a given message has reached the server
-     * and ready for pushing
-     */
-    this.listenSecure('push-msg-relayed')
-      .subscribe((payLoadStr: string) => {
-        console.log('cdUiLib::SioClientService::initSio()/listenSecure()/push-msg-relayed/:payLoadStr:', payLoadStr)
-        if (payLoadStr) {
-          const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
-          console.log('cdUiLib::SioClientService::initSio()/listenSecure(msg-relayed)payLoad:', payLoad)
-          this.updateRelayed(payLoad)
-        }
-      })
-
-    /**
-   * Recepient waits for notification of messaged pushed
-   */
-    this.listenSecure('push-msg-pushed')
-      .subscribe((payLoadStr: string) => {
-        console.log('cdUiLib::SioClientService::initSio()/listenSecure()/push-delivered/:payLoadStr:', payLoadStr)
-        // this confirms a given message was received
-        // mark local send message as delivered
-        // this.messageList.push(message);
-        if (payLoadStr) {
-          const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
-          // sender to flag that sent message is received
-          this.notificationAcceptDelivery(payLoad)
-        }
-      })
-
-
-
-    /**
-     * Sender waits for notification to message delivered
-     * It responds by sending completion message to server.
-     * Server is to save records but no further action
-     * Server would mark the commTrack as completed
-     * listening by r for notification that a given message
-     * has been seccussfully delivered
-     */
-    this.listenSecure('push-delivered')
-      .subscribe((payLoadStr: string) => {
-        console.log('cdUiLib::SioClientService::initSio()/listenSecure()/push-delivered/:payLoadStr:', payLoadStr)
-        // this confirms a given message was received
-        // mark local send message as delivered
-        // this.messageList.push(message);
-        if (payLoadStr) {
-          const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
-          // sender to flag that sent message is received
-          this.notificationMsgComplete(payLoad)
-        }
-      })
-
-  }
-
-  public sendMessage(msg: string) {
-    console.log('cdUiLib::SioClientService::sendMessage()/msg', msg)
-    if (this.socket) {
-      this.socket.emit('message', msg);
-    } else {
-      console.log('cdUiLib::SioClientService::sendMessage() error: socket is invalid')
-    }
-
-  }
-
-  public sendPayLoad(pushEnvelope: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::sendPayLoad/01/pushEnvelope:', pushEnvelope)
-    if ('pushData' in pushEnvelope) {
-      if ('pushGuid' in pushEnvelope.pushData) {
-        console.log('cdUiLib::SioClientService::sendPayLoad/02/this.socket:', this.socket)
-        // every message has a unique id
-        // pushEnvelope.pushData.pushGuid = uuidv4();
-        if (this.socket) {
-          this.logger.log("cdUiLib::SioClientService::sendPayLoad/:socket is available")
-          const msg = JSON.stringify(pushEnvelope);
-          this.socket.emit(pushEnvelope.pushData.triggerEvent, msg);
-        } else {
-          this.logger.error("cdUiLib::SioClientService::sendPayLoad/:unable to push message. socket is null")
-        }
-      } else {
-        this.logger.error('cdUiLib::SioClientService::sendPayLoad/01/triggerEvent missing in payLoad.pushData')
-      }
-    } else {
-      this.logger.error('cdUiLib::SioClientService::sendPayLoad/01/pushData missing in pushEnvelope')
-    }
-
-  }
-
-  public listenSecure = (emittEvent: string, cls = null, action: any = null) => {
-    console.log('cdUiLib::SioClientService::listenSecure()/01/emittEvent:', emittEvent)
-    console.log('cdUiLib::SioClientService::listenSecure()/this.socket:', this.socket)
-    if (this.socket) {
-      this.socket.on(emittEvent, (payLoadStr: any) => {
-
-        /**
-         * - check if confirmation process is enabled
-         * - prepare confirmation message back to sender
-         *    - flag message as recieved
-         *    - set triggerEvent event to 'msg-delivered' for server processing
-         *    - set emittEvent event to 'msg-delivered' for server processing
-         *    - trim (remove unessary load) payload for confirmation message
-         * - send confirmation message to sender
-         */
-        let triggerEvent = null;
-        if (payLoadStr) {
-          console.log('cdUiLib::SioClientService::listenSecure()/emittEvent/01/emittEvent:', emittEvent)
-          console.log('cdUiLib::SioClientService::listenSecure()/payLoadStr:', payLoadStr)
-          const payLoad: ICdPushEnvelop = payLoadStr;
-          // if (emittEvent === 'push-registered-client') {
-          //   action(cls, payLoadStr)
-          // }
-          // if (emittEvent == 'push-registered-client') {
-          //   action(cls,emittEvent, payLoad)
-          // }
-
-          if (action) {
-            action(cls, emittEvent, payLoad);
-          }
-
-          if ('pushData' in payLoad && action) {
-            console.log('cdUiLib::SioClientService::listenSecure/2')
-            if ('triggerEvent' in payLoad.pushData) {
-              console.log('cdUiLib::SioClientService::listenSecure/3')
-              triggerEvent = payLoad.pushData.triggerEvent;
-            } else {
-              console.log('cdUiLib::SioClientService::listenSecure()/triggerEvent missing in payLoad.pushData')
-            }
-
-          } else {
-            console.log('cdUiLib::SioClientService::listenSecure()/pushData missing in payLoad')
-          }
-
-
-          /**
-           * 
-           * if emittEvent === 'msg-delivered-push', 
-           * it means end of cycle of messaging, no need to 
-           * send another confirmation message, so...
-           *    - do not send confirmation message
-           *    - 
-           */
-          console.log('cdUiLib::SioClientService::listenSecure/4')
-          console.log('listenSecure()/emittEvent/04/emittEvent:', emittEvent)
-          if (emittEvent === 'push-msg-relayed') {
-            /**
-             * proceed with normal message reception,
-             * do not send another emittEvent = 'msg-delivered-push'
-             */
-            console.log('cdUiLib::SioClientService::listenSecure/5')
-            // this.message$.next(payLoadStr);
-          } else {
-            /**
-             * send confirmation massage
-             *  - set triggerEvent = 'msg-delivered'
-             *  - set emittEvent = 'msg-delivered-push'
-             */
-            console.log('cdUiLib::SioClientService::listenSecure/6')
-            if (emittEvent === 'push-msg-relayed') {
-
-            }
-            // else {
-            //   this.sendPayLoad(payLoad)
-            // }
-            if (emittEvent === 'push-msg-pushed') {
-              this.notificationAcceptDelivery(payLoadStr)
-            }
-
-            if (emittEvent === 'push-delivered') {
-              this.notificationMsgComplete(payLoadStr)
-            }
-
-          }
-        }
-
-      });
-    } else {
-      console.log('cdUiLib::SioClientService::listenSecure()/error: socket is invalid')
-    }
-
-    return this.message$.asObservable();
-  }
-
-  /**
-   * No action is expected from sender.
-   * No message to send to server
-   * Optionally, the sender can do its own house
-   * data updates and records.
-   * @param payLoad 
-   */
-  updateRelayed(payLoad: ICdPushEnvelop) {
-    console.log('updateRelayed()/01')
-    console.log('updateRelayed()/payLoad:', payLoad)
-    /**
-     * update record of send messages
-     */
-  }
-
-  notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/01')
-    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/senderAcceptDelivery:', payLoad)
-    /**
-     * update record of payload
-     * - delivered time
-     * - delivered = true
-     * - isNotification = true
-     */
-    payLoad.pushData.commTrack.deliveryTime = Number(new Date());
-    payLoad.pushData.commTrack.delivered = true;
-    payLoad.pushData.isNotification = true;
-    payLoad.pushData.triggerEvent = 'msg-received';
-    /**
-     * reverse sender and receiver subTypeId
-     */
-    this.sendPayLoad(payLoad);
-  }
-
-  notificationMsgComplete(payLoad: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::notificationMsgComplete()/01')
-    console.log('cdUiLib::SioClientService::notificationMsgComplete()/1:', payLoad)
-    /**
-     * update record of payload
-     * - delivered time
-     * - delivered = true
-     * - isNotification = true
-     */
-    payLoad.pushData.commTrack.completedTime = Number(new Date());
-    payLoad.pushData.commTrack.completed = true;
-    payLoad.pushData.isNotification = true;
-    payLoad.pushData.triggerEvent = 'msg-completed'
-    console.log('cdUiLib::SioClientService::notificationMsgComplete/2:', payLoad)
-    /**
-     * reverse sender and receiver subTypeId
-     */
-    this.sendPayLoad(payLoad);
-  }
-}
-
-```
-
-Illustration 2:
-Login component residing in cd-user module federation remote module.
-It has no conventional way of letting the shell know that login has succeeded or failed. So it uses socket.io.client from the angular library to push message the the shell via the cd-api server.
-```ts
-
-interface IInitData {
-  key: string;
-  value: CdObjId;
-}
-
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  // providers:[UserService],
-})
-
-export class LoginComponent implements OnInit {
-  debug = true;
-  baseModel: BaseModel;
-  resourceGuid = uuidv4();
-  jwtWsToken: null;
-  loginInvalid = false;
-  rememberMe = true;
-  submitted = false;
-  fg: FormGroup;
-  postData: any;
-  errMsg: any;
-  error = '';
-  sidebarInitData: IInitData;
-  socketData: ISocketItem[] | null = [];
-  routParams = {
-    queryParams: { token: '' },
-    skipLocationChange: true,
-    replaceUrl: false
-  };
-
-  constructor(
-    private logger: NGXLogger,
-    private svSio: SioClientService,
-    private svSioTest: SioClientTestService,
-    private svWss: WebsocketService,
-    private svUser: UserService,
-    private svSess: SessService,
-    private svMenu: MenuService,
-    private svNav: NavService,
-    private route: Router,
-    private svBase: BaseService,
-  ) {
-    // this.svSio.env = environment;
-    // this.svSio.initSio(null, null);
-    this.fg = new FormGroup({
-      userName: new FormControl(),
-      password: new FormControl(),
-      rememberMe: new FormControl()
-    });
-  }
-
-  ngOnInit() {
-    this.logger.info('cd-user/LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
-    // this.logger.debug('AppComponent initialized');
-    this.initialize()
-  }
-
-  login(fg: any) {
-    this.logger.info('starting cd-user/LoginComponent::login');
-    let authData: AuthData = fg.value;
-    const valid = fg.valid;
-    this.logger.info('cd-user/LoginComponent::login/01');
-    this.logger.info('cd-user/LoginComponent::login/fg:', fg);
-    this.logger.info('cd-user/LoginComponent::login/valid:', valid);
-    this.submitted = true;
-    const consumerGuid = { consumerGuid: environment.consumerToken };
-    authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
-    try {
-      this.logger.info('cd-user/LoginComponent::login/02');
-      if (valid) {
-        this.logger.info('cd-user/LoginComponent::login/03');
-        this.initSession(authData);
-      }
-    } catch (err) {
-      this.logger.info('cd-user/LoginComponent::login/04');
-      this.errMsg = "Something went wrong!!"
-      this.loginInvalid = true;
-    }
-  }
-
-  /**
-   * Initialize
-   */
-  initialize(): void {
-    this.logger.info('cd-user/LoginComponent::initialize()/01');
-    const filter: LsFilter = {
-      storageType: StorageType.CdObjId,
-      cdObjId: {
-        appId: localStorage.getItem('appId'),
-        resourceGuid: null,
-        resourceName: 'SidebarComponent',
-        ngModule: 'SharedModule',
-        jwtToken: localStorage.getItem('accessToken'),
-        socket: null,
-        commTrack: null
-      }
-    }
-    this.logger.info('cd-user/LoginComponent::initialize()/filter:', filter);
-    // this.sidebarInitData = this.svBase.searchLocalStorage(filter);
-    this.sidebarInitData = this.searchLocalStorage(filter);
-    this.logger.info('cd-user/LoginComponent::initialize()/this.sidebarInitData:', this.sidebarInitData);
-    const socketDataStr = localStorage.getItem('socketData')
-    if (socketDataStr) {
-      this.socketData = JSON.parse(socketDataStr).filter(appInit)
-      function appInit(s: ISocketItem): ISocketItem | null {
-        if (s.name === 'appInit') {
-          return s;
-        } else {
-          return null;
-        }
-      }
-      this.logger.info('cd-user/LoginComponent::initialize()/this.socketData:', this.socketData);
-    } else {
-      this.logger.info('Err: socket data is not valid')
-    }
-    this.setAppId();
-  }
-
-  setAppId() {
-    console.log('cd-user/LoginComponent::setAppId()/01')
-    console.log('cd-user/LoginComponent::setAppId()/this.svSio.socket:', this.svSio.socket)
-    localStorage.removeItem('appId');
-    // localStorage.setItem('appId', this.svBase.getGuid());
-    const appId = localStorage.getItem('appId');
-    console.log('cd-user/LoginComponent::setAppId()/appId:', appId)
-    const envl: ICdPushEnvelop = this.configPushPayload('register-client', 'push-registered-client', 1000)
-    console.log('cd-user/LoginComponent::setAppId()/envl:', envl)
-    // this.svSio.sendPayLoad(envl)
-
-    // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
-    this.listen('push-registered-client')
-    this.listen('push-msg-relayed')
-    this.listen('push-msg-pushed')
-    this.listen('push-delivered')
-    this.listen('msg-relayed')
-    this.listen('msg-menu')
-    this.listen('push-menu')
-    this.sendSioMessage(envl)
-  }
-
-  initSession(authData: AuthData) {
-    this.logger.info('cd-user/LoginComponent::initSession/01');
-    this.svUser.auth$(authData).subscribe((res: any) => {
-      if (res.app_state.success === true) {
-        this.logger.info('cd-user/LoginComponent::initSession/res:', JSON.stringify(res));
-        this.svSess.appState = res.app_state;
-        /*
-        create a session on successfull authentication.
-        For subsequeng successull request to the server,
-        use renewSess(res);
-        */
-        if (res.app_state.sess.cd_token !== null && res.app_state.success) {
-          this.logger.info('cd-user/LoginComponent::initSession/02');
-          const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
-          envl.pushData.m = res.data.menuData;
-          envl.pushData.token= res.app_state.sess.cd_token
-          this.logger.info('cd-user/LoginComponent::initSession/envl:', envl);
-
-          if (environment.wsMode === 'sio') {
-            this.logger.info('cd-user/LoginComponent::initSession/envl:...using sio');
-            this.sendSioMessage(envl)
-
-          }
-
-          if (environment.wsMode === 'wss') {
-            this.logger.info('cd-user/LoginComponent::initSession/envl:...using wss');
-            this.svWss.sendMsg(envl)
-          }
-
-          ///////////////////////////////////////
-          this.svSess.createSess(res, this.svMenu);
-          this.svUser.currentUser = { name: `${res.data.userData.userName}`, picture: `${environment.shellHost}/user-resources/${res.data.userData.userGuid}/avatar-01/a.jpg` };
-          this.svNav.userMenu = [
-            { title: 'Profile', link: '/pages/cd-auth/register' },
-            { title: 'Log out', link: '/pages/cd-auth/logout' }
-          ];
-          // this.baseModel.sess = res.app_state.sess;
-          const params = {
-            queryParams: { token: res.app_state.sess.cd_token },
-            skipLocationChange: true,
-            replaceUrl: false
-          };
-          // below: old method
-          // this.route.navigate(['/comm'], params);
-          // this.route.navigate(['/dashboard'], params);
-          this.route.navigate([environment.initialPage], params);
-
-
-          // below new method based on this.baseModel;
-          // this.svNav.nsNavigate(this,'/comm','message from cd-user')
-        }
-      } else {
-        this.errMsg = "The userName and password were not valid"
-        this.loginInvalid = true;
-        this.svSess.logout();
-      }
-    });
-
-  }
-
-  // push-registered-client, push-srv-received, push-msg-relayed, push-msg-pushed, push-delivered, push-msg-completed, push-srv-received, registered, push-menu, push-memo
-  listen(event) {
-    this.logger.info('cd-shell/cd-user/LoginComponent::listen/event:', event);
-    // Listen for incoming messages
-    this.svSioTest.sioListen(event).subscribe({
-      next: (payLoad: ICdPushEnvelop) => {
-        // console.log('cd-shell/cd-user/LoginComponent::listen/Received payLoad:', payLoadStr);
-        // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
-        console.log('cd-user/LoginComponent::pushSubscribe()/payLoad:', payLoad);
-        // Handle the message payload
-        // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu 
-        switch (payLoad.pushData.emittEvent) {
-          case 'push-msg-relayed':
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-msg-relayed event")
-            this.updateRelayed(payLoad)
-            break;
-          case 'push-msg-pushed':
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-msg-pushed event")
-            this.notificationAcceptDelivery(payLoad)
-            break;
-          case 'push-delivered':
-            console.log('cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-delivered-client event")
-            this.notificationMsgComplete(payLoad)
-            break;
-
-          case 'push-registered-client':
-            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-registered-client event")
-            this.saveSocket(payLoad);
-            break;
-
-          case 'msg-relayed':
-            console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle msg-relayed event")
-            break;
-          case 'push-msg-completed':
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-msg-completed event")
-            break;
-          case 'push-srv-received':
-            console.log('cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-srv-received event")
-            break;
-          case 'push-menu':
-            console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad:', payLoad)
-            console.log("handle push-menu event")
-            this.routParams.queryParams.token = payLoad.pushData.token;
-            // this.svIdleTimeout.startTimer(this.cd, idleTimerOptions);
-            // load appropriate menu
-            // this.htmlMenu(payLoad.resp.data,payLoad.pushData.token);
-            break;
-        }
-
-      },
-      error: (error) => {
-        console.error('cd-shell/cd-user/LoginComponent::listen/Error receiving message:', error);
-      },
-      complete: () => {
-        console.log('cd-shell/cd-user/LoginComponent::listen/Message subscription complete');
-      }
-    })
-  }
-
-
-  notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/01')
-    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/senderAcceptDelivery:', payLoad)
-    /**
-     * update record of payload
-     * - delivered time
-     * - delivered = true
-     * - isNotification = true
-     */
-    payLoad.pushData.commTrack.deliveryTime = Number(new Date());
-    payLoad.pushData.commTrack.delivered = true;
-    payLoad.pushData.isNotification = true;
-    payLoad.pushData.triggerEvent = 'msg-received';
-    /**
-     * reverse sender and receiver subTypeId
-     */
-    // this.sendPayLoad(payLoad);
-    this.sendSioMessage(payLoad)
-  }
-
-  notificationMsgComplete(payLoad: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::notificationMsgComplete()/01')
-    console.log('cdUiLib::SioClientService::notificationMsgComplete()/1:', payLoad)
-    /**
-     * update record of payload
-     * - delivered time
-     * - delivered = true
-     * - isNotification = true
-     */
-    payLoad.pushData.commTrack.completedTime = Number(new Date());
-    payLoad.pushData.commTrack.completed = true;
-    payLoad.pushData.isNotification = true;
-    payLoad.pushData.triggerEvent = 'msg-completed'
-    console.log('cdUiLib::SioClientService::notificationMsgComplete/2:', payLoad)
-    /**
-     * reverse sender and receiver subTypeId
-     */
-    // this.sendPayLoad(payLoad);
-    this.sendSioMessage(payLoad)
-  }
-
-  sendSioMessage(envl: ICdPushEnvelop): void {
-    this.logger.info('cd-user/LoginComponent::sendSioMessage/envl:', envl);
-    this.svSioTest.sendMessage(envl.pushData.triggerEvent, envl).subscribe({
-      next: (response: boolean) => {
-        console.log('Message sent successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error sending message:', error);
-      },
-      complete: () => {
-        console.log('Message sending complete');
-      }
-    });
-  }
-
-  configPushPayload(triggerEvent: string, emittEvent: string, cuid: number | string): ICdPushEnvelop {
-    console.log('starting cd-user::LoginComponent::configPushPayload()');
-    this.resourceGuid = this.svBase.getGuid();
-
-
-    const pushEnvelope: ICdPushEnvelop = {
-      pushData: {
-        pushGuid: '',
-        m: '',
-        pushRecepients: [],
-        triggerEvent: '',
-        emittEvent: '',
-        token: '',
-        isNotification: null,
-        appSockets: this.socketData,
-        isAppInit: true,
-        commTrack: {
-          initTime: Number(new Date()),
-          relayTime: null,
-          relayed: false,
-          pushed: false,
-          pushTime: null,
-          deliveryTime: null,
-          delivered: false,
-          completed: false,
-          completedTime: null
-        },
-      },
-      req: null,
-      resp: null
-    }
-
-    console.log('cd-user::LoginComponent::configPushPayload()/this.resourceGuid:', this.resourceGuid);
-    const key = this.resourceGuid;
-    const cdObj: CdObjId = {
-      appId: localStorage.getItem('appId')!,
-      ngModule: 'UserFrontModule',
-      resourceName: 'LoginComponent',
-      resourceGuid: this.resourceGuid,
-      jwtToken: this.jwtWsToken,
-      socket: null,
-      socketId: '',
-      commTrack: {
-        initTime: Number(new Date()),
-        relayTime: null,
-        relayed: false,
-        pushed: false,
-        pushTime: null,
-        deliveryTime: null,
-        delivered: false,
-        completed: false,
-        completedTime: null
-      },
-    }
-
-    localStorage.setItem(key, JSON.stringify(cdObj));
-
-    const users = [
-      {
-        userId: cuid,
-        subTypeId: 1,
-        cdObjId: cdObj,
-      },
-    ]
-
-    const envl: ICdPushEnvelop = { ...pushEnvelope };
-    envl.pushData.triggerEvent = triggerEvent;
-    envl.pushData.emittEvent = emittEvent;
-
-    // set sender
-    const uSender: any = { ...users[0] }
-    uSender.subTypeId = 1;
-    envl.pushData.pushRecepients.push(uSender)
-
-
-    if (triggerEvent === 'login') {
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/triggerEvent==login:');
-      // set recepient
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
-      const uRecepient: any = { ...users[0] }
-      uRecepient.subTypeId = 7;
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
-      uRecepient.cdObjId = this.sidebarInitData.value
-      envl.pushData.pushRecepients.push(uRecepient)
-
-    }
-
-    this.logger.info('cd-user/LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
-    return envl;
-
-  }
-
-  saveSocket(payLoad: ICdPushEnvelop) {
-    console.log('cd-user/LoginComponent::saveSocket()/payLoad:', payLoad);
-    /**
-     * - get socketStore
-     * - search socketStore for item with name='appInit'
-     * - remove existing item with the same key
-     * - save socketData to LocalStorage with resourceGuide as reference
-     */
-    const socketData: ISocketItem[] | null = payLoad.pushData.appSockets.filter(appInit)
-    function appInit(s: ISocketItem): ISocketItem | null {
-      if (s.name === 'appInit') {
-        return s;
-      } else {
-        return null;
-      }
-    }
-
-    if (socketData.length > 0) {
-      const socketStr = JSON.stringify(socketData)
-      localStorage.removeItem('socketData');
-      localStorage.setItem('socketData', socketStr);
-    }
-  }
-
-  /**
-   * No action is expected from sender.
-   * No message to send to server
-   * Optionally, the sender can do its own house
-   * data updates and records.
-   * @param payLoad 
-   */
-  updateRelayed(payLoad: ICdPushEnvelop) {
-    console.log('updateRelayed()/01')
-    console.log('updateRelayed()/payLoad:', payLoad)
-    /**
-     * update record of send messages
-     */
-  }
-
-  searchLocalStorage(f: LsFilter) {
-    this.logger.info('starting cd-user/LoginComponent::searchLocalStorage()/lcLength:');
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/f:', f);
-    // const lc = { ...localStorage };
-    const lcArr = [];
-
-    const lcLength = localStorage.length;
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/lcLength:', lcLength);
-    let i = 0;
-    for (let i = 0; i < localStorage.length; i++) {
-      // try {
-      // set iteration key name
-      const k = localStorage.key(i);
-      // use key name to retrieve the corresponding value
-      var v = localStorage.getItem(k!);
-      // this.logger.info the iteration key and value
-      this.logger.info('Key: ' + k + ', Value: ' + v);
-      try {
-        this.logger.info('cd-user/LoginComponent::searchLocalStorage()/1')
-        if (typeof (v) === 'object') {
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/2')
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/v:', v)
-          const lcItem = JSON.parse(v!);
-          if ('success' in lcItem) {
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/3')
-            const appState: IAppState = lcItem;
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/appState:', appState)
-          }
-          if ('resourceGuid' in lcItem) {
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/4')
-            const cdObjId = lcItem;
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/cdObjId:', cdObjId)
-          }
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/5')
-          lcArr.push({ key: k, value: JSON.parse(v!) })
-        } else {
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/typeof (v):', typeof (v))
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/6')
-          lcArr.push({ key: k, value: JSON.parse(v) })
-        }
-
-      } catch (e) {
-        this.logger.info('offending item:', v);
-        this.logger.info('the item is not an object');
-        this.logger.info('Error:', e);
-      }
-
-    }
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/lcArr:', lcArr);
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-    // isAppState
-    // const resourceName = 'UserModule';
-    const AppStateItems = (d: any) => 'success' in d.value;
-    const isObject = (d: any) => typeof (d.value) === 'object';
-    const CdObjIdItems = (d: any) => 'resourceName' in d.value;
-    const filtObjName = (d: any) => d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule;
-    const latestItem = (prev: any, current: any) => (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
-    let ret: any = null;
-    try {
-      if (this.debug) {
-        this.logger.info('cd-user/LoginComponent::searchLocalStorage()/debug=true:');
-        ret = lcArr
-          .filter((d: any) => {
-            if (typeof (d.value) === 'object') {
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByObject: d:', d);
-              return d
-            } else {
-              return null;
-            }
-          })
-          .filter((d: any) => {
-            if ('resourceName' in d.value) {
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
-              return d;
-            } else {
-              return null;
-            }
-          })
-          .filter((d: any) => {
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: d:', d);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
-            if (d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule) {
-              return d;
-            } else {
-              return null;
-            }
-          })
-          .reduce(
-            (prev = {}, current = {}) => {
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/prev:', prev);
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/current:', current);
-              return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
-            }
-          );
-      } else {
-        this.logger.info('cd-user/LoginComponent::searchLocalStorage()/debug=false:');
-        ret = lcArr
-          .filter(isObject)
-          .filter(CdObjIdItems!)
-          .filter(filtObjName!)
-          .reduce(latestItem!)
-      }
-      this.logger.info('cd-user/LoginComponent::searchLocalStorage()/ret:', ret);
-    } catch (e) {
-      this.logger.info('Error:', e);
-    }
-    return ret;
-  }
-
-  onFocus() {
-    this.errMsg = "";
-  }
-
-}
-```
-
-Illustration 3:
-Module federation shell, listens for messages from various remote modules including login status from cd-user.
-```ts
-/**
- * note: sender.cdObjId.resourceGuid is used to id the sender and the origin app.
- */
-
-let $ = new HtmlElemService();
-interface IdleTimerOptions {
-  inactivityTime: number;
-  actionCallback: () => void;
-}
-const idleTimerOptions: IdleTimerOptions = {
-  inactivityTime: 900,
-  actionCallback: () => {
-    console.log("starting actionCallback()");
-  },
-};
-
-@Component({
-  selector: "app-sidebar",
-  templateUrl: "./sidebar.component.html",
-  styleUrls: ["./sidebar.component.scss"],
-})
 export class SidebarComponent implements OnInit, AfterViewInit {
   resourceName = "SidebarComponent";
 
@@ -1854,52 +225,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     return envl;
   }
 
-  registerWsService() {
-    console.log("SidebarComponent::registerWsService()/01");
-    this.resourceGuid = this.svBase.getGuid();
-    console.log(
-      "SidebarComponent::registerWsService()/this.resourceGuid:",
-      this.resourceGuid
-    );
-    const key = this.resourceGuid;
-    const value: CdObjId = {
-      appId: localStorage.getItem("appId")!,
-      ngModule: "SharedModule",
-      resourceName: "SidebarComponent",
-      resourceGuid: this.resourceGuid,
-      jwtToken: this.jwtWsToken,
-      socket: null,
-      commTrack: {
-        initTime: Number(new Date()),
-        relayTime: null,
-        relayed: false,
-        pushed: false,
-        pushTime: null,
-        deliveryTime: null,
-        delivered: false,
-        completed: false,
-        completedTime: null,
-      },
-    };
-
-    const env = {
-      ctx: "Sys",
-      m: "CdPush",
-      c: "Websocket",
-      a: "Create",
-      dat: {
-        f_vals: [
-          {
-            data: value,
-          },
-        ],
-        token: "",
-      },
-      args: {},
-    };
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-
   idleTimerCallback() {
     // console.log('starting idleTimerCallback()');
     this.router.navigate(["/user/login"]);
@@ -1911,16 +236,78 @@ export class SidebarComponent implements OnInit, AfterViewInit {
    */
   initialize(): void {
     console.log("starting initialize()");
-
-    // register itself with the CommunicationService when it initializes
-    this.communicationService.registerSidebar(this);
-
     //initialize socket.io service
-    // this.svSio.env = environment;
-    // this.svSio.initSio(this, this.socketAction);
     this.setAppId();
+  }
 
-   
+  // Refference for events registered at the server
+  // [
+  //   {
+  //     triggerEvent: 'register-client',
+  //     emittEvent: 'push-registered-client',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'srv-received',
+  //     emittEvent: 'push-srv-received',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-relayed',
+  //     emittEvent: 'push-msg-relayed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-pushed',
+  //     emittEvent: 'push-msg-pushed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-received',
+  //     emittEvent: 'push-delivered',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-completed',
+  //     emittEvent: 'push-msg-completed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'register',
+  //     emittEvent: 'registered',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'login',
+  //     emittEvent: 'push-menu',
+  //     sFx: 'pushEnvelop'
+  //   },
+  //   {
+  //     triggerEvent: 'send-memo',
+  //     emittEvent: 'push-memo',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-pub',
+  //     emittEvent: 'push-pub',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-react',
+  //     emittEvent: 'push-react',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-menu',
+  //     emittEvent: 'push-menu',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-notif',
+  //     emittEvent: 'push-notif',
+  //     sFx: 'push'
+  //   }
+  // ]
   listen(event) {
     this.logger.info("cd-shell/SidebarComponent::listen/event:", event);
     // Listen for incoming messages
@@ -2050,7 +437,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }
     });
     let anonSession = false;
-    
 
     /****************************************************************************
      * Setup the notification dropdown
@@ -2058,8 +444,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     /**
      * At the moment, this is a demo, so we simulate the data via a copy of payLoad
      */
-    const payLoadSimulated:ICdPushEnvelop = cloneDeep(payLoad);
-    console.log('SidebarComponent::notificationAcceptDelivery()/payLoadSimulated1:', payLoadSimulated)
+    const payLoadSimulated: ICdPushEnvelop = cloneDeep(payLoad);
+    console.log(
+      "SidebarComponent::notificationAcceptDelivery()/payLoadSimulated1:",
+      payLoadSimulated
+    );
     if (!payLoadSimulated.resp || !payLoadSimulated.resp.data) {
       payLoadSimulated.resp = {
         app_state: {
@@ -2070,7 +459,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             app_msg: "",
           },
           sess: {
-            cd_token: '',
+            cd_token: "",
             jwt: null,
             ttl: 0,
           },
@@ -2082,21 +471,25 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           },
         },
         data: notificationDataDefault,
-      }
+      };
     }
-    console.log('SidebarComponent::notificationAcceptDelivery()/payLoadSimulated2:', payLoadSimulated)
-    if(this.recepientData.userId === 1000){
+    console.log(
+      "SidebarComponent::notificationAcceptDelivery()/payLoadSimulated2:",
+      payLoadSimulated
+    );
+    if (this.recepientData.userId === 1000) {
       anonSession = true;
       payLoadSimulated.resp.data = notificationDataDefault;
-    } else{
+    } else {
       anonSession = false;
       payLoadSimulated.resp.data = notificationDemoData;
     }
-    console.log('SidebarComponent::notificationAcceptDelivery()/payLoadSimulated3:', payLoadSimulated)
+    console.log(
+      "SidebarComponent::notificationAcceptDelivery()/payLoadSimulated3:",
+      payLoadSimulated
+    );
     this.svInteRact.notificationDropDownData =
-      this.svInteRact.mapInteRactToDropdownData(
-        payLoadSimulated, 
-        {
+      this.svInteRact.mapInteRactToDropdownData(payLoadSimulated, {
         anonSession: anonSession,
         userAclType: { aclTypeId: -1 },
       });
@@ -2281,9 +674,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
       }
     });
+
     //get launch time
     const launchTime = (new Date().getTime() / 1000).toString();
-
   }
 
   socketAction(cls, emittEvent, payLoad) {
@@ -2304,6 +697,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       payLoadStr
     );
     if (payLoadStr) {
+      // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
+      // console.log('SidebarComponent::pushSubscribe()/payLoad:', payLoad);
       cls.saveSocket(payLoadStr);
     }
   }
@@ -2331,1591 +726,147 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * remove active and mm-active class
-   */
-  _removeAllClass(className: any) {
-    const els = document.getElementsByClassName(className);
-    while (els[0]) {
-      els[0].classList.remove(className);
-    }
-  }
-
-  /**
-   * Activate the parent dropdown
-   */
-  _activateMenuDropdown() {
-    this._removeAllClass("mm-active");
-    this._removeAllClass("mm-show");
-    const links = document.getElementsByClassName("side-nav-link-ref");
-    let menuItemEl: any = null;
-
-    const paths: any = [];
-    // tslint:disable-next-line: prefer-for-of
-    for (let i = 0; i < links.length; i++) {
-      // tslint:disable-next-line: no-string-literal
-      paths.push(links[i]["pathname"]);
-    }
-    const itemIndex = paths.indexOf(window.location.pathname);
-    if (itemIndex === -1) {
-      const strIndex = window.location.pathname.lastIndexOf("/");
-      const item = window.location.pathname.substr(0, strIndex).toString();
-      menuItemEl = links[paths.indexOf(item)];
-    } else {
-      menuItemEl = links[itemIndex];
-    }
-
-    if (menuItemEl) {
-      menuItemEl.classList.add("active");
-      const parentEl = menuItemEl.parentElement;
-
-      if (parentEl) {
-        parentEl.classList.add("mm-active");
-
-        const parent2El = parentEl.parentElement.closest("ul");
-        if (parent2El && parent2El.id !== "side-menu") {
-          parent2El.classList.add("mm-show");
-          const parent3El = parent2El.parentElement;
-
-          if (parent3El && parent3El.id !== "side-menu") {
-            parent3El.classList.add("mm-active");
-            const childAnchor = parent3El.querySelector(".has-arrow");
-            const childDropdown = parent3El.querySelector(".has-dropdown");
-
-            if (childAnchor) {
-              childAnchor.classList.add("mm-active");
-            }
-            if (childDropdown) {
-              childDropdown.classList.add("mm-active");
-            }
-
-            const parent4El = parent3El.parentElement;
-            if (parent4El && parent4El.id !== "side-menu") {
-              parent4El.classList.add("mm-show");
-              const parent5El = parent4El.parentElement;
-              if (parent5El && parent5El.id !== "side-menu") {
-                parent5El.classList.add("mm-active");
-                const childanchor = parent5El.querySelector(".is-parent");
-                if (childanchor && parent5El.id !== "side-menu") {
-                  childanchor.classList.add("mm-active");
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  /**
-   * Returns true or false if given menu item has child or not
-   * @param item menuItem
-   */
-  hasItems(item: MenuItem) {
-    return item.subItems !== undefined ? item.subItems.length > 0 : false;
-  }
-
-  /**
-   * Change the layout onclick
-   * @param layout Change the layout
-   */
-  changeLayout(layout: string) {
-    this.eventService.broadcast("changeLayout", layout);
-  }
-
-  /**
-   * Light sidebar
-   */
-  lightSidebar() {
-    document.body.setAttribute("data-sidebar", "light");
-    document.body.setAttribute("data-topbar", "dark");
-    document.body.removeAttribute("data-sidebar-size");
-    document.body.removeAttribute("data-layout-size");
-    document.body.removeAttribute("data-keep-enlarged");
-    document.body.classList.remove("vertical-collpsed");
-  }
-
-  /**
-   * Compact sidebar
-   */
-  compactSidebar() {
-    document.body.setAttribute("data-sidebar-size", "small");
-    document.body.setAttribute("data-sidebar", "dark");
-    document.body.removeAttribute("data-topbar");
-    document.body.removeAttribute("data-layout-size");
-    document.body.removeAttribute("data-keep-enlarged");
-    document.body.classList.remove("sidebar-enable");
-    document.body.classList.remove("vertical-collpsed");
-  }
-
-  /**
-   * Icon sidebar
-   */
-  iconSidebar() {
-    document.body.classList.add("sidebar-enable");
-    document.body.classList.add("vertical-collpsed");
-    document.body.setAttribute("data-sidebar", "dark");
-    document.body.removeAttribute("data-layout-size");
-    document.body.removeAttribute("data-keep-enlarged");
-    document.body.removeAttribute("data-topbar");
-  }
-
-  /**
-   * Boxed layout
-   */
-  boxedLayout() {
-    document.body.setAttribute("data-keep-enlarged", "true");
-    document.body.setAttribute("data-layout-size", "boxed");
-    document.body.setAttribute("data-sidebar", "dark");
-    document.body.classList.add("vertical-collpsed");
-    document.body.classList.remove("sidebar-enable");
-    document.body.removeAttribute("data-topbar");
-  }
-
-  /**
-   * Colored sidebar
-   */
-  coloredSidebar() {
-    document.body.setAttribute("data-sidebar", "colored");
-    document.body.removeAttribute("data-sidebar-size");
-    document.body.removeAttribute("data-layout-size");
-    document.body.classList.remove("vertical-collpsed");
-    document.body.removeAttribute("data-topbar");
-  }
-
-  async htmlMenu(menuData: MenuItem[], cdToken: string) {
-    this.routParams.queryParams.token = cdToken;
-    menuData = await this.svMenu.mapMenu(menuData);
-    console.log("starting cdShellV2::SidebarComponent/htmlMenu()");
-    this.toggleEvents = [];
-    console.log("cdShellV2::SidebarComponent/htmlMenu()/01");
-    console.log("cdShellV2::SidebarComponent/htmlMenu()/menuData:", menuData);
-    if (menuData) {
-      this.htmlRootMenu(menuData).then(() => {
-        this.activateDropdown(menuData);
-      });
-    }
-  }
-
-  async htmlRootMenu(menuData: MenuItem[]) {
-    // clear container
-    (document.getElementById("sidebar-menu") as HTMLElement).innerHTML = "";
-    let h: HtmlCtx = {
-      elementRef: this.elementRef,
-      selector: "#sidebar-menu",
-      srtHtml: await this.htmlMenuContainer("root", null),
-      position: "afterbegin",
-    };
-    console.log("cdShellV2::SidebarComponent/htmlRootMenu()/01");
-    // append root container
-    $.append(h).then(async (success) => {
-      // build root menus
-      let rootMenus = "";
-      // if(menuData){
-      //   menuData = [];
-      // }
-      menuData.forEach((mi: MenuItem) => {
-        console.log("cdShellV2::SidebarComponent/htmlRootMenu()/02");
-        console.log("cdShellV2::SidebarComponent/htmlRootMenu()/mi:", mi);
-        rootMenus += this.htmlMenuItem(mi);
-      });
-
-      h = {
-        elementRef: this.elementRef,
-        selector: "#side-menu",
-        srtHtml: await rootMenus,
-        position: "afterbegin",
-      };
-      //insert menus to root container
-      $.append(h).then(() => {
-        console.log("cdShellV2::SidebarComponent/htmlRootMenu()/03");
-        console.log(
-          "cdShellV2::SidebarComponent/htmlRootMenu()/menuData:",
-          menuData
-        );
-        // for each menu item, set children
-        menuData.forEach(async (mi: MenuItem) => {
-          console.log("cdShellV2::SidebarComponent/htmlRootMenu()/04");
-          console.log(
-            "cdShellV2::SidebarComponent/htmlRootMenu()/menuData:",
-            menuData
-          );
-          console.log("cdShellV2::SidebarComponent/htmlRootMenu()/mi:", mi);
-          this.htmlChildren(mi, menuData);
-        });
-      });
-    });
-  }
-
-  async htmlChildren(mi: MenuItem, parentData: MenuItem[]) {
-    console.log("cdShellV2::SidebarComponent/htmlChildren()/01");
-    console.log("cdShellV2::SidebarComponent/htmlChildren()/01/mi:", mi);
-    let h: HtmlCtx = {
-      elementRef: this.elementRef,
-      selector: `#li_${mi.id}`,
-      srtHtml: await this.htmlMenuContainer("subMenu", mi),
-      position: "beforeend",
-    };
-    // set subMenu container
-    await $.append(h).then(async (success) => {
-      console.log("cdShellV2::SidebarComponent/htmlChildren()/02");
-      console.log("cdShellV2::SidebarComponent/htmlChildren()/02/mi:", mi);
-      // set children html
-      let htmlSubMenu = "";
-      mi.subItems.forEach((sm) => {
-        console.log("cdShellV2::SidebarComponent/htmlChildren()/03");
-        console.log("cdShellV2::SidebarComponent/htmlChildren()/03/sm:", sm);
-        htmlSubMenu += this.htmlMenuItem(sm);
-      });
-      //insert menus to sub-menu container
-      h = {
-        elementRef: this.elementRef,
-        selector: `#ul_${mi.id}`,
-        srtHtml: await htmlSubMenu,
-        position: "afterbegin",
-      };
-      $.append(h).then(() => {
-        console.log("cdShellV2::SidebarComponent/htmlChildren()/04");
-        console.log(
-          "cdShellV2::SidebarComponent/htmlChildren()/parentData:",
-          parentData
-        );
-        this.activateDropdown(parentData);
-        mi.subItems.forEach((sm) => {
-          console.log("cdShellV2::SidebarComponent/htmlChildren()/05");
-          console.log("cdShellV2::SidebarComponent/htmlChildren()/sm:", sm);
-          this.setRoutTarget(sm);
-        });
-      });
-    });
-  }
-
-  activateDropdown(parentData: MenuItem[]) {
-    console.log("SidebarComponent::activateDropdown()/01");
-    console.log("SidebarComponent::activateDropdown()/parentData:", parentData);
-    parentData.forEach((mi: MenuItem) => {
-      console.log("SidebarComponent::activateDropdown()/02");
-      const parentElem = document.getElementById(
-        `a_${mi.id?.toString()}`
-      ) as HTMLElement;
-      if (parentElem) {
-        console.log("SidebarComponent::activateDropdown()/03");
-        console.log("SidebarComponent::activateDropdown()/mi.id:", mi.id);
-        if (!this.isRepeatedEvent(mi.id!)) {
-          console.log("SidebarComponent::activateDropdown()/04");
-          console.log("SidebarComponent::activateDropdown()/mi.id:", mi.id);
-          this.saveEvent(mi.id!);
-          // add event to menu ul
-          parentElem.addEventListener("click", (e: Event) =>
-            this.toggleSetting(mi.id)
-          );
-        }
-      }
-    });
-
-  }
-
-  saveEvent(id: number) {
-    if (id) {
-      this.toggleEvents.push(id);
-    }
-  }
-
-  isRepeatedEvent(id: number) {
-    const repeatedEvents = this.toggleEvents.filter((e) => e === id);
-    if (repeatedEvents.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  elemExists(selector) {
-    const elem = this.elementRef.nativeElement.querySelector(
-      selector
-    ) as HTMLElement;
-    if (elem) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  async htmlMenuContainer(type, menuItem: MenuItem | null) {
-    if (type === "root") {
-      return `<ul id="side-menu" class="metismenu list-unstyled"></ul>`;
-    } else if (type === "subMenu" && menuItem) {
-      return `<ul id="ul_${menuItem.id}" aria-expanded="false" class="sub-menu mm-collapse">`;
-    } else {
-      return "";
-    }
-  }
-
-  htmlMenuItem(menuItem: MenuItem): string {
-    let hasArrow = "";
-    let link = "";
-    if ("subItems" in menuItem) {
-      if (menuItem.subItems.length > 0) {
-        hasArrow = "has-arrow";
-      }
-    }
-    if (menuItem.link) {
-      link = 'href="javascript:void(0);"';
-    } else {
-      link = "";
-    }
-    return `
-        <li id="li_${menuItem.id}" class="mm-active">
-          <a id="a_${menuItem.id}" ${link} aria-expanded="false" class="is-parent ${hasArrow} mm-active">
-            <i id="i_${menuItem.id}" class="bx ${menuItem.icon}"></i>
-            <span id="span_${menuItem.id}">${menuItem.label}</span>
-          </a>
-        </li>
-    `;
-  }
-
-  toggleSetting(menuId) {
-    const strId = `ul_${menuId.toString()}`;
-    const menuItemEl = document.getElementById(strId) as HTMLElement;
-    if (menuItemEl) {
-      menuItemEl.classList.toggle("active");
-      menuItemEl.classList.toggle("mm-show");
-    }
-  }
-
-  setRoutTarget(menuItem: MenuItem) {
-    const strId = `a_${menuItem.id!.toString()}`;
-    const menuItemEl = document.getElementById(strId) as HTMLElement;
-    if (menuItemEl && menuItem.link) {
-      console.log(
-        "SidebarComponent::setRoutTarget/this.routParams:",
-        this.routParams
-      );
-      console.log(
-        "SidebarComponent::setRoutTarget/this.routParams.queryParams.token:",
-        this.routParams.queryParams.token
-      );
-      if (this.routParams.queryParams.token.length > 30) {
-        console.log(
-          "SidebarComponent::setRoutTarget/menuItem.link2:",
-          menuItem.link
-        );
-        console.log(
-          "SidebarComponent::setRoutTarget/menuItem.moduleIsPublic2:",
-          menuItem.moduleIsPublic
-        );
-        menuItemEl.addEventListener("click", (e: Event) =>
-          this.router.navigate([menuItem.link], this.routParams)
-        );
-      } else {
-        console.log("SidebarComponent::setRoutTarget/menuItem:", menuItem);
-        console.log(
-          "SidebarComponent::setRoutTarget/menuItem.link1:",
-          menuItem.link
-        );
-        console.log(
-          "SidebarComponent::setRoutTarget/menuItem.moduleIsPublic1:",
-          menuItem.moduleIsPublic
-        );
-        menuItemEl.addEventListener("click", (e: Event) =>
-          this.router.navigate([menuItem.link])
-        );
-      }
-    }
-  }
-
   ngOnDestroy() {
     this.svPusher.unsubscribe("my-channel");
   }
 }
-
 ```
 
-///////////////////////////////////////////////////////////////////
-Below are codes from server side, cd-api.
-Notice that the same project, when config.pushService.sio.enabled is true, it runs in the context of cd-sio (corpdesk push server).
-It was also developed with capacity to run on websock when config.pushService.wss.enabled is true.
-Both sockent.io and websocketan share operational logics.
-
-// src/main.ts
-```ts
-export class Main {
-    logger: Logging;
-    allowedOrigins = [config.Cors.options.origin[5]];
-    constructor() {
-        this.logger = new Logging();
-    }
-    async run() {
-        this.logger.logInfo('Main::run()/01')
-        // basic settings
-        const app: Application = express();
-
-        // Serve .well-known directory for Let's Encrypt validation
-        // app.use('/.well-known/acme-challenge', express.static(path.join(__dirname, '.well-known/acme-challenge')));
-
-        const privateKey = fs.readFileSync(config.keyPath, 'utf8');
-        const certificate = fs.readFileSync(config.certPath, 'utf8');
-
-
-        let certAuth = '';
-        // just in case certificate authority is not provided
-        if (config.caPath.length > 0) {
-            certAuth = fs.readFileSync(config.caPath, 'utf8');
-        } else {
-            certAuth = null
-        }
-
-        const credentials = {
-            key: privateKey,
-            cert: certificate,
-            // ca: certAuth
-        };
-
-
-        const options = config.Cors.options;
-
-        ////////////////////////////////////////////////////////////////////////////////
-        const corsOptions = {
-            origin: config.Cors.options.origin[5], // Replace with your client URL
-            // origin: 'http://localhost', // for localhost teting
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            credentials: true
-        };
-        ////////////////////////////////////////////////////////////////////////////////
-
-        let httpsServer = null;
-        let corsOpts = null;
-
-        //////////////////////////////////////////////////////////////////////////////
-        app.use(cors(corsOptions));
-        app.use(express.json()); // For parsing application/json
-        app.options('*', cors(corsOptions)); // Enable pre-flight across-the-board
-        //////////////////////////////////////////////////////////////////////////////
-
-        // Serve .well-known directory for Let's Encrypt validation
-        // To test: curl http://localhost:8080/.well-known/acme-challenge/test-file -v
-        app.use(config.http.webroot, express.static(path.join(__dirname, config.http.webroot)));
-
-        // Create HTTP server
-        const httpServer = createHttpServer(app);
-
-        // Create HTTPS server
-        httpsServer = https.createServer(credentials, app);
-        corsOpts = {
-            cors: {
-                options: config.Cors.options.allowedHeaders,
-                origin: config.Cors.options.origin
-            }
-        }
-
-
-        /**
-         * When run on sio mode in production,
-         * use SSL
-         * use cors
-         */
-        if (config.pushService.sio.enabled) {
-            this.logger.logInfo('Main::run()/02')
-
-            // const io = new Server(httpsServer, corsOpts);
-            /////////////////////////////////////////////////////
-            const io = new Server(httpsServer, {
-                cors: {
-                    origin: config.Cors.options.origin[5],
-                    methods: ['GET', 'POST'],
-                    credentials: true
-                }
-            });
-            /////////////////////////////////////////////////////
-
-            this.logger.logInfo('Main::run()/03')
-            this.logger.logInfo('Main::run()/config.push.mode:', { mode: config.push.mode })
-            // let pubClient = getRedisClient();
-            let pubClient;
-            let subClient;
-            switch (config.push.mode) {
-                case "PUSH_BASIC":
-                    this.logger.logInfo('Main::run()/031')
-                    pubClient = createClient({ host: config.push.redisHost, port: config.push.redisPort, legacyMode: true } as RedisClientOptions);
-                    // pubClient = getRedisClient();
-                    subClient = pubClient.duplicate();
-                    break;
-                case "PUSH_CLUSTER":
-                    this.logger.logInfo('Main::run()/032')
-                    pubClient = new Redis.Cluster(config.push.startupNodes);
-                    subClient = pubClient.duplicate();
-                    break;
-                case "PUSH_SENTINEL":
-                    this.logger.logInfo('Main::run()/033')
-                    pubClient = new Redis(config.push.sentinalOptions);
-                    subClient = pubClient.duplicate();
-                    break;
-                default:
-                    this.logger.logInfo('Main::run()/034')
-                    pubClient = createClient({ host: config.push.redisHost, port: config.push.redisPort } as RedisClientOptions);
-                    // pubClient = getRedisClient();
-                    subClient = pubClient.duplicate();
-                    break;
-            }
-
-            Promise.all([pubClient, subClient])
-                .then(() => {
-                    this.logger.logInfo('Main::run()/035')
-                    const svSio = new SioService();
-                    svSio.run(io, pubClient, subClient)
-                });
-        }
-
-        /**
-         * When run on app mode in production,
-         * use without SSL...but behind nginx proxy server fitted with SSL
-         * do not use cors...but set it at nginx
-         */
-        if (config.apiRoute === "/api" && config.secure === "false") {
-            console.log("main/04")
-            httpsServer = createServer(app);
-            corsOpts = {
-                cors: {
-                    options: config.Cors.options.allowedHeaders,
-                    origin: null
-                }
-            }
-        }
-
-
-        
-        app.post('/sio/p-reg/', async (req: any, res: any) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            CdInit(req, res);
-        });
-
-        
-
-
-        // set api entry point
-        app.post(config.apiRoute, async (req: any, res: any) => {
-            console.log("app.post/01")
-            res.setHeader('Content-Type', 'application/json');
-            ////////////////////
-            // res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            CdInit(req, res, ds);
-        });
-
-        if (config.pushService.pusher.enabled) {
-            app.post('/notify', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const { message, channel, event } = req.body;
-                // this.logger.logInfo("message:", message)
-                pusher.trigger(channel, event, { message: "hello from server on '/notify'" })
-                    .then(() => res.status(200).send("Notification sent from '/notify'"))
-                    .catch((err: Error) => res.status(500).send(`Error sending notification: ${err.message}`));
-            });
-
-            app.post('/notify-user', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const { message, userId } = req.body;
-                const channel = `private-user-${userId}`;
-
-                pusher.trigger(channel, 'user-event', { message: "hello from server on '/notify-user'" })
-                    .then(() => res.status(200).send("Notification sent from '/notify'"))
-                    .catch((err: Error) => res.status(500).send(`Error sending notification: ${err.message}`));
-            });
-
-            app.post('/pusher/auth', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const socketId = req.body.socket_id;
-                const channel = req.body.channel_name;
-                const auth = pusher.authenticate(socketId, channel);
-                res.send(auth);
-            });
-        }
-
-        if (config.pushService.wss.enabled) {
-
-            console.log("main/05")
-            const expressServer = app.listen(config.wssPort, () => {
-                console.log(`server is listening on ${config.wssPort}`);
-            })
-                .on('error', (e) => {
-                    console.log(`Error:${e}`);
-                });
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Define the WebSocket server. Here, the server mounts to the `/ws`
-            // route of the Express JS server.
-            const wss = new WebSocket.Server({
-                server: expressServer,
-                path: '/ws'
-            });
-            /**
-             * run the websocket
-             */
-            const cdWs = new WebsocketService();
-            cdWs.run(wss);
-
-
-            // ///////////////////////////////////////////////////
-            // const server = createHttpsServer(credentials, app);
-            // const wsServer = new WebSocketServer({
-            //     httpsServer: server,
-            //     autoAcceptConnections: false
-            // });
-
-
-        } else {
-
-            if (config.http.enabled) {
-                // Start HTTP server (for Let's Encrypt and optional redirect to HTTPS)
-                httpServer.listen(config.http.port, () => {
-                    this.logger.logInfo(`HTTP server listening on port ${config.http.port}`);
-                }).on('error', (e) => {
-                    this.logger.logError(`HTTP server: listen()/Error: ${e}`);
-                });
-            }
-
-            // start server
-            httpsServer.listen(config.apiPort, () => {
-                // console.log(`cd-api server is listening on ${config.apiPort}`);
-                this.logger.logInfo(`cd-api server is listening on:`, { port: `${config.apiPort}` })
-            })
-                .on('error', (e) => {
-                    this.logger.logError(`cd-api server: listen()/Error:${e}`)
-                });
-        }
-
-    }
-
-    originIsAllowed(origin: string) {
-        return this.allowedOrigins.includes(origin);
-    }
-
-}
-```
-
-// src/CdApi/sys/cd-push/services/sio.service.ts
-```ts
-export class SioService {
-    logger: Logging;
-    b = new BaseService();
-
-    constructor() {
-        this.logger = new Logging();
-    }
-
-    run(io, pubClient, subClient) {
-        // this.logger.logInfo("SioService::run()/io:", io)
-        // this.logger.logInfo("SioService::run()/pubClient:", pubClient)
-        // this.logger.logInfo("SioService::run()/subClient:", subClient)
-        const port = config.push.serverPort;
-        pubClient.on("error", (err) => {
-            this.logger.logInfo(`pubClient error: ${JSON.stringify(err)}`);
-        });
-        io.adapter(createAdapter(pubClient, subClient));
-        io.on('connection', (socket) => {
-            this.logger.logInfo('a user connected');
-            this.runRegisteredEvents(socket, io, pubClient)
-            socket.on('disconnect', () => {
-                this.logger.logInfo('a user disconnected!');
-            });
-        });
-    }
-
-    /**
-     * This array can be a configuration available in the database.
-     * There would then be different sets depending on the calling application.
-     * This would then mean one server can handle several applications..eg:
-     * - memo
-     * - tracking financial transaction
-     * - authentication process
-     * - system transaction tracking
-     * triggerEvent: the listening event at the server to handle a given message
-     *              or event emitted by the client
-     * emittEvent: the listening event at the client to handles a given message
-     *              or event emitted by the server
-     * sFx: server function that handles a given message
-     * 
-     * cFx: client function that handles a given message
-     */
-    getRegisteredEvents(): PushEvent[] {
-        this.logger.logInfo('starting getRegisteredEvents()');
-        this.testColouredLogs();
-        return [
-            {
-                triggerEvent: 'register-client',
-                emittEvent: 'push-registered-client',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'srv-received',
-                emittEvent: 'push-srv-received',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-relayed',
-                emittEvent: 'push-msg-relayed',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-pushed',
-                emittEvent: 'push-msg-pushed',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-received',
-                emittEvent: 'push-delivered',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-completed',
-                emittEvent: 'push-msg-completed',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'register',
-                emittEvent: 'registered',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'login',
-                emittEvent: 'push-menu',
-                sFx: 'pushEnvelop'
-            },
-            {
-                triggerEvent: 'send-memo',
-                emittEvent: 'push-memo',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-pub',
-                emittEvent: 'push-pub',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-react',
-                emittEvent: 'push-react',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-menu',
-                emittEvent: 'push-menu',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-notif',
-                emittEvent: 'push-notif',
-                sFx: 'push'
-            }
-        ]
-    }
-
-    runRegisteredEvents(socket, io, pubClient) {
-        this.logger.logInfo('SioService::runRegisteredEvents(socket)/01');
-        // this.logger.logInfo('SioService::runRegisteredEvents(socket)/socket:', socket);
-        // listen to registered events
-        this.getRegisteredEvents().forEach((e) => {
-
-            this.logger.logInfo(`SioService::runRegisteredEvents(socket)/e:${JSON.stringify(e)}`);
-            socket.on(e.triggerEvent, async (payLoad: string) => {
-                console.log('---------------------------------------')
-                console.log(`socket.on${e.triggerEvent}`)
-                console.log('---------------------------------------')
-                this.logger.logInfo(`SioService::runRegisteredEvents()/e.triggerEvent:${e.triggerEvent}`);
-                this.logger.logInfo(`SioService::runRegisteredEvents()/payLoad:${JSON.stringify(payLoad)}`);
-                const pushEnvelop: ICdPushEnvelop = JSON.parse(payLoad)
-                const sender = this.getSender(pushEnvelop.pushData.pushRecepients);
-                this.logger.logInfo(`SioService::runRegisteredEvents()/sender:${JSON.stringify(sender)}`);
-                await this.persistSenderData(sender, socket, pubClient)
-                if (pushEnvelop.pushData.commTrack.completed) {
-                    /**
-                     * process message completion
-                     */
-                    this.logger.logInfo('SioService::getRegisteredEvents()/message processing completed')
-                    this.logger.logInfo(`SioService::getRegisteredEvents()/pushEnvelop:${pushEnvelop}`);
-                    console.log('--------------------------------------------------------------------------')
-                    console.log('PROCESS COMPLETED')
-                    console.log('--------------------------------------------------------------------------')
-                } else {
-                    this.relayMessages(pushEnvelop, io, pubClient)
-                }
-
-            });
-        })
-    }
-
-    getSender(pushRecepients: ICommConversationSub[]): ICommConversationSub {
-        return pushRecepients.filter((r) => r.subTypeId === 1)[0]
-    }
-
-    resourceHasSocket() {
-        // confirm if resource has socket already
-    }
-
-    async persistSenderData(sender: ICommConversationSub, socket, pubClient) {
-        this.logger.logInfo(`SioService::persistSenderData/01/socket.id: ${socket.id}`);
-        sender.cdObjId.socketId = socket.id;
-        const k = sender.cdObjId.resourceGuid;
-        const v = JSON.stringify(sender);
-        this.logger.logInfo(`SioService::persistSenderData()/k:${k}`);
-        this.logger.logInfo(`SioService::persistSenderData()/v:${v}`);
-        return await this.b.wsRedisCreate(k, v);
-    }
-
-    relayMessages(pushEnvelop: ICdPushEnvelop, io, pubClient) {
-        if (pushEnvelop.pushData.commTrack.completed === true) {
-            this.logger.logInfo(`SioService::relayMessages()/pushEnvelop:${pushEnvelop}`);
-            console.log('--------------------------------------------------------------------------')
-            console.log('PROCESS COMPLETED')
-            console.log('--------------------------------------------------------------------------')
-
-        } else {
-            pushEnvelop.pushData.pushRecepients.forEach(async (recepient: ICommConversationSub) => {
-                let payLoad = '';
-                this.logger.logInfo(`SioService::relayMessages()/recepient:${JSON.stringify(recepient)}`);
-                this.logger.logInfo("SioService::relayMessages()/pushEnvelop.pushData.pushRecepients:", pushEnvelop.pushData.pushRecepients);
-                console.log("SioService::relayMessages()/pushEnvelop:", pushEnvelop);
-                // const recepientSocket = this.recepientSocket(recepient, pubClient);
-                const recepientDataStr = await this.destinationSocket(recepient);
-                this.logger.logInfo("SioService::relayMessages()/pushEnvelop.pushData.recepientDataStr:", recepientDataStr);
-                const recepientData = JSON.parse(recepientDataStr.r);
-                this.logger.logInfo(`SioService::relayMessages()/recepientData:${JSON.stringify(recepientData)}`);
-
-                if (recepientDataStr.r) {
-                    const recepientSocketId = recepientData.cdObjId.socketId;
-                    // const msg = JSON.stringify(pushEnvelop);
-                    switch (recepient.subTypeId) {
-                        case 1:
-                            console.log('--------------------------------------------------------------------------')
-                            console.log('STARTING MESSAGE TO SENDER')
-                            console.log('--------------------------------------------------------------------------')
-                            // handle message to sender:
-                            // mark message as relayed plus relayedTime
-                            // const pushEnvelop1 = this.shallow(pushEnvelop)
-                            const pushEnvelop1: ICdPushEnvelop = JSON.parse(JSON.stringify(pushEnvelop));
-                            pushEnvelop1.pushData.commTrack.relayTime = Number(new Date());
-
-                            // pushEnvelop1.pushData.emittEvent = 'push-msg-relayed';
-                            if (pushEnvelop1.pushData.commTrack.relayed !== true) {
-                                pushEnvelop1.pushData.isNotification = true;
-                            }
-
-                            this.logger.logInfo(`SioService::relayMessages()/[switch 1] pushEnvelop:${JSON.stringify(pushEnvelop1)}`);
-                            this.logger.logInfo('SioService::relayMessages()/[switch 1] sending confirmation message to sender');
-                            this.logger.logInfo(`SioService::relayMessages()/[switch 1] pushEnvelop.pushData.triggerEvent:${pushEnvelop1.pushData.triggerEvent}`);
-                            this.logger.logInfo('case-1: 01')
-                            if (pushEnvelop1.pushData.isAppInit) {
-                                /**
-                                 * if the incoming message is for applitialization:
-                                 * - nb: the resourceGuid is already saved in redis for reference
-                                 * - save socket in envelop
-                                 * - push message back to sender with socketid info
-                                 * - the client app will rely on these data for subsequest communication by federated components of the app
-                                 */
-                                console.log('--------------------------------------------------------------------------')
-                                console.log('SENDING APP-INIT-DATA')
-                                console.log(`case-1: 011...isAppInit->triggerEvent === push-registered-client`)
-                                console.log('--------------------------------------------------------------------------')
-                                const socketStore: ISocketItem = {
-                                    socketId: recepientSocketId,
-                                    name: 'appInit',
-                                    socketGuid: this.b.getGuid()
-                                }
-                                // save socket
-                                pushEnvelop1.pushData.appSockets.push(socketStore)
-                                // send back to sender
-                                io.to(recepientSocketId).emit('push-registered-client', pushEnvelop1);
-                            }
-                            if (pushEnvelop1.pushData.isNotification) {
-                                this.logger.logInfo('case-1: 02...isNotification')
-                                if (pushEnvelop1.pushData.commTrack.relayed !== true && pushEnvelop1.pushData.commTrack.pushed !== true) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    console.log('SENDING NOTIFICATION')
-                                    console.log(`case-1: 04...isNotification->triggerEvent === msg-relayed`)
-                                    console.log('--------------------------------------------------------------------------')
-                                    pushEnvelop1.pushData.emittEvent = 'push-msg-relayed';
-                                    pushEnvelop1.pushData.commTrack.relayed = true;
-                                    /**
-                                     * this is notification from recepient to sender
-                                     * to confirm message has been delivered
-                                     */
-                                    io.to(recepientSocketId).emit('push-msg-relayed', pushEnvelop1);
-                                }
-
-                                if (pushEnvelop1.pushData.commTrack.delivered === true && pushEnvelop1.pushData.commTrack.completed !== true ) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    console.log('SENDING NOTIFICATION')
-                                    console.log(`case-1: 03...isNotification->event to emit === push-delivered`)
-                                    console.log('--------------------------------------------------------------------------')
-
-                                    /**
-                                     * this is notification from recepient to sender
-                                     * to confirm message has been delivered
-                                     */
-                                    io.to(recepientSocketId).emit('push-delivered', pushEnvelop1);
-                                }
-
-                                // was closed and open for testing on 8 jul 2024
-                                if (pushEnvelop1.pushData.triggerEvent === 'msg-received' && pushEnvelop1.pushData.commTrack.completed !== true) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    this.logger.logInfo('SENDING NOTIFICATION')
-                                    this.logger.logInfo(`case-1: 041...isNotification->triggerEvent === msg-relayed`)
-                                    console.log('--------------------------------------------------------------------------')
-
-                                    /**
-                                     * this is notification from recepient to sender
-                                     * to confirm message has been delivered
-                                     */
-                                    io.to(recepientSocketId).emit('push-delivered', pushEnvelop1);
-                                }
-                                // was closed and open for testing on 8 jul 2024
-                                if (pushEnvelop1.pushData.triggerEvent === 'msg-completed' && pushEnvelop1.pushData.commTrack.completed !== true) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    this.logger.logInfo('SENDING NOTIFICATION')
-                                    this.logger.logInfo(`case-1: 042...isNotification->triggerEvent === msg-completed`)
-                                    console.log('--------------------------------------------------------------------------')
-
-                                    /**
-                                     * record completion of messaging
-                                     */
-                                    this.logger.logInfo('message completed')
-
-                                }
-                            } else {
-                                this.logger.logInfo('case-1: 05')
-                                // send notification to client for relay
-                                if (pushEnvelop1.pushData.triggerEvent === 'msg-received') {
-                                    this.logger.logInfo('case-1: 06')
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1/[msg-received]] sending 'msg-received' message to sender`);
-                                    // payLoad = JSON.stringify(pushEnvelop);
-                                    // io.to(recepientSocketId).emit('push-delivered', payLoad);
-                                } else {
-                                    this.logger.logInfo('case-1: 07')
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1[push-msg-relayed]] sending 'push-msg-relayed' message to sender`);
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1[push-msg-relayed]]/recepientSocketId:${JSON.stringify(recepientSocketId)}`)
-
-                                    payLoad = JSON.stringify(pushEnvelop1);
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1[push-msg-relayed]]/pushEnvelop1:${pushEnvelop1}`)
-                                    console.log('--------------------------------------------------------------------------')
-                                    console.log('SENDING PAYLOAD')
-                                    console.log(`case-1: 08...seding payload ->emit event === 'push-msg-relayed`)
-                                    console.log('--------------------------------------------------------------------------')
-                                    io.to(recepientSocketId).emit('push-msg-relayed', pushEnvelop1);
-                                    // io.to(recepientSocketId).emit('push-msg-relayed', '{"msg": "testing messege"}');
-                                    // io.emit('push-msg-relayed', `{"msg": "testing messege"}`);
-                                }
-                            }
-
-                            break;
-                        case 7:
-
-                            console.log('--------------------------------------------------------------------------')
-                            console.log('STARTING MESSAGE TO RECEPIENTS')
-                            console.log('No of app sockets:', { noOfSockets: pushEnvelop.pushData.appSockets.length })
-                            console.log('--------------------------------------------------------------------------')
-                            // const pushEnvelop7 = this.shallow(pushEnvelop)
-                            const pushEnvelop7 = JSON.parse(JSON.stringify(pushEnvelop));
-                            this.logger.logInfo(`SioService::relayMessages()/[switch 7] pushEnvelop copy:${JSON.stringify(pushEnvelop7)}`);
-                            // handle message to destined recepient
-                            // if(pushEnvelop.pushData.emittEvent === 'msg-received'){
-                            //     // if it is message confirmation to sender
-                            //     pushEnvelop.pushData.commTrack.deliveryTime = Number(new Date());
-                            //     pushEnvelop.pushData.commTrack.deliverd = true;
-                            // }
-                            this.logger.logInfo('case-7: 01')
-                            if (pushEnvelop7.pushData.isNotification) {
-                                this.logger.logInfo('case-7: 02')
-                            } else {
-                                this.logger.logInfo('case-7: 03')
-                                if (pushEnvelop7.pushData.commTrack.pushed) {
-                                    this.logger.logInfo('case-7: 04')
-                                } else {
-                                    this.logger.logInfo('case-7: 05')
-                                    pushEnvelop7.pushData.commTrack.relayTime = Number(new Date());
-                                    pushEnvelop7.pushData.commTrack.relayed = true;
-                                    pushEnvelop7.pushData.commTrack.pushTime = Number(new Date());
-                                    pushEnvelop7.pushData.commTrack.pushed = true;
-                                    pushEnvelop7.pushData.triggerEvent = 'msg-pushed';
-                                    pushEnvelop7.pushData.emittEvent = 'push-msg-pushed';
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 7] pushEnvelop7:${JSON.stringify(pushEnvelop7)}`);
-                                    if (pushEnvelop7.pushData.triggerEvent === 'msg-received') {
-                                        this.logger.logInfo('case-7: 06')
-                                        // while relaying 'msg-received', do not send to group 7 (recepients)
-                                        this.logger.logInfo('SioService::relayMessages()/[switch 7] not sending message to recepient, this is just confirmation');
-                                    } else {
-                                        this.logger.logInfo('case-7: 07')
-                                        this.logger.logInfo(`SioService::relayMessages()/[switch 7] sending to recepient:${JSON.stringify(pushEnvelop7)}`);
-                                        console.log('--------------------------------------------------------------------------')
-                                        console.log('SENDING PAYLOAD')
-                                        console.log(`case-7: 08...seding payload ->emit event === ${pushEnvelop7.pushData.emittEvent}`)
-                                        console.log(`case-7: 09...seding payload ->recepientSocketId = ${recepientSocketId}`)
-                                        console.log('--------------------------------------------------------------------------')
-                                        payLoad = JSON.stringify(pushEnvelop7);
-                                        io.to(recepientSocketId).emit(pushEnvelop7.pushData.emittEvent, pushEnvelop7);
-                                    }
-                                }
-
-                            }
-
-                            break;
-                    }
-                } else {
-                    this.logger.logInfo("@@@@@@@@@@@@@@@ No valid response for recepientData from the redis storage @@@@@@@@@@@@@@@@@")
-                    this.logger.logInfo(`@@@@@@@@@@@@@@@ The client ${recepient.cdObjId.resourceName} may not be connected to the push server @@@@@@@@@@@@@@@@@`)
-                }
-
-            })
-        }
-
-    }
-
-    async destinationSocket(recepient: ICommConversationSub) {
-        this.logger.logInfo("SioService::destinationSocket()/recepient):", recepient)
-        this.logger.logInfo("@@@@@@@@@@@@@@@@@@@@@@@@@@@ check recepeint @@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        const k = recepient.cdObjId.resourceGuid
-        
-        return await this.b.wsRedisRead(k);
-    }
-
-    async getRooms(io) {
-        const rooms = await io.of('/').adapter.allRooms();
-        this.logger.logInfo(rooms); // a Set containing all rooms (across every node)
-        return rooms;
-    }
-
-    shallow<T extends object>(source: T): T {
-        // return {
-        //     ...source,
-        // }
-        ///////////////////////////////////////
-        const copy = {} as T
-        Object.keys(source).forEach((key) => {
-            copy[key as keyof T] = source[key as keyof T]
-        })
-        return copy
-        ////////////////////////////////////////////
-    }
-
-
-}
-```
-I would like you to review the section: Token and Authentication Flow.
-The section suggests introduction of a structure with jwt-signature among other meta data.
-Note that cd-push mechanism already have ICdPushEnvelop which has property of resp: ICdResponse.
-ICdResponse has as nested interface ISessResp that takes care of the proposed data.
-A cd-push message is always in the context of an underlying http req/resp. The associated transaction data forms part of ICdPushEnvelop.
-For example when push message is send in the context of auth http transaction, the req/res is saved as part of the push data.
-
-// Proposed by already taken care of
-```json
-{
-  "iss": "corpdesk-devtools",
-  "sub": "runtime-sync",
-  "aud": "cd-shell",
-  "iat": 1732301231,
-  "exp": 1732304831,
-  "scope": ["dev.sync.push"],
-  "signature": "<JWT_SIGNATURE>"
-}
-
-```
-
-Structure of ICdPushEnvelop:
-```ts
-export interface ICdPushEnvelop {
-  pushData: {
-    appId?: string;
-    appSockets?: ISocketItem[];
-    pushGuid: string;
-    m?: string;
-    pushRecepients: ICommConversationSub[];
-    triggerEvent: string;
-    emittEvent: string;
-    token: string;
-    commTrack: CommTrack;
-    isNotification: boolean | null;
-    isAppInit?: boolean | null;
-  };
-  req: ICdRequest | null;
-  resp: ICdResponse | null;
-}
-```
+There may not be work at the server level.
+If you look at the comment above SidebarComponent.listen(event): it is an array of objects.
+The objects are events already registered at the back end.
+In each set, one event is for reciving and sending at the server level.
+So the client just need to refer to them to establish communication.
+When one registers itself with cd-sio, it synonimous to loging in to a chat. But instead of messages, what is exchanged is payLoad: ICdPushEnvelop.
+So any entity use 'register-client' once then use msg-x to manage payload communication.
 
 ```ts
-export interface ICdResponse {
-  app_state: {
-    success: boolean; // tels whether the process was successfull or not
-    info: IRespInfo; // status messages including error details if any or standard message of success
-    sess: ISessResp; // session status data
-    cache: object;
-    sConfig?: IServerConfig;
-  };
-  data: object;
-}
-
-// export interface IRespInfo {
-//   messages: string[]; // array of errors encountered
-//   code: string; // error code. Corpdesk use this to code the exact spot of error by controller and action
-//   app_msg: any; // general response message (can be set with string, or null)
-// }
-export interface IRespInfo {
-  messages: string[]; // array of errors encountered
-  code: string; // error code. Corpdesk uses this to code the exact spot of error by controller and action
-  app_msg: any; // general response message (can be set with string, or null)
-
-  // Merged state into a single property `respState`
-  respState?: {
-    cdLevel: CdResponseState; // -1 for error, 0 for success, 1 for warning, etc.
-    cdDescription?: string; // Custom description for Corpdesk-specific state
-
-    httpCode: HttpState; // HTTP status code (e.g., 200, 400, etc.)
-    httpDescription?: string; // HTTP status description (e.g., "OK", "Bad Request")
-  };
-}
-export interface ISessResp {
-  cd_token?: string; // corpdesk token
-  userId?: number | null; // current user id
-  jwt: {
-    jwtToken: string;
-    checked: boolean;
-    checkTime: number;
-    authorized: boolean;
-  } | null; // jwt data
-  ttl: number; // server settings for session lifetime
-  initUuid?: string; // initialization guid of session
-  initTime?: string; // when the session started
-  clientId?: any; // OPtonal. for diagnosis for server view of the client.
-}
+// Refference for events registered at the server
+// [
+//   {
+//     triggerEvent: 'register-client',
+//     emittEvent: 'push-registered-client',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'srv-received',
+//     emittEvent: 'push-srv-received',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'msg-relayed',
+//     emittEvent: 'push-msg-relayed',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'msg-pushed',
+//     emittEvent: 'push-msg-pushed',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'msg-received',
+//     emittEvent: 'push-delivered',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'msg-completed',
+//     emittEvent: 'push-msg-completed',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'register',
+//     emittEvent: 'registered',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'login',
+//     emittEvent: 'push-menu',
+//     sFx: 'pushEnvelop'
+//   },
+//   {
+//     triggerEvent: 'send-memo',
+//     emittEvent: 'push-memo',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'send-pub',
+//     emittEvent: 'push-pub',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'send-react',
+//     emittEvent: 'push-react',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'send-menu',
+//     emittEvent: 'push-menu',
+//     sFx: 'push'
+//   },
+//   {
+//     triggerEvent: 'send-notif',
+//     emittEvent: 'push-notif',
+//     sFx: 'push'
+//   }
+// ]
 ```
 
-//////////////////////////////////////////////
-From what you have explained, I have realised much as we have done the documentation, we still have to come to the same page on how cd-push works and get implemented in corpdesk system. To achieve this, I think, we first need a narration on the flow of the process.
-The process being how a 'hello save' works and its implementation.
+////////////////////////////////////////////////////
+Hi Chase. I was just looking at what we have done so far and comparing with previous codes.
+Kindly bear with me. Its also a long time since I worked on it and trying to recollect as much details as I can. It took quite some time to bring it where is.
+Now an important thing that I have notice (but had also mentioned as a principle) All codes were relying on Angular library code that had shared modules.
+One of them was cd-push. In the cd-push was SioClientService.
+So both SidebarComponent and cd-user/LoginComponent was relying on cd-ui-lib/cd-push/SioClientService.
+This way, any item in the cd-shell that needs push services can rely on SioClientService.
+Notice this is where we do the connection via the method initSio()
+It means outside of IdePushClientService file, and still inside the cd-push module, we need to implement SioClientService.
+This one was implemented in Angular and because of the farmework nature, we were constrained to abide to some Angular styles so could not go by all corpdesk rules.
+So when we implement the class below we would go by corpdesk-rfc-0001.
 
-The reason I shared the login process in a module federatin environment is to demonstrate how cd-push works.
-Some principles to note:
-- when we have a feature to implement for cd-push, we assume cd-push facility is either available as a module in sys/cd-push or available in a library.
-In other words when implementing for dev-sync, we assume the cd-push is available and we do not implement for example, DevSyncPushService.
-- What we focus on is how to fill up the ICdPushEnvelop data.
-As a reference, we can go to LoginComponent that was shared earlier.
-I have also shared it below.
-- It is the one initiating a cd-push
-Below are step by stpe processes
-1. Druring ngOnInit(), it calls this.initialize()
-2. In this implementation, we assume the whole of the module federation has one appId that is shared in the LocalStorage.
-A new unique one is created everytime the application is launched. This is controlled by SidebarController then save to LocalStorage.
-All remote modules are then expected to pick it up.
-3. Following 2, appId of LoginComponent is set via this.setAppId();
-4. Another important thing also happens. It starts listening to specific events
-5. So when login() is called, it already has appId set and it already in the listening mode.
-6. So the login does a http request/response to cd-api,
-7. Whether the login is successfull or not, the sidebar and other modules are not aware about the status of the login.
-So cd-user/LoginComponent needs to send a cd-push to module federation cd-shell/sidebar for it to know the status of the login and update the UI.
-8. Now the login process goes to initSession().
-When successful, it goes to if (res.app_state.sess.cd_token !== null && res.app_state.success) {}
-In this block it calls:
-const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
-You can see that this is all about setting up the ICdPushEnvelop data.
-9. Message is eventually sent to Sidbare to take over the next processing which is setting up the UI based on login response.
-10. Note that from here apart from sending the actual message, we can be listening to some events and even be aware when the messages are delivered or be able to send further notifications based on associated states.
-For login: note the following methods:
-sendSioMessage(envl: ICdPushEnvelop) // for sending the main message
-notificationAcceptDelivery(payLoad: ICdPushEnvelop) // notification
-  notificationMsgComplete(payLoad: ICdPushEnvelop) // notification
-
-It is important to note that these methods do not rely on cd-user facilities by cd-push facilities. In this case: 
-private svSio: SioClientService,
-    private svSioTest: SioClientTestService,
-    private svWss: WebsocketService,
-
-We just need to align with this type of process for dev-sync.
+1. No arguments for constructor
+2. No decorations
+3. Corpdesk naming conventions to be respected.
 
 ```ts
-interface IInitData {
-  key: string;
-  value: CdObjId;
-}
+import { v4 as uuidv4 } from "uuid";
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { Socket, io } from "socket.io-client";
+import { CdObjId, ICdResponse } from "./IBase";
+import { ICdPushEnvelop } from "./IBase";
+import { NGXLogger } from "ngx-logger";
 
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  // providers:[UserService],
+@Injectable({
+  providedIn: "root",
 })
+export class SioClientService {
+  env: any = null;
+  jwtToken = "";
+  socket: Socket;
+  public message$: BehaviorSubject<string> = new BehaviorSubject("");
+  pushDataList: ICdPushEnvelop[] = [];
+  constructor(private logger: NGXLogger) {}
 
-export class LoginComponent implements OnInit {
-  debug = true;
-  baseModel: BaseModel;
-  resourceGuid = uuidv4();
-  jwtWsToken: null;
-  loginInvalid = false;
-  rememberMe = true;
-  submitted = false;
-  fg: FormGroup;
-  postData: any;
-  errMsg: any;
-  error = '';
-  sidebarInitData: IInitData;
-  socketData: ISocketItem[] | null = [];
-  routParams = {
-    queryParams: { token: '' },
-    skipLocationChange: true,
-    replaceUrl: false
-  };
-
-  constructor(
-    private logger: NGXLogger,
-    private svSio: SioClientService,
-    private svSioTest: SioClientTestService,
-    private svWss: WebsocketService,
-    private svUser: UserService,
-    private svSess: SessService,
-    private svMenu: MenuService,
-    private svNav: NavService,
-    private route: Router,
-    private svBase: BaseService,
-  ) {
-    // this.svSio.env = environment;
-    // this.svSio.initSio(null, null);
-    this.fg = new FormGroup({
-      userName: new FormControl(),
-      password: new FormControl(),
-      rememberMe: new FormControl()
-    });
+  setEnv(env: any) {
+    this.env = env;
   }
-
-  ngOnInit() {
-    this.logger.info('cd-user/LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
-    // this.logger.debug('AppComponent initialized');
-    this.initialize()
-  }
-
-  login(fg: any) {
-    this.logger.info('starting cd-user/LoginComponent::login');
-    let authData: AuthData = fg.value;
-    const valid = fg.valid;
-    this.logger.info('cd-user/LoginComponent::login/01');
-    this.logger.info('cd-user/LoginComponent::login/fg:', fg);
-    this.logger.info('cd-user/LoginComponent::login/valid:', valid);
-    this.submitted = true;
-    const consumerGuid = { consumerGuid: environment.consumerToken };
-    authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
-    try {
-      this.logger.info('cd-user/LoginComponent::login/02');
-      if (valid) {
-        this.logger.info('cd-user/LoginComponent::login/03');
-        this.initSession(authData);
-      }
-    } catch (err) {
-      this.logger.info('cd-user/LoginComponent::login/04');
-      this.errMsg = "Something went wrong!!"
-      this.loginInvalid = true;
-    }
-  }
-
   /**
-   * Initialize
+   * - save resource in localStorag so it is sharable
+   * with other resources between different client entities
+   * - make call to the server to
+   *    - save resource in redis for reference by other remote clients
+   *    - the same records in redis will be reverenced for persistent socket connection
    */
-  initialize(): void {
-    this.logger.info('cd-user/LoginComponent::initialize()/01');
-    const filter: LsFilter = {
-      storageType: StorageType.CdObjId,
-      cdObjId: {
-        appId: localStorage.getItem('appId'),
-        resourceGuid: null,
-        resourceName: 'SidebarComponent',
-        ngModule: 'SharedModule',
-        jwtToken: localStorage.getItem('accessToken'),
-        socket: null,
-        commTrack: null
-      }
-    }
-    this.logger.info('cd-user/LoginComponent::initialize()/filter:', filter);
-    // this.sidebarInitData = this.svBase.searchLocalStorage(filter);
-    this.sidebarInitData = this.searchLocalStorage(filter);
-    this.logger.info('cd-user/LoginComponent::initialize()/this.sidebarInitData:', this.sidebarInitData);
-    const socketDataStr = localStorage.getItem('socketData')
-    if (socketDataStr) {
-      this.socketData = JSON.parse(socketDataStr).filter(appInit)
-      function appInit(s: ISocketItem): ISocketItem | null {
-        if (s.name === 'appInit') {
-          return s;
-        } else {
-          return null;
-        }
-      }
-      this.logger.info('cd-user/LoginComponent::initialize()/this.socketData:', this.socketData);
-    } else {
-      this.logger.info('Err: socket data is not valid')
-    }
-    this.setAppId();
-  }
-
-  setAppId() {
-    console.log('cd-user/LoginComponent::setAppId()/01')
-    console.log('cd-user/LoginComponent::setAppId()/this.svSio.socket:', this.svSio.socket)
-    localStorage.removeItem('appId');
-    // localStorage.setItem('appId', this.svBase.getGuid());
-    const appId = localStorage.getItem('appId');
-    console.log('cd-user/LoginComponent::setAppId()/appId:', appId)
-    const envl: ICdPushEnvelop = this.configPushPayload('register-client', 'push-registered-client', 1000)
-    console.log('cd-user/LoginComponent::setAppId()/envl:', envl)
-    // this.svSio.sendPayLoad(envl)
-
-    // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
-    this.listen('push-registered-client')
-    this.listen('push-msg-relayed')
-    this.listen('push-msg-pushed')
-    this.listen('push-delivered')
-    this.listen('msg-relayed')
-    this.listen('msg-menu')
-    this.listen('push-menu')
-    this.sendSioMessage(envl)
-  }
-
-  initSession(authData: AuthData) {
-    this.logger.info('cd-user/LoginComponent::initSession/01');
-    this.svUser.auth$(authData).subscribe((res: any) => {
-      if (res.app_state.success === true) {
-        this.logger.info('cd-user/LoginComponent::initSession/res:', JSON.stringify(res));
-        this.svSess.appState = res.app_state;
-        /*
-        create a session on successfull authentication.
-        For subsequeng successull request to the server,
-        use renewSess(res);
-        */
-        if (res.app_state.sess.cd_token !== null && res.app_state.success) {
-          this.logger.info('cd-user/LoginComponent::initSession/02');
-          const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
-          envl.pushData.m = res.data.menuData;
-          envl.pushData.token= res.app_state.sess.cd_token
-          this.logger.info('cd-user/LoginComponent::initSession/envl:', envl);
-
-          if (environment.wsMode === 'sio') {
-            this.logger.info('cd-user/LoginComponent::initSession/envl:...using sio');
-            this.sendSioMessage(envl)
-
-          }
-
-          if (environment.wsMode === 'wss') {
-            this.logger.info('cd-user/LoginComponent::initSession/envl:...using wss');
-            this.svWss.sendMsg(envl)
-          }
-
-          ///////////////////////////////////////
-          this.svSess.createSess(res, this.svMenu);
-          this.svUser.currentUser = { name: `${res.data.userData.userName}`, picture: `${environment.shellHost}/user-resources/${res.data.userData.userGuid}/avatar-01/a.jpg` };
-          this.svNav.userMenu = [
-            { title: 'Profile', link: '/pages/cd-auth/register' },
-            { title: 'Log out', link: '/pages/cd-auth/logout' }
-          ];
-          // this.baseModel.sess = res.app_state.sess;
-          const params = {
-            queryParams: { token: res.app_state.sess.cd_token },
-            skipLocationChange: true,
-            replaceUrl: false
-          };
-          // below: old method
-          // this.route.navigate(['/comm'], params);
-          // this.route.navigate(['/dashboard'], params);
-          this.route.navigate([environment.initialPage], params);
-
-
-          // below new method based on this.baseModel;
-          // this.svNav.nsNavigate(this,'/comm','message from cd-user')
-        }
-      } else {
-        this.errMsg = "The userName and password were not valid"
-        this.loginInvalid = true;
-        this.svSess.logout();
-      }
-    });
-
-  }
-
-  // push-registered-client, push-srv-received, push-msg-relayed, push-msg-pushed, push-delivered, push-msg-completed, push-srv-received, registered, push-menu, push-memo
-  listen(event) {
-    this.logger.info('cd-shell/cd-user/LoginComponent::listen/event:', event);
-    // Listen for incoming messages
-    this.svSioTest.sioListen(event).subscribe({
-      next: (payLoad: ICdPushEnvelop) => {
-        // console.log('cd-shell/cd-user/LoginComponent::listen/Received payLoad:', payLoadStr);
-        // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
-        console.log('cd-user/LoginComponent::pushSubscribe()/payLoad:', payLoad);
-        // Handle the message payload
-        // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu 
-        switch (payLoad.pushData.emittEvent) {
-          case 'push-msg-relayed':
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-msg-relayed event")
-            this.updateRelayed(payLoad)
-            break;
-          case 'push-msg-pushed':
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-msg-pushed event")
-            this.notificationAcceptDelivery(payLoad)
-            break;
-          case 'push-delivered':
-            console.log('cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-delivered-client event")
-            this.notificationMsgComplete(payLoad)
-            break;
-
-          case 'push-registered-client':
-            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-registered-client event")
-            this.saveSocket(payLoad);
-            break;
-
-          case 'msg-relayed':
-            console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle msg-relayed event")
-            break;
-          case 'push-msg-completed':
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-msg-completed event")
-            break;
-          case 'push-srv-received':
-            console.log('cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-srv-received event")
-            break;
-          case 'push-menu':
-            console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad:', payLoad)
-            console.log("handle push-menu event")
-            this.routParams.queryParams.token = payLoad.pushData.token;
-            // this.svIdleTimeout.startTimer(this.cd, idleTimerOptions);
-            // load appropriate menu
-            // this.htmlMenu(payLoad.resp.data,payLoad.pushData.token);
-            break;
-        }
-
-      },
-      error: (error) => {
-        console.error('cd-shell/cd-user/LoginComponent::listen/Error receiving message:', error);
-      },
-      complete: () => {
-        console.log('cd-shell/cd-user/LoginComponent::listen/Message subscription complete');
-      }
-    })
-  }
-
-
-  notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/01')
-    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/senderAcceptDelivery:', payLoad)
-    /**
-     * update record of payload
-     * - delivered time
-     * - delivered = true
-     * - isNotification = true
-     */
-    payLoad.pushData.commTrack.deliveryTime = Number(new Date());
-    payLoad.pushData.commTrack.delivered = true;
-    payLoad.pushData.isNotification = true;
-    payLoad.pushData.triggerEvent = 'msg-received';
-    /**
-     * reverse sender and receiver subTypeId
-     */
-    // this.sendPayLoad(payLoad);
-    this.sendSioMessage(payLoad)
-  }
-
-  notificationMsgComplete(payLoad: ICdPushEnvelop) {
-    console.log('cdUiLib::SioClientService::notificationMsgComplete()/01')
-    console.log('cdUiLib::SioClientService::notificationMsgComplete()/1:', payLoad)
-    /**
-     * update record of payload
-     * - delivered time
-     * - delivered = true
-     * - isNotification = true
-     */
-    payLoad.pushData.commTrack.completedTime = Number(new Date());
-    payLoad.pushData.commTrack.completed = true;
-    payLoad.pushData.isNotification = true;
-    payLoad.pushData.triggerEvent = 'msg-completed'
-    console.log('cdUiLib::SioClientService::notificationMsgComplete/2:', payLoad)
-    /**
-     * reverse sender and receiver subTypeId
-     */
-    // this.sendPayLoad(payLoad);
-    this.sendSioMessage(payLoad)
-  }
-
-  sendSioMessage(envl: ICdPushEnvelop): void {
-    this.logger.info('cd-user/LoginComponent::sendSioMessage/envl:', envl);
-    this.svSioTest.sendMessage(envl.pushData.triggerEvent, envl).subscribe({
-      next: (response: boolean) => {
-        console.log('Message sent successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error sending message:', error);
-      },
-      complete: () => {
-        console.log('Message sending complete');
-      }
-    });
-  }
-
-  configPushPayload(triggerEvent: string, emittEvent: string, cuid: number | string): ICdPushEnvelop {
-    console.log('starting cd-user::LoginComponent::configPushPayload()');
-    this.resourceGuid = this.svBase.getGuid();
-
-
-    const pushEnvelope: ICdPushEnvelop = {
-      pushData: {
-        pushGuid: '',
-        m: '',
-        pushRecepients: [],
-        triggerEvent: '',
-        emittEvent: '',
-        token: '',
-        isNotification: null,
-        appSockets: this.socketData,
-        isAppInit: true,
-        commTrack: {
-          initTime: Number(new Date()),
-          relayTime: null,
-          relayed: false,
-          pushed: false,
-          pushTime: null,
-          deliveryTime: null,
-          delivered: false,
-          completed: false,
-          completedTime: null
-        },
-      },
-      req: null,
-      resp: null
-    }
-
-    console.log('cd-user::LoginComponent::configPushPayload()/this.resourceGuid:', this.resourceGuid);
-    const key = this.resourceGuid;
-    const cdObj: CdObjId = {
-      appId: localStorage.getItem('appId')!,
-      ngModule: 'UserFrontModule',
-      resourceName: 'LoginComponent',
-      resourceGuid: this.resourceGuid,
-      jwtToken: this.jwtWsToken,
+  registerResource(rGuid: string) {
+    // this.resourceGuid = uuidv4();
+    const key = rGuid;
+    const value: CdObjId = {
+      appId: this.env.appId,
+      ngModule: "UserModule",
+      resourceName: "SessionService",
+      resourceGuid: rGuid,
+      jwtToken: "",
       socket: null,
-      socketId: '',
       commTrack: {
         initTime: Number(new Date()),
         relayTime: null,
@@ -3925,1307 +876,1144 @@ export class LoginComponent implements OnInit {
         deliveryTime: null,
         delivered: false,
         completed: false,
-        completedTime: null
+        completedTime: null,
       },
-    }
+    };
 
-    localStorage.setItem(key, JSON.stringify(cdObj));
-
-    const users = [
-      {
-        userId: cuid,
-        subTypeId: 1,
-        cdObjId: cdObj,
+    const env = {
+      ctx: "Sys",
+      m: "CdPush",
+      c: "Websocket",
+      a: "Create",
+      dat: {
+        f_vals: [
+          {
+            data: value,
+          },
+        ],
+        token: "",
       },
-    ]
-
-    const envl: ICdPushEnvelop = { ...pushEnvelope };
-    envl.pushData.triggerEvent = triggerEvent;
-    envl.pushData.emittEvent = emittEvent;
-
-    // set sender
-    const uSender: any = { ...users[0] }
-    uSender.subTypeId = 1;
-    envl.pushData.pushRecepients.push(uSender)
-
-
-    if (triggerEvent === 'login') {
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/triggerEvent==login:');
-      // set recepient
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
-      const uRecepient: any = { ...users[0] }
-      uRecepient.subTypeId = 7;
-      this.logger.info('cd-user/LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
-      uRecepient.cdObjId = this.sidebarInitData.value
-      envl.pushData.pushRecepients.push(uRecepient)
-
-    }
-
-    this.logger.info('cd-user/LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
-    return envl;
-
+      args: {},
+    };
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
-  saveSocket(payLoad: ICdPushEnvelop) {
-    console.log('cd-user/LoginComponent::saveSocket()/payLoad:', payLoad);
+  /**
+   * initiate listeners to various events involved
+   * in pushing message via push server
+   */
+  initSio(cls: any, action: any) {
+    console.log("cdUiLib::SioClientService::initSio()/01");
+    this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
+    console.log(
+      "cdUiLib::SioClientService::initSio()/this.socket:",
+      this.socket
+    );
+
+    // this.registerResource(rGuid)
+
     /**
-     * - get socketStore
-     * - search socketStore for item with name='appInit'
-     * - remove existing item with the same key
-     * - save socketData to LocalStorage with resourceGuide as reference
+     * injecting extra listeners from
+     * implementing class
      */
-    const socketData: ISocketItem[] | null = payLoad.pushData.appSockets.filter(appInit)
-    function appInit(s: ISocketItem): ISocketItem | null {
-      if (s.name === 'appInit') {
-        return s;
-      } else {
-        return null;
-      }
+    // extListiners(this);
+
+    if (action) {
+      this.listenSecure("push-registered-client", cls, action).subscribe(
+        (payLoadStr: any) => {
+          console.log("initSio::listenSecure/action=push-registered-client");
+          console.log(
+            "initSio::listenSecure/action=push-registered-client/payLoadStr:",
+            payLoadStr
+          );
+          action(cls, "push-registered-client", payLoadStr);
+        }
+      );
+
+      this.listenSecure("push-msg-pushed", cls, action).subscribe(
+        (payLoadStr: any) => {
+          console.log("initSio::listenSecure/action=push-msg-pushed");
+          console.log(
+            "initSio::listenSecure/action=push-msg-pushed/payLoadStr:",
+            payLoadStr
+          );
+          action(cls, "push-msg-pushed", payLoadStr);
+        }
+      );
     }
 
-    if (socketData.length > 0) {
-      const socketStr = JSON.stringify(socketData)
-      localStorage.removeItem('socketData');
-      localStorage.setItem('socketData', socketStr);
+    /**
+     * Send receives 'push-msg-relayed' event when
+     * message has been received by server and pushed
+     * to client. No action is expected from the sender
+     * listen for notification that a given message has reached the server
+     * and ready for pushing
+     */
+    this.listenSecure("push-msg-relayed").subscribe((payLoadStr: string) => {
+      console.log(
+        "cdUiLib::SioClientService::initSio()/listenSecure()/push-msg-relayed/:payLoadStr:",
+        payLoadStr
+      );
+      if (payLoadStr) {
+        const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr);
+        console.log(
+          "cdUiLib::SioClientService::initSio()/listenSecure(msg-relayed)payLoad:",
+          payLoad
+        );
+        this.updateRelayed(payLoad);
+      }
+    });
+
+    /**
+     * Recepient waits for notification of messaged pushed
+     */
+    this.listenSecure("push-msg-pushed").subscribe((payLoadStr: string) => {
+      console.log(
+        "cdUiLib::SioClientService::initSio()/listenSecure()/push-delivered/:payLoadStr:",
+        payLoadStr
+      );
+      // this confirms a given message was received
+      // mark local send message as delivered
+      // this.messageList.push(message);
+      if (payLoadStr) {
+        const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr);
+        // sender to flag that sent message is received
+        this.notificationAcceptDelivery(payLoad);
+      }
+    });
+
+    /**
+     * Sender waits for notification to message delivered
+     * It responds by sending completion message to server.
+     * Server is to save records but no further action
+     * Server would mark the commTrack as completed
+     * listening by r for notification that a given message
+     * has been seccussfully delivered
+     */
+    this.listenSecure("push-delivered").subscribe((payLoadStr: string) => {
+      console.log(
+        "cdUiLib::SioClientService::initSio()/listenSecure()/push-delivered/:payLoadStr:",
+        payLoadStr
+      );
+      // this confirms a given message was received
+      // mark local send message as delivered
+      // this.messageList.push(message);
+      if (payLoadStr) {
+        const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr);
+        // sender to flag that sent message is received
+        this.notificationMsgComplete(payLoad);
+      }
+    });
+  }
+
+  public sendMessage(msg: string) {
+    console.log("cdUiLib::SioClientService::sendMessage()/msg", msg);
+    if (this.socket) {
+      this.socket.emit("message", msg);
+    } else {
+      console.log(
+        "cdUiLib::SioClientService::sendMessage() error: socket is invalid"
+      );
     }
   }
+
+  public sendPayLoad(pushEnvelope: ICdPushEnvelop) {
+    console.log(
+      "cdUiLib::SioClientService::sendPayLoad/01/pushEnvelope:",
+      pushEnvelope
+    );
+    if ("pushData" in pushEnvelope) {
+      if ("pushGuid" in pushEnvelope.pushData) {
+        console.log(
+          "cdUiLib::SioClientService::sendPayLoad/02/this.socket:",
+          this.socket
+        );
+        // every message has a unique id
+        // pushEnvelope.pushData.pushGuid = uuidv4();
+        if (this.socket) {
+          this.logger.log(
+            "cdUiLib::SioClientService::sendPayLoad/:socket is available"
+          );
+          const msg = JSON.stringify(pushEnvelope);
+          this.socket.emit(pushEnvelope.pushData.triggerEvent, msg);
+        } else {
+          this.logger.error(
+            "cdUiLib::SioClientService::sendPayLoad/:unable to push message. socket is null"
+          );
+        }
+      } else {
+        this.logger.error(
+          "cdUiLib::SioClientService::sendPayLoad/01/triggerEvent missing in payLoad.pushData"
+        );
+      }
+    } else {
+      this.logger.error(
+        "cdUiLib::SioClientService::sendPayLoad/01/pushData missing in pushEnvelope"
+      );
+    }
+  }
+
+  public listenSecure = (
+    emittEvent: string,
+    cls = null,
+    action: any = null
+  ) => {
+    console.log(
+      "cdUiLib::SioClientService::listenSecure()/01/emittEvent:",
+      emittEvent
+    );
+    console.log(
+      "cdUiLib::SioClientService::listenSecure()/this.socket:",
+      this.socket
+    );
+    if (this.socket) {
+      this.socket.on(emittEvent, (payLoadStr: any) => {
+        /**
+         * - check if confirmation process is enabled
+         * - prepare confirmation message back to sender
+         *    - flag message as recieved
+         *    - set triggerEvent event to 'msg-delivered' for server processing
+         *    - set emittEvent event to 'msg-delivered' for server processing
+         *    - trim (remove unessary load) payload for confirmation message
+         * - send confirmation message to sender
+         */
+        let triggerEvent = null;
+        if (payLoadStr) {
+          console.log(
+            "cdUiLib::SioClientService::listenSecure()/emittEvent/01/emittEvent:",
+            emittEvent
+          );
+          console.log(
+            "cdUiLib::SioClientService::listenSecure()/payLoadStr:",
+            payLoadStr
+          );
+          const payLoad: ICdPushEnvelop = payLoadStr;
+          // if (emittEvent === 'push-registered-client') {
+          //   action(cls, payLoadStr)
+          // }
+          // if (emittEvent == 'push-registered-client') {
+          //   action(cls,emittEvent, payLoad)
+          // }
+
+          if (action) {
+            action(cls, emittEvent, payLoad);
+          }
+
+          if ("pushData" in payLoad && action) {
+            console.log("cdUiLib::SioClientService::listenSecure/2");
+            if ("triggerEvent" in payLoad.pushData) {
+              console.log("cdUiLib::SioClientService::listenSecure/3");
+              triggerEvent = payLoad.pushData.triggerEvent;
+            } else {
+              console.log(
+                "cdUiLib::SioClientService::listenSecure()/triggerEvent missing in payLoad.pushData"
+              );
+            }
+          } else {
+            console.log(
+              "cdUiLib::SioClientService::listenSecure()/pushData missing in payLoad"
+            );
+          }
+
+          /**
+           *
+           * if emittEvent === 'msg-delivered-push',
+           * it means end of cycle of messaging, no need to
+           * send another confirmation message, so...
+           *    - do not send confirmation message
+           *    -
+           */
+          console.log("cdUiLib::SioClientService::listenSecure/4");
+          console.log("listenSecure()/emittEvent/04/emittEvent:", emittEvent);
+          if (emittEvent === "push-msg-relayed") {
+            /**
+             * proceed with normal message reception,
+             * do not send another emittEvent = 'msg-delivered-push'
+             */
+            console.log("cdUiLib::SioClientService::listenSecure/5");
+            // this.message$.next(payLoadStr);
+          } else {
+            /**
+             * send confirmation massage
+             *  - set triggerEvent = 'msg-delivered'
+             *  - set emittEvent = 'msg-delivered-push'
+             */
+            console.log("cdUiLib::SioClientService::listenSecure/6");
+            if (emittEvent === "push-msg-relayed") {
+            }
+            // else {
+            //   this.sendPayLoad(payLoad)
+            // }
+            if (emittEvent === "push-msg-pushed") {
+              this.notificationAcceptDelivery(payLoadStr);
+            }
+
+            if (emittEvent === "push-delivered") {
+              this.notificationMsgComplete(payLoadStr);
+            }
+          }
+        }
+      });
+    } else {
+      console.log(
+        "cdUiLib::SioClientService::listenSecure()/error: socket is invalid"
+      );
+    }
+
+    return this.message$.asObservable();
+  };
 
   /**
    * No action is expected from sender.
    * No message to send to server
    * Optionally, the sender can do its own house
    * data updates and records.
-   * @param payLoad 
+   * @param payLoad
    */
   updateRelayed(payLoad: ICdPushEnvelop) {
-    console.log('updateRelayed()/01')
-    console.log('updateRelayed()/payLoad:', payLoad)
+    console.log("updateRelayed()/01");
+    console.log("updateRelayed()/payLoad:", payLoad);
     /**
      * update record of send messages
      */
   }
 
-  searchLocalStorage(f: LsFilter) {
-    this.logger.info('starting cd-user/LoginComponent::searchLocalStorage()/lcLength:');
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/f:', f);
-    // const lc = { ...localStorage };
-    const lcArr = [];
-
-    const lcLength = localStorage.length;
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/lcLength:', lcLength);
-    let i = 0;
-    for (let i = 0; i < localStorage.length; i++) {
-      // try {
-      // set iteration key name
-      const k = localStorage.key(i);
-      // use key name to retrieve the corresponding value
-      var v = localStorage.getItem(k!);
-      // this.logger.info the iteration key and value
-      this.logger.info('Key: ' + k + ', Value: ' + v);
-      try {
-        this.logger.info('cd-user/LoginComponent::searchLocalStorage()/1')
-        if (typeof (v) === 'object') {
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/2')
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/v:', v)
-          const lcItem = JSON.parse(v!);
-          if ('success' in lcItem) {
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/3')
-            const appState: IAppState = lcItem;
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/appState:', appState)
-          }
-          if ('resourceGuid' in lcItem) {
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/4')
-            const cdObjId = lcItem;
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/cdObjId:', cdObjId)
-          }
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/5')
-          lcArr.push({ key: k, value: JSON.parse(v!) })
-        } else {
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/typeof (v):', typeof (v))
-          this.logger.info('cd-user/LoginComponent::searchLocalStorage()/6')
-          lcArr.push({ key: k, value: JSON.parse(v) })
-        }
-
-      } catch (e) {
-        this.logger.info('offending item:', v);
-        this.logger.info('the item is not an object');
-        this.logger.info('Error:', e);
-      }
-
-    }
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/lcArr:', lcArr);
-    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-    // isAppState
-    // const resourceName = 'UserModule';
-    const AppStateItems = (d: any) => 'success' in d.value;
-    const isObject = (d: any) => typeof (d.value) === 'object';
-    const CdObjIdItems = (d: any) => 'resourceName' in d.value;
-    const filtObjName = (d: any) => d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule;
-    const latestItem = (prev: any, current: any) => (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
-    let ret: any = null;
-    try {
-      if (this.debug) {
-        this.logger.info('cd-user/LoginComponent::searchLocalStorage()/debug=true:');
-        ret = lcArr
-          .filter((d: any) => {
-            if (typeof (d.value) === 'object') {
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByObject: d:', d);
-              return d
-            } else {
-              return null;
-            }
-          })
-          .filter((d: any) => {
-            if ('resourceName' in d.value) {
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
-              return d;
-            } else {
-              return null;
-            }
-          })
-          .filter((d: any) => {
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: d:', d);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
-            this.logger.info('cd-user/LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
-            if (d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule) {
-              return d;
-            } else {
-              return null;
-            }
-          })
-          .reduce(
-            (prev = {}, current = {}) => {
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/prev:', prev);
-              this.logger.info('cd-user/LoginComponent::searchLocalStorage()/current:', current);
-              return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
-            }
-          );
-      } else {
-        this.logger.info('cd-user/LoginComponent::searchLocalStorage()/debug=false:');
-        ret = lcArr
-          .filter(isObject)
-          .filter(CdObjIdItems!)
-          .filter(filtObjName!)
-          .reduce(latestItem!)
-      }
-      this.logger.info('cd-user/LoginComponent::searchLocalStorage()/ret:', ret);
-    } catch (e) {
-      this.logger.info('Error:', e);
-    }
-    return ret;
+  notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
+    console.log("cdUiLib::SioClientService::notificationAcceptDelivery()/01");
+    console.log(
+      "cdUiLib::SioClientService::notificationAcceptDelivery()/senderAcceptDelivery:",
+      payLoad
+    );
+    /**
+     * update record of payload
+     * - delivered time
+     * - delivered = true
+     * - isNotification = true
+     */
+    payLoad.pushData.commTrack.deliveryTime = Number(new Date());
+    payLoad.pushData.commTrack.delivered = true;
+    payLoad.pushData.isNotification = true;
+    payLoad.pushData.triggerEvent = "msg-received";
+    /**
+     * reverse sender and receiver subTypeId
+     */
+    this.sendPayLoad(payLoad);
   }
 
-  onFocus() {
-    this.errMsg = "";
+  notificationMsgComplete(payLoad: ICdPushEnvelop) {
+    console.log("cdUiLib::SioClientService::notificationMsgComplete()/01");
+    console.log(
+      "cdUiLib::SioClientService::notificationMsgComplete()/1:",
+      payLoad
+    );
+    /**
+     * update record of payload
+     * - delivered time
+     * - delivered = true
+     * - isNotification = true
+     */
+    payLoad.pushData.commTrack.completedTime = Number(new Date());
+    payLoad.pushData.commTrack.completed = true;
+    payLoad.pushData.isNotification = true;
+    payLoad.pushData.triggerEvent = "msg-completed";
+    console.log(
+      "cdUiLib::SioClientService::notificationMsgComplete/2:",
+      payLoad
+    );
+    /**
+     * reverse sender and receiver subTypeId
+     */
+    this.sendPayLoad(payLoad);
   }
-
 }
 ```
 
+/////////////////////////////////////////////////////////
+Besed on the samples you have given, and I did not see the setAppId(), I am thinking you again take time to go through the server side process, this time with the background of how we must implement the front end processes.
+We need to understand the crucial bits that must happen on the client, especially during initialization for there to be bi-drectional communication.
 
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////
-From your explanations, in order to see the expected output, we need to initiate the IdePushClientService in the page where we need the interaction.
-Below is the runtime page of SignInController.
-If I understand you correctly, we need to have a way of initiating IdePushClientService at this stage. Of course this is just for testing but eventually the code will be built up.
-Given that this the eventual code, how can we do a POC for this?
+- pay special attantion to the method persistSenderData() and especially when it is called and the rationale.
+- another critical one is getSender()
+- and ofcourse runRegisteredEvents() during initialization.
 
 ```ts
-import { BaseService, ICdResponse } from "../../base";
-import { CdShellController } from "../../base/cd-shell.controller";
-import { ConsumerModel } from "../../moduleman/models/consumer.model";
-import { UserModel } from "../models/user.model";
+export class SioService {
+  logger: Logging;
+  b = new BaseService();
 
-export class SignInController extends CdShellController {
-  private b = new BaseService();
-
-  template(): string {
-    return `
-      <form id="signInForm" class="cd-sign-in">
-        <h1 class="cd-heading">Sign In</h1>
-        <label for="username">Username</label>
-        <input id="username" type="text" cd-model="username" required />
-
-        <label for="password">Password</label>
-        <input id="password" type="password" cd-model="password" required />
-
-        <button type="submit" class="cd-button">Sign In x</button>
-      </form>
-    `;
+  constructor() {
+    this.logger = new Logging();
   }
 
-  setup(): void {
-    const form = document.getElementById("signInForm");
-    if (!form) return;
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const { username, password } = this.processFormData();
-      const data = {
-        user: { userName: username, password } as UserModel,
-        consumer: {
-          consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD",
-        } as ConsumerModel,
-      };
-      this.auth(data);
+  run(io, pubClient, subClient) {
+    // this.logger.logInfo("SioService::run()/io:", io)
+    // this.logger.logInfo("SioService::run()/pubClient:", pubClient)
+    // this.logger.logInfo("SioService::run()/subClient:", subClient)
+    const port = config.push.serverPort;
+    pubClient.on("error", (err) => {
+      this.logger.logInfo(`pubClient error: ${JSON.stringify(err)}`);
+    });
+    io.adapter(createAdapter(pubClient, subClient));
+    io.on("connection", (socket) => {
+      this.logger.logInfo("a user connected");
+      this.runRegisteredEvents(socket, io, pubClient);
+      socket.on("disconnect", () => {
+        this.logger.logInfo("a user disconnected!");
+      });
     });
   }
 
-  processFormData(): { username: string; password: string } {
-    const username =
-      (document.querySelector('[cd-model="username"]') as HTMLInputElement)
-        ?.value || "";
-    const password =
-      (document.querySelector('[cd-model="password"]') as HTMLInputElement)
-        ?.value || "";
-    return { username, password };
+  /**
+   * This array can be a configuration available in the database.
+   * There would then be different sets depending on the calling application.
+   * This would then mean one server can handle several applications..eg:
+   * - memo
+   * - tracking financial transaction
+   * - authentication process
+   * - system transaction tracking
+   * triggerEvent: the listening event at the server to handle a given message
+   *              or event emitted by the client
+   * emittEvent: the listening event at the client to handles a given message
+   *              or event emitted by the server
+   * sFx: server function that handles a given message
+   *
+   * cFx: client function that handles a given message
+   */
+  getRegisteredEvents(): PushEvent[] {
+    this.logger.logInfo("starting getRegisteredEvents()");
+    this.testColouredLogs();
+    return [
+      {
+        triggerEvent: "register-client",
+        emittEvent: "push-registered-client",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "srv-received",
+        emittEvent: "push-srv-received",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "msg-relayed",
+        emittEvent: "push-msg-relayed",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "msg-pushed",
+        emittEvent: "push-msg-pushed",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "msg-received",
+        emittEvent: "push-delivered",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "msg-completed",
+        emittEvent: "push-msg-completed",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "register",
+        emittEvent: "registered",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "login",
+        emittEvent: "push-menu",
+        sFx: "pushEnvelop",
+      },
+      {
+        triggerEvent: "send-memo",
+        emittEvent: "push-memo",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "send-pub",
+        emittEvent: "push-pub",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "send-react",
+        emittEvent: "push-react",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "send-menu",
+        emittEvent: "push-menu",
+        sFx: "push",
+      },
+      {
+        triggerEvent: "send-notif",
+        emittEvent: "push-notif",
+        sFx: "push",
+      },
+    ];
   }
 
-  async auth(data: {
-    user: UserModel;
-    consumer: ConsumerModel;
-  }): Promise<void> {
-    console.log('starting SignInController:auth()')
-    console.log('SignInController:auth()/data:', data)
-    window.cdShell?.progress?.start("Signing in...");
-    try {
-      const request = this.b.buildBaseRequest(
-        { ctx: "Sys", name: "User" },
-        { name: "User" },
-        "Login",
-        { data: data.user, consumer: data.consumer },
-        null
+  runRegisteredEvents(socket, io, pubClient) {
+    this.logger.logInfo("SioService::runRegisteredEvents(socket)/01");
+    // this.logger.logInfo('SioService::runRegisteredEvents(socket)/socket:', socket);
+    // listen to registered events
+    this.getRegisteredEvents().forEach((e) => {
+      this.logger.logInfo(
+        `SioService::runRegisteredEvents(socket)/e:${JSON.stringify(e)}`
       );
-
-      const result = (await this.b.handleRequest(request)) as ICdResponse;
-      if (result.app_state.success) {
-        window.cdShell?.notify?.success("Login successful");
-        window.cdShell?.progress?.done();
-        // Proceed to dashboard or main shell load
-      } else {
-        window.cdShell?.notify?.error(
-          result.app_state.info.app_msg || "Login failed"
+      socket.on(e.triggerEvent, async (payLoad: string) => {
+        console.log("---------------------------------------");
+        console.log(`socket.on${e.triggerEvent}`);
+        console.log("---------------------------------------");
+        this.logger.logInfo(
+          `SioService::runRegisteredEvents()/e.triggerEvent:${e.triggerEvent}`
         );
-      }
-    } catch (e: any) {
-      window.cdShell?.notify?.error(e.message || "Unexpected error");
-    } finally {
-      window.cdShell?.progress?.done();
-    }
-  }
-}
-
-```
-
-
-///////////////////////////////////////////
-
-I placed the sample you suggested in the file src/CdShell/sys/cd-user/view/sign-in.controller.js.
-Note the format is that of compiled  file in the view directory.
-We assume it has been generated as shared below.
-So while loading it, there seem to be some issues.
-
-// Error during build
-```log
-x Build failed in 699ms
-error during build:
-node_modules/readdirp/esm/index.js (2:9): "Readable" is not exported by "__vite-browser-external", imported by "node_modules/readdirp/esm/index.js".
-file: /home/emp-12/cd-shell/node_modules/readdirp/esm/index.js:2:9
-
-1: import { stat, lstat, readdir, realpath } from 'node:fs/promises';
-2: import { Readable } from 'node:stream';
-            ^
-3: import { resolve as presolve, relative as prelative, join as pjoin, sep as psep } from 'node:path';
-4: export const EntryTypes = {
-
-    at getRollupError (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
-    at error (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
-    at Module.error (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:16939:16)
-    at Module.traceVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:17391:29)
-    at ModuleScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:15061:39)
-    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
-    at Identifier.bind (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5413:40)
-    at ClassDeclaration.bind (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:2804:23)
-    at ExportNamedDeclaration.bind (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:12632:27)
-    at Program.bind (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:2800:28)
-```
-
-// mocking compiled file
-```js
-import { IdePushClientService } from "../../cd-push/services/ide-push-client.service";
-
-export const ctlSignIn = {
-  username: "",
-  password: "",
-
-  __template() {
-    return `
-      <form class="cd-sign-in">
-        <h1 class="cd-heading">Sign In</h1>
-
-        <label>Username</label>
-        <input cd-model="username" placeholder="Username" />
-
-        <label>Password</label>
-        <input cd-model="password" type="password" placeholder="Password" />
-
-        <button type="button" cd-click="auth">Sign In</button>
-      </form>
-    `;
-  },
-
-  __setup() {
-    // -----------------------------------
-    // 1️⃣ Initialize POC socket client
-    // -----------------------------------
-    console.info("Initializing IDE push client (POC)...");
-    try {
-      const apiUrl = "http://localhost:3000"; // cd-api test endpoint
-      const workspacePath = "/path/to/workspace/src"; // replace with real path
-      this.idePushClient = new IdePushClientService(apiUrl, workspacePath);
-      console.log("IdePushClientService initialized");
-    } catch (e) {
-      console.error("Failed to initialize IdePushClientService:", e.message);
-    }
-
-    // -----------------------------------
-    // 2️⃣ Attach form listener
-    // -----------------------------------
-    const form = document.getElementById("signInForm");
-    if (!form) return;
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const { username, password } = this.processFormData();
-      const data = {
-        user: { userName: username, password },
-        consumer: {
-          consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD",
-        },
-      };
-      this.auth(data);
+        this.logger.logInfo(
+          `SioService::runRegisteredEvents()/payLoad:${JSON.stringify(payLoad)}`
+        );
+        const pushEnvelop: ICdPushEnvelop = JSON.parse(payLoad);
+        const sender = this.getSender(pushEnvelop.pushData.pushRecepients);
+        this.logger.logInfo(
+          `SioService::runRegisteredEvents()/sender:${JSON.stringify(sender)}`
+        );
+        await this.persistSenderData(sender, socket, pubClient);
+        if (pushEnvelop.pushData.commTrack.completed) {
+          /**
+           * process message completion
+           */
+          this.logger.logInfo(
+            "SioService::getRegisteredEvents()/message processing completed"
+          );
+          this.logger.logInfo(
+            `SioService::getRegisteredEvents()/pushEnvelop:${pushEnvelop}`
+          );
+          console.log(
+            "--------------------------------------------------------------------------"
+          );
+          console.log("PROCESS COMPLETED");
+          console.log(
+            "--------------------------------------------------------------------------"
+          );
+        } else {
+          this.relayMessages(pushEnvelop, io, pubClient);
+        }
+      });
     });
-    console.log("[cd-user] Controller setup complete");
-  },
+  }
 
-  auth() {
-    console.log("Auth triggered with:", this.username, this.password);
-    alert(`Hello, ${this.username}!`);
-  },
-};
-```
+  getSender(pushRecepients: ICommConversationSub[]): ICommConversationSub {
+    return pushRecepients.filter((r) => r.subTypeId === 1)[0];
+  }
 
-//////////////////////////////////////////////////////////////////
-At the browser, I am getting 404 response.
-Take a look and let me know if you can tell where the problem is.
-js client connection code
-```ts
-connect() {
-    try {
-      console.info(`[IdePushClientService] Connecting to ${this.apiUrl}...`);
-      const sioOptions = {
-        path: "/",
-        transports: ["polling"],
-        secure: false,
-        reconnection: true,
-        reconnectionAttempts: 3,
-        reconnectionDelay: 2000,
-      };
-      this.socket = io(this.apiUrl, sioOptions);
+  resourceHasSocket() {
+    // confirm if resource has socket already
+  }
 
-      this.socket.on("connect", () => {
-        console.info("[IdePushClientService] ✅ Connected to cd-api");
-      });
+  async persistSenderData(sender: ICommConversationSub, socket, pubClient) {
+    this.logger.logInfo(
+      `SioService::persistSenderData/01/socket.id: ${socket.id}`
+    );
+    sender.cdObjId.socketId = socket.id;
+    const k = sender.cdObjId.resourceGuid;
+    const v = JSON.stringify(sender);
+    this.logger.logInfo(`SioService::persistSenderData()/k:${k}`);
+    this.logger.logInfo(`SioService::persistSenderData()/v:${v}`);
+    return await this.b.wsRedisCreate(k, v);
+  }
 
-      this.socket.on("disconnect", () => {
-        console.warn("[IdePushClientService] ⚠️ Disconnected from cd-api");
-      });
-    } catch (err) {
-      console.error("[IdePushClientService] Connection error:", err.message);
+  relayMessages(pushEnvelop: ICdPushEnvelop, io, pubClient) {
+    if (pushEnvelop.pushData.commTrack.completed === true) {
+      this.logger.logInfo(
+        `SioService::relayMessages()/pushEnvelop:${pushEnvelop}`
+      );
+      console.log(
+        "--------------------------------------------------------------------------"
+      );
+      console.log("PROCESS COMPLETED");
+      console.log(
+        "--------------------------------------------------------------------------"
+      );
+    } else {
+      pushEnvelop.pushData.pushRecepients.forEach(
+        async (recepient: ICommConversationSub) => {
+          let payLoad = "";
+          this.logger.logInfo(
+            `SioService::relayMessages()/recepient:${JSON.stringify(recepient)}`
+          );
+          this.logger.logInfo(
+            "SioService::relayMessages()/pushEnvelop.pushData.pushRecepients:",
+            pushEnvelop.pushData.pushRecepients
+          );
+          console.log("SioService::relayMessages()/pushEnvelop:", pushEnvelop);
+          // const recepientSocket = this.recepientSocket(recepient, pubClient);
+          const recepientDataStr = await this.destinationSocket(recepient);
+          this.logger.logInfo(
+            "SioService::relayMessages()/pushEnvelop.pushData.recepientDataStr:",
+            recepientDataStr
+          );
+          const recepientData = JSON.parse(recepientDataStr.r);
+          this.logger.logInfo(
+            `SioService::relayMessages()/recepientData:${JSON.stringify(recepientData)}`
+          );
+
+          if (recepientDataStr.r) {
+            const recepientSocketId = recepientData.cdObjId.socketId;
+            // const msg = JSON.stringify(pushEnvelop);
+            switch (recepient.subTypeId) {
+              case 1:
+                console.log(
+                  "--------------------------------------------------------------------------"
+                );
+                console.log("STARTING MESSAGE TO SENDER");
+                console.log(
+                  "--------------------------------------------------------------------------"
+                );
+                // handle message to sender:
+                // mark message as relayed plus relayedTime
+                // const pushEnvelop1 = this.shallow(pushEnvelop)
+                const pushEnvelop1: ICdPushEnvelop = JSON.parse(
+                  JSON.stringify(pushEnvelop)
+                );
+                pushEnvelop1.pushData.commTrack.relayTime = Number(new Date());
+
+                // pushEnvelop1.pushData.emittEvent = 'push-msg-relayed';
+                if (pushEnvelop1.pushData.commTrack.relayed !== true) {
+                  pushEnvelop1.pushData.isNotification = true;
+                }
+
+                this.logger.logInfo(
+                  `SioService::relayMessages()/[switch 1] pushEnvelop:${JSON.stringify(pushEnvelop1)}`
+                );
+                this.logger.logInfo(
+                  "SioService::relayMessages()/[switch 1] sending confirmation message to sender"
+                );
+                this.logger.logInfo(
+                  `SioService::relayMessages()/[switch 1] pushEnvelop.pushData.triggerEvent:${pushEnvelop1.pushData.triggerEvent}`
+                );
+                this.logger.logInfo("case-1: 01");
+                if (pushEnvelop1.pushData.isAppInit) {
+                  /**
+                   * if the incoming message is for applitialization:
+                   * - nb: the resourceGuid is already saved in redis for reference
+                   * - save socket in envelop
+                   * - push message back to sender with socketid info
+                   * - the client app will rely on these data for subsequest communication by federated components of the app
+                   */
+                  console.log(
+                    "--------------------------------------------------------------------------"
+                  );
+                  console.log("SENDING APP-INIT-DATA");
+                  console.log(
+                    `case-1: 011...isAppInit->triggerEvent === push-registered-client`
+                  );
+                  console.log(
+                    "--------------------------------------------------------------------------"
+                  );
+                  const socketStore: ISocketItem = {
+                    socketId: recepientSocketId,
+                    name: "appInit",
+                    socketGuid: this.b.getGuid(),
+                  };
+                  // save socket
+                  pushEnvelop1.pushData.appSockets.push(socketStore);
+                  // send back to sender
+                  io.to(recepientSocketId).emit(
+                    "push-registered-client",
+                    pushEnvelop1
+                  );
+                }
+                if (pushEnvelop1.pushData.isNotification) {
+                  this.logger.logInfo("case-1: 02...isNotification");
+                  if (
+                    pushEnvelop1.pushData.commTrack.relayed !== true &&
+                    pushEnvelop1.pushData.commTrack.pushed !== true
+                  ) {
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    console.log("SENDING NOTIFICATION");
+                    console.log(
+                      `case-1: 04...isNotification->triggerEvent === msg-relayed`
+                    );
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    pushEnvelop1.pushData.emittEvent = "push-msg-relayed";
+                    pushEnvelop1.pushData.commTrack.relayed = true;
+                    /**
+                     * this is notification from recepient to sender
+                     * to confirm message has been delivered
+                     */
+                    io.to(recepientSocketId).emit(
+                      "push-msg-relayed",
+                      pushEnvelop1
+                    );
+                  }
+
+                  if (
+                    pushEnvelop1.pushData.commTrack.delivered === true &&
+                    pushEnvelop1.pushData.commTrack.completed !== true
+                  ) {
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    console.log("SENDING NOTIFICATION");
+                    console.log(
+                      `case-1: 03...isNotification->event to emit === push-delivered`
+                    );
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+
+                    /**
+                     * this is notification from recepient to sender
+                     * to confirm message has been delivered
+                     */
+                    io.to(recepientSocketId).emit(
+                      "push-delivered",
+                      pushEnvelop1
+                    );
+                  }
+
+                  // was closed and open for testing on 8 jul 2024
+                  if (
+                    pushEnvelop1.pushData.triggerEvent === "msg-received" &&
+                    pushEnvelop1.pushData.commTrack.completed !== true
+                  ) {
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    this.logger.logInfo("SENDING NOTIFICATION");
+                    this.logger.logInfo(
+                      `case-1: 041...isNotification->triggerEvent === msg-relayed`
+                    );
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+
+                    /**
+                     * this is notification from recepient to sender
+                     * to confirm message has been delivered
+                     */
+                    io.to(recepientSocketId).emit(
+                      "push-delivered",
+                      pushEnvelop1
+                    );
+                  }
+                  // was closed and open for testing on 8 jul 2024
+                  if (
+                    pushEnvelop1.pushData.triggerEvent === "msg-completed" &&
+                    pushEnvelop1.pushData.commTrack.completed !== true
+                  ) {
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    this.logger.logInfo("SENDING NOTIFICATION");
+                    this.logger.logInfo(
+                      `case-1: 042...isNotification->triggerEvent === msg-completed`
+                    );
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+
+                    /**
+                     * record completion of messaging
+                     */
+                    this.logger.logInfo("message completed");
+                  }
+                } else {
+                  this.logger.logInfo("case-1: 05");
+                  // send notification to client for relay
+                  if (pushEnvelop1.pushData.triggerEvent === "msg-received") {
+                    this.logger.logInfo("case-1: 06");
+                    this.logger.logInfo(
+                      `SioService::relayMessages()/[switch 1/[msg-received]] sending 'msg-received' message to sender`
+                    );
+                    // payLoad = JSON.stringify(pushEnvelop);
+                    // io.to(recepientSocketId).emit('push-delivered', payLoad);
+                  } else {
+                    this.logger.logInfo("case-1: 07");
+                    this.logger.logInfo(
+                      `SioService::relayMessages()/[switch 1[push-msg-relayed]] sending 'push-msg-relayed' message to sender`
+                    );
+                    this.logger.logInfo(
+                      `SioService::relayMessages()/[switch 1[push-msg-relayed]]/recepientSocketId:${JSON.stringify(recepientSocketId)}`
+                    );
+
+                    payLoad = JSON.stringify(pushEnvelop1);
+                    this.logger.logInfo(
+                      `SioService::relayMessages()/[switch 1[push-msg-relayed]]/pushEnvelop1:${pushEnvelop1}`
+                    );
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    console.log("SENDING PAYLOAD");
+                    console.log(
+                      `case-1: 08...seding payload ->emit event === 'push-msg-relayed`
+                    );
+                    console.log(
+                      "--------------------------------------------------------------------------"
+                    );
+                    io.to(recepientSocketId).emit(
+                      "push-msg-relayed",
+                      pushEnvelop1
+                    );
+                    // io.to(recepientSocketId).emit('push-msg-relayed', '{"msg": "testing messege"}');
+                    // io.emit('push-msg-relayed', `{"msg": "testing messege"}`);
+                  }
+                }
+
+                break;
+              case 7:
+                console.log(
+                  "--------------------------------------------------------------------------"
+                );
+                console.log("STARTING MESSAGE TO RECEPIENTS");
+                console.log("No of app sockets:", {
+                  noOfSockets: pushEnvelop.pushData.appSockets.length,
+                });
+                console.log(
+                  "--------------------------------------------------------------------------"
+                );
+                // const pushEnvelop7 = this.shallow(pushEnvelop)
+                const pushEnvelop7 = JSON.parse(JSON.stringify(pushEnvelop));
+                this.logger.logInfo(
+                  `SioService::relayMessages()/[switch 7] pushEnvelop copy:${JSON.stringify(pushEnvelop7)}`
+                );
+                // handle message to destined recepient
+                // if(pushEnvelop.pushData.emittEvent === 'msg-received'){
+                //     // if it is message confirmation to sender
+                //     pushEnvelop.pushData.commTrack.deliveryTime = Number(new Date());
+                //     pushEnvelop.pushData.commTrack.deliverd = true;
+                // }
+                this.logger.logInfo("case-7: 01");
+                if (pushEnvelop7.pushData.isNotification) {
+                  this.logger.logInfo("case-7: 02");
+                } else {
+                  this.logger.logInfo("case-7: 03");
+                  if (pushEnvelop7.pushData.commTrack.pushed) {
+                    this.logger.logInfo("case-7: 04");
+                  } else {
+                    this.logger.logInfo("case-7: 05");
+                    pushEnvelop7.pushData.commTrack.relayTime = Number(
+                      new Date()
+                    );
+                    pushEnvelop7.pushData.commTrack.relayed = true;
+                    pushEnvelop7.pushData.commTrack.pushTime = Number(
+                      new Date()
+                    );
+                    pushEnvelop7.pushData.commTrack.pushed = true;
+                    pushEnvelop7.pushData.triggerEvent = "msg-pushed";
+                    pushEnvelop7.pushData.emittEvent = "push-msg-pushed";
+                    this.logger.logInfo(
+                      `SioService::relayMessages()/[switch 7] pushEnvelop7:${JSON.stringify(pushEnvelop7)}`
+                    );
+                    if (pushEnvelop7.pushData.triggerEvent === "msg-received") {
+                      this.logger.logInfo("case-7: 06");
+                      // while relaying 'msg-received', do not send to group 7 (recepients)
+                      this.logger.logInfo(
+                        "SioService::relayMessages()/[switch 7] not sending message to recepient, this is just confirmation"
+                      );
+                    } else {
+                      this.logger.logInfo("case-7: 07");
+                      this.logger.logInfo(
+                        `SioService::relayMessages()/[switch 7] sending to recepient:${JSON.stringify(pushEnvelop7)}`
+                      );
+                      console.log(
+                        "--------------------------------------------------------------------------"
+                      );
+                      console.log("SENDING PAYLOAD");
+                      console.log(
+                        `case-7: 08...seding payload ->emit event === ${pushEnvelop7.pushData.emittEvent}`
+                      );
+                      console.log(
+                        `case-7: 09...seding payload ->recepientSocketId = ${recepientSocketId}`
+                      );
+                      console.log(
+                        "--------------------------------------------------------------------------"
+                      );
+                      payLoad = JSON.stringify(pushEnvelop7);
+                      io.to(recepientSocketId).emit(
+                        pushEnvelop7.pushData.emittEvent,
+                        pushEnvelop7
+                      );
+                    }
+                  }
+                }
+
+                break;
+            }
+          } else {
+            this.logger.logInfo(
+              "@@@@@@@@@@@@@@@ No valid response for recepientData from the redis storage @@@@@@@@@@@@@@@@@"
+            );
+            this.logger.logInfo(
+              `@@@@@@@@@@@@@@@ The client ${recepient.cdObjId.resourceName} may not be connected to the push server @@@@@@@@@@@@@@@@@`
+            );
+          }
+        }
+      );
     }
   }
-```
 
-Browser console logs
-```log
-[ModuleService][ensureInitialized]: starting index-DDt7rqfv.js:18:6725
-starting initializeNodeModules()-01 index-DDt7rqfv.js:18:4435
-[SHELL] [DEBUG] ModuleService::loadModule()/01: index-DDt7rqfv.js:18:506
-[SHELL] [DEBUG] [ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-DDt7rqfv.js:18:506
-Initializing IDE push client (POC)... index-BltsKVy6.js:13:26
-[IdePushClientService] Initializing... index-BltsKVy6.js:1:41349
-[IdePushClientService] Connecting to http://localhost:3002... index-BltsKVy6.js:1:41454
-[IdePushClientService] Mock watcher active on: /home/emp-12/cd-shell/src index-BltsKVy6.js:1:41956
-IdePushClientService initialized index-BltsKVy6.js:13:177
-[ModuleService] Loaded 'cd-user' (Vite mode) at 11/10/2025 09:43:47 index-DDt7rqfv.js:18:7665
-[SHELL] [DEBUG] Main::loadModule()/menu: 
-Array []
-index-DDt7rqfv.js:18:506
-XHRGET
-http://localhost:3002/?EIO=4&transport=polling&t=wt7gn3n3
-[HTTP/1.1 404 Not Found 4ms]
+  async destinationSocket(recepient: ICommConversationSub) {
+    this.logger.logInfo(
+      "SioService::destinationSocket()/recepient):",
+      recepient
+    );
+    this.logger.logInfo(
+      "@@@@@@@@@@@@@@@@@@@@@@@@@@@ check recepeint @@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    );
+    const k = recepient.cdObjId.resourceGuid;
+    // return await pubClient.get(key, (err, socketDataStr) => {
+    //     if (err) throw err;
+    //     const recepientData: ICommConversationSub = JSON.parse(socketDataStr);
+    //     const rs = recepientData.cdObjId.socketId;
+    //     this.logger.logInfo('recepientSocket:', rs);
+    //     return rs;
+    // });
+    return await this.b.wsRedisRead(k);
+  }
 
-[SHELL] [DEBUG] Main::loadModule()/theme: 
-Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-DDt7rqfv.js:18:506
-[SHELL] [DEBUG] bootstrapShell()/11: index-DDt7rqfv.js:18:506
-loadTheme(): loading theme ID: default index-DDt7rqfv.js:18:1647
-Theme loaded successfully: default index-DDt7rqfv.js:18:2167
-XHRGET
-http://localhost:3002/?EIO=4&transport=polling&t=wt9bcgyk
-[HTTP/1.1 404 Not Found 2ms]
+  async getRooms(io) {
+    const rooms = await io.of("/").adapter.allRooms();
+    this.logger.logInfo(rooms); // a Set containing all rooms (across every node)
+    return rooms;
+  }
 
-XHRGET
-http://localhost:3002/?EIO=4&transport=polling&t=wtbijcim
-[HTTP/1.1 404 Not Found 5ms]
-
-XHRGET
-http://localhost:3002/?EIO=4&transport=polling&t=wtfh34iw
-[HTTP/1.1 404 Not Found 7ms]
-
-	
-GET
-	http://localhost:3002/?EIO=4&transport=polling&t=wtfh34iw
-Status
-404
-Not Found
-VersionHTTP/1.1
-Transferred517 B (139 B size)
-Referrer Policystrict-origin-when-cross-origin
-DNS ResolutionSystem
-
-	
-Access-Control-Allow-Credentials
-	true
-Access-Control-Allow-Origin
-	http://localhost:4173
-Connection
-	keep-alive
-Content-Length
-	139
-Content-Security-Policy
-	default-src 'none'
-Content-Type
-	text/html; charset=utf-8
-Date
-	Sat, 11 Oct 2025 06:43:58 GMT
-Keep-Alive
-	timeout=5
-Vary
-	Origin
-X-Content-Type-Options
-	nosniff
-X-Powered-By
-	Express
-	
-Accept
-	*/*
-Accept-Encoding
-	gzip, deflate, br, zstd
-Accept-Language
-	en-US,en;q=0.5
-Cache-Control
-	no-cache
-Connection
-	keep-alive
-Host
-	localhost:3002
-Origin
-	http://localhost:4173
-Pragma
-	no-cache
-Referer
-	http://localhost:4173/
-Sec-Fetch-Dest
-	empty
-Sec-Fetch-Mode
-	cors
-Sec-Fetch-Site
-	same-site
-User-Agent
-	Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0
-
-
-```
-Server end: config.ts
-```ts
-export default{
-  pushService: {
-    sio: {
-      enabled: true,
-    },
-    wss: {
-      enabled: false,
-    },
-    pusher: {
-      enabled: true,
-    },
-  },
-  Cors: {
-    options: {
-      // key:fs.readFileSync(path.join(process.env.CERT_PATH)),
-      // cert:fs.readFileSync(path.join(process.env.KEY_PATH)),
-      // ca:fs.readFileSync(path.join(process.env.CSR_PATH)),
-      // requestCert: false,
-      // rejectUnauthorized: false,
-      allowedHeaders: [
-        "Origin",
-        "X-Requested-With",
-        "Content-Type",
-        "Authorization",
-        "Accept",
-        "X-Access-Token",
-      ],
-      credentials: true,
-      methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-      origin: [
-        `https://${API_HOST_IP}`,
-        `https://localhost:443`,
-        `https://127.0.0.1:443`,
-        `http://localhost:80`,
-        `http://127.0.0.1:80`,
-        `http://localhost:4173`,
-        `https://www.${API_HOST_NAME}`,
-        `https://cd-user.${API_HOST_NAME}`,
-        `https://cd-comm.${API_HOST_NAME}`,
-        `https://cd-moduleman.${API_HOST_NAME}`,
-      ],
-      preflightContinue: false,
-    },
-  },
+  shallow<T extends object>(source: T): T {
+    // return {
+    //     ...source,
+    // }
+    ///////////////////////////////////////
+    const copy = {} as T;
+    Object.keys(source).forEach((key) => {
+      copy[key as keyof T] = source[key as keyof T];
+    });
+    return copy;
+    ////////////////////////////////////////////
+  }
 }
 ```
 
-Server end: main.ts
-```ts
-export class Main {
-    logger: Logging;
-    allowedOrigins = [config.Cors.options.origin[5]];
-    constructor() {
-        this.logger = new Logging();
-    }
-    async run() {
-        this.logger.logInfo('Main::run()/01')
-        // basic settings
-        const app: Application = express();
+/////////////////////////////////////////////////
 
-        // Serve .well-known directory for Let's Encrypt validation
-        // app.use('/.well-known/acme-challenge', express.static(path.join(__dirname, '.well-known/acme-challenge')));
+MemoryDevSyncStore to CdStore:
+I took a break and has started assessing the work we have developed so far.
+I used to be a commercial artist a long time ago before I moved to software development.
+The reason I moved was because, I take so much time to do what I consider a good work.
+But when it is only limited to on user, and the work can be reused, I feel a sense of waste.
+But in software I felt its very nature allowed easy reuse. But now in software we dont want to take time to build items that can be reused.
+So when I look at MemoryDevSyncStore, it seem dedicated to DevSync when it is a very nice piece of work that should not be usable only in DevSync.
+The question is: can this pattern of service be reused?
+Remember also what I kept saying that corpdesk resolve: Things that developers do over and over and everytime it is done a little differently.
+In this case we can have cd-store and apply the same principle and it would offer a service required by various modules of corpdesk and developer needs then it can be reused over and over.
+DevSync just need to consume it.
 
-        const privateKey = fs.readFileSync(config.keyPath, 'utf8');
-        const certificate = fs.readFileSync(config.certPath, 'utf8');
+created cd-sync
+created cd-store
+Rename IDevSyncStore to ICdStore
+Add ICdStore to interfaces in sys/cd-store/models/cd-store.model.ts
+Create cd-store.service in sys/cd-store/services to host CdStoreService
+Added devSync property to global config (src/config.ts)
+devSync: {
+storageType: "memory", // or 'file', 'redis'
+sioEndpoint: "wss://cd-sio-server",
+appId: "vite-dev-instance",
+},
+This can be a pattern that is standardized in rfc where it becomes a rule that every module have optional space at the global config and the property will have its name in Camel case. This way the config can be in the db and get auto loaded during launch of the system.
 
-
-        let certAuth = '';
-        // just in case certificate authority is not provided
-        if (config.caPath.length > 0) {
-            certAuth = fs.readFileSync(config.caPath, 'utf8');
-        } else {
-            certAuth = null
-        }
-
-        const credentials = {
-            key: privateKey,
-            cert: certificate,
-            // ca: certAuth
-        };
-
-
-        const options = config.Cors.options;
-
-        ////////////////////////////////////////////////////////////////////////////////
-        const corsOptions = {
-            origin: config.Cors.options.origin[5], // Replace with your client URL
-            // origin: 'http://localhost', // for localhost teting
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            credentials: true
-        };
-        ////////////////////////////////////////////////////////////////////////////////
-
-        let httpsServer = null;
-        let corsOpts = null;
-
-        //////////////////////////////////////////////////////////////////////////////
-        app.use(cors(corsOptions));
-        app.use(express.json()); // For parsing application/json
-        app.options('*', cors(corsOptions)); // Enable pre-flight across-the-board
-        //////////////////////////////////////////////////////////////////////////////
-
-        // Serve .well-known directory for Let's Encrypt validation
-        // To test: curl http://localhost:8080/.well-known/acme-challenge/test-file -v
-        app.use(config.http.webroot, express.static(path.join(__dirname, config.http.webroot)));
-
-        // Create HTTP server
-        const httpServer = createHttpServer(app);
-
-        // Create HTTPS server
-        httpsServer = https.createServer(credentials, app);
-        corsOpts = {
-            cors: {
-                options: config.Cors.options.allowedHeaders,
-                origin: config.Cors.options.origin
-            }
-        }
-
-
-        /**
-         * When run on sio mode in production,
-         * use SSL
-         * use cors
-         */
-        if (config.pushService.sio.enabled) {
-            this.logger.logInfo('Main::run()/02')
-
-            // const io = new Server(httpsServer, corsOpts);
-            /////////////////////////////////////////////////////
-            const io = new Server(httpsServer, {
-                cors: {
-                    origin: config.Cors.options.origin[5],
-                    methods: ['GET', 'POST'],
-                    credentials: true
-                }
-            });
-            /////////////////////////////////////////////////////
-
-            this.logger.logInfo('Main::run()/03')
-            this.logger.logInfo('Main::run()/config.push.mode:', { mode: config.push.mode })
-            // let pubClient = getRedisClient();
-            let pubClient;
-            let subClient;
-            switch (config.push.mode) {
-                case "PUSH_BASIC":
-                    this.logger.logInfo('Main::run()/031')
-                    pubClient = createClient({ host: config.push.redisHost, port: config.push.redisPort, legacyMode: true } as RedisClientOptions);
-                    // pubClient = getRedisClient();
-                    subClient = pubClient.duplicate();
-                    break;
-                case "PUSH_CLUSTER":
-                    this.logger.logInfo('Main::run()/032')
-                    pubClient = new Redis.Cluster(config.push.startupNodes);
-                    subClient = pubClient.duplicate();
-                    break;
-                case "PUSH_SENTINEL":
-                    this.logger.logInfo('Main::run()/033')
-                    pubClient = new Redis(config.push.sentinalOptions);
-                    subClient = pubClient.duplicate();
-                    break;
-                default:
-                    this.logger.logInfo('Main::run()/034')
-                    pubClient = createClient({ host: config.push.redisHost, port: config.push.redisPort } as RedisClientOptions);
-                    // pubClient = getRedisClient();
-                    subClient = pubClient.duplicate();
-                    break;
-            }
-
-            Promise.all([pubClient, subClient])
-                .then(() => {
-                    this.logger.logInfo('Main::run()/035')
-                    const svSio = new SioService();
-                    svSio.run(io, pubClient, subClient)
-                });
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
-
-        /**
-         * When run on app mode in production,
-         * use without SSL...but behind nginx proxy server fitted with SSL
-         * do not use cors...but set it at nginx
-         */
-        if (config.apiRoute === "/api" && config.secure === "false") {
-            console.log("main/04")
-            httpsServer = createServer(app);
-            corsOpts = {
-                cors: {
-                    options: config.Cors.options.allowedHeaders,
-                    origin: null
-                }
-            }
-        }
-
-        app.post('/sio/p-reg/', async (req: any, res: any) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            CdInit(req, res);
-        });
-
-        
-
-
-        // set api entry point
-        app.post(config.apiRoute, async (req: any, res: any) => {
-            console.log("app.post/01")
-            res.setHeader('Content-Type', 'application/json');
-            ////////////////////
-            // res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            CdInit(req, res, ds);
-        });
-
-        if (config.pushService.pusher.enabled) {
-            app.post('/notify', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const { message, channel, event } = req.body;
-                // this.logger.logInfo("message:", message)
-                pusher.trigger(channel, event, { message: "hello from server on '/notify'" })
-                    .then(() => res.status(200).send("Notification sent from '/notify'"))
-                    .catch((err: Error) => res.status(500).send(`Error sending notification: ${err.message}`));
-            });
-
-            app.post('/notify-user', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const { message, userId } = req.body;
-                const channel = `private-user-${userId}`;
-
-                pusher.trigger(channel, 'user-event', { message: "hello from server on '/notify-user'" })
-                    .then(() => res.status(200).send("Notification sent from '/notify'"))
-                    .catch((err: Error) => res.status(500).send(`Error sending notification: ${err.message}`));
-            });
-
-            app.post('/pusher/auth', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const socketId = req.body.socket_id;
-                const channel = req.body.channel_name;
-                const auth = pusher.authenticate(socketId, channel);
-                res.send(auth);
-            });
-        }
-
-        if (config.pushService.wss.enabled) {
-
-            console.log("main/05")
-            const expressServer = app.listen(config.wssPort, () => {
-                console.log(`server is listening on ${config.wssPort}`);
-            })
-                .on('error', (e) => {
-                    console.log(`Error:${e}`);
-                });
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Define the WebSocket server. Here, the server mounts to the `/ws`
-            // route of the Express JS server.
-            const wss = new WebSocket.Server({
-                server: expressServer,
-                path: '/ws'
-            });
-            /**
-             * run the websocket
-             */
-            const cdWs = new WebsocketService();
-            cdWs.run(wss);
-
-
-        } else {
-
-            if (config.http.enabled) {
-                // Start HTTP server (for Let's Encrypt and optional redirect to HTTPS)
-                httpServer.listen(config.http.port, () => {
-                    this.logger.logInfo(`HTTP server listening on port ${config.http.port}`);
-                }).on('error', (e) => {
-                    this.logger.logError(`HTTP server: listen()/Error: ${e}`);
-                });
-            }
-
-            // start server
-            httpsServer.listen(config.apiPort, () => {
-                // console.log(`cd-api server is listening on ${config.apiPort}`);
-                this.logger.logInfo(`cd-api server is listening on:`, { port: `${config.apiPort}` })
-            })
-                .on('error', (e) => {
-                    this.logger.logError(`cd-api server: listen()/Error:${e}`)
-                });
-        }
-
-    }
-
-    originIsAllowed(origin: string) {
-        return this.allowedOrigins.includes(origin);
-    }
-
+created sys/dev-sync/services/dev-sync.service.ts
+Created DevSyncService class
+In DevSyncService.init(), I have:
+init() {
+const store = DevSyncStoreFactory.create(config.devSync.storageType);
+const devSyncClient = new DevSyncClient(config.devSync, store);
+devSyncClient.initialize();
 }
 
+Transformed DevSyncStoreFactory into CdStoreFactory then created its file cd-store.factory.ts
+
+The eventual file strucures are like below.
+
+```sh
+emp-12@emp-12 ~/cd-shell (main) [SIGINT]> tree src/CdShell/sys/cd-store/
+src/CdShell/sys/cd-store/
+├── controllers
+├── models
+│   └── cd-store.model.ts
+└── services
+    ├── cd-store.service.ts
+    ├── dev-sync.factory.ts
+    ├── file-store.service.ts
+    ├── memory-store.service.ts
+    └── redis-store.service.ts
+
+4 directories, 6 files
+emp-12@emp-12 ~/cd-shell (main)> tree src/CdShell/sys/dev-sync/
+src/CdShell/sys/dev-sync/
+├── controllers
+├── models
+│   └── dev-sync.model.ts
+└── services
+    └── dev-sync-client.service.ts
+
+4 directories, 2 files
+emp-12@emp-12 ~/cd-shell (main)>
 ```
+
+// The codes below now need to be integrated with new development
+
+```ts
+import { io } from "socket.io-client";
+import config from "../../../../config";
+import { CdStoreFactoryService } from "../../cd-store/services/dev-sync.factory";
+
+export class DevSyncClientService {
+  store;
+  socket;
+  appId: string;
+  config;
+
+  constructor() {
+    this.config = config.devSync;
+    const store = CdStoreFactoryService.create(config.devSync.storageType);
+    if (config.devSync.autoInitialize) {
+      this.initialize();
+    }
+  }
+  /**
+   * Entry point for starting dev-sync client.
+   */
+  async initialize(): Promise<void> {
+    await this.connect();
+    await this.setAppId();
+    await this.registerClient();
+    this.listenForEvents();
+  }
+
+  /**
+   * Connects socket to DevSync server.
+   */
+  private async connect(): Promise<void> {
+    this.socket = io(this.config.sioEndpoint, {
+      transports: ["websocket"],
+    });
+
+    this.socket.on("connect", () => {
+      console.log(`[DevSync] Connected with socket ID: ${this.socket.id}`);
+    });
+
+    this.socket.on("disconnect", () => {
+      console.log("[DevSync] Disconnected from server");
+    });
+  }
+
+  /**
+   * Sets application identity (unique app ID) for the session.
+   */
+  private async setAppId(): Promise<void> {
+    const existing = await this.store.get("devsync.appId");
+    if (existing) {
+      this.appId = existing;
+      console.log(`[DevSync] Using existing appId: ${this.appId}`);
+      return;
+    }
+
+    // Create a new one if none exists
+    this.appId = this.generateGuid();
+    await this.store.save("devsync.appId", this.appId);
+    console.log(`[DevSync] Generated new appId: ${this.appId}`);
+  }
+
+  /**
+   * Register this client with cd-sio (like “login” into the DevSync session).
+   */
+  private async registerClient(): Promise<void> {
+    const senderData = {
+      appId: this.appId,
+      socketId: this.socket.id,
+      connectedAt: new Date().toISOString(),
+    };
+
+    await this.store.save("devsync.sender", senderData);
+    this.socket.emit("register-client", JSON.stringify(senderData));
+    console.log(`[DevSync] Client registered with server`);
+  }
+
+  /**
+   * Start listening for registered server events.
+   */
+  private listenForEvents(): void {
+    const registeredEvents = [
+      "push-registered-client",
+      "push-msg-relayed",
+      "push-msg-pushed",
+      "push-delivered",
+      "push-msg-completed",
+      "push-notif",
+    ];
+
+    registeredEvents.forEach((event) => {
+      this.socket.on(event, (payload: any) => {
+        console.log(`[DevSync] Event received: ${event}`, payload);
+        this.handleIncoming(payload);
+      });
+    });
+  }
+
+  /**
+   * Process inbound message (push payloads, updates, etc.)
+   */
+  private async handleIncoming(payload: any): Promise<void> {
+    if (payload?.appId && payload.appId === this.appId) {
+      console.log("[DevSync] Ignoring self-update to prevent loop.");
+      return;
+    }
+
+    console.log("[DevSync] Applying payload update:", payload);
+    // TODO: apply file/memory sync logic here
+  }
+
+  /**
+   * Emit update message to server.
+   */
+  async pushUpdate(data: any): Promise<void> {
+    const payload = {
+      sender: this.appId,
+      timestamp: Date.now(),
+      data,
+    };
+
+    this.socket.emit("send-pub", JSON.stringify(payload));
+    console.log(`[DevSync] Update sent to server`);
+  }
+
+  private generateGuid(): string {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+}
+```
+
+//////////////////////////////////////////////////////////////
+
+We have already done a test based at src/CdShell/sys/cd-user/view/sign-in.controller.js
+It still has the old codes.
+We need to update the codes to use the new development.
+These will form example of runtime 'chat user'. (Even though we need to decide a central location to act on behalf of all the controllers.)
+At this stage we also need to determine which codes are going to run 'chat user' representing IDE process.
 
 //////////////////////////////////////////
+What we did earlier and I think we can still adopt the same strategy, is to assume the codes are already compiled at src/CdShell/sys/cd-user/view/sign-in.controller.js.
+Below are the codes that worked successfully last time. We just need to update it to use the structures we have now.
+To have made this test, I switched of any writing by post-build.js.
+After we work on the code below, we need its 'chat partner' of the IDE side.
 
-```log
-[ModuleService][ensureInitialized]: starting index-DkM_0jsT.js:18:6725
-starting initializeNodeModules()-01 index-DkM_0jsT.js:18:4435
-[SHELL] [DEBUG] ModuleService::loadModule()/01: index-DkM_0jsT.js:18:506
-[SHELL] [DEBUG] [ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-DkM_0jsT.js:18:506
-Initializing IDE push client (POC)... index-C6T3TMWg.js:13:26
-[IdePushClientService] Initializing... index-C6T3TMWg.js:1:41349
-[IdePushClientService] Connecting to http://localhost:3002... index-C6T3TMWg.js:1:41454
-[IdePushClientService] Mock watcher active on: /home/emp-12/cd-shell/src index-C6T3TMWg.js:1:41965
-IdePushClientService initialized index-C6T3TMWg.js:13:177
-[ModuleService] Loaded 'cd-user' (Vite mode) at 11/10/2025 10:06:02 index-DkM_0jsT.js:18:7665
-[SHELL] [DEBUG] Main::loadModule()/menu: 
-Array []
-index-DkM_0jsT.js:18:506
-XHRGET
-http://localhost:3002/socket.io/?EIO=4&transport=polling&t=xltpudlw
-[HTTP/1.1 404 Not Found 4ms]
+// src/CdShell/sys/cd-user/view/sign-in.controller.js
 
-[SHELL] [DEBUG] Main::loadModule()/theme: 
-Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-DkM_0jsT.js:18:506
-[SHELL] [DEBUG] bootstrapShell()/11: index-DkM_0jsT.js:18:506
-loadTheme(): loading theme ID: default index-DkM_0jsT.js:18:1647
-Theme loaded successfully: default index-DkM_0jsT.js:18:2167
-XHRGET
-http://localhost:3002/socket.io/?EIO=4&transport=polling&t=xlvgtdw3
-[HTTP/1.1 404 Not Found 5ms]
-
-XHRGET
-http://localhost:3002/socket.io/?EIO=4&transport=polling&t=xlxuswrn
-[HTTP/1.1 404 Not Found 4ms]
-
-XHRGET
-http://localhost:3002/socket.io/?EIO=4&transport=polling&t=xm1qjl1d
-[HTTP/1.1 404 Not Found 7ms]
-
-​
-```
-
-//////////////////////////////////////////////////////
-
-Before I changed the vite configs, the server property was set as blow.
-I am wondering the use of the property 'open'?
-```ts
-server: {
-    open: true,
-    port: 4173,
-  },
-```
-Proposed changes:
-```ts
-server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "/home/emp-12/.ssl/key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "/home/emp-12/.ssl/cert.pem")),
-    },
-    port: 5173,
-    host: "localhost",
-  },
-```
-
-/////////////////////////////////////
-Below is the vite configuration.
-When I do npm run preview, it still runs on 4173 in http mode. Note https.
-// src/vite.config.ts
-```ts
-export default defineConfig({
-  // server: config.viteHttpsServer, // Use HTTPS server configuration
-  // // server: config.viteHttpServer, // Use HTTP server configuration
-  server: {
-    https: {
-      key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
-      cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
-    },
-    port: 5173,
-    host: "localhost",
-    open: true,
-  },
-
-  root: ".", // Root is the project base
-
-  publicDir: "public",
-
-  build: {
-    outDir: "dist", // Final PWA bundle
-    emptyOutDir: true,
-    target: "esnext", // ✅ Use "esnext" instead of "es2022"
-    modulePreload: true,
-    rollupOptions: {
-      input: path.resolve(__dirname, "public/index.html"),
-      output: {
-        format: "es", // ✅ Ensure ESM output supports top-level await
-      },
-    },
-  },
-
-  esbuild: {
-    target: "esnext", // ✅ Same here to bypass old browser targets
-    supported: {
-      "top-level-await": true, // ✅ Explicitly enable top-level await
-    },
-  },
-
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-      "@shell": path.resolve(__dirname, "dist-ts/CdShell"),
-    },
-    extensions: [".js", ".ts"],
-  },
-
-  optimizeDeps: {
-    esbuildOptions: {
-      target: "esnext", // ✅ Extend same fix to optimizeDeps
-      supported: {
-        "top-level-await": true,
-      },
-    },
-  },
-
-  preview: {
-    port: 5173,
-    open: true,
-  },
-});
-```
-// build and preview logs
-```log
-emp-12@emp-12 ~/cd-shell (main)> npm run build
-
-> cd-shell@1.0.0 prebuild
-> node scripts/prebuild-stubs.js
-
-[prebuild] View placeholders ready.
-
-
-> cd-shell@1.0.0 build
-> npm run clean && npm run prebuild && npm run compile-ts && vite build && npm run post-build
-
-
-> cd-shell@1.0.0 clean
-> rm -rf dist dist-ts
-
-
-> cd-shell@1.0.0 prebuild
-> node scripts/prebuild-stubs.js
-
-[prebuild] View placeholders ready.
-
-
-> cd-shell@1.0.0 compile-ts
-> tsc --project tsconfig.json
-
-vite v5.4.20 building for production...
-[plugin:vite:resolve] [plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/home/emp-12/cd-shell/src/CdShell/sys/moduleman/services/module.service.ts". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
-[plugin:vite:resolve] [plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/home/emp-12/cd-shell/src/CdShell/sys/moduleman/services/module.service.ts". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
-✓ 161 modules transformed.
-dist/index.html                                   1.07 kB │ gzip:  0.51 kB
-dist/assets/index-C_EefWij.css                    1.20 kB │ gzip:  0.49 kB
-dist/assets/__vite-browser-external-D7Ct-6yo.js   0.13 kB │ gzip:  0.14 kB
-dist/assets/_commonjsHelpers-DyVB06ra.js          0.58 kB │ gzip:  0.34 kB
-dist/assets/index-YhLg4ZnN.js                     0.76 kB │ gzip:  0.42 kB
-dist/assets/index-DIGhDJk_.js                     0.77 kB │ gzip:  0.42 kB
-dist/assets/index-DMjNbz6u.js                     0.77 kB │ gzip:  0.42 kB
-dist/assets/index-BZ0GEKVt.js                     7.84 kB │ gzip:  3.44 kB
-dist/assets/index-CqtLqM9o.js                    21.48 kB │ gzip:  6.82 kB
-dist/assets/index-BR3Heh4p.js                    43.62 kB │ gzip: 13.88 kB
-dist/assets/url-CHIVpiFS.js                      48.60 kB │ gzip: 16.71 kB
-✓ built in 1.11s
-
-> cd-shell@1.0.0 post-build
-> node scripts/post-build.js || bash scripts/post-build.sh
-
-[sys] Found 8 controllers
-[app] Found 12 controllers
-[OK] Generated module wrapper: src/CdShell/sys/cd-comm/view/index.js
-[OK] Generated module wrapper: src/CdShell/sys/cd-push/view/index.js
-[OK] Generated module wrapper: src/CdShell/sys/cd-user/view/index.js
-[OK] Generated module wrapper: src/CdShell/app/cd-geo/view/index.js
-[OK] Generated module wrapper: src/CdShell/app/coops/view/index.js
-[post-build] Controller → view sync complete.
---------------------------------------------------
-[post-build] Build completed successfully.
-10/11/2025, 12:32:39 PM
---------------------------------------------------
-emp-12@emp-12 ~/cd-shell (main)> npm run preview
-
-> cd-shell@1.0.0 preview
-> vite preview
-
-  ➜  Local:   http://localhost:4173/
-  ➜  Network: use --host to expose
-  ➜  press h + enter to show help
-
-```
-
-///////////////////////////////////////
-What is your take on the following behaviour.
-preview is stuck on http but with --debug, it follows the config as expected.
-```log
-mp-12@emp-12 ~/cd-shell (main)> npm run preview
-
-> cd-shell@1.0.0 preview
-> vite preview
-
-  ➜  Local:   http://localhost:4173/
-  ➜  Network: use --host to expose
-  ➜  press h + enter to show help
-```
-
-```log
-emp-12@emp-12 ~/cd-shell (main) [SIGINT]> npm run dev
-
-> cd-shell@1.0.0 dev
-> vite --debug
-
-  vite:config no config file found. +0ms
-  vite:config using resolved config: {
-  vite:config   root: '/home/emp-12/cd-shell',
-  vite:config   base: '/',
-  vite:config   mode: 'development',
-  vite:config   configFile: undefined,
-  vite:config   logLevel: undefined,
-  vite:config   clearScreen: undefined,
-
-  ...other logs
-
-  vite:config   worker: { format: 'iife', plugins: '() => plugins', rollupOptions: {} },
-  vite:config   appType: 'spa',
-  vite:config   experimental: { importGlobRestoreExtension: false, hmrPartialAccept: false },
-  vite:config   webSocketToken: 'HQbGZlcaYBkY',
-  vite:config   additionalAllowedHosts: [],
-  vite:config   getSortedPlugins: [Function: getSortedPlugins],
-  vite:config   getSortedPluginHooks: [Function: getSortedPluginHooks]
-  vite:config } +9ms
-  vite:deps Hash is consistent. Skipping. Use --force to override. +0ms
-
-  VITE v5.4.20  ready in 187 ms
-
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: use --host to expose
-  ➜  press h + enter to show help
-
-```
-
-```json
-"scripts": {
-    "clean": "rm -rf dist dist-ts",
-    "prebuild": "node scripts/prebuild-stubs.js",
-    "compile-ts": "tsc --project tsconfig.json",
-    "dev": "vite --debug",
-    "build": "npm run clean && npm run prebuild && npm run compile-ts && vite build && npm run post-build",
-    "post-build": "node scripts/post-build.js || bash scripts/post-build.sh",
-    "preview": "vite preview",
-    "rebuild": "npm run clean && npm run build",
-    "analyze": "vite build --mode analyze"
-  },
-```
-
-```log
-mp-12@emp-12 ~/cd-shell (main)> npm run preview
-
-> cd-shell@1.0.0 preview
-> vite preview
-
-  ➜  Local:   http://localhost:4173/
-  ➜  Network: use --host to expose
-  ➜  press h + enter to show help
-```
-
-```ts
-export default defineConfig({
-  // server: config.viteHttpsServer, // Use HTTPS server configuration
-  server: config.viteHttpServer, // Use HTTP server configuration
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
-  //     cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
-  //   },
-  //   port: 5173,
-  //   host: "localhost",
-  //   open: true,
-  // },
-
-  root: ".", // Root is the project base
-
-  publicDir: "public",
-
-  build: {
-    outDir: "dist", // Final PWA bundle
-    emptyOutDir: true,
-    target: "esnext", // ✅ Use "esnext" instead of "es2022"
-    modulePreload: true,
-    rollupOptions: {
-      input: path.resolve(__dirname, "public/index.html"),
-      output: {
-        format: "es", // ✅ Ensure ESM output supports top-level await
-      },
-    },
-  },
-
-  esbuild: {
-    target: "esnext", // ✅ Same here to bypass old browser targets
-    supported: {
-      "top-level-await": true, // ✅ Explicitly enable top-level await
-    },
-  },
-
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-      "@shell": path.resolve(__dirname, "dist-ts/CdShell"),
-    },
-    extensions: [".js", ".ts"],
-  },
-
-  optimizeDeps: {
-    esbuildOptions: {
-      target: "esnext", // ✅ Extend same fix to optimizeDeps
-      supported: {
-        "top-level-await": true,
-      },
-    },
-  },
-
-  preview: config.viteHttpServer, // Use HTTP server configuration
-  // preview: {
-  //   https: {
-  //     key: fs.readFileSync("/home/emp-12/.ssl/key.pem"),
-  //     cert: fs.readFileSync("/home/emp-12/.ssl/cert.pem"),
-  //   },
-  //   port: 5173,
-  //   host: "localhost",
-  //   open: true,
-  // },
-});
-```
-
-////////////////////////////////////////////
-
-What is your take on the following data.
-It represent an attempt to make a socket.io connection via https.
-
-// Browser inspector/console
-```log
-Initializing IDE push client (POC)... index-CjeQMhvw.js:13:26
-[IdePushClientService] Initializing... index-CjeQMhvw.js:1:41355
-[IdePushClientService] Connecting to https://localhost:3002... index-CjeQMhvw.js:1:41460
-[IdePushClientService] Mock watcher active on: undefined index-CjeQMhvw.js:1:41971
-IdePushClientService initialized index-CjeQMhvw.js:13:162
-[ModuleService] Loaded 'cd-user' (Vite mode) at 11/10/2025 19:50:11 index-CvEMQszk.js:18:7645
-[SHELL] [DEBUG] Main::loadModule()/menu: 
-Array []
-index-CvEMQszk.js:18:506
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=ih169kfw. (Reason: CORS request did not succeed). Status code: (null).
-
-[SHELL] [DEBUG] Main::loadModule()/theme: 
-Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-```
-
-// Browser inspector/network/headers
-```log
-GET /socket.io/?EIO=4&transport=polling&t=ih169kfw undefined
-Host: localhost:3002
-User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0
-Accept: */*
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br, zstd
-Origin: https://localhost:5173
-Connection: keep-alive
-Referer: https://localhost:5173/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-site
-Pragma: no-cache
-Cache-Control: no-cache
-```
-// src/vite.config.ts
-```ts
-import { defineConfig } from "vite";
-import fs from "fs";
-import path from "path";
-// import config from "./config";
-
-const viteConfig = {
-  https: {
-    key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
-    cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
-  },
-  port: 5173,
-  host: "localhost",
-  open: true,
-};
-export default defineConfig({
-  server: viteConfig, // Use HTTP server configuration
-
-  preview: viteConfig, // Preview server same as dev server
-
-  root: ".", // Root is the project base
-
-  publicDir: "public",
-
-  build: {
-    outDir: "dist", // Final PWA bundle
-    emptyOutDir: true,
-    target: "esnext", // ✅ Use "esnext" instead of "es2022"
-    modulePreload: true,
-    rollupOptions: {
-      input: path.resolve(__dirname, "public/index.html"),
-      output: {
-        format: "es", // ✅ Ensure ESM output supports top-level await
-      },
-    },
-  },
-
-  esbuild: {
-    target: "esnext", // ✅ Same here to bypass old browser targets
-    supported: {
-      "top-level-await": true, // ✅ Explicitly enable top-level await
-    },
-  },
-
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-      "@shell": path.resolve(__dirname, "dist-ts/CdShell"),
-    },
-    extensions: [".js", ".ts"],
-  },
-
-  optimizeDeps: {
-    esbuildOptions: {
-      target: "esnext", // ✅ Extend same fix to optimizeDeps
-      supported: {
-        "top-level-await": true,
-      },
-    },
-  },
-});
-```
-// src/config.ts
-```ts
-export default {
-  viteWorkspacePath: '/home/emp-12/cd-shell/src',
-  cdSio: {
-    endpoint: `https://localhost:3002`,
-    serverHost: `localhost`,
-    serverPort: `3002`,
-    entryPoint: `/socket.io`,
-    timeout: 15000,
-  },
-}
-```
-// src/CdShell/sys/cd-push/services/ide-push-client.service.js
-```ts
+```js
 import { IdePushClientService } from "../../cd-push/services/ide-push-client.service.js";
 import config from "../../../../config";
 
@@ -5290,490 +2078,31 @@ export const ctlSignIn = {
 };
 ```
 
-```js
-import { io } from "socket.io-client";
-// import { CdLog } from "../../sys/logging/cd-log.service.js";
+////////////////////////////////////////////////////
 
-export class IdePushClientService {
-  constructor(apiUrl, workspacePath) {
-    this.apiUrl = apiUrl;
-    this.workspacePath = workspacePath;
-    this.socket = null;
+POC Analysis:
+The set up below results in successfull connection to cd-sio server.
+// In src/CdShell/sys/cd-user/view/sign-in.controller.js, we have a method:
 
-    console.info("[IdePushClientService] Initializing...");
-    this.connect();
-    this.mockWatchSave();
-  }
-
-  connect() {
-    try {
-      console.info(`[IdePushClientService] Connecting to ${this.apiUrl}...`);
-      const sioOptions = {
-        path: "/socket.io", // <-- fix
-        transports: ["polling"],
-        secure: false,
-        reconnection: true,
-        reconnectionAttempts: 3,
-        reconnectionDelay: 2000,
-      };
-      this.socket = io(this.apiUrl, sioOptions);
-
-      this.socket.on("connect", () => {
-        console.info("[IdePushClientService] ✅ Connected to cd-api");
-      });
-
-      this.socket.on("disconnect", () => {
-        console.warn("[IdePushClientService] ⚠️ Disconnected from cd-api");
-      });
-    } catch (err) {
-      console.error("[IdePushClientService] Connection error:", err.message);
-    }
-  }
-
-  // 🔹 Mock watcher (browser-friendly)
-  mockWatchSave() {
-    console.info(
-      `[IdePushClientService] Mock watcher active on: ${this.workspacePath}`
-    );
-  }
-
-  // 🔹 Simulate "save" event trigger
-  sendSaveEvent(filePath) {
-    console.info(`[IdePushClientService] Sending save event for: ${filePath}`);
-    if (this.socket && this.socket.connected) {
-      this.socket.emit("ide-push-save", { file: filePath, ts: Date.now() });
-    } else {
-      console.warn(
-        "[IdePushClientService] Cannot send save event — socket not connected."
-      );
-    }
-  }
-}
-
-```
-// backend bootstrap
 ```ts
-export class Main {
-    logger: Logging;
-    allowedOrigins = [
-        config.Cors.options.origin[5], // https://localhost:5173
-        config.Cors.options.origin[6]  // https://192.168.0.156:5173
-    ];
-    constructor() {
-        this.logger = new Logging();
+__setup() {
+    // -----------------------------------
+    // 1️⃣ Initialize POC socket client
+    // -----------------------------------
+    console.info("Initializing IDE push client (POC)...");
+    try {
+      const apiUrl = config.cdSio.endpoint; // cd-api test endpoint
+      const workspacePath = config.viteWorkspacePath; // replace with real path
+      this.idePushClient = new IdePushClientService(apiUrl, workspacePath);
+      console.log("IdePushClientService initialized");
+    } catch (e) {
+      console.error("Failed to initialize IdePushClientService:", e.message);
     }
-    async run() {
-        this.logger.logInfo('Main::run()/01')
-        // this.logger.logInfo('Main::run()/config.keyPath', {keyPath: config.keyPath} )
-        // this.logger.logInfo('Main::run()/config.certPath', {certPath: config.certPath} )
-        // this.logger.logInfo('Main::run()/config.caPath', {caPath: config.caPath} )
-        // basic settings
-        const app: Application = express();
-
-        // Serve .well-known directory for Let's Encrypt validation
-        // app.use('/.well-known/acme-challenge', express.static(path.join(__dirname, '.well-known/acme-challenge')));
-
-        const privateKey = fs.readFileSync(config.keyPath, 'utf8');
-        const certificate = fs.readFileSync(config.certPath, 'utf8');
-
-
-        let certAuth = '';
-        // just in case certificate authority is not provided
-        if (config.caPath.length > 0) {
-            certAuth = fs.readFileSync(config.caPath, 'utf8');
-        } else {
-            certAuth = null
-        }
-
-        const credentials = {
-            key: privateKey,
-            cert: certificate,
-            // ca: certAuth
-        };
-
-
-        const options = config.Cors.options;
-
-        ////////////////////////////////////////////////////////////////////////////////
-        const corsOptions = {
-            origin: this.allowedOrigins, // Replace with your client URL
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            credentials: true
-        };
-        ////////////////////////////////////////////////////////////////////////////////
-
-        let httpsServer = null;
-        let corsOpts = null;
-
-        //////////////////////////////////////////////////////////////////////////////
-        app.use(cors(corsOptions));
-        app.use(express.json()); // For parsing application/json
-        app.options('*', cors(corsOptions)); // Enable pre-flight across-the-board
-        //////////////////////////////////////////////////////////////////////////////
-
-        // Serve .well-known directory for Let's Encrypt validation
-        // To test: curl http://localhost:8080/.well-known/acme-challenge/test-file -v
-        app.use(config.http.webroot, express.static(path.join(__dirname, config.http.webroot)));
-
-        // Create HTTP server
-        const httpServer = createHttpServer(app);
-
-        // Create HTTPS server
-        httpsServer = https.createServer(credentials, app);
-        corsOpts = {
-            cors: {
-                options: config.Cors.options.allowedHeaders,
-                origin: config.Cors.options.origin
-            }
-        }
-
-
-        /**
-         * When run on sio mode in production,
-         * use SSL
-         * use cors
-         */
-        if (config.pushService.sio.enabled) {
-            this.logger.logInfo('Main::run()/02')
-
-            // const io = new Server(httpsServer, corsOpts);
-            /////////////////////////////////////////////////////
-            const io = new Server(httpServer, {
-                path: "/socket.io",
-                cors: {
-                    origin: this.allowedOrigins,
-                    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-                    credentials: true
-                }
-            });
-            /////////////////////////////////////////////////////
-
-            this.logger.logInfo('Main::run()/03')
-            this.logger.logInfo('Main::run()/config.push.mode:', { mode: config.push.mode })
-            // let pubClient = getRedisClient();
-            let pubClient;
-            let subClient;
-            switch (config.push.mode) {
-                case "PUSH_BASIC":
-                    this.logger.logInfo('Main::run()/031')
-                    pubClient = createClient({ host: config.push.redisHost, port: config.push.redisPort, legacyMode: true } as RedisClientOptions);
-                    // pubClient = getRedisClient();
-                    subClient = pubClient.duplicate();
-                    break;
-                case "PUSH_CLUSTER":
-                    this.logger.logInfo('Main::run()/032')
-                    pubClient = new Redis.Cluster(config.push.startupNodes);
-                    subClient = pubClient.duplicate();
-                    break;
-                case "PUSH_SENTINEL":
-                    this.logger.logInfo('Main::run()/033')
-                    pubClient = new Redis(config.push.sentinalOptions);
-                    subClient = pubClient.duplicate();
-                    break;
-                default:
-                    this.logger.logInfo('Main::run()/034')
-                    pubClient = createClient({ host: config.push.redisHost, port: config.push.redisPort } as RedisClientOptions);
-                    // pubClient = getRedisClient();
-                    subClient = pubClient.duplicate();
-                    break;
-            }
-
-            Promise.all([pubClient, subClient])
-                .then(() => {
-                    this.logger.logInfo('Main::run()/035')
-                    const svSio = new SioService();
-                    svSio.run(io, pubClient, subClient)
-                });
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
-
-        /**
-         * When run on app mode in production,
-         * use without SSL...but behind nginx proxy server fitted with SSL
-         * do not use cors...but set it at nginx
-         */
-        if (config.apiRoute === "/api" && config.secure === "false") {
-            console.log("main/04")
-            httpsServer = createServer(app);
-            corsOpts = {
-                cors: {
-                    options: config.Cors.options.allowedHeaders,
-                    origin: null
-                }
-            }
-        }
-
-        
-        app.post('/sio/p-reg/', async (req: any, res: any) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            CdInit(req, res);
-        });
-
-        // set api entry point
-        app.post(config.apiRoute, async (req: any, res: any) => {
-            console.log("app.post/01")
-            res.setHeader('Content-Type', 'application/json');
-            ////////////////////
-            // res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            CdInit(req, res, ds);
-        });
-
-        if (config.pushService.pusher.enabled) {
-            app.post('/notify', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const { message, channel, event } = req.body;
-                // this.logger.logInfo("message:", message)
-                pusher.trigger(channel, event, { message: "hello from server on '/notify'" })
-                    .then(() => res.status(200).send("Notification sent from '/notify'"))
-                    .catch((err: Error) => res.status(500).send(`Error sending notification: ${err.message}`));
-            });
-
-            app.post('/notify-user', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const { message, userId } = req.body;
-                const channel = `private-user-${userId}`;
-
-                pusher.trigger(channel, 'user-event', { message: "hello from server on '/notify-user'" })
-                    .then(() => res.status(200).send("Notification sent from '/notify'"))
-                    .catch((err: Error) => res.status(500).send(`Error sending notification: ${err.message}`));
-            });
-
-            app.post('/pusher/auth', (req: Request, res: Response) => {
-                res.setHeader("Access-Control-Allow-Credentials", "true");
-                res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                const socketId = req.body.socket_id;
-                const channel = req.body.channel_name;
-                const auth = pusher.authenticate(socketId, channel);
-                res.send(auth);
-            });
-        }
-
-        if (config.pushService.wss.enabled) {
-
-            console.log("main/05")
-            const expressServer = app.listen(config.wssPort, () => {
-                console.log(`server is listening on ${config.wssPort}`);
-            })
-                .on('error', (e) => {
-                    console.log(`Error:${e}`);
-                });
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Define the WebSocket server. Here, the server mounts to the `/ws`
-            // route of the Express JS server.
-            const wss = new WebSocket.Server({
-                server: expressServer,
-                path: '/ws'
-            });
-            /**
-             * run the websocket
-             */
-            const cdWs = new WebsocketService();
-            cdWs.run(wss);
-
-
-        } else {
-
-            if (config.http.enabled) {
-                // Start HTTP server (for Let's Encrypt and optional redirect to HTTPS)
-                httpServer.listen(config.http.port, () => {
-                    this.logger.logInfo(`HTTP server listening on port ${config.http.port}`);
-                }).on('error', (e) => {
-                    this.logger.logError(`HTTP server: listen()/Error: ${e}`);
-                });
-            }
-
-            // start server
-            httpsServer.listen(config.apiPort, () => {
-                // console.log(`cd-api server is listening on ${config.apiPort}`);
-                this.logger.logInfo(`cd-api server is listening on:`, { port: `${config.apiPort}` })
-            })
-                .on('error', (e) => {
-                    this.logger.logError(`cd-api server: listen()/Error:${e}`)
-                });
-        }
-
-    }
-
-    originIsAllowed(origin: string) {
-        return this.allowedOrigins.includes(origin);
-    }
-
 }
 ```
-
-/////////////////////////////////////////////////////
-These are partial browser logs focusing on the processing of attempted connection to the socket.io.
-I have made it to capture to configuration used.
-
-Browser inspect/console
-```log
-Initializing IDE push client (POC)... index-DQBaOkPT.js:13:26
-[IdePushClientService] Initializing... index-DQBaOkPT.js:1:41355
-[IdePushClientService] Connecting to https://localhost:3002... index-DQBaOkPT.js:1:41460
-[IdePushClientService] socket.io options: {"path":"/socket.io","transports":["polling"],"secure":true,"reconnection":true,"reconnectionAttempts":3,"reconnectionDelay":2000}... index-DQBaOkPT.js:1:41653
-[IdePushClientService] Mock watcher active on: /home/emp-12/cd-shell/src index-DQBaOkPT.js:1:42053
-IdePushClientService initialized index-DQBaOkPT.js:13:162
-[ModuleService] Loaded 'cd-user' (Vite mode) at 11/10/2025 20:36:28 index-D_TYUkyV.js:18:7645
-[SHELL] [DEBUG] Main::loadModule()/menu: 
-Array []
-index-D_TYUkyV.js:18:506
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=k4kb6nz0. (Reason: CORS request did not succeed). Status code: (null).
-
-[SHELL] [DEBUG] Main::loadModule()/theme: 
-Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-D_TYUkyV.js:18:506
-[SHELL] [DEBUG] bootstrapShell()/11: index-D_TYUkyV.js:18:506
-loadTheme(): loading theme ID: default index-D_TYUkyV.js:18:1647
-Theme loaded successfully: default index-D_TYUkyV.js:18:2167
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=k4mma1yb. (Reason: CORS request did not succeed). Status code: (null).
-
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=k4ptzcb8. (Reason: CORS request did not succeed). Status code: (null).
-
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=k4tphg3a. (Reason: CORS request did not succeed). Status code: (null).
-```
-
-Browser inspect/network/headers
-```log
-GET /socket.io/?EIO=4&transport=polling&t=k7d9s54l undefined
-Host: localhost:3002
-User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0
-Accept: */*
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br, zstd
-Origin: https://localhost:5173
-Connection: keep-alive
-Referer: https://localhost:5173/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-site
-Pragma: no-cache
-Cache-Control: no-cache
-```
-
-// emp-12@emp-12 ~> sudo netstat -nltp
-```log
-tcp6       0      0 :::3002                 :::*                    LISTEN      245922/node 
-```
-// confirmation with telnet
-```log
-emp-12@emp-12 ~> telnet localhost 3002
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.
-```
-// partial server logs:
-// Note that, we are able to see the socket.io settings and confirmation of listening port for the server.
-```log
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/01 [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/02 [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/sioOptions:{"path":"/socket.io","cors":{"origin":["https://localhost:5173/","https://192.168.0.156:5173/"],"methods":["GET","POST","PUT","DELETE","OPTIONS"],"credentials":true}} [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/03 [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/config.push.mode: [CONTEXT] -> 
-[object Object]
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/031 [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: HTTP server listening on port 8081 [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: server is listening on:port: 3002 [CONTEXT] -> {}
-[10/11/2025, 8:31:49 PM] [INFO]: Main::run()/035 [CONTEXT] -> {}
-```
-/////////////////////////////////////////////////
-
-Below are the latest logs
-Browser inspect/console
-```log
-Initializing IDE push client (POC)... index-DQBaOkPT.js:13:26
-[IdePushClientService] Initializing... index-DQBaOkPT.js:1:41355
-[IdePushClientService] Connecting to https://localhost:3002... index-DQBaOkPT.js:1:41460
-[IdePushClientService] socket.io options: {"path":"/socket.io","transports":["polling"],"secure":true,"reconnection":true,"reconnectionAttempts":3,"reconnectionDelay":2000}... index-DQBaOkPT.js:1:41653
-[IdePushClientService] Mock watcher active on: /home/emp-12/cd-shell/src index-DQBaOkPT.js:1:42053
-IdePushClientService initialized index-DQBaOkPT.js:13:162
-[ModuleService] Loaded 'cd-user' (Vite mode) at 11/10/2025 21:15:25 index-D_TYUkyV.js:18:7645
-[SHELL] [DEBUG] Main::loadModule()/menu: 
-Array []
-index-D_TYUkyV.js:18:506
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=linfd22u. (Reason: CORS request did not succeed). Status code: (null).
-
-[SHELL] [DEBUG] Main::loadModule()/theme: 
-Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-D_TYUkyV.js:18:506
-[SHELL] [DEBUG] bootstrapShell()/11: index-D_TYUkyV.js:18:506
-loadTheme(): loading theme ID: default index-D_TYUkyV.js:18:1647
-Theme loaded successfully: default index-D_TYUkyV.js:18:2167
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=lipqryzj. (Reason: CORS request did not succeed). Status code: (null).
-
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://localhost:3002/socket.io/?EIO=4&transport=polling&t=litqp53u. (Reason: CORS request did not succeed). Status code: (null).
-```
-Browser inspect/network/headers
-```log
-GET /socket.io/?EIO=4&transport=polling&t=lhk6rqom undefined
-Host: localhost:3002
-User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0
-Accept: */*
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br, zstd
-Origin: https://localhost:5173
-Connection: keep-alive
-Referer: https://localhost:5173/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-site
-Pragma: no-cache
-Cache-Control: no-cache
-```
-
-Backend booting logs
-```log
-[10/11/2025, 9:11:45 PM] [INFO]: Main::run()/01 [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: Main::run()/02 [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: Main::run()/sioOptions:{"path":"/socket.io","cors":{"origin":["https://localhost:5173","https://192.168.0.156:5173"],"methods":["GET","POST","PUT","DELETE","OPTIONS"],"credentials":true}} [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: Main::run()/03 [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: Main::run()/config.push.mode: [CONTEXT] -> 
-[object Object]
-[10/11/2025, 9:11:46 PM] [INFO]: Main::run()/031 [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: HTTP server listening on port 8081 [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: server is listening on:port: 3002 [CONTEXT] -> {}
-[10/11/2025, 9:11:46 PM] [INFO]: Main::run()/035 [CONTEXT] -> {}
-```
-
-/////////////////////////////////////////////////////////
-I eventually achieved a milestone by connecting to the backend.
-Take a look at the browser logs, server logs and the respective codes for both, then suggest the next development towards dev-sync reality.
-
-Browser logs
-```log
-Initializing IDE push client (POC)... index-DQBaOkPT.js:13:26
-[IdePushClientService] Initializing... index-DQBaOkPT.js:1:41355
-[IdePushClientService] Connecting to https://localhost:3002... index-DQBaOkPT.js:1:41460
-[IdePushClientService] socket.io options: {"path":"/socket.io","transports":["polling"],"secure":true,"reconnection":true,"reconnectionAttempts":3,"reconnectionDelay":2000}... index-DQBaOkPT.js:1:41653
-[IdePushClientService] Mock watcher active on: /home/emp-12/cd-shell/src index-DQBaOkPT.js:1:42053
-IdePushClientService initialized index-DQBaOkPT.js:13:162
-[ModuleService] Loaded 'cd-user' (Vite mode) at 11/10/2025 22:09:57 index-D_TYUkyV.js:18:7645
-[SHELL] [DEBUG] Main::loadModule()/menu: 
-Array []
-index-D_TYUkyV.js:18:506
-[SHELL] [DEBUG] Main::loadModule()/theme: 
-Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-D_TYUkyV.js:18:506
-[SHELL] [DEBUG] bootstrapShell()/11: index-D_TYUkyV.js:18:506
-loadTheme(): loading theme ID: default index-D_TYUkyV.js:18:1647
-[IdePushClientService] ✅ Connected to cd-api index-DQBaOkPT.js:1:41794
-Theme loaded successfully: default index-D_TYUkyV.js:18:2167
-
-
-```
-
-Client service
+Kindly do a markdown document that explains the proof of concept below.
+We did it with you. You can use the history records to fill up details.
+// src/CdShell/sys/cd-push/services/ide-push-client.service.js
 ```ts
 export class IdePushClientService {
   constructor(apiUrl, workspacePath) {
@@ -5811,488 +2140,4976 @@ export class IdePushClientService {
       console.error("[IdePushClientService] Connection error:", err.message);
     }
   }
+```
+Do a markdown developer guide related to the following:
+From the success of proof of concept excersise, we need to adop what had been used before to facilitate notification of login status between two module federation components.
+Below is comparison and analysis of bi-directional process in module federation inter-module communication and IDE to PWA runtime communication.
+Underlying mission: Develop a way in which when a developer saves work, a custom compilation process is initiated and the runtime codes are updated before eentually having the PWA test on the browser be updated while running live.
 
-  // 🔹 Mock watcher (browser-friendly)
-  mockWatchSave() {
-    console.info(
-      `[IdePushClientService] Mock watcher active on: ${this.workspacePath}`
-    );
+CASE 1: Module federation Sample:
+
+Actor id: 001
+Module: cd-shell
+Module type: shell // module federation host
+Component: SidebarComponent
+Comunication Description:
+
+- publishes appId in LocalStorage for sharing with components and modules within the module federation ecosystem
+- Listens for login status by Actor 002,
+- process login status
+- load menu from Actor 002
+
+Actor id: 002
+Module: cd-user
+Module type: remote
+Component: LoginComponent
+Comunication Description: On login response,
+
+- notify Actor 002 of status
+- include associated menu in the payload
+
+Notes:
+
+- Actor 002 is remote but child to 001. They share common appId created by 001 during launch
+- By the time Actor 002 is invoked, Actor 001 had initialize and placed shared appId in LocalStorage
+
+CASE 2: IDE to PWA runtime communication Sample:
+
+Actor id: 003
+Module: dev-sync
+Module type: PWA development utility
+Component: IdeAgentService
+Comunication Description:
+
+- publishes appId in CdStorage for sharing with components and modules within cd-shell PWA
+- Listens for save event by developer,
+- on save,
+  - custom compile developer source codes to 'view'(runtime code) directory
+  - send cd-sio message to runtime listener with relevant data
+  - trigger vite to reload the page
+- listen and handle response from runtime listener
+
+Actor id: 004
+Module: cd-user
+Module type: PWA end-user module
+Component: SignInController
+Comunication Description: Listen for save events from the IDE,
+
+- on 'save update page
+- inform IDE of status
+
+Notes:
+
+- Actor 004 is part of live version of 003. They share common appId created by 001 during launch
+- By the time Actor 004 is invoked, Actor 001 had initialize and placed shared appId in CdStorage
+
+Details of Login process in the context of studying how socket.io comunication is initiated and executed.
+
+
+Below are source codes for both cd-shell/SidebarComponent and cd-user/LoginComponent.
+They reflect the document you have just done.
+Note the explanatory comments on the code.
+```ts
+export class SidebarComponent implements OnInit {
+  ngOnInit(): void {
+    console.log("starting SidebarComponent::ngOnInit()");
+    this.initialize();
   }
 
-  // 🔹 Simulate "save" event trigger
-  sendSaveEvent(filePath) {
-    console.info(`[IdePushClientService] Sending save event for: ${filePath}`);
-    if (this.socket && this.socket.connected) {
-      this.socket.emit("ide-push-save", { file: filePath, ts: Date.now() });
-    } else {
-      console.warn(
-        "[IdePushClientService] Cannot send save event — socket not connected."
-      );
-    }
+  /**
+   * Initialize functions:
+   * 1. register itself with the CommunicationService when it initializes
+   * 2. Set cd-sio listeners and register with the cd-sio server
+   */
+  initialize(): void {
+    // register itself with the CommunicationService when it initializes
+    this.communicationService.registerSidebar(this);
+    this.setAppId();
+    this.initSioClient();
+  }
+
+  /**
+   * setAppId function
+   * 1. Remove any existing appId in localStorage
+   * 2. Save the new appId in localStorage for sharing by other modules
+   */
+  setAppId() {
+    /**
+     * Remove any existing appId in localStorage
+     * There can only be one appId per browser session
+     * This is published by this component on behalf of this cd-shell that hosts other remote modules but belonging to the same app
+     */
+    localStorage.removeItem("appId");
+
+    /**
+     * Save the new appId in localStorage for sharing by other modules
+     */
+    localStorage.setItem("appId", this.svBase.getGuid());
+  }
+
+  /**
+   * initSioClient functions
+   * 1. Set cd-shell/Sidebar relevant listeners for events emitted by the cd-sio server
+   * 2. Retrieve the appId from localStorage for use in registering this cd-shell with the cd-sio server
+   * 3. Set the push envelope for registering this cd-shell with the cd-sio server
+   * 4. Send the register-client message to the cd-sio server
+   */
+  initSioClient() {
+    /**
+     * Set listeners for events emitted by the cd-sio server
+     */
+    this.listen("push-registered-client"); // response to register-client
+    this.listen("push-msg-relayed"); // response to msg-relayed. Push message can be of any kind: application data, chat message etc They are packaged in ICdPushEnvelop
+    this.listen("push-msg-pushed"); // Notification that message has been pushed to target
+    this.listen("push-delivered"); // Notification that message has been delivered to target
+    this.listen("msg-relayed"); // Notification that message has been relayed by server
+    this.listen("msg-menu"); // response to send-menu. This is used to send menu data to the cd-shell
+    this.listen("push-menu"); // response to send-menu. This is used to send menu data to the cd-shell
+
+    /**
+     * Retrieve the appId from localStorage for use in registering this cd-shell with the cd-sio server
+     */
+    const appId = localStorage.getItem("appId");
+
+    /**
+     * Set the push envelope for registering this cd-shell with the cd-sio server
+     */
+    const envl: ICdPushEnvelop = this.configPushPayload(
+      "register-client",
+      "push-registered-client",
+      1000
+    );
+
+    /**
+     * Send the register-client message to the cd-sio server
+     * The client being this cd-shell/SidebarComponent
+     */
+    this.sendSioMessage(envl);
+  }
+
+  configPushPayload(
+    triggerEvent: string,
+    emittEvent: string,
+    cuid: number | string
+  ): ICdPushEnvelop {
+    this.resourceGuid = this.svBase.getGuid();
+
+    const pushEnvelope: ICdPushEnvelop = {
+      pushData: {
+        pushGuid: "",
+        m: "",
+        pushRecepients: [],
+        triggerEvent: "",
+        emittEvent: "",
+        token: "",
+        isNotification: null,
+        appSockets: [],
+        isAppInit: true,
+        commTrack: {
+          initTime: Number(new Date()),
+          relayTime: null,
+          relayed: false,
+          pushed: false,
+          pushTime: null,
+          deliveryTime: null,
+          delivered: false,
+          completed: false,
+          completedTime: null,
+        },
+      },
+      req: null,
+      resp: null,
+    };
+
+    const key = this.resourceGuid;
+    const cdObj: CdObjId = {
+      appId: localStorage.getItem("appId")!,
+      ngModule: "SharedModule",
+      resourceName: "SidebarComponent",
+      resourceGuid: this.resourceGuid,
+      jwtToken: this.jwtWsToken,
+      socket: null,
+      socketId: "",
+      commTrack: {
+        initTime: Number(new Date()),
+        relayTime: null,
+        relayed: false,
+        pushed: false,
+        pushTime: null,
+        deliveryTime: null,
+        delivered: false,
+        completed: false,
+        completedTime: null,
+      },
+    };
+
+    localStorage.setItem(key, JSON.stringify(cdObj));
+
+    const users = [
+      {
+        userId: cuid,
+        subTypeId: 1,
+        cdObjId: cdObj,
+      },
+    ];
+
+    const envl: ICdPushEnvelop = { ...pushEnvelope };
+    envl.pushData.triggerEvent = triggerEvent;
+    envl.pushData.emittEvent = emittEvent;
+
+    // set sender
+    const uSender: any = { ...users[0] };
+    uSender.subTypeId = 1;
+    envl.pushData.pushRecepients.push(uSender);
+
+    return envl;
+  }
+
+  registerWsService() {
+    console.log("SidebarComponent::registerWsService()/01");
+    this.resourceGuid = this.svBase.getGuid();
+    console.log(
+      "SidebarComponent::registerWsService()/this.resourceGuid:",
+      this.resourceGuid
+    );
+    const key = this.resourceGuid;
+    const value: CdObjId = {
+      appId: localStorage.getItem("appId")!,
+      ngModule: "SharedModule",
+      resourceName: "SidebarComponent",
+      resourceGuid: this.resourceGuid,
+      jwtToken: this.jwtWsToken,
+      socket: null,
+      commTrack: {
+        initTime: Number(new Date()),
+        relayTime: null,
+        relayed: false,
+        pushed: false,
+        pushTime: null,
+        deliveryTime: null,
+        delivered: false,
+        completed: false,
+        completedTime: null,
+      },
+    };
+
+    const env = {
+      ctx: "Sys",
+      m: "CdPush",
+      c: "Websocket",
+      a: "Create",
+      dat: {
+        f_vals: [
+          {
+            data: value,
+          },
+        ],
+        token: "",
+      },
+      args: {},
+    };
+    localStorage.setItem(key, JSON.stringify(value));
   }
 }
 ```
 
-backend logs
-```log
-[10/11/2025, 10:09:58 PM] [INFO]: a user connected [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/01 [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: starting getRegisteredEvents() [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"register-client","emittEvent":"push-registered-client","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"srv-received","emittEvent":"push-srv-received","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"msg-relayed","emittEvent":"push-msg-relayed","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"msg-pushed","emittEvent":"push-msg-pushed","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"msg-received","emittEvent":"push-delivered","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"msg-completed","emittEvent":"push-msg-completed","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"register","emittEvent":"registered","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"login","emittEvent":"push-menu","sFx":"pushEnvelop"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"send-memo","emittEvent":"push-memo","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"send-pub","emittEvent":"push-pub","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"send-react","emittEvent":"push-react","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"send-menu","emittEvent":"push-menu","sFx":"push"} [CONTEXT] -> {}
-[10/11/2025, 10:09:58 PM] [INFO]: SioService::runRegisteredEvents(socket)/e:{"triggerEvent":"send-notif","emittEvent":"push-notif","sFx":"push"} [CONTEXT] -> {}
-```
-
-
-Backend service
 ```ts
-export class SioService {
-    logger: Logging;
-    b = new BaseService();
+export class LoginComponent implements OnInit {
+  ngOnInit() {
+    this.logger.info(
+      "cd-user/LoginComponent::ngOnInit()/StorageType.CdObjId:",
+      StorageType.CdObjId
+    );
+    // this.logger.debug('AppComponent initialized');
+    this.initialize();
+  }
 
-    constructor() {
-        this.logger = new Logging();
-    }
+  /**
+   * Initialize functions:
+   * 1. Set filter for searching the date for recepient cd-shell/SidebarComponent
+   * 2. Save target recepient cd-shell/SidebarComponent cdObjId as sidebarInitData for later use
+   * 3. Get the socketData saved in localStorage by cd-shell/SidebarComponent
+   * 4. Set cd-sio listeners and register with the cd-sio server
+   */
+  initialize(): void {
+    this.logger.info("cd-user/LoginComponent::initialize()/01");
+    /**
+     * Set filter for searching the date for recepient cd-shell/SidebarComponent.
+     * This is because LoginComponent will have to notify cd-shell/SidebarComponent of the login results
+     * immediately they are available. This is done via cd-sio sockect.io server.
+     * cd-user/LoginComponent expects cd-shell/SidebarComponent to shall have already been launched and is listening on the event 'push-menu'.
+     * Note that 'push-menu' is the emittEvent by the server when it relays menu data fron cd-user/LoginComponent.
+     * Another important note is that when cd-shell/SidebarComponent was launched, it would have saved its cdObjId in localStorage.
+     * Now LoginComponent is searching localStorage for cd-shell/SidebarComponent cdObjId so that it can be used as the recepient.
+     */
+    const filter: LsFilter = {
+      storageType: StorageType.CdObjId,
+      cdObjId: {
+        appId: localStorage.getItem("appId"),
+        resourceGuid: null,
+        resourceName: "SidebarComponent",
+        ngModule: "SharedModule",
+        jwtToken: localStorage.getItem("accessToken"),
+        socket: null,
+        commTrack: null,
+      },
+    };
+    this.logger.info("cd-user/LoginComponent::initialize()/filter:", filter);
 
-    run(io, pubClient, subClient) {
-        // this.logger.logInfo("SioService::run()/io:", io)
-        // this.logger.logInfo("SioService::run()/pubClient:", pubClient)
-        // this.logger.logInfo("SioService::run()/subClient:", subClient)
-        const port = config.push.serverPort;
-        pubClient.on("error", (err) => {
-            this.logger.logInfo(`pubClient error: ${JSON.stringify(err)}`);
-        });
-        io.adapter(createAdapter(pubClient, subClient));
-        io.on('connection', (socket) => {
-            this.logger.logInfo('a user connected');
-            this.runRegisteredEvents(socket, io, pubClient)
-            socket.on('disconnect', () => {
-                this.logger.logInfo('a user disconnected!');
-            });
-        });
+    /**
+     * We then save cd-shell/SidebarComponent cdObjId as sidebarInitData for later use
+     * - as the recepient of the login menu data
+     */
+    this.sidebarInitData = this.searchLocalStorage(filter);
+    this.logger.info(
+      "cd-user/LoginComponent::initialize()/this.sidebarInitData:",
+      this.sidebarInitData
+    );
+
+    function appInit(s: ISocketItem): ISocketItem | null {
+      if (s.name === "appInit") {
+        return s;
+      } else {
+        return null;
+      }
     }
 
     /**
-     * This array can be a configuration available in the database.
-     * There would then be different sets depending on the calling application.
-     * This would then mean one server can handle several applications..eg:
-     * - memo
-     * - tracking financial transaction
-     * - authentication process
-     * - system transaction tracking
-     * triggerEvent: the listening event at the server to handle a given message
-     *              or event emitted by the client
-     * emittEvent: the listening event at the client to handles a given message
-     *              or event emitted by the server
-     * sFx: server function that handles a given message
-     * 
-     * cFx: client function that handles a given message
+     * We also need to get the socketData saved in localStorage by cd-shell/SidebarComponent
+     * This is what will enable direct communication between cd-user/LoginComponent and cd-shell/SidebarComponent
      */
-    getRegisteredEvents(): PushEvent[] {
-        this.logger.logInfo('starting getRegisteredEvents()');
-        this.testColouredLogs();
-        return [
-            {
-                triggerEvent: 'register-client',
-                emittEvent: 'push-registered-client',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'srv-received',
-                emittEvent: 'push-srv-received',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-relayed',
-                emittEvent: 'push-msg-relayed',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-pushed',
-                emittEvent: 'push-msg-pushed',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-received',
-                emittEvent: 'push-delivered',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'msg-completed',
-                emittEvent: 'push-msg-completed',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'register',
-                emittEvent: 'registered',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'login',
-                emittEvent: 'push-menu',
-                sFx: 'pushEnvelop'
-            },
-            {
-                triggerEvent: 'send-memo',
-                emittEvent: 'push-memo',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-pub',
-                emittEvent: 'push-pub',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-react',
-                emittEvent: 'push-react',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-menu',
-                emittEvent: 'push-menu',
-                sFx: 'push'
-            },
-            {
-                triggerEvent: 'send-notif',
-                emittEvent: 'push-notif',
-                sFx: 'push'
-            }
-        ]
+    const socketDataStr = localStorage.getItem("socketData");
+    if (socketDataStr) {
+      this.socketData = JSON.parse(socketDataStr).filter(appInit);
+      this.logger.info(
+        "cd-user/LoginComponent::initialize()/this.socketData:",
+        this.socketData
+      );
+    } else {
+      this.logger.info("Err: socket data is not valid");
     }
 
-    runRegisteredEvents(socket, io, pubClient) {
-        this.logger.logInfo('SioService::runRegisteredEvents(socket)/01');
-        // this.logger.logInfo('SioService::runRegisteredEvents(socket)/socket:', socket);
-        // listen to registered events
-        this.getRegisteredEvents().forEach((e) => {
+    /**
+     * Set cd-sio listeners and register with the cd-sio server
+     */
+    this.initSioClient();
+  }
 
-            this.logger.logInfo(`SioService::runRegisteredEvents(socket)/e:${JSON.stringify(e)}`);
-            socket.on(e.triggerEvent, async (payLoad: string) => {
-                console.log('---------------------------------------')
-                console.log(`socket.on${e.triggerEvent}`)
-                console.log('---------------------------------------')
-                this.logger.logInfo(`SioService::runRegisteredEvents()/e.triggerEvent:${e.triggerEvent}`);
-                this.logger.logInfo(`SioService::runRegisteredEvents()/payLoad:${JSON.stringify(payLoad)}`);
-                const pushEnvelop: ICdPushEnvelop = JSON.parse(payLoad)
-                const sender = this.getSender(pushEnvelop.pushData.pushRecepients);
-                this.logger.logInfo(`SioService::runRegisteredEvents()/sender:${JSON.stringify(sender)}`);
-                await this.persistSenderData(sender, socket, pubClient)
-                if (pushEnvelop.pushData.commTrack.completed) {
-                    /**
-                     * process message completion
-                     */
-                    this.logger.logInfo('SioService::getRegisteredEvents()/message processing completed')
-                    this.logger.logInfo(`SioService::getRegisteredEvents()/pushEnvelop:${pushEnvelop}`);
-                    console.log('--------------------------------------------------------------------------')
-                    console.log('PROCESS COMPLETED')
-                    console.log('--------------------------------------------------------------------------')
-                } else {
-                    this.relayMessages(pushEnvelop, io, pubClient)
-                }
+  /**
+   * initSioClient has two main functions:
+   * 1. Set cd-sio listeners for the events that LoginComponent expects from the cd-sio server
+   * 2. Register cd-user/LoginComponent with the cd-sio server
+   */
+  initSioClient() {
+    console.log("cd-user/LoginComponent::initSioClient()/01");
+    console.log(
+      "cd-user/LoginComponent::initSioClient()/this.svSio.socket:",
+      this.svSio.socket
+    );
+    // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
+    this.listen("push-registered-client");
+    this.listen("push-msg-relayed");
+    this.listen("push-msg-pushed");
+    this.listen("push-delivered");
+    this.listen("msg-relayed");
+    this.listen("msg-menu");
+    this.listen("push-menu");
 
-            });
-        })
+    /**
+     * Register cd-user/LoginComponent with the cd-sio server
+     */
+    const envl: ICdPushEnvelop = this.configPushPayload(
+      "register-client",
+      "push-registered-client",
+      1000 // 1000 is anonimous user. Used when session is not yet created
+    );
+    this.sendSioMessage(envl);
+  }
+
+  login(fg: any) {
+    this.logger.info("starting cd-user/LoginComponent::login");
+    let authData: AuthData = fg.value;
+    const valid = fg.valid;
+    this.logger.info("cd-user/LoginComponent::login/01");
+    this.logger.info("cd-user/LoginComponent::login/fg:", fg);
+    this.logger.info("cd-user/LoginComponent::login/valid:", valid);
+    this.submitted = true;
+    const consumerGuid = { consumerGuid: environment.consumerToken };
+    authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
+    try {
+      this.logger.info("cd-user/LoginComponent::login/02");
+      if (valid) {
+        this.logger.info("cd-user/LoginComponent::login/03");
+        this.initSession(authData);
+      }
+    } catch (err) {
+      this.logger.info("cd-user/LoginComponent::login/04");
+      this.errMsg = "Something went wrong!!";
+      this.loginInvalid = true;
     }
+  }
 
-    getSender(pushRecepients: ICommConversationSub[]): ICommConversationSub {
-        return pushRecepients.filter((r) => r.subTypeId === 1)[0]
-    }
+  /**
+   * Following login request to cd-api server, this method is called to
+   * 1. Create a session via svSess.createSess()
+   * 2. Save current user data in svUser.currentUser
+   * 3. Set user menu in svNav.userMenu
+   * 4. Notify cd-shell/SidbarComponent of login status while availing menu data to cd-shell/SidebarComponent via cd-sio server
+   * 5. Navigate to the initial page defined in environment.initialPage
+   * @param authData 
+   */
+  initSession(authData: AuthData) {
+    this.logger.info("cd-user/LoginComponent::initSession/01");
+    this.svUser.auth$(authData).subscribe((res: any) => {
+      if (res.app_state.success === true) {
+        this.logger.info(
+          "cd-user/LoginComponent::initSession/res:",
+          JSON.stringify(res)
+        );
+        this.svSess.appState = res.app_state;
+        /*
+        create a session on successfull authentication.
+        For subsequeng successull request to the server,
+        use renewSess(res);
+        */
+        if (res.app_state.sess.cd_token !== null && res.app_state.success) {
+          this.logger.info("cd-user/LoginComponent::initSession/02");
 
-    resourceHasSocket() {
-        // confirm if resource has socket already
-    }
+          /**
+           * Prepare the push payload to send menu data to cd-shell/SidebarComponent
+           */
+          const envl: ICdPushEnvelop = this.configPushPayload(
+            "login",
+            "push-menu",
+            res.data.userData.userId
+          );
+          envl.pushData.m = res.data.menuData;
+          envl.pushData.token = res.app_state.sess.cd_token;
+          this.logger.info("cd-user/LoginComponent::initSession/envl:", envl);
 
-    async persistSenderData(sender: ICommConversationSub, socket, pubClient) {
-        this.logger.logInfo(`SioService::persistSenderData/01/socket.id: ${socket.id}`);
-        sender.cdObjId.socketId = socket.id;
-        const k = sender.cdObjId.resourceGuid;
-        const v = JSON.stringify(sender);
-        this.logger.logInfo(`SioService::persistSenderData()/k:${k}`);
-        this.logger.logInfo(`SioService::persistSenderData()/v:${v}`);
-        return await this.b.wsRedisCreate(k, v);
-    }
+          /**
+           * Send the menu data to cd-shell/SidebarComponent via the cd-sio server
+           */
+          if (environment.wsMode === "sio") {
+            this.logger.info(
+              "cd-user/LoginComponent::initSession/envl:...using sio"
+            );
+            this.sendSioMessage(envl);
+          }
 
-    relayMessages(pushEnvelop: ICdPushEnvelop, io, pubClient) {
-        if (pushEnvelop.pushData.commTrack.completed === true) {
-            this.logger.logInfo(`SioService::relayMessages()/pushEnvelop:${pushEnvelop}`);
-            console.log('--------------------------------------------------------------------------')
-            console.log('PROCESS COMPLETED')
-            console.log('--------------------------------------------------------------------------')
+          /**
+           * If environment.wsMode is set to wss, then use the WebSocketService to send the menu data to cd-shell/SidebarComponent via the cd-sio server
+           */
+          if (environment.wsMode === "wss") {
+            this.logger.info(
+              "cd-user/LoginComponent::initSession/envl:...using wss"
+            );
+            this.svWss.sendMsg(envl);
+          }
 
-        } else {
-            pushEnvelop.pushData.pushRecepients.forEach(async (recepient: ICommConversationSub) => {
-                let payLoad = '';
-                this.logger.logInfo(`SioService::relayMessages()/recepient:${JSON.stringify(recepient)}`);
-                this.logger.logInfo("SioService::relayMessages()/pushEnvelop.pushData.pushRecepients:", pushEnvelop.pushData.pushRecepients);
-                console.log("SioService::relayMessages()/pushEnvelop:", pushEnvelop);
-                // const recepientSocket = this.recepientSocket(recepient, pubClient);
-                const recepientDataStr = await this.destinationSocket(recepient);
-                this.logger.logInfo("SioService::relayMessages()/pushEnvelop.pushData.recepientDataStr:", recepientDataStr);
-                const recepientData = JSON.parse(recepientDataStr.r);
-                this.logger.logInfo(`SioService::relayMessages()/recepientData:${JSON.stringify(recepientData)}`);
+          ///////////////////////////////////////
+          this.svSess.createSess(res, this.svMenu);
+          this.svUser.currentUser = {
+            name: `${res.data.userData.userName}`,
+            picture: `${environment.shellHost}/user-resources/${res.data.userData.userGuid}/avatar-01/a.jpg`,
+          };
+          this.svNav.userMenu = [
+            { title: "Profile", link: "/pages/cd-auth/register" },
+            { title: "Log out", link: "/pages/cd-auth/logout" },
+          ];
+          // this.baseModel.sess = res.app_state.sess;
+          const params = {
+            queryParams: { token: res.app_state.sess.cd_token },
+            skipLocationChange: true,
+            replaceUrl: false,
+          };
+          // below: old method
+          // this.route.navigate(['/comm'], params);
+          // this.route.navigate(['/dashboard'], params);
+          this.route.navigate([environment.initialPage], params);
 
-                if (recepientDataStr.r) {
-                    const recepientSocketId = recepientData.cdObjId.socketId;
-                    // const msg = JSON.stringify(pushEnvelop);
-                    switch (recepient.subTypeId) {
-                        case 1:
-                            console.log('--------------------------------------------------------------------------')
-                            console.log('STARTING MESSAGE TO SENDER')
-                            console.log('--------------------------------------------------------------------------')
-                            // handle message to sender:
-                            // mark message as relayed plus relayedTime
-                            // const pushEnvelop1 = this.shallow(pushEnvelop)
-                            const pushEnvelop1: ICdPushEnvelop = JSON.parse(JSON.stringify(pushEnvelop));
-                            pushEnvelop1.pushData.commTrack.relayTime = Number(new Date());
-
-                            // pushEnvelop1.pushData.emittEvent = 'push-msg-relayed';
-                            if (pushEnvelop1.pushData.commTrack.relayed !== true) {
-                                pushEnvelop1.pushData.isNotification = true;
-                            }
-
-                            this.logger.logInfo(`SioService::relayMessages()/[switch 1] pushEnvelop:${JSON.stringify(pushEnvelop1)}`);
-                            this.logger.logInfo('SioService::relayMessages()/[switch 1] sending confirmation message to sender');
-                            this.logger.logInfo(`SioService::relayMessages()/[switch 1] pushEnvelop.pushData.triggerEvent:${pushEnvelop1.pushData.triggerEvent}`);
-                            this.logger.logInfo('case-1: 01')
-                            if (pushEnvelop1.pushData.isAppInit) {
-                                /**
-                                 * if the incoming message is for applitialization:
-                                 * - nb: the resourceGuid is already saved in redis for reference
-                                 * - save socket in envelop
-                                 * - push message back to sender with socketid info
-                                 * - the client app will rely on these data for subsequest communication by federated components of the app
-                                 */
-                                console.log('--------------------------------------------------------------------------')
-                                console.log('SENDING APP-INIT-DATA')
-                                console.log(`case-1: 011...isAppInit->triggerEvent === push-registered-client`)
-                                console.log('--------------------------------------------------------------------------')
-                                const socketStore: ISocketItem = {
-                                    socketId: recepientSocketId,
-                                    name: 'appInit',
-                                    socketGuid: this.b.getGuid()
-                                }
-                                // save socket
-                                pushEnvelop1.pushData.appSockets.push(socketStore)
-                                // send back to sender
-                                io.to(recepientSocketId).emit('push-registered-client', pushEnvelop1);
-                            }
-                            if (pushEnvelop1.pushData.isNotification) {
-                                this.logger.logInfo('case-1: 02...isNotification')
-                                if (pushEnvelop1.pushData.commTrack.relayed !== true && pushEnvelop1.pushData.commTrack.pushed !== true) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    console.log('SENDING NOTIFICATION')
-                                    console.log(`case-1: 04...isNotification->triggerEvent === msg-relayed`)
-                                    console.log('--------------------------------------------------------------------------')
-                                    pushEnvelop1.pushData.emittEvent = 'push-msg-relayed';
-                                    pushEnvelop1.pushData.commTrack.relayed = true;
-                                    /**
-                                     * this is notification from recepient to sender
-                                     * to confirm message has been delivered
-                                     */
-                                    io.to(recepientSocketId).emit('push-msg-relayed', pushEnvelop1);
-                                }
-
-                                if (pushEnvelop1.pushData.commTrack.delivered === true && pushEnvelop1.pushData.commTrack.completed !== true ) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    console.log('SENDING NOTIFICATION')
-                                    console.log(`case-1: 03...isNotification->event to emit === push-delivered`)
-                                    console.log('--------------------------------------------------------------------------')
-
-                                    /**
-                                     * this is notification from recepient to sender
-                                     * to confirm message has been delivered
-                                     */
-                                    io.to(recepientSocketId).emit('push-delivered', pushEnvelop1);
-                                }
-
-                                // was closed and open for testing on 8 jul 2024
-                                if (pushEnvelop1.pushData.triggerEvent === 'msg-received' && pushEnvelop1.pushData.commTrack.completed !== true) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    this.logger.logInfo('SENDING NOTIFICATION')
-                                    this.logger.logInfo(`case-1: 041...isNotification->triggerEvent === msg-relayed`)
-                                    console.log('--------------------------------------------------------------------------')
-
-                                    /**
-                                     * this is notification from recepient to sender
-                                     * to confirm message has been delivered
-                                     */
-                                    io.to(recepientSocketId).emit('push-delivered', pushEnvelop1);
-                                }
-                                // was closed and open for testing on 8 jul 2024
-                                if (pushEnvelop1.pushData.triggerEvent === 'msg-completed' && pushEnvelop1.pushData.commTrack.completed !== true) {
-                                    console.log('--------------------------------------------------------------------------')
-                                    this.logger.logInfo('SENDING NOTIFICATION')
-                                    this.logger.logInfo(`case-1: 042...isNotification->triggerEvent === msg-completed`)
-                                    console.log('--------------------------------------------------------------------------')
-
-                                    /**
-                                     * record completion of messaging
-                                     */
-                                    this.logger.logInfo('message completed')
-
-                                }
-                            } else {
-                                this.logger.logInfo('case-1: 05')
-                                // send notification to client for relay
-                                if (pushEnvelop1.pushData.triggerEvent === 'msg-received') {
-                                    this.logger.logInfo('case-1: 06')
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1/[msg-received]] sending 'msg-received' message to sender`);
-                                    // payLoad = JSON.stringify(pushEnvelop);
-                                    // io.to(recepientSocketId).emit('push-delivered', payLoad);
-                                } else {
-                                    this.logger.logInfo('case-1: 07')
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1[push-msg-relayed]] sending 'push-msg-relayed' message to sender`);
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1[push-msg-relayed]]/recepientSocketId:${JSON.stringify(recepientSocketId)}`)
-
-                                    payLoad = JSON.stringify(pushEnvelop1);
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 1[push-msg-relayed]]/pushEnvelop1:${pushEnvelop1}`)
-                                    console.log('--------------------------------------------------------------------------')
-                                    console.log('SENDING PAYLOAD')
-                                    console.log(`case-1: 08...seding payload ->emit event === 'push-msg-relayed`)
-                                    console.log('--------------------------------------------------------------------------')
-                                    io.to(recepientSocketId).emit('push-msg-relayed', pushEnvelop1);
-                                    // io.to(recepientSocketId).emit('push-msg-relayed', '{"msg": "testing messege"}');
-                                    // io.emit('push-msg-relayed', `{"msg": "testing messege"}`);
-                                }
-                            }
-
-                            break;
-                        case 7:
-
-                            console.log('--------------------------------------------------------------------------')
-                            console.log('STARTING MESSAGE TO RECEPIENTS')
-                            console.log('No of app sockets:', { noOfSockets: pushEnvelop.pushData.appSockets.length })
-                            console.log('--------------------------------------------------------------------------')
-                            // const pushEnvelop7 = this.shallow(pushEnvelop)
-                            const pushEnvelop7 = JSON.parse(JSON.stringify(pushEnvelop));
-                            this.logger.logInfo(`SioService::relayMessages()/[switch 7] pushEnvelop copy:${JSON.stringify(pushEnvelop7)}`);
-                            // handle message to destined recepient
-                            // if(pushEnvelop.pushData.emittEvent === 'msg-received'){
-                            //     // if it is message confirmation to sender
-                            //     pushEnvelop.pushData.commTrack.deliveryTime = Number(new Date());
-                            //     pushEnvelop.pushData.commTrack.deliverd = true;
-                            // }
-                            this.logger.logInfo('case-7: 01')
-                            if (pushEnvelop7.pushData.isNotification) {
-                                this.logger.logInfo('case-7: 02')
-                            } else {
-                                this.logger.logInfo('case-7: 03')
-                                if (pushEnvelop7.pushData.commTrack.pushed) {
-                                    this.logger.logInfo('case-7: 04')
-                                } else {
-                                    this.logger.logInfo('case-7: 05')
-                                    pushEnvelop7.pushData.commTrack.relayTime = Number(new Date());
-                                    pushEnvelop7.pushData.commTrack.relayed = true;
-                                    pushEnvelop7.pushData.commTrack.pushTime = Number(new Date());
-                                    pushEnvelop7.pushData.commTrack.pushed = true;
-                                    pushEnvelop7.pushData.triggerEvent = 'msg-pushed';
-                                    pushEnvelop7.pushData.emittEvent = 'push-msg-pushed';
-                                    this.logger.logInfo(`SioService::relayMessages()/[switch 7] pushEnvelop7:${JSON.stringify(pushEnvelop7)}`);
-                                    if (pushEnvelop7.pushData.triggerEvent === 'msg-received') {
-                                        this.logger.logInfo('case-7: 06')
-                                        // while relaying 'msg-received', do not send to group 7 (recepients)
-                                        this.logger.logInfo('SioService::relayMessages()/[switch 7] not sending message to recepient, this is just confirmation');
-                                    } else {
-                                        this.logger.logInfo('case-7: 07')
-                                        this.logger.logInfo(`SioService::relayMessages()/[switch 7] sending to recepient:${JSON.stringify(pushEnvelop7)}`);
-                                        console.log('--------------------------------------------------------------------------')
-                                        console.log('SENDING PAYLOAD')
-                                        console.log(`case-7: 08...seding payload ->emit event === ${pushEnvelop7.pushData.emittEvent}`)
-                                        console.log(`case-7: 09...seding payload ->recepientSocketId = ${recepientSocketId}`)
-                                        console.log('--------------------------------------------------------------------------')
-                                        payLoad = JSON.stringify(pushEnvelop7);
-                                        io.to(recepientSocketId).emit(pushEnvelop7.pushData.emittEvent, pushEnvelop7);
-                                    }
-                                }
-
-                            }
-
-                            break;
-                    }
-                } else {
-                    this.logger.logInfo("@@@@@@@@@@@@@@@ No valid response for recepientData from the redis storage @@@@@@@@@@@@@@@@@")
-                    this.logger.logInfo(`@@@@@@@@@@@@@@@ The client ${recepient.cdObjId.resourceName} may not be connected to the push server @@@@@@@@@@@@@@@@@`)
-                }
-
-            })
+          // below new method based on this.baseModel;
+          // this.svNav.nsNavigate(this,'/comm','message from cd-user')
         }
+      } else {
+        this.errMsg = "The userName and password were not valid";
+        this.loginInvalid = true;
+        this.svSess.logout();
+      }
+    });
+  }
 
-    }
+  // Reference to server event list
+  // const srvEventList = [
+  //   {
+  //     triggerEvent: 'register-client',
+  //     emittEvent: 'push-registered-client',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'srv-received',
+  //     emittEvent: 'push-srv-received',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-relayed',
+  //     emittEvent: 'push-msg-relayed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-pushed',
+  //     emittEvent: 'push-msg-pushed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-received',
+  //     emittEvent: 'push-delivered',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-completed',
+  //     emittEvent: 'push-msg-completed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'register',
+  //     emittEvent: 'registered',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'login',
+  //     emittEvent: 'push-menu',
+  //     sFx: 'pushEnvelop'
+  //   },
+  //   {
+  //     triggerEvent: 'send-memo',
+  //     emittEvent: 'push-memo',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-pub',
+  //     emittEvent: 'push-pub',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-react',
+  //     emittEvent: 'push-react',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-menu',
+  //     emittEvent: 'push-menu',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-notif',
+  //     emittEvent: 'push-notif',
+  //     sFx: 'push'
+  //   }
+  // ]
 
-    async destinationSocket(recepient: ICommConversationSub) {
-        this.logger.logInfo("SioService::destinationSocket()/recepient):", recepient)
-        this.logger.logInfo("@@@@@@@@@@@@@@@@@@@@@@@@@@@ check recepeint @@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        const k = recepient.cdObjId.resourceGuid
-        // return await pubClient.get(key, (err, socketDataStr) => {
-        //     if (err) throw err;
-        //     const recepientData: ICommConversationSub = JSON.parse(socketDataStr);
-        //     const rs = recepientData.cdObjId.socketId;
-        //     this.logger.logInfo('recepientSocket:', rs);
-        //     return rs;
-        // });
-        return await this.b.wsRedisRead(k);
-    }
+  // push-registered-client, push-srv-received, push-msg-relayed, push-msg-pushed, push-delivered, push-msg-completed, push-srv-received, registered, push-menu, push-memo
+  
+  /**
+   * Call this method to set a listener on a specific event from the cd-sio server
+   * @param event 
+   */
+  listen(event) {
+    this.logger.info("cd-shell/cd-user/LoginComponent::listen/event:", event);
+    // Listen for incoming messages
+    this.svSioTest.sioListen(event).subscribe({
+      next: (payLoad: ICdPushEnvelop) => {
+        // console.log('cd-shell/cd-user/LoginComponent::listen/Received payLoad:', payLoadStr);
+        // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
+        console.log(
+          "cd-user/LoginComponent::pushSubscribe()/payLoad:",
+          payLoad
+        );
+        // Handle the message payload
+        // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
+        switch (payLoad.pushData.emittEvent) {
+          case "push-msg-relayed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-msg-relayed event");
+            this.updateRelayed(payLoad);
+            break;
+          case "push-msg-pushed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-msg-pushed event");
+            this.notificationAcceptDelivery(payLoad);
+            break;
+          case "push-delivered":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-delivered-client event");
+            this.notificationMsgComplete(payLoad);
+            break;
 
-    async getRooms(io) {
-        const rooms = await io.of('/').adapter.allRooms();
-        this.logger.logInfo(rooms); // a Set containing all rooms (across every node)
-        return rooms;
-    }
+          case "push-registered-client":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-registered-client event");
+            this.saveSocket(payLoad);
+            break;
 
-    shallow<T extends object>(source: T): T {
-        // return {
-        //     ...source,
-        // }
-        ///////////////////////////////////////
-        const copy = {} as T
-        Object.keys(source).forEach((key) => {
-            copy[key as keyof T] = source[key as keyof T]
-        })
-        return copy
-        ////////////////////////////////////////////
-    }
-
+          case "msg-relayed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle msg-relayed event");
+            break;
+          case "push-msg-completed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-msg-completed event");
+            break;
+          case "push-srv-received":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-srv-received event");
+            break;
+          case "push-menu":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-menu/:payLoad:",
+              payLoad
+            );
+            console.log("handle push-menu event");
+            this.routParams.queryParams.token = payLoad.pushData.token;
+            // this.svIdleTimeout.startTimer(this.cd, idleTimerOptions);
+            // load appropriate menu
+            // this.htmlMenu(payLoad.resp.data,payLoad.pushData.token);
+            break;
+        }
+      },
+      error: (error) => {
+        console.error(
+          "cd-shell/cd-user/LoginComponent::listen/Error receiving message:",
+          error
+        );
+      },
+      complete: () => {
+        console.log(
+          "cd-shell/cd-user/LoginComponent::listen/Message subscription complete"
+        );
+      },
+    });
+  }
 }
 ```
 
+/////////////////////////////////////////
+I have revised the cimparison analysis that we had earlier.
+This time I am focusing on how to use it for implementation.
+Note that there is an important change that I have made.
+The earlier one had Actor 004 with the settings:
+Module: cd-user
+Module type: PWA end-user module
+Component: SignInController
+
+The settings for Actor 4 for new version has the following settings instead:
+Module: dev-sync
+Module type: PWA development utility
+Component: IdeAgentClientService
+
+The above settings alighn witht the corpdesk-rfc-0004 (the one just published on cd-sio).
+These new changes address the following:
+1. There is the primary one Actor 003 can play the role of registering appId in CdStore in behalf of the whole app.
+2. Actor 004 plays a sencond fiddle and relies on the appId that was set by Actor 003 during launch.
+3. We will need to do some wiring that ensures that Actor 004 is launched after 003. For example it can be done such that it is 003 that calls 004 into life. You can advise if there is any better strategy.
+4. Another thing that this solves is taking the responsibilty of participation in the dev-sync by the same subjects (in the case of how it was set earlier, there is no logical way that cd-user can be a host to dev-sync. Especially  when we only need one instance for runtime for the whole app.)
+So, we will have IdeAgentService to act on behalf of IDE and IdeAgentClientService will act on behalf of runtime instance.
+
+
+REFERENCE(Refined Model):
+Below is comparison and analysis of bi-directional process in module federation inter-module communication and IDE to PWA runtime communication.
+Underlying mission: Develop a way in which when a developer saves work, a custom compilation process is initiated and the runtime codes are updated before eentually having the PWA test on the browser be updated while running live.
+
+CASE 1: Module federation Sample:
+
+Actor id: 001
+Module: cd-shell
+Module type: shell // module federation host
+Component: SidebarComponent
+Comunication Description:
+
+- publishes appId in LocalStorage for sharing with components and modules within the module federation ecosystem
+- Listens for login status by Actor 002,
+- process login status
+- load menu from Actor 002
+
+Actor id: 002
+Module: cd-user
+Module type: remote
+Component: LoginComponent
+Comunication Description: On login response,
+
+- notify Actor 002 of status
+- include associated menu in the payload
+
+Notes:
+
+- Actor 002 is remote but child to 001. They share common appId created by 001 during launch
+- By the time Actor 002 is invoked, Actor 001 had initialize and placed shared appId in LocalStorage
+
+CASE 2: IDE to PWA runtime communication Sample:
+
+Actor id: 003
+Module: dev-sync
+Module type: PWA development utility
+Component: IdeAgentService
+Comunication Description:
+
+- publishes appId in CdStorage for sharing with components and modules within cd-shell PWA
+- Listens for save event by developer,
+- on save,
+  - custom compile developer source codes to 'view'(runtime code) directory
+  - send cd-sio message to runtime listener with relevant data
+  - trigger vite to reload the page
+- listen and handle response from runtime listener
+
+Actor id: 004
+Module: dev-sync
+Module type: PWA development utility
+Component: IdeAgentClientService
+Comunication Description: Listen for save events from the IDE,
+
+- on 'save update page
+- inform IDE of status
+
+Notes:
+
+- Actor 004 is part of live version of 003. They share common appId created by 001 during launch
+- By the time Actor 004 is invoked, Actor 001 had initialize and placed shared appId in CdStorage
+
+////////////////////////////////////////////////
+Now we have done the following:
+1. Done a systematic comparison of login process and dev-syc proces
+2. Looked at the codes for login process and how they can be transformed for dev-syc
+3. Done corpdesk-rfc-0004 as a reference for cd-sio client processes
+4. Modified initial model of design to align with the corpdesk-rfc-0004
+
+Below is halfway done IdeAgentService based on earlier proposal.
+Note that the sections labled 'Save Detection Logic' were done before going though the above specifications.
+Note that two of the methods are trying to call:
+this.svDevSync.sendSioMessage(data);
+In both cased the data has typescript error because the process did not follow the required protocal.
+And even if they were to get it right it would be labourious with repeated codes.
+The process that both may have followed to make work easier and proper is:
+1. make use of the mathod configPushPayload() where all the hardles already have easy to use templates.
+2. The initialization did not also follow protocal by use of imported svSio, setAppId(), initSioClient() and listen().
+And all the mentioned codes just need to be copy pasted. You can always as for a missing reference.
+In the absence of the above, the message may not have been relayed by the server.
+
+So, try to make use of specification we know so far to try to finnish of IdeAgentService
+
+```ts
+export class IdeAgentService {
+  b = new BaseService();
+  resourceGuid: string;
+  jwtWsToken = '';
+  // config;
+  // workspacePath
+  // devSync: DevSyncClientService;
+  svDevSync = new DevSyncClientService();
+  svSio = new SioClientService();
+  svCdStore = new CdStoreService();
+  InitData: any;
+  socketData: ISocketItem[] = [];
+
+  constructor() {
+    // this.config = config.devSync;
+    // this.workspacePath = config.viteWorkspacePath || process.cwd();
+    // this.svDevSync = new DevSyncClientService();
+    this.initialize();
+  }
+
+  ///////////////////////////////////////////////////////////
+  // BORROWED FROM dev-sync::IdeAgentService
+  ///////////////////////////////////////////////////////////
+  async initialize() {
+    console.info("[IDE Agent] Initializing DevSyncClient (IDE side)...");
+
+    // await this.svDevSync.connect();
+    // await this.svDevSync.setAppId();
+    // await this.svDevSync.registerClient();
+
+    // this.listenForMessages();
+    // this.startSaveWatcher();
+    console.info("dev-sync::IdeAgentService::initialize()/01");
+    ////////////////////////////////////////////////////////////////
+    // LOOKUP IDE-AGENT INIT DATA IN cd-store IF IT EXISTS
+    // const filter: LsFilter = {
+    //   storageType: StorageType.CdObjId,
+    //   cdObjId: {
+    //     appId: localStorage.getItem('appId'),
+    //     resourceGuid: null,
+    //     resourceName: 'SidebarComponent',
+    //     ngModule: 'SharedModule',
+    //     jwtToken: localStorage.getItem('accessToken'),
+    //     socket: null,
+    //     commTrack: null
+    //   }
+    // }
+    const filter: LsFilter = {
+      storageType: StorageType.Memory,
+      cdObjId: {
+        appId: await this.svCdStore.get("appId"),
+        resourceGuid: null,
+        resourceName: "IdeAgentService",
+        cdModule: "dev-sync",
+        jwtToken: await this.svCdStore.get("jwtToken"),
+        socket: null,
+        commTrack: null,
+      },
+    };
+    console.info("dev-sync::IdeAgentService::initialize()/filter:", filter);
+    this.InitData = await this.svCdStore.get(JSON.stringify(filter));
+    console.info(
+      "dev-sync::IdeAgentService::initialize()/this.InitData:",
+      this.InitData
+    );
+
+    function appInit(s: ISocketItem): ISocketItem | null {
+      if (s.name === "appInit") {
+        return s;
+      } else {
+        return null;
+      }
+    }
+
+    const socketDataStr = await this.svCdStore.get("socketData");
+    if (socketDataStr) {
+      this.socketData = JSON.parse(socketDataStr).filter(appInit);
+      console.info(
+        "dev-sync::IdeAgentService::initialize()/this.socketData:",
+        this.socketData
+      );
+    } else {
+      console.info("Err: socket data is not valid");
+    }
+    this.setAppId();
+
+    console.log("[IDE Agent] Ready and listening for messages...");
+  }
+
+  setAppId() {
+    console.log('dev-sync::IdeAgentService::setAppId()/01')
+    console.log('dev-sync::IdeAgentService::setAppId()/this.svSio.socket:', this.svSio.socket)
+    localStorage.removeItem('appId');
+    // localStorage.setItem('appId', this.svBase.getGuid());
+    const appId = localStorage.getItem('appId');
+    console.log('dev-sync::IdeAgentService::setAppId()/appId:', appId)
+    const envl: ICdPushEnvelop = this.configPushPayload('register-client', 'push-registered-client', 1000)
+    console.log('dev-sync::IdeAgentService::setAppId()/envl:', envl)
+    // this.svSio.sendPayLoad(envl)
+
+    // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
+    this.listen('push-registered-client')
+    this.listen('push-msg-relayed')
+    this.listen('push-msg-pushed')
+    this.listen('push-delivered')
+    this.listen('msg-relayed')
+    this.listen('msg-menu')
+    this.listen('push-menu')
+    this.sendSioMessage(envl)
+  }
+
+
+  listen(event) {
+    console.info('cd-shell/dev-sync::IdeAgentService::listen/event:', event);
+    // Listen for incoming messages
+    this.svSio.sioListen(event).subscribe({
+      next: (payLoad: ICdPushEnvelop) => {
+        // console.log('cd-shell/dev-sync::IdeAgentService::listen/Received payLoad:', payLoadStr);
+        // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
+        console.log('dev-sync::IdeAgentService::pushSubscribe()/payLoad:', payLoad);
+        // Handle the message payload
+        // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu 
+        switch (payLoad.pushData.emittEvent) {
+          case 'push-msg-relayed':
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-msg-relayed event")
+            this.updateRelayed(payLoad)
+            break;
+          case 'push-msg-pushed':
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-msg-pushed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-msg-pushed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-msg-pushed event")
+            this.notificationAcceptDelivery(payLoad)
+            break;
+          case 'push-delivered':
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-delivered/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-delivered/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-delivered-client event")
+            this.notificationMsgComplete(payLoad)
+            break;
+
+          case 'push-registered-client':
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-registered-client event")
+            this.saveSocket(payLoad);
+            break;
+
+          case 'msg-relayed':
+            console.log('dev-sync::IdeAgentService::listenSecure()/msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle msg-relayed event")
+            break;
+          case 'push-msg-completed':
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-msg-completed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-msg-completed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-msg-completed event")
+            break;
+          case 'push-srv-received':
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-srv-received/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('dev-sync::IdeAgentService::listenSecure()/push-srv-received/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-srv-received event")
+            break;
+          // case 'push-menu':
+          //   console.log('dev-sync::IdeAgentService::listenSecure()/push-menu/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+          //   console.log('dev-sync::IdeAgentService::listenSecure()/push-menu/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+          //   console.log('dev-sync::IdeAgentService::listenSecure()/push-menu/:payLoad:', payLoad)
+          //   console.log("handle push-menu event")
+          //   this.routParams.queryParams.token = payLoad.pushData.token;
+          //   // this.svIdleTimeout.startTimer(this.cd, idleTimerOptions);
+          //   // load appropriate menu
+          //   // this.htmlMenu(payLoad.resp.data,payLoad.pushData.token);
+          //   break;
+        }
+
+      },
+      error: (error) => {
+        console.error('cd-shell/dev-sync::IdeAgentService::listen/Error receiving message:', error);
+      },
+      complete: () => {
+        console.log('cd-shell/dev-sync::IdeAgentService::listen/Message subscription complete');
+      }
+    })
+  }
 
 
 
+  notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
+    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/01')
+    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/senderAcceptDelivery:', payLoad)
+    /**
+     * update record of payload
+     * - delivered time
+     * - delivered = true
+     * - isNotification = true
+     */
+    payLoad.pushData.commTrack.deliveryTime = Number(new Date());
+    payLoad.pushData.commTrack.delivered = true;
+    payLoad.pushData.isNotification = true;
+    payLoad.pushData.triggerEvent = 'msg-received';
+    /**
+     * reverse sender and receiver subTypeId
+     */
+    // this.sendPayLoad(payLoad);
+    this.sendSioMessage(payLoad)
+  }
+
+  notificationMsgComplete(payLoad: ICdPushEnvelop) {
+    console.log('cdUiLib::SioClientService::notificationMsgComplete()/01')
+    console.log('cdUiLib::SioClientService::notificationMsgComplete()/1:', payLoad)
+    /**
+     * update record of payload
+     * - delivered time
+     * - delivered = true
+     * - isNotification = true
+     */
+    payLoad.pushData.commTrack.completedTime = Number(new Date());
+    payLoad.pushData.commTrack.completed = true;
+    payLoad.pushData.isNotification = true;
+    payLoad.pushData.triggerEvent = 'msg-completed'
+    console.log('cdUiLib::SioClientService::notificationMsgComplete/2:', payLoad)
+    /**
+     * reverse sender and receiver subTypeId
+     */
+    // this.sendPayLoad(payLoad);
+    this.sendSioMessage(payLoad)
+  }
 
 
+  sendSioMessage(envl: ICdPushEnvelop): void {
+    console.info('dev-sync::IdeAgentService::sendSioMessage/envl:', envl);
+    this.svSio.sendMessageV2(envl.pushData.triggerEvent, envl).subscribe({
+      next: (response: boolean) => {
+        console.log('Message sent successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error sending message:', error);
+      },
+      complete: () => {
+        console.log('Message sending complete');
+      }
+    });
+  }
+
+  /**
+   * This method facilites the initial configuration of a push payload.
+   * The payload (ICdPushEnvelop.pushData.m) where 'm' is the message body, is set
+   * by the caller of this method.
+   * @param triggerEvent 
+   * @param emittEvent 
+   * @param cuid 
+   * @returns 
+   */
+  configPushPayload(triggerEvent: string, emittEvent: string, cuid: number | string): ICdPushEnvelop {
+    console.log('starting dev-sync::IdeAgentService::configPushPayload()');
+    /**
+     * Everytime this method is called it generates a new resourceGuid
+     * Notice the setting for CdObjId.resourceName which is the name of this service
+     */
+    this.resourceGuid = this.b.getGuid();
+
+    const pushEnvelope: ICdPushEnvelop = {
+      pushData: {
+        pushGuid: '',
+        m: '',
+        pushRecepients: [],
+        triggerEvent: '',
+        emittEvent: '',
+        token: '',
+        isNotification: null,
+        appSockets: this.socketData,
+        isAppInit: true,
+        commTrack: {
+          initTime: Number(new Date()),
+          relayTime: null,
+          relayed: false,
+          pushed: false,
+          pushTime: null,
+          deliveryTime: null,
+          delivered: false,
+          completed: false,
+          completedTime: null
+        },
+      },
+      req: null,
+      resp: null
+    }
+
+    console.log('dev-sync::IdeAgentService::configPushPayload()/this.resourceGuid:', this.resourceGuid);
+    const key = this.resourceGuid;
+    const cdObj: CdObjId = {
+      appId: localStorage.getItem('appId')!,
+      // ngModule: 'UserFrontModule',
+      cdModule: 'dev-sync',
+      resourceName: 'IdeAgentService',
+      resourceGuid: this.resourceGuid,
+      jwtToken: this.jwtWsToken,
+      socket: null,
+      socketId: '',
+      commTrack: {
+        initTime: Number(new Date()),
+        relayTime: null,
+        relayed: false,
+        pushed: false,
+        pushTime: null,
+        deliveryTime: null,
+        delivered: false,
+        completed: false,
+        completedTime: null
+      },
+    }
+
+    localStorage.setItem(key, JSON.stringify(cdObj));
+
+    const users = [
+      {
+        userId: cuid,
+        subTypeId: 1,
+        cdObjId: cdObj,
+      },
+    ]
+
+    const envl: ICdPushEnvelop = { ...pushEnvelope };
+    envl.pushData.triggerEvent = triggerEvent;
+    envl.pushData.emittEvent = emittEvent;
+
+    // set sender
+    const uSender: any = { ...users[0] }
+    uSender.subTypeId = 1;
+    envl.pushData.pushRecepients.push(uSender)
 
 
+    if (triggerEvent === 'login') {
+      console.info('dev-sync::IdeAgentService::configPushPayload()/triggerEvent==login:');
+      // set recepient
+      console.info('dev-sync::IdeAgentService::configPushPayload()/this.InitData:', JSON.stringify(this.InitData));
+      console.info('dev-sync::IdeAgentService::configPushPayload()/this.InitData.value:', JSON.stringify(this.InitData.value));
+      const uRecepient: any = { ...users[0] }
+      uRecepient.subTypeId = 7;
+      console.info('dev-sync::IdeAgentService::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
+      uRecepient.cdObjId = this.InitData.value
+      envl.pushData.pushRecepients.push(uRecepient)
+
+    }
+
+    console.info('dev-sync::IdeAgentService::configPushPayload()/envl:', JSON.stringify(envl));
+    return envl;
+
+  }
 
 
+  saveSocket(payLoad: ICdPushEnvelop) {
+    console.log('dev-sync::IdeAgentService::saveSocket()/payLoad:', payLoad);
+    /**
+     * - get socketStore
+     * - search socketStore for item with name='appInit'
+     * - remove existing item with the same key
+     * - save socketData to LocalStorage with resourceGuide as reference
+     */
+    const socketData: ISocketItem[] | null = payLoad.pushData.appSockets.filter(appInit)
+    function appInit(s: ISocketItem): ISocketItem | null {
+      if (s.name === 'appInit') {
+        return s;
+      } else {
+        return null;
+      }
+    }
+
+    if (socketData.length > 0) {
+      const socketStr = JSON.stringify(socketData)
+      localStorage.removeItem('socketData');
+      localStorage.setItem('socketData', socketStr);
+    }
+  }
+
+  /**
+   * No action is expected from sender.
+   * No message to send to server
+   * Optionally, the sender can do its own house
+   * data updates and records.
+   * @param payLoad 
+   */
+  updateRelayed(payLoad: ICdPushEnvelop) {
+    console.log('updateRelayed()/01')
+    console.log('updateRelayed()/payLoad:', payLoad)
+    /**
+     * update record of send messages
+     */
+  }
+  // BORROWED FROM dev-sync::IdeAgentService
+  ///////////////////////////////////////////////////////////
+
+  // ------------------------------------------------------------
+  // 🧩 Save Detection Logic
+  // ------------------------------------------------------------
+  startSaveWatcher() {
+    const watchPath = path.resolve(config.viteWorkspacePath || process.cwd());
+
+    try {
+      console.log(`[IDE Agent] Watching for changes in: ${watchPath}`);
+
+      fs.watch(watchPath, { recursive: true }, (eventType, filename) => {
+        if (filename && (eventType === "change" || eventType === "rename")) {
+          console.log(`[IDE Agent] Detected save event: ${filename}`);
+          this.onSave(filename);
+        }
+      });
+    } catch (err) {
+      console.error("[IDE Agent] File watcher failed:", err);
+    }
+  }
+
+  async onSave(filename) {
+    console.log("[IDE Agent] 👋 Hello Save! File changed:", filename);
+
+    const payload = {
+      source: { appId: this.svDevSync.appId },
+      action: "FILE_SAVED",
+      data: { filename, timestamp: new Date().toISOString() },
+    };
+
+    this.svDevSync.sendSioMessage(payload);
+  }
 
 
+  async handleAuthAttempt(source, data) {
+    console.log("[IDE Agent] Handling AUTH_ATTEMPT for:", data.username);
+
+    const isValid = data.password === "1234";
+    const message = isValid
+      ? `✅ Auth success for ${data.username}`
+      : `❌ Auth failed for ${data.username}`;
+
+    const response = {
+      source: { appId: this.svDevSync.appId },
+      target: source.appId,
+      action: "AUTH_RESULT",
+      data: { success: isValid, message },
+    };
+
+    this.svDevSync.sendSioMessage(response);
+    console.log("[IDE Agent] Sent AUTH_RESULT back to runtime.");
+  }
+}
+```
+
+/////////////////////////////////////////
+
+```ts
+/**
+   * initSioClient has two main functions:
+   * 1. Set cd-sio listeners for the events that LoginComponent expects from the cd-sio server
+   * 2. Register cd-user/LoginComponent with the cd-sio server
+   */
+  initSioClient() {
+    console.log("cd-user/LoginComponent::initSioClient()/01");
+    console.log(
+      "cd-user/LoginComponent::initSioClient()/this.svSio.socket:",
+      this.svSio.socket
+    );
+    // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
+    this.listen("push-registered-client");
+    this.listen("push-msg-relayed");
+    this.listen("push-msg-pushed");
+    this.listen("push-delivered");
+    this.listen("msg-relayed");
+    this.listen("msg-menu");
+    this.listen("push-menu");
+
+    /**
+     * Register cd-user/LoginComponent with the cd-sio server
+     */
+    const envl: ICdPushEnvelop = this.configPushPayload(
+      "register-client",
+      "push-registered-client",
+      1000 // 1000 is anonimous user. Used when session is not yet created
+    );
+    this.sendSioMessage(envl);
+  }
+
+  /**
+   * Call this method to set a listener on a specific event from the cd-sio server
+   * @param event 
+   */
+  listen(event) {
+    this.logger.info("cd-shell/cd-user/LoginComponent::listen/event:", event);
+    // Listen for incoming messages
+    this.svSioTest.sioListen(event).subscribe({
+      next: (payLoad: ICdPushEnvelop) => {
+        // console.log('cd-shell/cd-user/LoginComponent::listen/Received payLoad:', payLoadStr);
+        // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
+        console.log(
+          "cd-user/LoginComponent::pushSubscribe()/payLoad:",
+          payLoad
+        );
+        // Handle the message payload
+        // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
+        switch (payLoad.pushData.emittEvent) {
+          case "push-msg-relayed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-msg-relayed event");
+            this.updateRelayed(payLoad);
+            break;
+          case "push-msg-pushed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-msg-pushed event");
+            this.notificationAcceptDelivery(payLoad);
+            break;
+          case "push-delivered":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-delivered-client event");
+            this.notificationMsgComplete(payLoad);
+            break;
+
+          case "push-registered-client":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-registered-client event");
+            this.saveSocket(payLoad);
+            break;
+
+          case "msg-relayed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle msg-relayed event");
+            break;
+          case "push-msg-completed":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-msg-completed event");
+            break;
+          case "push-srv-received":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log("handle push-srv-received event");
+            break;
+          case "push-menu":
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.emittEvent:",
+              payLoad.pushData.emittEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.triggerEvent:",
+              payLoad.pushData.triggerEvent
+            );
+            console.log(
+              "cd-user/LoginComponent::listenSecure()/push-menu/:payLoad:",
+              payLoad
+            );
+            console.log("handle push-menu event");
+            this.routParams.queryParams.token = payLoad.pushData.token;
+            // this.svIdleTimeout.startTimer(this.cd, idleTimerOptions);
+            // load appropriate menu
+            // this.htmlMenu(payLoad.resp.data,payLoad.pushData.token);
+            break;
+        }
+      },
+      error: (error) => {
+        console.error(
+          "cd-shell/cd-user/LoginComponent::listen/Error receiving message:",
+          error
+        );
+      },
+      complete: () => {
+        console.log(
+          "cd-shell/cd-user/LoginComponent::listen/Message subscription complete"
+        );
+      },
+    });
+  }
+```
+
+I prefer if you just had a method with helpers so that we just maintain simple architecture.
+What we need is just IdeAgenService and IdeAgenClientService. We contain everything within this light easy to follow and document architecture.
+What we can isolate is the required code updating mechanism.
+The handler can call the mechanisme for code update handling.
+Rember in the example of cd-user, we have the module laid out as shown on the tree.
+We would be having 
+1. some kind of custom compiler that generates runtime codes from the controller directory to the view directory.
+2. We can have some way of tracking directories or files that have new changes.
+3. On save the file watcher would be called then the custom compilier takes over
+4. Following this then the vite reloads the browser.
+This is just my view but you can assist to complete the picture.
+src/CdShell/sys/cd-user/
+├── controllers
+│   ├── session.controller.ts
+│   ├── sign-in.controller.ts
+│   └── user.controller.ts
+├── models
+│   ├── group-member.model.ts
+│   ├── group-member-view.model.ts
+│   ├── group.model.ts
+│   ├── group-type.model.ts
+│   ├── session.model.ts
+│   └── user.model.ts
+├── services
+│   ├── group-member.service.ts
+│   ├── group.service.ts
+│   ├── menu.service.ts
+│   ├── session.service.ts
+│   └── user.service.ts
+└── view
+    ├── index.d.ts
+    ├── index.js
+    ├── module.json
+    ├── session.controller.js
+    ├── sign-in.controller.js
+    ├── sign-up.controller.js
+    └── user.controller.js
+
+5 directories, 21 files
+
+/////////////////////////////////////////////////
+Below is the current working implementation of ModuleService.
+We dont want to break how it was executing even as we integrate with IdeAgentService and IdeAgentClientService.
+Of specific interest is initializeNodeModules() which was a very strategic solution to some initialization proces.
+It should not be affected.
+Then there is isBrowser(), isViteMode and baseDir() which also should be considered for relevance.
+I have shared both version. See how you can implement the new one as you preserve the old version fundamental processes.
+
+```ts
+// Node.js module placeholders
+let fs: any;
+let path: any;
+let url: any;
+
+/**
+ * Dynamically loads Node.js modules only when running in Node context.
+ */
+const initializeNodeModules = async () => {
+  console.log("starting initializeNodeModules()-01");
+  if (typeof window === "undefined") {
+    console.log("initializeNodeModules()-02");
+    try {
+      const [fsModule, pathModule, urlModule] = await Promise.all([
+        import("fs"),
+        import("path"),
+        import("url"),
+      ]);
+      console.log("initializeNodeModules()-03");
+      fs = fsModule;
+      path = pathModule;
+      url = urlModule;
+    } catch (e) {
+      console.log("initializeNodeModules()-04");
+      console.error("[ModuleService] Failed to load Node.js modules:", e);
+    }
+  }
+};
+
+/**
+ * ModuleService
+ * Handles dynamic loading of Corpdesk modules in both browser (Vite) and Node contexts.
+ */
+export class ModuleService {
+  private logger = new LoggerService();
+  private static initPromise: Promise<void> | null = null;
+  private modules: Record<string, any> = {};
+
+  // --- Environment flags ---
+  private get isBrowser() {
+    return typeof window !== "undefined";
+  }
+
+  private get isViteMode() {
+    // Vite mode implies running inside browser context
+    return this.isBrowser;
+  }
+
+  private get baseDir() {
+    return this.isViteMode
+      ? "/src/CdShell"
+      : path?.resolve(process.cwd(), "dist-ts/CdShell");
+  }
+
+  /**
+   * Ensures Node modules (fs, path, url) are loaded only once.
+   */
+  public static async ensureInitialized(): Promise<void> {
+    console.log("[ModuleService][ensureInitialized]: starting");
+    if (!this.initPromise) this.initPromise = initializeNodeModules();
+    return this.initPromise;
+  }
+
+  constructor() {
+    this.logger.debug("[ModuleService][constructor]: starting");
+    if (this.isViteMode) {
+      this.logger.debug("[ModuleService] isViteMode=true");
+
+      // FIX: Use the ABSOLUTE path relative to the project root.
+      // This is often the most reliable pattern to force Vite to find files.
+      this.modules = import.meta.glob("/src/CdShell/**/index.js");
+
+      this.logger.debug("[ModuleService] Running under Vite (browser).");
+    } else {
+      this.logger.debug("[ModuleService] Running under Node (non-Vite).");
+    }
+  }
+
+  /**
+   * Loads a module dynamically by context and moduleId.
+   * Example: ctx="sys", moduleId="cd-user" → /src/CdShell/sys/cd-user/view/index.js
+   */
+  async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+    this.logger.debug("ModuleService::loadModule()/01:");
+
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
+
+    // --- Step 1: Compute normalized target fragment ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug(
+      "[ModuleService] expectedPathFragment:",
+      expectedFragment
+    );
+
+    // --- Step 2: Vite (Browser) Mode ---
+    if (isVite) {
+      // The expectedFragment is calculated as: "src/CdShell/sys/cd-user/view/index.js"
+
+      // Find the correct key from the modules map
+      const pathKey = Object.keys(this.modules).find((key) => {
+        // Normalizes key: removes a leading './' OR a leading '/' (if present).
+        // This makes the key match the expectedFragment ("src/CdShell/...")
+        const normalizedKey = key.replace(/^\.?\//, "");
+
+        return normalizedKey === expectedFragment;
+      });
+
+      if (!pathKey) {
+        console.error(
+          "[ModuleService] Available module keys:",
+          Object.keys(this.modules)
+        );
+        throw new Error(
+          `[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`
+        );
+      }
+
+      try {
+        const loader = this.modules[pathKey];
+        const mod = (await loader()) as { module: ICdModule };
+        const moduleInfo = mod.module;
+
+        if (!moduleInfo)
+          throw new Error(`Missing 'module' export in: ${pathKey}`);
+
+        // Inject module template into the DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+
+        // Initialize controller if defined
+        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
+
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
+        // Timestamp log
+        const now = new Date();
+        console.log(
+          `[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+        );
+
+        return moduleInfo;
+      } catch (err) {
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory
+      .replace(/\\/g, "/")
+      .replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(
+        `[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+      );
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
+  }
+}
+```
+
+```ts
+import url from "url";
+import { CdDirectiveBinder } from "../directives/cd-directive-binder";
+import { ICdModule } from "../interfaces/icd-module";
+import { Logger } from "../utils/logger";
+
+export class ModuleService {
+  private static instance: ModuleService;
+  private static initialized = false;
+  private static hasPreloaded = false;
+
+  private readonly logger = new Logger("ModuleService");
+
+  private baseDir = process.cwd() + "/src/CdShell";
+  private isViteMode = typeof window !== "undefined";
+  private modules: Record<string, any> = {};
+
+  // --- Preload configuration: define system-critical modules here ---
+  private static preloadModules = [
+    { ctx: "sys", moduleId: "dev-sync", component: "IdeAgentService" },
+    { ctx: "sys", moduleId: "dev-sync", component: "IdeAgentClientService" },
+  ];
+
+  // ----------------------------------------------------------
+  // Singleton Access
+  // ----------------------------------------------------------
+  static getInstance(): ModuleService {
+    if (!ModuleService.instance) {
+      ModuleService.instance = new ModuleService();
+    }
+    return ModuleService.instance;
+  }
+
+  // ----------------------------------------------------------
+  // Initialization
+  // ----------------------------------------------------------
+  static async ensureInitialized(): Promise<void> {
+    if (ModuleService.initialized) return;
+    const instance = ModuleService.getInstance();
+    instance.logger.debug("ModuleService initialized");
+    ModuleService.initialized = true;
+  }
+
+  // ----------------------------------------------------------
+  // Preload Pipeline (System Modules)
+  // ----------------------------------------------------------
+  private static async preloadModulesSequentially(): Promise<void> {
+    const instance = ModuleService.getInstance();
+
+    for (const mod of ModuleService.preloadModules) {
+      try {
+        instance.logger.debug(`[Preload] Loading ${mod.moduleId}`);
+        const loaded = await instance.loadModule(mod.ctx, mod.moduleId);
+
+        // Run controller setup if available
+        if (loaded?.controller && typeof loaded.controller.__setup === "function") {
+          instance.logger.debug(`[Preload] Setting up ${mod.component}`);
+          await loaded.controller.__setup();
+        }
+
+        instance.logger.debug(`[Preload] Completed ${mod.component}`);
+      } catch (err) {
+        instance.logger.error(`[Preload] Failed ${mod.moduleId}: ${err}`);
+      }
+    }
+  }
+
+  // ----------------------------------------------------------
+  // Module Loading
+  // ----------------------------------------------------------
+  async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+
+    // --- Step 0: Preload system modules (only once per session) ---
+    if (!ModuleService.hasPreloaded) {
+      ModuleService.hasPreloaded = true;
+      await ModuleService.preloadModulesSequentially();
+    }
+
+    this.logger.debug("ModuleService::loadModule()/01:");
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
+
+    // --- Step 1: Compute normalized target fragment ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug("[ModuleService] expectedPathFragment:", expectedFragment);
+
+    // --- Step 2: Browser (Vite) Mode ---
+    if (isVite) {
+      const pathKey = Object.keys(this.modules).find((key) => {
+        const normalizedKey = key.replace(/^\.?\//, "");
+        return normalizedKey === expectedFragment;
+      });
+
+      if (!pathKey) {
+        console.error("[ModuleService] Available module keys:", Object.keys(this.modules));
+        throw new Error(`[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`);
+      }
+
+      try {
+        const loader = this.modules[pathKey];
+        const mod = (await loader()) as { module: ICdModule };
+        const moduleInfo = mod.module;
+
+        if (!moduleInfo) throw new Error(`Missing 'module' export in: ${pathKey}`);
+
+        // Inject template into DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+
+        // Initialize controller if defined
+        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
+
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
+        const now = new Date();
+        console.log(`[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleString()}`);
+        return moduleInfo;
+      } catch (err) {
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory.replace(/\\/g, "/").replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    this.logger.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(`[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleString()}`);
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
+  }
+}
+
+```
+
+/////////////////////////////////////////
+
+I am thinking about some simpler optional way of updating the browser. What is IdeAgentService only listens to save event: ie when the user invokes save in the IDE.
+when it detects a save event, it does the following:
+- (optional) detect files that have changes or just runs compilation of all modules
+- save runtime codes to /view
+- reload the browser.
+
+I am just wondering why we must do the socket.io communication.
+
+Give me a proposal for IdeAgentService that does not use socket.io-client
+
+//////////////////////////////////
+
+Assist me to resolve the issue below
+
+```log
+vite v5.4.20 building for production...
+✓ 950 modules transformed.
+x Build failed in 2.47s
+error during build:
+src/CdShell/sys/cd-store/services/file-store.service.ts (2:9): "promises" is not exported by "__vite-browser-external:fs", imported by "src/CdShell/sys/cd-store/services/file-store.service.ts".
+file: /home/emp-12/cd-shell/src/CdShell/sys/cd-store/services/file-store.service.ts:2:9
+
+1: // file-dev-sync-store.ts
+2: import { promises as fs } from 'fs';
+            ^
+3: import path from 'path';
+4: import { ICdStore } from '../models/cd-store.model';
+
+    at getRollupError (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:16939:16)
+    at Module.traceVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:17391:29)
+    at ModuleScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:15061:39)
+    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ClassBodyScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at FunctionScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+```
+
+// src/CdShell/sys/cd-store/services/file-store.service.ts
+```ts
+// file-dev-sync-store.ts
+import { promises as fs } from 'fs';
+import path from 'path';
+import { ICdStore } from '../models/cd-store.model';
+// import { ICdStore } from '../../base';
+
+export class FileStoreService implements ICdStore {
+  private filePath: string;
+
+  constructor(basePath: string = './.devsync-store.json') {
+    this.filePath = path.resolve(basePath);
+  }
+
+  private async readFile(): Promise<Record<string, any>> {
+    try {
+      const content = await fs.readFile(this.filePath, 'utf-8');
+      return JSON.parse(content || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  private async writeFile(data: Record<string, any>): Promise<void> {
+    await fs.writeFile(this.filePath, JSON.stringify(data, null, 2), 'utf-8');
+  }
+
+  async save(key: string, data: any): Promise<void> {
+    const store = await this.readFile();
+    store[key] = data;
+    await this.writeFile(store);
+  }
+
+  async get(key: string): Promise<any | null> {
+    const store = await this.readFile();
+    return store[key] ?? null;
+  }
+
+  async delete(key: string): Promise<void> {
+    const store = await this.readFile();
+    delete store[key];
+    await this.writeFile(store);
+  }
+
+  async clear(): Promise<void> {
+    await this.writeFile({});
+  }
+}
+
+```
+
+//////////////////////////////////////////
+This file is part of optional storage system for cd-shell.
+We have options for memory, redis and file storage. This is the file storage option.
+We dont intend to use it now but we need to circumvent the compilation error so the source codes is still intact even though not for immeidate use.
+
+// cd-storage module structure.
+emp-12@emp-12 ~/cd-shell (main)> tree src/CdShell/sys/cd-store/
+src/CdShell/sys/cd-store/
+├── controllers
+├── models
+│   └── cd-store.model.ts
+├── services
+│   ├── cd-store-factory.service.ts
+│   ├── cd-store.service.ts
+│   ├── file-store.service.ts
+│   ├── memory-store.service.ts
+│   └── redis-store.service.ts
+└── view
+    └── index.js
+
+5 directories, 7 files
+
+///////////////////////////////////
+The current settings for vite
+// src/vite.config.ts
+```ts
+import { defineConfig } from "vite";
+import fs from "fs";
+import path from "path";
+// import config from "./config";
+
+const viteConfig = {
+  https: {
+    key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
+    cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
+  },
+  port: 5173,
+  host: "localhost",
+  open: true,
+};
+export default defineConfig({
+  server: viteConfig, // Use HTTP server configuration
+
+  preview: viteConfig, // Preview server same as dev server
+
+  root: ".", // Root is the project base
+
+  publicDir: "public",
+
+  build: {
+    outDir: "dist", // Final PWA bundle
+    emptyOutDir: true,
+    target: "esnext", // ✅ Use "esnext" instead of "es2022"
+    modulePreload: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, "public/index.html"),
+      output: {
+        format: "es", // ✅ Ensure ESM output supports top-level await
+      },
+    },
+  },
+
+  esbuild: {
+    target: "esnext", // ✅ Same here to bypass old browser targets
+    supported: {
+      "top-level-await": true, // ✅ Explicitly enable top-level await
+    },
+  },
+
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@shell": path.resolve(__dirname, "dist-ts/CdShell"),
+    },
+    extensions: [".js", ".ts"],
+  },
+
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext", // ✅ Extend same fix to optimizeDeps
+      supported: {
+        "top-level-await": true,
+      },
+    },
+  },
+});
+
+```
+
+/////////////////////////////////////////////////
+
+I am experiencing the problem below in my PWA project.
+The file is it having isses with, is an optional logic for storage.
+It would be ok to keep it as a source code but avoid compiling it for now.
+Extra info:
+The scenario is such that we are building codes that should be usable in node project, PWA, cli or embeded ecosystem. Is there a way it can detect an environment then gets processed conditionally. For example in this case we are in PWA environment and we are having problem with Node specific issues. Can we have some helper methods like isNode(), isPWA() etc to help process this file gracefully. 
+What is your suggested fix.
+
+```log
+vite v5.4.20 building for production...
+✓ 947 modules transformed.
+x Build failed in 2.50s
+error during build:
+src/CdShell/sys/cd-store/services/file-store.service.ts (2:9): "promises" is not exported by "__vite-browser-external:fs", imported by "src/CdShell/sys/cd-store/services/file-store.service.ts".
+file: /home/emp-12/cd-shell/src/CdShell/sys/cd-store/services/file-store.service.ts:2:9
+
+1: // file-dev-sync-store.ts
+2: import { promises as fs } from 'fs';
+            ^
+3: import path from 'path';
+4: import { ICdStore } from '../models/cd-store.model';
+
+    at getRollupError (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:16939:16)
+    at Module.traceVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:17391:29)
+    at ModuleScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:15061:39)
+    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ClassBodyScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ChildScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at FunctionScope.findVariable (file:///home/emp-12/cd-shell/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+```
+
+The current settings for vite
+// src/vite.config.ts
+```ts
+import { defineConfig } from "vite";
+import fs from "fs";
+import path from "path";
+// import config from "./config";
+
+const viteConfig = {
+  https: {
+    key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
+    cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
+  },
+  port: 5173,
+  host: "localhost",
+  open: true,
+};
+export default defineConfig({
+  server: viteConfig, // Use HTTP server configuration
+
+  preview: viteConfig, // Preview server same as dev server
+
+  root: ".", // Root is the project base
+
+  publicDir: "public",
+
+  build: {
+    outDir: "dist", // Final PWA bundle
+    emptyOutDir: true,
+    target: "esnext", // ✅ Use "esnext" instead of "es2022"
+    modulePreload: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, "public/index.html"),
+      output: {
+        format: "es", // ✅ Ensure ESM output supports top-level await
+      },
+    },
+  },
+
+  esbuild: {
+    target: "esnext", // ✅ Same here to bypass old browser targets
+    supported: {
+      "top-level-await": true, // ✅ Explicitly enable top-level await
+    },
+  },
+
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@shell": path.resolve(__dirname, "dist-ts/CdShell"),
+    },
+    extensions: [".js", ".ts"],
+  },
+
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext", // ✅ Extend same fix to optimizeDeps
+      supported: {
+        "top-level-await": true,
+      },
+    },
+  },
+});
+
+```
+cd-store module showing optional storage strategies.
+We can skip file storage for PWA project.
+// cd-storage module structure.
+emp-12@emp-12 ~/cd-shell (main)> tree src/CdShell/sys/cd-store/
+src/CdShell/sys/cd-store/
+├── controllers
+├── models
+│   └── cd-store.model.ts
+├── services
+│   ├── cd-store-factory.service.ts
+│   ├── cd-store.service.ts
+│   ├── file-store.service.ts
+│   ├── memory-store.service.ts
+│   └── redis-store.service.ts
+└── view
+    └── index.js
+
+////////////////////////////////////
+Issue while testing initial module load:
+Kindly assist to identify the cause of the problem showing in the logs below:
+Note that the file where problem emanated is a sample test of compiled code.
+src/CdShell/sys/dev-sync/view/dev-sync.controller.js
+
+```log
+
+start 1 index-C4P47hd5.js:18:11508
+[SHELL] [DEBUG] [Main] init(): starting index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-C4P47hd5.js:18:506
+[ModuleService][constructor]: starting index-C4P47hd5.js:18:4821
+[ModuleService] Running under Vite (browser). index-C4P47hd5.js:18:4894
+[SHELL] [DEBUG] starting bootstrapShell() index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/01: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] [Main] init(): completed index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/02: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/03: index-C4P47hd5.js:18:506
+ThemeService::loadThemeConfig(): 01 index-C4P47hd5.js:18:1077
+ThemeService::loadThemeConfig(): 01 index-C4P47hd5.js:18:1183
+ThemeService::loadThemeConfig()/res: 
+Response { type: "basic", url: "https://localhost:5173/themes/default/theme.json", redirected: false, status: 200, ok: true, statusText: "", headers: Headers(8), body: ReadableStream, bodyUsed: true }
+index-C4P47hd5.js:18:1236
+ThemeService::loadThemeConfig(): 03 index-C4P47hd5.js:18:1452
+[SHELL] [DEBUG] bootstrapShell()/04: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/themeConfig: 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/05: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/06: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/07: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/08: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/09: index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/ctx: sys index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/moduleId: cd-user index-C4P47hd5.js:18:506
+[SHELL] [DEBUG] bootstrapShell()/10: index-C4P47hd5.js:18:506
+[ModuleService][constructor]: starting index-C4P47hd5.js:18:4821
+[ModuleService] Running under Vite (browser). index-C4P47hd5.js:18:4894
+[Preload] Loading dev-sync index-C4P47hd5.js:18:6872
+ModuleService::loadModule()/01: index-C4P47hd5.js:18:7359
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-C4P47hd5.js:18:7523
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 11:07:19 index-C4P47hd5.js:18:8100
+[Preload] Setting up IdeAgentService index-C4P47hd5.js:18:7031
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentService index-C4P47hd5.js:18:7114
+[Preload] Loading dev-sync index-C4P47hd5.js:18:6872
+ModuleService::loadModule()/01: index-C4P47hd5.js:18:7359
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-C4P47hd5.js:18:7523
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 11:07:19 index-C4P47hd5.js:18:8100
+[Preload] Setting up IdeAgentClientService index-C4P47hd5.js:18:7031
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentClientService index-C4P47hd5.js:18:7114
+ModuleService::loadModule()/01: index-C4P47hd5.js:18:7359
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-C4P47hd5.js:18:7523
+[ModuleService] Browser import failed: TR: Column type for fn#currentUserId is not defined and cannot be guessed. Make sure you have turned on an "emitDecoratorMetadata": true option in tsconfig.json. Also make sure you have imported "reflect-metadata" on top of the main entry file in your application (before any entity imported).If you are using JavaScript instead of TypeScript you must explicitly provide a column type.
+    I https://localhost:5173/assets/index-BRP-Yb9a.js:23
+    TR https://localhost:5173/assets/index-BRP-Yb9a.js:23
+    ge https://localhost:5173/assets/index-BRP-Yb9a.js:33
+    Vr https://localhost:5173/assets/index-BRP-Yb9a.js:33
+    <anonymous> https://localhost:5173/assets/index-BRP-Yb9a.js:33
+index-C4P47hd5.js:18:8208
+[BOOTSTRAP ERROR] TR: Column type for fn#currentUserId is not defined and cannot be guessed. Make sure you have turned on an "emitDecoratorMetadata": true option in tsconfig.json. Also make sure you have imported "reflect-metadata" on top of the main entry file in your application (before any entity imported).If you are using JavaScript instead of TypeScript you must explicitly provide a column type.
+    I https://localhost:5173/assets/index-BRP-Yb9a.js:23
+    TR https://localhost:5173/assets/index-BRP-Yb9a.js:23
+    ge https://localhost:5173/assets/index-BRP-Yb9a.js:33
+    Vr https://localhost:5173/assets/index-BRP-Yb9a.js:33
+    <anonymous> https://localhost:5173/assets/index-BRP-Yb9a.js:33
+index-C4P47hd5.js:18:11572
+
+​
+```
+// src/CdShell/sys/moduleman/services/module.service.ts
+```ts
+// --------------------------------------
+// Imports
+// --------------------------------------
+import { CdDirectiveBinder } from "../../base/cd-directive-binder";
+import { ICdModule } from "../models/module.model";
+
+// --------------------------------------
+// Node dynamic imports (preserve legacy behavior)
+// --------------------------------------
+let fs: any;
+let path: any;
+let url: any;
+
+const initializeNodeModules = async () => {
+  if (typeof window === "undefined") {
+    try {
+      const [fsModule, pathModule, urlModule] = await Promise.all([
+        import("fs"),
+        import("path"),
+        import("url"),
+      ]);
+      fs = fsModule;
+      path = pathModule;
+      url = urlModule;
+    } catch (e) {
+      console.error("[ModuleService] Failed to load Node.js modules:", e);
+    }
+  }
+};
+
+// --------------------------------------
+// ModuleService
+// --------------------------------------
+export class ModuleService {
+  private static instance: ModuleService;
+  private static initPromise: Promise<void> | null = null;
+  private static hasPreloaded = false;
+
+  // private logger = new Logger("ModuleService");
+  private modules: Record<string, any> = {};
+
+  // --- Preload configuration ---
+  private static preloadModules = [
+    { ctx: "sys", moduleId: "dev-sync", component: "IdeAgentService" },
+    { ctx: "sys", moduleId: "dev-sync", component: "IdeAgentClientService" },
+  ];
+
+  // --------------------------------------
+  // Singleton Access
+  // --------------------------------------
+  static getInstance(): ModuleService {
+    if (!ModuleService.instance) {
+      ModuleService.instance = new ModuleService();
+    }
+    return ModuleService.instance;
+  }
+
+  // --------------------------------------
+  // Environment Helpers (preserved)
+  // --------------------------------------
+  private get isBrowser() {
+    return typeof window !== "undefined";
+  }
+
+  private get isViteMode() {
+    return this.isBrowser;
+  }
+
+  private get baseDir() {
+    return this.isViteMode
+      ? "/src/CdShell"
+      : path?.resolve(process.cwd(), "dist-ts/CdShell");
+  }
+
+  // --------------------------------------
+  // Initialization (preserved)
+  // --------------------------------------
+  public static async ensureInitialized(): Promise<void> {
+    if (!this.initPromise) this.initPromise = initializeNodeModules();
+    await this.initPromise;
+  }
+
+  // --------------------------------------
+  // Constructor (preserved Vite setup)
+  // --------------------------------------
+  constructor() {
+    console.debug("[ModuleService][constructor]: starting");
+
+    if (this.isViteMode) {
+      console.debug("[ModuleService] Running under Vite (browser).");
+      this.modules = import.meta.glob("/src/CdShell/**/index.js");
+    } else {
+      console.debug("[ModuleService] Running under Node (non-Vite).");
+    }
+  }
+
+  // --------------------------------------
+  // Preload Pipeline
+  // --------------------------------------
+  private static async preloadModulesSequentially(): Promise<void> {
+    const instance = ModuleService.getInstance();
+
+    for (const mod of this.preloadModules) {
+      try {
+        console.debug(`[Preload] Loading ${mod.moduleId}`);
+        const loaded = await instance.loadModule(mod.ctx, mod.moduleId);
+
+        // Run controller setup if available
+        if (loaded?.controller && typeof loaded.controller.__setup === "function") {
+          console.debug(`[Preload] Setting up ${mod.component}`);
+          await loaded.controller.__setup();
+        }
+
+        console.debug(`[Preload] Completed ${mod.component}`);
+      } catch (err) {
+        console.error(`[Preload] Failed ${mod.moduleId}: ${err}`);
+      }
+    }
+  }
+
+  // --------------------------------------
+  // Module Loader (core unified version)
+  // --------------------------------------
+  async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+
+    // --- Step 0: Preload system modules (first run only) ---
+    if (!ModuleService.hasPreloaded) {
+      ModuleService.hasPreloaded = true;
+      await ModuleService.preloadModulesSequentially();
+    }
+
+    console.debug("ModuleService::loadModule()/01:");
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
+
+    // --- Step 1: Compute target path ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    console.debug("[ModuleService] expectedPathFragment:", expectedFragment);
+
+    // --- Step 2: Browser (Vite) Mode ---
+    if (isVite) {
+      const pathKey = Object.keys(this.modules).find((key) => {
+        const normalizedKey = key.replace(/^\.?\//, "");
+        return normalizedKey === expectedFragment;
+      });
+
+      if (!pathKey) {
+        console.error("[ModuleService] Available module keys:", Object.keys(this.modules));
+        throw new Error(`[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`);
+      }
+
+      try {
+        const loader = this.modules[pathKey];
+        const mod = (await loader()) as { module: ICdModule };
+        const moduleInfo = mod.module;
+
+        if (!moduleInfo)
+          throw new Error(`Missing 'module' export in: ${pathKey}`);
+
+        // Inject module template into DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+
+        // Initialize controller if defined
+        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
+
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        binder.bind(container);
+
+        const now = new Date();
+        console.log(`[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleString()}`);
+        return moduleInfo;
+      } catch (err) {
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory.replace(/\\/g, "/").replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    console.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(`[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleString()}`);
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
+  }
+}
+
+```
+
+// src/CdShell/sys/dev-sync/view/dev-sync.controller.js
+```ts
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Dev-Sync</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
+  },
+};
+```
+
+/////////////////////////////////////
+
+Kindly assist to fine the isse and fix it.
+// Browser logs for PWA project during launch
+```log
+[ModuleService][constructor]: starting index-CQ94ltsD.js:18:4821
+[ModuleService] Running under Vite (browser). index-CQ94ltsD.js:18:4894
+[Preload] Loading dev-sync index-CQ94ltsD.js:18:6886
+ModuleService::loadModule()/01: index-CQ94ltsD.js:18:7373
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CQ94ltsD.js:18:7537
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 12:30:01 index-CQ94ltsD.js:18:8114
+[Preload] Setting up IdeAgentService index-CQ94ltsD.js:18:7045
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentService index-CQ94ltsD.js:18:7128
+[Preload] Loading dev-sync index-CQ94ltsD.js:18:6886
+ModuleService::loadModule()/01: index-CQ94ltsD.js:18:7373
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CQ94ltsD.js:18:7537
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 12:30:01 index-CQ94ltsD.js:18:8114
+[Preload] Setting up IdeAgentClientService index-CQ94ltsD.js:18:7045
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentClientService index-CQ94ltsD.js:18:7128
+ModuleService::loadModule()/01: index-CQ94ltsD.js:18:7373
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-CQ94ltsD.js:18:7537
+[ModuleService] Browser import failed: IR: Column type for pn#currentUserId is not defined and cannot be guessed. Make sure you have turned on an "emitDecoratorMetadata": true option in tsconfig.json. Also make sure you have imported "reflect-metadata" on top of the main entry file in your application (before any entity imported).If you are using JavaScript instead of TypeScript you must explicitly provide a column type.
+    I https://localhost:5173/assets/index-B5ny4vyw.js:24
+    IR https://localhost:5173/assets/index-B5ny4vyw.js:24
+    Ie https://localhost:5173/assets/index-B5ny4vyw.js:34
+    Yr https://localhost:5173/assets/index-B5ny4vyw.js:34
+    <anonymous> https://localhost:5173/assets/index-B5ny4vyw.js:34
+index-CQ94ltsD.js:18:8222
+[BOOTSTRAP ERROR] IR: Column type for pn#currentUserId is not defined and cannot be guessed. Make sure you have turned on an "emitDecoratorMetadata": true option in tsconfig.json. Also make sure you have imported "reflect-metadata" on top of the main entry file in your application (before any entity imported).If you are using JavaScript instead of TypeScript you must explicitly provide a column type.
+    I https://localhost:5173/assets/index-B5ny4vyw.js:24
+    IR https://localhost:5173/assets/index-B5ny4vyw.js:24
+    Ie https://localhost:5173/assets/index-B5ny4vyw.js:34
+    Yr https://localhost:5173/assets/index-B5ny4vyw.js:34
+    <anonymous> https://localhost:5173/assets/index-B5ny4vyw.js:34
+index-CQ94ltsD.js:18:11586
+
+​
+```
+// src/CdShell/sys/utils/orm-shim.ts
+```ts
+import { getEnvironment } from "../../../environment";
+
+const env = getEnvironment();
+let TypeORM: any = {};
+let decorators: Record<string, any> = {};
+
+// Define a no-op decorator
+const noop = (..._args: any[]) => (_target?: any, _key?: any) => {};
+
+// Async loader (for Node/CLI only)
+async function loadTypeORM() {
+  if (env === "node" || env === "cli") {
+    try {
+      return await import("typeorm");
+    } catch {
+      console.warn("[ORM SHIM] TypeORM not available — using no-op decorators.");
+    }
+  }
+  return {};
+}
+
+// Register TypeORM if available (non-blocking)
+loadTypeORM().then((mod) => {
+  if (mod && Object.keys(mod).length) {
+    TypeORM = mod;
+    decorators = {
+      Entity: TypeORM.Entity ?? noop,
+      Column: TypeORM.Column ?? noop,
+      PrimaryGeneratedColumn: TypeORM.PrimaryGeneratedColumn ?? noop,
+      ManyToOne: TypeORM.ManyToOne ?? noop,
+      OneToMany: TypeORM.OneToMany ?? noop,
+      JoinColumn: TypeORM.JoinColumn ?? noop,
+      JoinTable: TypeORM.JoinTable ?? noop,
+    };
+  } else {
+    decorators = {
+      Entity: noop,
+      Column: noop,
+      PrimaryGeneratedColumn: noop,
+      ManyToOne: noop,
+      OneToMany: noop,
+      JoinColumn: noop,
+      JoinTable: noop,
+    };
+  }
+});
+
+// Always export decorators immediately (safe fallback)
+export const Entity = (...args: any[]) => decorators.Entity(...args);
+export const Column = (...args: any[]) => decorators.Column(...args);
+export const PrimaryGeneratedColumn = (...args: any[]) =>
+  decorators.PrimaryGeneratedColumn(...args);
+export const ManyToOne = (...args: any[]) => decorators.ManyToOne(...args);
+export const OneToMany = (...args: any[]) => decorators.OneToMany(...args);
+export const JoinColumn = (...args: any[]) => decorators.JoinColumn(...args);
+export const JoinTable = (...args: any[]) => decorators.JoinTable(...args);
+```
+// src/CdShell/sys/cd-user/models/user.model.ts
+```ts
+import type { ICdRequest } from '../../base/i-base.js';
+import { DEFAULT_ARGS, DEFAULT_DAT, SYS_CTX } from '../../base/i-base.js';
+import { BaseService } from '../../base/base.service.js';
+import { UserController } from '../controllers/user.controller.js';
+import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
 
 
+export interface IUserModel {
+  userId?: number;
+  userGuid?: string;
+  userName: string;
+  password?: string;
+  email?: string;
+  companyId?: number;
+  docId?: number;
+  mobile?: string;
+  gender?: number;
+  birthDate?: string;
+  postalAddr?: string;
+  fName?: string;
+  mName?: string;
+  lName?: string;
+  nationalId?: number;
+  passportId?: number;
+  userEnabled?: boolean | number;
+  zipCode?: string;
+  activationKey?: string;
+  userTypeId?: number;
+  userProfile?: string;
+}
+
+DEFAULT_DAT.f_vals[0].data = {
+  userName: '',
+  password: '',
+} as IUserModel;
+
+export const DEFAULT_ENVELOPE_LOGIN: ICdRequest = {
+  ctx: SYS_CTX,
+  m: 'User',
+  c: 'User',
+  a: 'Login',
+  dat: DEFAULT_DAT,
+  args: DEFAULT_ARGS,
+};
+
+@Entity({
+  name: 'user',
+  synchronize: false,
+})
+
+export class UserModel {
+  @PrimaryGeneratedColumn({
+    name: 'user_id',
+  })
+  userId?: number;
+
+  @Column({
+    name: 'user_guid',
+    length: 36,
+  })
+  userGuid?: string;
+
+  @Column('varchar', {
+    name: 'user_name',
+    length: 50,
+    nullable: true,
+  })
+  userName!: string;
+
+  @Column('char', {
+    name: 'password',
+    length: 60,
+    default: null,
+  })
+  password?: string;
+
+  @Column('varchar', {
+    length: 60,
+    unique: true,
+    nullable: true,
+  })
+  @Column()
+  email?: string;
+
+  @Column({
+    name: 'company_id',
+    default: null,
+  })
+  // @IsInt()
+  companyId?: number;
+
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  // @IsInt()
+  docId?: number;
+
+  @Column({
+    name: 'mobile',
+    default: null,
+  })
+  mobile?: string;
+
+  @Column({
+    name: 'gender',
+    default: null,
+  })
+  gender?: number;
+
+  @Column({
+    name: 'birth_date',
+    default: null,
+  })
+  // @IsDate()
+  birthDate?: Date;
+
+  @Column({
+    name: 'postal_addr',
+    default: null,
+  })
+  postalAddr?: string;
+
+  @Column({
+    name: 'f_name',
+    default: null,
+  })
+  fName?: string;
+
+  @Column({
+    name: 'm_name',
+    default: null,
+  })
+  mName?: string;
+
+  @Column({
+    name: 'l_name',
+    default: null,
+  })
+  lName?: string;
+
+  @Column({
+    name: 'national_id',
+    default: null,
+  })
+  // @IsInt()
+  nationalId?: number;
+
+  @Column({
+    name: 'passport_id',
+    default: null,
+  })
+  // @IsInt()
+  passportId?: number;
+
+  @Column({
+    name: 'user_enabled',
+    default: null,
+  })
+  userEnabled?: boolean;
+
+  @Column('char', {
+    name: 'zip_code',
+    length: 5,
+    default: null,
+  })
+  zipCode?: string;
+
+  @Column({
+    name: 'activation_key',
+    length: 36,
+  })
+  activationKey?: string;
+
+  @Column({
+    name: 'user_type_id',
+    default: null,
+  })
+  userTypeId?: number;
+
+  @Column({
+    name: 'user_profile',
+    default: null,
+  })
+  userProfile?: string;
+
+  // @OneToMany((type) => DocModel, (doc) => doc.user) // note: we will create user property in the Docs class
+  // docs?: DocModel[];
+
+  // HOOKS
+  // @BeforeInsert()
+  // @BeforeUpdate()
+  // async validate?() {
+  //   await validateOrReject(this);
+  // }
+}
+
+export interface IUserProfileAccess {
+  userPermissions?: IProfileUserAccess[];
+  groupPermissions?: IProfileGroupAccess[];
+}
+
+/**
+ * Improved versin should have just one interface and
+ * instead of userId or groupId, cdObjId is applied.
+ * This would then allow any object permissions to be set
+ * Automation and 'role' concept can then be used to manage permission process
+ */
+export interface IProfileUserAccess {
+  userId: number;
+  hidden: boolean;
+  field: string;
+  read: boolean;
+  write: boolean;
+  execute: boolean;
+}
+
+export interface IProfileGroupAccess {
+  groupId: number;
+  field: string;
+  hidden: boolean;
+  read: boolean;
+  write: boolean;
+  execute: boolean;
+}
+
+export interface IUserProfile {
+  fieldPermissions?: IUserProfileAccess;
+  avatar?: string; // URL or base64-encoded image
+  userData: UserModel;
+  areasOfInterest?: string[];
+  bio?: string;
+  affiliatedInstitutions?: string[];
+  following?: string[]; // Limit to X entries (e.g., 1000) to avoid abuse
+  followers?: string[]; // Limit to X entries (e.g., 1000)
+  friends?: string[]; // Limit to X entries (e.g., 500)
+  groups?: string[]; // Limit to X entries (e.g., 100)
+}
+
+export const profileDefaultConfig = [
+  {
+    path: ['fieldPermissions', 'userPermissions', ['userName']],
+    value: {
+      userId: 1000,
+      field: 'userName',
+      hidden: false,
+      read: true,
+      write: false,
+      execute: false,
+    },
+  },
+  {
+    path: ['fieldPermissions', 'groupPermissions', ['userName']],
+    value: {
+      groupId: 0,
+      field: 'userName',
+      hidden: false,
+      read: true,
+      write: false,
+      execute: false,
+    },
+  },
+];
+
+/**
+ * the data below can be managed under with 'roles'
+ * there needs to be a function that set the default 'role' for a user
+ */
+export const userProfileDefault: IUserProfile = {
+  fieldPermissions: {
+    /**
+     * specified permission setting for given users to specified fields
+     */
+    userPermissions: [
+      {
+        userId: 1000,
+        field: 'userName',
+        hidden: false,
+        read: true,
+        write: false,
+        execute: false,
+      },
+    ],
+    groupPermissions: [
+      {
+        groupId: 0, // "_public"
+        field: 'userName',
+        hidden: false,
+        read: true,
+        write: false,
+        execute: false,
+      },
+    ],
+  },
+  userData: {
+    userName: '',
+    fName: '',
+    lName: '',
+  },
+};
+function uuidv4(): any {
+  throw new Error('Function not implemented.');
+}
+
+```
+
+/////////////////////////////////////
+Kindly go through the following and let me know what is causing the issue showing in the browser logs.
+Also let me know your suggestion on the fix.
+// Browser logs
+```log
+[ModuleService][constructor]: starting index-CpfmFdAV.js:31:4725
+[ModuleService] Running under Vite (browser). index-CpfmFdAV.js:31:4798
+[Preload] Loading dev-sync index-CpfmFdAV.js:31:6796
+ModuleService::loadModule()/01: index-CpfmFdAV.js:31:7283
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CpfmFdAV.js:31:7447
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 15:07:42 index-CpfmFdAV.js:31:8025
+[Preload] Setting up IdeAgentService index-CpfmFdAV.js:31:6955
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentService index-CpfmFdAV.js:31:7038
+[Preload] Loading dev-sync index-CpfmFdAV.js:31:6796
+ModuleService::loadModule()/01: index-CpfmFdAV.js:31:7283
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CpfmFdAV.js:31:7447
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 15:07:42 index-CpfmFdAV.js:31:8025
+[Preload] Setting up IdeAgentClientService index-CpfmFdAV.js:31:6955
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentClientService index-CpfmFdAV.js:31:7038
+ModuleService::loadModule()/01: index-CpfmFdAV.js:31:7283
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-CpfmFdAV.js:31:7447
+[ModuleService] Browser import failed: _R: Column type for sn#currentUserId is not defined and cannot be guessed. Make sure you have turned on an "emitDecoratorMetadata": true option in tsconfig.json. Also make sure you have imported "reflect-metadata" on top of the main entry file in your application (before any entity imported).If you are using JavaScript instead of TypeScript you must explicitly provide a column type.
+    P https://localhost:5173/assets/index-6lW0Y-NO.js:11
+    _R https://localhost:5173/assets/index-6lW0Y-NO.js:11
+    Ae https://localhost:5173/assets/index-6lW0Y-NO.js:21
+    Br https://localhost:5173/assets/index-6lW0Y-NO.js:21
+    <anonymous> https://localhost:5173/assets/index-6lW0Y-NO.js:21
+index-CpfmFdAV.js:31:8133
+[BOOTSTRAP ERROR] _R: Column type for sn#currentUserId is not defined and cannot be guessed. Make sure you have turned on an "emitDecoratorMetadata": true option in tsconfig.json. Also make sure you have imported "reflect-metadata" on top of the main entry file in your application (before any entity imported).If you are using JavaScript instead of TypeScript you must explicitly provide a column type.
+    P https://localhost:5173/assets/index-6lW0Y-NO.js:11
+    _R https://localhost:5173/assets/index-6lW0Y-NO.js:11
+    Ae https://localhost:5173/assets/index-6lW0Y-NO.js:21
+    Br https://localhost:5173/assets/index-6lW0Y-NO.js:21
+    <anonymous> https://localhost:5173/assets/index-6lW0Y-NO.js:21
+index-CpfmFdAV.js:31:11393
+
+​
+```
+
+// src/CdShell/sys/dev-sync/view/dev-sync.controller.js
+```js
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Dev-Sync</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+    alert(`Hello, ${this.username}!`);
+  },
+};
+```
 
 
+// src/CdShell/sys/cd-user/models/user.model.ts
+```ts
+import type { ICdRequest } from '../../base/i-base.js';
+import { DEFAULT_ARGS, DEFAULT_DAT, SYS_CTX } from '../../base/i-base.js';
+import { BaseService } from '../../base/base.service.js';
+import { UserController } from '../controllers/user.controller.js';
+import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
+
+export interface IUserModel {
+  userId?: number;
+  userGuid?: string;
+  userName: string;
+  password?: string;
+  email?: string;
+  companyId?: number;
+  docId?: number;
+  mobile?: string;
+  gender?: number;
+  birthDate?: string;
+  postalAddr?: string;
+  fName?: string;
+  mName?: string;
+  lName?: string;
+  nationalId?: number;
+  passportId?: number;
+  userEnabled?: boolean | number;
+  zipCode?: string;
+  activationKey?: string;
+  userTypeId?: number;
+  userProfile?: string;
+}
+
+DEFAULT_DAT.f_vals[0].data = {
+  userName: '',
+  password: '',
+} as IUserModel;
+
+export const DEFAULT_ENVELOPE_LOGIN: ICdRequest = {
+  ctx: SYS_CTX,
+  m: 'User',
+  c: 'User',
+  a: 'Login',
+  dat: DEFAULT_DAT,
+  args: DEFAULT_ARGS,
+};
+
+@Entity({
+  name: 'user',
+  synchronize: false,
+})
+export class UserModel {
+  @PrimaryGeneratedColumn({
+    name: 'user_id',
+  })
+  userId?: number;
+
+  @Column({
+    name: 'user_guid',
+    length: 36,
+  })
+  userGuid?: string;
+
+  @Column('varchar', {
+    name: 'user_name',
+    length: 50,
+    nullable: true,
+  })
+  userName!: string;
+
+  @Column('char', {
+    name: 'password',
+    length: 60,
+    default: null,
+  })
+  password?: string;
+
+  @Column('varchar', {
+    length: 60,
+    unique: true,
+    nullable: true,
+  })
+  email?: string; // REMOVED DUPLICATE @Column() decorator
+
+  @Column({
+    name: 'company_id',
+    default: null,
+  })
+  companyId?: number;
+
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  docId?: number;
+
+  @Column({
+    name: 'mobile',
+    default: null,
+  })
+  mobile?: string;
+
+  @Column({
+    name: 'gender',
+    default: null,
+  })
+  gender?: number;
+
+  @Column({
+    name: 'birth_date',
+    default: null,
+  })
+  birthDate?: Date;
+
+  @Column({
+    name: 'postal_addr',
+    default: null,
+  })
+  postalAddr?: string;
+
+  @Column({
+    name: 'f_name',
+    default: null,
+  })
+  fName?: string;
+
+  @Column({
+    name: 'm_name',
+    default: null,
+  })
+  mName?: string;
+
+  @Column({
+    name: 'l_name',
+    default: null,
+  })
+  lName?: string;
+
+  @Column({
+    name: 'national_id',
+    default: null,
+  })
+  nationalId?: number;
+
+  @Column({
+    name: 'passport_id',
+    default: null,
+  })
+  passportId?: number;
+
+  @Column({
+    name: 'user_enabled',
+    default: null,
+  })
+  userEnabled?: boolean;
+
+  @Column('char', {
+    name: 'zip_code',
+    length: 5,
+    default: null,
+  })
+  zipCode?: string;
+
+  @Column({
+    name: 'activation_key',
+    length: 36,
+  })
+  activationKey?: string;
+
+  @Column({
+    name: 'user_type_id',
+    default: null,
+  })
+  userTypeId?: number;
+
+  @Column({
+    name: 'user_profile',
+    default: null,
+  })
+  userProfile?: string;
+}
+```
+
+// src/CdShell/sys/utils/orm-shim.ts
+```ts
+import { getEnvironment } from "../../../environment";
+
+const env = getEnvironment();
+const isBrowser = env === "browser" || env === "pwa";
+
+// No-op decorators for browser environment
+const noop =
+  (..._args: any[]) =>
+  (_target?: any, _key?: any) => {};
+
+// For browser/PWA, immediately use no-op decorators
+// For Node.js, we'll try to load TypeORM but still provide safe defaults
+let decorators: Record<string, any> = {};
+
+if (isBrowser) {
+  // Browser environment - immediately use no-op decorators
+  decorators = {
+    Entity: noop,
+    Column: noop,
+    PrimaryGeneratedColumn: noop,
+    PrimaryColumn: noop,
+    ManyToOne: noop,
+    OneToMany: noop,
+    JoinColumn: noop,
+    JoinTable: noop,
+    CreateDateColumn: noop,
+    UpdateDateColumn: noop,
+    VersionColumn: noop,
+    Index: noop,
+    Unique: noop,
+  };
+} else {
+  // Node.js environment - try to load TypeORM but with safe fallbacks
+  decorators = {
+    Entity: noop,
+    Column: noop,
+    PrimaryGeneratedColumn: noop,
+    PrimaryColumn: noop,
+    ManyToOne: noop,
+    OneToMany: noop,
+    JoinColumn: noop,
+    JoinTable: noop,
+    CreateDateColumn: noop,
+    UpdateDateColumn: noop,
+    VersionColumn: noop,
+    Index: noop,
+    Unique: noop,
+  };
+
+  // Async load for Node.js (non-blocking)
+  (async () => {
+    try {
+      const TypeORM = await import("typeorm");
+      if (TypeORM) {
+        decorators.Entity = TypeORM.Entity ?? noop;
+        decorators.Column = TypeORM.Column ?? noop;
+        decorators.PrimaryGeneratedColumn =
+          TypeORM.PrimaryGeneratedColumn ?? noop;
+        decorators.PrimaryColumn = TypeORM.PrimaryColumn ?? noop;
+        decorators.ManyToOne = TypeORM.ManyToOne ?? noop;
+        decorators.OneToMany = TypeORM.OneToMany ?? noop;
+        decorators.JoinColumn = TypeORM.JoinColumn ?? noop;
+        decorators.JoinTable = TypeORM.JoinTable ?? noop;
+        decorators.CreateDateColumn = TypeORM.CreateDateColumn ?? noop;
+        decorators.UpdateDateColumn = TypeORM.UpdateDateColumn ?? noop;
+        decorators.VersionColumn = TypeORM.VersionColumn ?? noop;
+        decorators.Index = TypeORM.Index ?? noop;
+        decorators.Unique = TypeORM.Unique ?? noop;
+        console.log("[ORM SHIM] TypeORM loaded successfully");
+      }
+    } catch (error) {
+      console.warn(
+        "[ORM SHIM] TypeORM not available - using no-op decorators:",
+        error
+      );
+    }
+  })();
+}
+
+// Export decorators - always available immediately
+export const Entity = decorators.Entity;
+export const Column = decorators.Column;
+export const PrimaryGeneratedColumn = decorators.PrimaryGeneratedColumn;
+export const PrimaryColumn = decorators.PrimaryColumn;
+export const ManyToOne = decorators.ManyToOne;
+export const OneToMany = decorators.OneToMany;
+export const JoinColumn = decorators.JoinColumn;
+export const JoinTable = decorators.JoinTable;
+export const CreateDateColumn = decorators.CreateDateColumn;
+export const UpdateDateColumn = decorators.UpdateDateColumn;
+export const VersionColumn = decorators.VersionColumn;
+export const Index = decorators.Index;
+export const Unique = decorators.Unique;
+
+// Helper to check if we're using real TypeORM
+export const isTypeORMAvailable = () => !isBrowser;
+```
 
 
+//////////////////////////////////////////
+The main.ts already has the reflect-metadata.
+I have also shared the current status of tsconfig.json
+// main.ts already has reflect-metadata
+```ts
+import 'reflect-metadata'; // MUST BE FIRST IMPORT
+import { ShellConfig } from "./CdShell/sys/base/i-base";
+import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
+import { ITheme } from "./CdShell/sys/theme/models/themes.model";
+import { LoggerService } from "./CdShell/utils/logger.service";
+import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
+import { ThempeLoaderService } from "./CdShell/sys/theme/services/theme-loader.service";
+import { ModuleService } from "./CdShell/sys/moduleman/services/module.service";
 
 
+export class Main {
+  private svModule!: ModuleService;
+  private svMenu!: MenuService;
+  private svTheme!: ThemeService;
+  private svThemeLoader!: ThempeLoaderService;
+  private logger = new LoggerService();
+
+  constructor() {
+    // intentionally empty — setup moved to init()
+  }
+
+  /**
+   * Unified initializer: sets up services and shell config.
+   * Backward-compatible: replaces initialize() + init().
+   */
+  async init() {
+    this.logger.debug("[Main] init(): starting");
+
+    // ✅ Ensure ModuleService is properly initialized
+    if (typeof window === "undefined") {
+      this.logger.debug(
+        "[Main] Running in Node → awaiting ensureInitialized()"
+      );
+      await ModuleService.ensureInitialized();
+    } else {
+      this.logger.debug(
+        "[Main] Running in browser → skipping ensureInitialized()"
+      );
+    }
+
+    // ✅ Instantiate services
+    this.svModule = new ModuleService();
+    this.svMenu = new MenuService();
+    this.svTheme = new ThemeService();
+    this.svThemeLoader = new ThempeLoaderService();
+
+    // ✅ Load shell config and apply log level
+    const shellConfig = await this.loadShellConfig();
+    if (shellConfig.logLevel) {
+      this.logger.setLevel(shellConfig.logLevel);
+    }
+
+    this.logger.debug("[Main] init(): completed");
+  }
+
+  async run() {
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    this.logger.debug("bootstrapShell()/01:");
+
+    const shellConfig: ShellConfig = await this.loadShellConfig();
+    this.logger.debug("bootstrapShell()/02:");
+    if (shellConfig.logLevel) {
+      this.logger.setLevel(shellConfig.logLevel);
+    }
+    this.logger.debug("bootstrapShell()/03:");
+
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    this.logger.debug("bootstrapShell()/04:");
+    this.logger.debug("bootstrapShell()/themeConfig:", themeConfig);
+
+    // Set title
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+    this.logger.debug("bootstrapShell()/05:");
+
+    // Set logo
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    this.logger.debug("bootstrapShell()/06:");
+    if (logoEl && themeConfig.logo) {
+      logoEl.src = themeConfig.logo;
+    }
+
+    this.logger.debug("bootstrapShell()/07:");
+    if (themeConfig.colors.primary) {
+      document.documentElement.style.setProperty(
+        "--theme-color",
+        themeConfig.colors.primary
+      );
+    }
+
+    this.logger.debug("bootstrapShell()/08:");
+    if (shellConfig.defaultModulePath) {
+      this.logger.debug("bootstrapShell()/09:");
+      const [ctx, moduleId] = shellConfig.defaultModulePath.split("/");
+      this.logger.debug("bootstrapShell()/ctx:", ctx);
+      this.logger.debug("bootstrapShell()/moduleId:", moduleId);
+      this.logger.debug("bootstrapShell()/10:");
+
+      // 👉 Load module
+      const moduleInfo = await this.svModule.loadModule(ctx, moduleId);
+
+      if (moduleInfo.menu) {
+        this.logger.debug("Main::loadModule()/menu:", moduleInfo.menu);
+
+        // Load theme config for menu rendering
+        const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
+        if (!resTheme.ok) {
+          const errorText = await resTheme.text();
+          throw new Error(
+            `Theme fetch failed: ${resTheme.status} ${resTheme.statusText}. Body: ${errorText}`
+          );
+        }
+
+        const theme = (await resTheme.json()) as ITheme;
+        this.logger.debug("Main::loadModule()/theme:", theme);
+        this.svMenu.renderMenuWithSystem(moduleInfo.menu, theme);
+      } else {
+        this.logger.debug("Main::loadModule()/no menu to render");
+      }
+
+      this.logger.debug("bootstrapShell()/11:");
+    }
+
+    // Load theme
+    this.svThemeLoader.loadTheme("default");
+
+    // Menu toggle
+    const burger = document.getElementById("cd-burger")!;
+    const sidebar = document.getElementById("cd-sidebar")!;
+    const overlay = document.getElementById("cd-overlay")!;
+
+    burger.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("hidden");
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.add("hidden");
+    });
+  }
+
+  async loadShellConfig(): Promise<ShellConfig> {
+    const res = await fetch("/shell.config.json");
+    if (!res.ok) {
+      throw new Error(`Failed to load shell config: ${res.statusText}`);
+    }
+    return await res.json();
+  }
+}
+
+```
+// tsconfig.json
+```ts
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "outDir": "dist-ts",
+    "rootDir": "src",
+    "noEmit": false,
+    "allowJs": false,
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules", 
+    "dist", 
+    "dist-ts",
+    "src/CdShell/**/view/**"
+  ] 
+}
+
+```
+
+/////////////////////////////////////////////////
+
+One of our requirements is to build typescript source codes that can be ported accross different applications.
+This should include node, pwa, cli etc
+The DX should be such that there is never need to re-work on codes just because platform is changing.
+For that reason we have environment.ts and orm-shim.ts.
+Knowing the underlying problem based on your advise so far, is there some way we can refactor user.model.ts in a way that the current problem is managed in PWA environment but when it gets to where typeorm is not an issue, it continues to work normally.
+I am visualizing performing problematic imports conditionally and also including decorators also conditionally.
+The solution should work with all models in the project.
+
+// src/main.ts
+```ts
+export const getEnvironment = ():
+  | "node"
+  | "browser"
+  | "pwa"
+  | "cli"
+  | "unknown" => {
+  // Check for browser first
+  if (typeof window !== "undefined" && typeof document !== "undefined") {
+    // Check for PWA
+    if (
+      "serviceWorker" in navigator ||
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.location.protocol === "file:"
+    ) {
+      return "pwa";
+    }
+    return "browser";
+  }
+
+  // Check for Node.js
+  if (
+    typeof process !== "undefined" &&
+    process.versions != null &&
+    process.versions.node != null
+  ) {
+    return process.argv[1] ? "cli" : "node";
+  }
+
+  return "unknown";
+};
+
+// Convenience helpers
+export const isNode = () =>
+  getEnvironment() === "node" || getEnvironment() === "cli";
+export const isBrowser = () => getEnvironment() === "browser";
+export const isPWA = () => getEnvironment() === "pwa";
+export const isCLI = () => getEnvironment() === "cli";
+
+```
+
+// user.model.ts
+```ts
+import type { ICdRequest } from '../../base/i-base.js';
+import { DEFAULT_ARGS, DEFAULT_DAT, SYS_CTX } from '../../base/i-base.js';
+import { BaseService } from '../../base/base.service.js';
+import { UserController } from '../controllers/user.controller.js';
+import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
+
+export interface IUserModel {
+  userId?: number;
+  userGuid?: string;
+  userName: string;
+  password?: string;
+  email?: string;
+  companyId?: number;
+  docId?: number;
+  mobile?: string;
+  gender?: number;
+  birthDate?: string;
+  postalAddr?: string;
+  fName?: string;
+  mName?: string;
+  lName?: string;
+  nationalId?: number;
+  passportId?: number;
+  userEnabled?: boolean | number;
+  zipCode?: string;
+  activationKey?: string;
+  userTypeId?: number;
+  userProfile?: string;
+}
+
+DEFAULT_DAT.f_vals[0].data = {
+  userName: '',
+  password: '',
+} as IUserModel;
+
+export const DEFAULT_ENVELOPE_LOGIN: ICdRequest = {
+  ctx: SYS_CTX,
+  m: 'User',
+  c: 'User',
+  a: 'Login',
+  dat: DEFAULT_DAT,
+  args: DEFAULT_ARGS,
+};
+
+@Entity({
+  name: 'user',
+  synchronize: false,
+})
+export class UserModel {
+  @PrimaryGeneratedColumn({
+    name: 'user_id',
+  })
+  userId?: number;
+
+  @Column({
+    name: 'user_guid',
+    length: 36,
+  })
+  userGuid?: string;
+
+  @Column('varchar', {
+    name: 'user_name',
+    length: 50,
+    nullable: true,
+  })
+  userName!: string;
+
+  @Column('char', {
+    name: 'password',
+    length: 60,
+    default: null,
+  })
+  password?: string;
+
+  @Column('varchar', {
+    length: 60,
+    unique: true,
+    nullable: true,
+  })
+  email?: string; // REMOVED DUPLICATE @Column() decorator
+
+  @Column({
+    name: 'company_id',
+    default: null,
+  })
+  companyId?: number;
+
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  docId?: number;
+
+  @Column({
+    name: 'mobile',
+    default: null,
+  })
+  mobile?: string;
+
+  @Column({
+    name: 'gender',
+    default: null,
+  })
+  gender?: number;
+
+  @Column({
+    name: 'birth_date',
+    default: null,
+  })
+  birthDate?: Date;
+
+  @Column({
+    name: 'postal_addr',
+    default: null,
+  })
+  postalAddr?: string;
+
+  @Column({
+    name: 'f_name',
+    default: null,
+  })
+  fName?: string;
+
+  @Column({
+    name: 'm_name',
+    default: null,
+  })
+  mName?: string;
+
+  @Column({
+    name: 'l_name',
+    default: null,
+  })
+  lName?: string;
+
+  @Column({
+    name: 'national_id',
+    default: null,
+  })
+  nationalId?: number;
+
+  @Column({
+    name: 'passport_id',
+    default: null,
+  })
+  passportId?: number;
+
+  @Column({
+    name: 'user_enabled',
+    default: null,
+  })
+  userEnabled?: boolean;
+
+  @Column('char', {
+    name: 'zip_code',
+    length: 5,
+    default: null,
+  })
+  zipCode?: string;
+
+  @Column({
+    name: 'activation_key',
+    length: 36,
+  })
+  activationKey?: string;
+
+  @Column({
+    name: 'user_type_id',
+    default: null,
+  })
+  userTypeId?: number;
+
+  @Column({
+    name: 'user_profile',
+    default: null,
+  })
+  userProfile?: string;
+}
+```
+
+/////////////////////////////////////
+
+I have been able to clear the typeorm issues.
+There where other typeorm imports that also had to apply shim in the import.
+Now we have 'process' as the isse as seen in the log below.
+Assist from the given iformation if you can get a clue of the import that need to be tamed for PWA project.
+I noticed that only when BaseService is imported is when the issue was throwing the error.
+So I have shared the imports for the BaseService.
+
+```log
+ModuleService::loadModule()/01: index-FtM4GZJ2.js:31:7283
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-FtM4GZJ2.js:31:7447
+[ModuleService] 1 index-FtM4GZJ2.js:31:7507
+[ModuleService] 2 index-FtM4GZJ2.js:31:7615
+[ModuleService] 3 index-FtM4GZJ2.js:31:7815
+[ModuleService] 4 index-FtM4GZJ2.js:31:7878
+[ModuleService] 5 index-FtM4GZJ2.js:31:7931
+[ModuleService] 6 index-FtM4GZJ2.js:31:7986
+[ModuleService] 7 index-FtM4GZJ2.js:31:8076
+[ModuleService] 8 index-FtM4GZJ2.js:31:8190
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] 9 index-FtM4GZJ2.js:31:8283
+[ModuleService] 10 index-FtM4GZJ2.js:31:8354
+[ModuleService] 11 index-FtM4GZJ2.js:31:8400
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 15/10/2025, 23:36:27 index-FtM4GZJ2.js:31:8436
+[Preload] Setting up IdeAgentClientService index-FtM4GZJ2.js:31:6955
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentClientService index-FtM4GZJ2.js:31:7038
+ModuleService::loadModule()/01: index-FtM4GZJ2.js:31:7283
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-FtM4GZJ2.js:31:7447
+[ModuleService] 1 index-FtM4GZJ2.js:31:7507
+[ModuleService] 2 index-FtM4GZJ2.js:31:7615
+[ModuleService] 3 index-FtM4GZJ2.js:31:7815
+[ModuleService] 4 index-FtM4GZJ2.js:31:7878
+[ModuleService] 12 index-FtM4GZJ2.js:31:8544
+[ModuleService] Browser import failed: ReferenceError: process is not defined
+    <anonymous> https://localhost:5173/assets/index-0aNCHYHQ.js:61
+index-FtM4GZJ2.js:31:8580
+    loadModule https://localhost:5173/assets/index-FtM4GZJ2.js:31
+[BOOTSTRAP ERROR] ReferenceError: process is not defined
+    <anonymous> https://localhost:5173/assets/index-0aNCHYHQ.js:61
+```
+
+// part of compiled code where the issue is arrising from
+```js
+const XO =
+  process.version.charCodeAt(1) < 55 && process.version.charCodeAt(2) === 46
+    ? KO()
+    : JO();
+var eh = XO,
+  qy = Vo,
+  go = Zl,
+  ZO = eh.RedisError,
+  eI = !1;
+function ss(s, e) {
+  (go(s, "The options argument is required"),
+    go.strictEqual(
+      typeof s,
+      "object",
+      "The options argument has to be of type object"
+    ),
+    Object.defineProperty(this, "message", {
+      value: s.message || "",
+      configurable: !0,
+      writable: !0,
+    }),
+    (e || e === void 0) && Error.captureStackTrace(this, ss));
+  for (var t = Object.keys(s), n = t.pop(); n; n = t.pop()) this[n] = s[n];
+}
+```
+
+// Base imports
+```ts
+import {
+  ObjectLiteral,
+  DeepPartial,
+  UpdateResult,
+  DeleteResult,
+  FindOptionsWhere,
+  FindManyOptions,
+  EntityMetadata,
+  getConnection,
+} from "typeorm"; // ../../utils/orm-shim.js
+import { SessionService } from "../cd-user/services/session.service";
+import * as Lá from "lodash";
+import {
+  AbstractBaseService,
+  CacheData,
+  CD_FX_FAIL,
+  CdFxStateLevel,
+  CreateIParams,
+  IQbFilter,
+  IQbInput,
+  MANAGED_FIELDS,
+  ObjectItem,
+  ValidationRules,
+  type BaseServiceInterface,
+  type CdFxReturn,
+  type ICdRequest,
+  type ICdResponse,
+  type IJsonUpdate,
+  type IQuery,
+  type IRespInfo,
+  type IServiceInput,
+  type ISessResp,
+} from "./i-base";
+import { SessionModel } from "../cd-user/models/session.model";
+import { EntityAdapter } from "../utils/entity-adapter";
+import config from "../../../config";
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
+import { DocModel } from "../moduleman/models/doc.model";
+import { DocService } from "../moduleman/services/doc.service";
+import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+import { createClient } from "redis";
+import { from, Observable } from "rxjs";
+import { SocketStore } from "../cd-push/models/cd-push-socket.model";
+import { QueryBuilderHelper } from "../utils/query-builder-helper";
+import { toKebabCase, toPascalCase } from "../utils/cd-naming.util";
+import { inspect } from "util";
+import { HttpService } from "./http.service";
+import chalk from "chalk";
+import { FxEventEmitter } from "./fx-event-emitter";
+```
+
+///////////////////////////////////////////////////
+
+Below is your recommended vite configruration.
+Under it I have shared the curren configuration.
+Kindly consider the currnt and give me the full version contrining your recommendations.
+// src/vite.config.ts
+```ts
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  // ... your existing config
+  
+  define: {
+    // Define process.env for browser
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+    'process.version': JSON.stringify('v18.0.0'),
+    'process.versions': JSON.stringify({ node: '18.0.0' }),
+    'process.platform': JSON.stringify('browser'),
+    global: 'globalThis',
+  },
+  
+  resolve: {
+    alias: {
+      // Add aliases for problematic modules
+      '@': path.resolve(__dirname, "src"),
+      '@shell': path.resolve(__dirname, "dist-ts/CdShell"),
+      // Optional: Redirect problematic modules to browser-friendly versions
+      'redis': path.resolve(__dirname, 'src/CdShell/sys/utils/redis-shim.ts'),
+      'chalk': path.resolve(__dirname, 'src/CdShell/sys/utils/chalk-shim.ts'),
+      'util': path.resolve(__dirname, 'src/CdShell/sys/utils/util-shim.ts'),
+    },
+    extensions: [".js", ".ts"],
+  },
+
+  build: {
+    rollupOptions: {
+      external: [
+        // Externalize Node.js modules that shouldn't be bundled for browser
+        'redis',
+        'chalk',
+        'util',
+        'fs',
+        'path',
+        'crypto',
+        'stream',
+        'http',
+        'https',
+        'net',
+        'tls',
+        'zlib',
+        'os',
+        'child_process',
+        'cluster',
+        'dgram',
+        'dns',
+        'domain',
+        'module',
+        'readline',
+        'repl',
+        'tty',
+        'url',
+        'vm',
+      ],
+    },
+  },
+});
+```
+
+current vite config
+// src/vite.config.ts
+```ts
+import { defineConfig } from "vite";
+import fs from "fs";
+import path from "path";
+
+const viteConfig = {
+  https: {
+    key: fs.readFileSync(path.resolve("/home/emp-12/.ssl/key.pem")),
+    cert: fs.readFileSync(path.resolve("/home/emp-12/.ssl/cert.pem")),
+  },
+  port: 5173,
+  host: "localhost",
+  open: true,
+};
+
+export default defineConfig({
+  server: viteConfig,
+  preview: viteConfig,
+  root: ".",
+  publicDir: "public",
+
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    target: "esnext",
+    modulePreload: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, "public/index.html"),
+      output: {
+        format: "es",
+      },
+      // Externalize Node.js modules for browser builds
+      external: ['fs', 'path', 'crypto', 'util', 'stream'],
+    },
+  },
+
+  esbuild: {
+    target: "esnext",
+    supported: {
+      "top-level-await": true,
+    },
+  },
+
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@shell": path.resolve(__dirname, "dist-ts/CdShell"),
+    },
+    extensions: [".js", ".ts"],
+  },
+
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext",
+      supported: {
+        "top-level-await": true,
+      },
+    },
+    // Exclude Node.js modules from dependency optimization
+    exclude: ['fs', 'path', 'crypto'],
+  },
+
+  // Define global constants for environment detection
+  define: {
+    __IS_NODE__: JSON.stringify(false),
+    __IS_BROWSER__: JSON.stringify(true),
+    __IS_PWA__: JSON.stringify(true),
+  },
+});
 
 
-///////////////////////////////////////
+```
 
-## ToDo:
+//////////////////////////////////////////
+I am experiencing the following on the buffer-shim.ts:
+Class static side 'typeof Buffer' incorrectly extends base class static side '{ readonly prototype: Uint8Array<ArrayBufferLike>; readonly BYTES_PER_ELEMENT: number; of(...items: number[]): Uint8Array<ArrayBuffer>; from(arrayLike: ArrayLike<...>): Uint8Array<...>; from<T>(arrayLike: ArrayLike<...>, mapfn: (v: T, k: number) => number, thisArg?: any): Uint8Array<...>; from(elements: Iterable<......'.
+  Types of property 'from' are incompatible.
+    Type '(data: any, encoding?: string) => Buffer' is not assignable to type '{ (arrayLike: ArrayLike<number>): Uint8Array<ArrayBuffer>; <T>(arrayLike: ArrayLike<T>, mapfn: (v: T, k: number) => number, thisArg?: any): Uint8Array<...>; (elements: Iterable<...>): Uint8Array<...>; <T>(elements: Iterable<...>, mapfn?: (v: T, k: number) => number, thisArg?: any): Uint8Array<...>; }'.
+      Types of parameters 'encoding' and 'mapfn' are incompatible.
+        Type '(v: any, k: number) => number' is not assignable to type 'string'.ts(2417)
 
-Documentation:
 
-- Menu System:menu/services/menuRenderer.ts → How the raw menu config is turned into HTML/DOM.
+// src/CdShell/sys/utils/buffer-shim.ts
+```ts
+export class Buffer extends Uint8Array {
+  static from(data: any, encoding?: string): Buffer {
+    if (typeof data === 'string') {
+      const encoder = new TextEncoder();
+      return encoder.encode(data) as any;
+    }
+    return new Buffer(data);
+  }
+  
+  static alloc(size: number): Buffer {
+    return new Buffer(size);
+  }
+  
+  toString(encoding: string = 'utf8'): string {
+    const decoder = new TextDecoder();
+    return decoder.decode(this);
+  }
+}
+
+export default Buffer;
+```
+
+/////////////////////////////////////////
+
+Below is an example of error that seem to be causing issues accros the codes. Assit to understand the problem and how to fix.
+Illustration 1 is a log from the browser showing some issue at the end.
+Based on the browser inspector/Sources, I identified the area that seem to cause the issue. It is from here that we generated Illustration 3.
+Which then led us to identify that it is generated from the source src/CdShell/sys/moduleman/services/company.service.ts.
+Illustration 2 is the original code and illustration 3 is extracted from compiled minified code then formared for easier human readding.
+
+Illustration 1:
+// Browser logs:
+```log
+ModuleService::loadModule()/01: index-AD2s8-5r.js:31:7303
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-AD2s8-5r.js:31:7467
+[ModuleService] 1 index-AD2s8-5r.js:31:7527
+[ModuleService] 2 index-AD2s8-5r.js:31:7635
+[ModuleService] 3 index-AD2s8-5r.js:31:7835
+[ModuleService] 4 index-AD2s8-5r.js:31:7898
+[ModuleService] 5 index-AD2s8-5r.js:31:7951
+[ModuleService] 6 index-AD2s8-5r.js:31:8006
+[ModuleService] 7 index-AD2s8-5r.js:31:8096
+[ModuleService] 8 index-AD2s8-5r.js:31:8210
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[ModuleService] 9 index-AD2s8-5r.js:31:8303
+[ModuleService] 10 index-AD2s8-5r.js:31:8374
+[ModuleService] 11 index-AD2s8-5r.js:31:8420
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 16/10/2025, 23:18:24 index-AD2s8-5r.js:31:8456
+[Preload] Setting up IdeAgentClientService index-AD2s8-5r.js:31:6975
+[cd-user] Controller setup complete index-DvGMnDDL.js:13:26
+[Preload] Completed IdeAgentClientService index-AD2s8-5r.js:31:7058
+ModuleService::loadModule()/01: index-AD2s8-5r.js:31:7303
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-AD2s8-5r.js:31:7467
+[ModuleService] 1 index-AD2s8-5r.js:31:7527
+[ModuleService] 2 index-AD2s8-5r.js:31:7635
+[ModuleService] 3 index-AD2s8-5r.js:31:7835
+[ModuleService] 4 index-AD2s8-5r.js:31:7898
+[ModuleService] 12 index-AD2s8-5r.js:31:8564
+[ModuleService] Browser import failed: ReferenceError: can't access lexical declaration 'Kc' before initialization
+    <anonymous> https://localhost:5173/assets/index-DmgdWEPB.js:6
+index-AD2s8-5r.js:31:8600
+    loadModule https://localhost:5173/assets/index-AD2s8-5r.js:31
+[BOOTSTRAP ERROR] ReferenceError: can't access lexical declaration 'Kc' before initialization
+    <anonymous> https://localhost:5173/assets/index-DmgdWEPB.js:6
+```
+
+Illustration 2:
+// original code:
+// src/CdShell/sys/moduleman/services/company.service.ts
+```ts
+export class CompanyService extends GenericService<ObjectLiteral> {
+  // b = new BaseService<CompanyModel>();
+  serviceModel = CompanyModel;
+  // defaultDs = config.ds.sqlite;
+  // Define validation rules
+  cRules: any = {
+    required: ['companyName', 'companyTypeGuid', 'companyGuid'],
+    noDuplicate: ['companyName', 'companyTypeGuid'],
+  };
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  // ADAPTATION FROM GENERIC SERVICE
+  constructor() {
+    super(CompanyModel);
+  }
+
+  /**
+   * Validate input before processing create
+   */
+  async validateCreate(pl: CompanyModel): Promise<CdFxReturn<boolean>> {
+    const retState = true;
+    // Ensure required fields exist
+    for (const field of this.cRules.required) {
+      if (!pl[field]) {
+        return {
+          data: false,
+          state: false,
+          message: `Missing required field: ${field}`,
+        };
+      }
+    }
+
+    // Check for duplicates
+    const query = {
+      where: {
+        companyName: pl.companyName,
+        companyTypeId: pl.companyTypeGuid,
+      },
+    };
+    const serviceInput = {
+      serviceModel: CompanyModel,
+      docName: 'Validate Duplicate Company',
+      dSource: 1,
+      cmd: { query },
+    };
+
+    const existingRecords = await this.b.read(null, null, serviceInput);
+    if ('state' in existingRecords && 'data' in existingRecords) {
+      if (!existingRecords.state || !existingRecords.data) {
+        return { data: false, state: false, message: 'Validation failed' };
+      }
+
+      if (existingRecords.data.length > 0) {
+        return { data: true, state: true, message: 'Validation passed' };
+      } else {
+        return { data: false, state: false, message: 'Validation failed' };
+      }
+    }
+
+    return { data: false, state: false, message: 'Validation failed' };
+  }
+
+  /**
+   * Fetch newly created record by guid
+   */
+  async afterCreate(
+    pl: CompanyModel,
+  ): Promise<CdFxReturn<CompanyModel | ObjectLiteral | null >> {
+    const query = {
+      where: { companyGuid: pl.companyGuid },
+    };
+
+    const serviceInput = {
+      serviceModel: CompanyModel,
+      docName: 'Fetch Created Company',
+      dSource: 1,
+      cmd: { query },
+    };
+
+    const retResult = await this.b.read(null, null, serviceInput);
+    if ('state' in retResult) {
+      return retResult;
+    } else {
+      return CD_FX_FAIL;
+    }
+  }
+
+  async getCompany(
+    q: IQuery,
+  ): Promise<CdFxReturn<CompanyModel[] | ObjectLiteral[] | unknown>> {
+    // Validate query input
+    if (!q || !q.where || Object.keys(q.where).length === 0) {
+      return {
+        data: null,
+        state: false,
+        message: 'Invalid query: "where" condition is required',
+      };
+    }
+
+    const serviceInput = {
+      serviceModel: CompanyModel,
+      docName: 'CompanyService::getCompany',
+      cmd: {
+        action: 'find',
+        query: q,
+      },
+      dSource: 1,
+    };
+
+    try {
+      const retResult = await this.b.read(null, null, serviceInput);
+
+      if ('state' in retResult) {
+        return retResult;
+      } else {
+        return CD_FX_FAIL;
+      }
+    } catch (e: any) {
+      CdLog.error(`CompanyService.getCompany() - Error: ${e.message}`);
+      return {
+        data: null,
+        state: false,
+        message: `Error retrieving Company: ${e.message}`,
+      };
+    }
+  }
+
+  beforeUpdate(q: any) {
+    if (q.update.CoopEnabled === '') {
+      q.update.CoopEnabled = null;
+    }
+    return q;
+  }
+
+  async getCompanyI(req, res, q?: IQuery): Promise<any> {
+    if (q === null) {
+      q = this.b.getQuery(req);
+    }
+    console.log('CompanyService::getCompany/f:', q);
+    const serviceInput = this.b.siGet(
+      q!,
+      'CompanyService::getCompany',
+      CompanyModel,
+    );
+    try {
+      return await this.b.read(req, res, serviceInput);
+    } catch (e: any) {
+      console.log('CompanyService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'BaseService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      return [];
+    }
+  }
+}
+```
+Illustration 3:
+// code formatted from compiled minified version
+```js
+class gR extends Kc {
+  constructor() {
+    (super(ct),
+      (this.serviceModel = ct),
+      (this.cRules = {
+        required: ["companyName", "companyTypeGuid", "companyGuid"],
+        noDuplicate: ["companyName", "companyTypeGuid"],
+      }));
+  }
+  async validateCreate(e) {
+    for (const i of this.cRules.required)
+      if (!e[i])
+        return { data: !1, state: !1, message: `Missing required field: ${i}` };
+    const t = {
+        where: { companyName: e.companyName, companyTypeId: e.companyTypeGuid },
+      },
+      n = {
+        serviceModel: ct,
+        docName: "Validate Duplicate Company",
+        dSource: 1,
+        cmd: { query: t },
+      },
+      r = await this.b.read(null, null, n);
+    return "state" in r && "data" in r
+      ? !r.state || !r.data
+        ? { data: !1, state: !1, message: "Validation failed" }
+        : r.data.length > 0
+          ? { data: !0, state: !0, message: "Validation passed" }
+          : { data: !1, state: !1, message: "Validation failed" }
+      : { data: !1, state: !1, message: "Validation failed" };
+  }
+  async afterCreate(e) {
+    const t = { where: { companyGuid: e.companyGuid } },
+      n = {
+        serviceModel: ct,
+        docName: "Fetch Created Company",
+        dSource: 1,
+        cmd: { query: t },
+      },
+      r = await this.b.read(null, null, n);
+    return "state" in r ? r : sn;
+  }
+  async getCompany(e) {
+    if (!e || !e.where || Object.keys(e.where).length === 0)
+      return {
+        data: null,
+        state: !1,
+        message: 'Invalid query: "where" condition is required',
+      };
+    const t = {
+      serviceModel: ct,
+      docName: "CompanyService::getCompany",
+      cmd: { action: "find", query: e },
+      dSource: 1,
+    };
+    try {
+      const n = await this.b.read(null, null, t);
+      return "state" in n ? n : sn;
+    } catch (n) {
+      return (
+        Nr.error(`CompanyService.getCompany() - Error: ${n.message}`),
+        {
+          data: null,
+          state: !1,
+          message: `Error retrieving Company: ${n.message}`,
+        }
+      );
+    }
+  }
+  beforeUpdate(e) {
+    return (e.update.CoopEnabled === "" && (e.update.CoopEnabled = null), e);
+  }
+  async getCompanyI(e, t, n) {
+    (n === null && (n = this.b.getQuery(e)),
+      console.log("CompanyService::getCompany/f:", n));
+    const r = this.b.siGet(n, "CompanyService::getCompany", ct);
+    try {
+      return await this.b.read(e, t, r);
+    } catch (i) {
+      (console.log("CompanyService::read$()/e:", i),
+        this.b.err.push(i.toString()));
+      const a = { messages: this.b.err, code: "BaseService:update" };
+      return (await this.b.serviceErr(e, t, i, a.code), []);
+    }
+  }
+}
+```
+
+//////////////////////////////////////////////
+Below is the current state of orm-shim.ts.
+Assist me to add the following as part of the shim:
+ViewEntity, ViewColumn, QueryDeepPartialEntity, ObjectLiteral
+```ts
+import { getEnvironment } from "../../../environment";
+
+const env = getEnvironment();
+const isBrowser = env === "browser" || env === "pwa";
+
+// No-op decorators for browser environment
+const noop =
+  (..._args: any[]) =>
+    (target?: any, _key?: any) => {
+      // If used as a class decorator (Entity), return the class itself.
+      // If used as a property decorator (Column), return nothing.
+      return target;
+    };
+
+// For browser/PWA, immediately use no-op decorators
+// For Node.js, we'll try to load TypeORM but still provide safe defaults
+let decorators: Record<string, any> = {};
+
+if (isBrowser) {
+  // Browser environment - immediately use no-op decorators
+  decorators = {
+    Entity: noop,
+    Column: noop,
+    PrimaryGeneratedColumn: noop,
+    PrimaryColumn: noop,
+    ManyToOne: noop,
+    OneToMany: noop,
+    JoinColumn: noop,
+    JoinTable: noop,
+    CreateDateColumn: noop,
+    UpdateDateColumn: noop,
+    VersionColumn: noop,
+    Index: noop,
+    Unique: noop,
+  };
+} else {
+  // Node.js environment - try to load TypeORM but with safe fallbacks
+  decorators = {
+    Entity: noop,
+    Column: noop,
+    PrimaryGeneratedColumn: noop,
+    PrimaryColumn: noop,
+    ManyToOne: noop,
+    OneToMany: noop,
+    JoinColumn: noop,
+    JoinTable: noop,
+    CreateDateColumn: noop,
+    UpdateDateColumn: noop,
+    VersionColumn: noop,
+    Index: noop,
+    Unique: noop,
+  };
+
+  // Async load for Node.js (non-blocking)
+  (async () => {
+    try {
+      const TypeORM = await import("typeorm");
+      if (TypeORM) {
+        decorators.Entity = TypeORM.Entity ?? noop;
+        decorators.Column = TypeORM.Column ?? noop;
+        decorators.PrimaryGeneratedColumn =
+          TypeORM.PrimaryGeneratedColumn ?? noop;
+        decorators.PrimaryColumn = TypeORM.PrimaryColumn ?? noop;
+        decorators.ManyToOne = TypeORM.ManyToOne ?? noop;
+        decorators.OneToMany = TypeORM.OneToMany ?? noop;
+        decorators.JoinColumn = TypeORM.JoinColumn ?? noop;
+        decorators.JoinTable = TypeORM.JoinTable ?? noop;
+        decorators.CreateDateColumn = TypeORM.CreateDateColumn ?? noop;
+        decorators.UpdateDateColumn = TypeORM.UpdateDateColumn ?? noop;
+        decorators.VersionColumn = TypeORM.VersionColumn ?? noop;
+        decorators.Index = TypeORM.Index ?? noop;
+        decorators.Unique = TypeORM.Unique ?? noop;
+        console.log("[ORM SHIM] TypeORM loaded successfully");
+      }
+    } catch (error) {
+      console.warn(
+        "[ORM SHIM] TypeORM not available - using no-op decorators:",
+        error
+      );
+    }
+  })();
+}
+
+// Export decorators - always available immediately
+export const Entity = decorators.Entity;
+export const Column = decorators.Column;
+export const PrimaryGeneratedColumn = decorators.PrimaryGeneratedColumn;
+export const PrimaryColumn = decorators.PrimaryColumn;
+export const ManyToOne = decorators.ManyToOne;
+export const OneToMany = decorators.OneToMany;
+export const JoinColumn = decorators.JoinColumn;
+export const JoinTable = decorators.JoinTable;
+export const CreateDateColumn = decorators.CreateDateColumn;
+export const UpdateDateColumn = decorators.UpdateDateColumn;
+export const VersionColumn = decorators.VersionColumn;
+export const Index = decorators.Index;
+export const Unique = decorators.Unique;
+
+// Helper to check if we're using real TypeORM
+export const isTypeORMAvailable = () => !isBrowser;
+```
+
+////////////////////////////
+Below is the current state of orm-shim.ts.
+Assist me to add what is shimable from the following list of typeorm:
+DataSource, DeleteResult, FindOptionsWhere, ObjectLiteral, UpdateResult
+// src/CdShell/sys/utils/orm-shim.ts
+```ts
+// Shim for TypeORM decorators to allow code to run in both Node.js and browser/PWA environments
+// In browser/PWA, decorators are no-ops to avoid runtime errors
+// In Node.js, attempt to load TypeORM dynamically
+
+import { getEnvironment } from "../../../environment";
+
+const env = getEnvironment();
+const isBrowser = env === "browser" || env === "pwa";
+
+// No-op decorators for browser environment
+const noop =
+  (..._args: any[]) =>
+  (target?: any, _key?: any) => {
+    // If used as a class decorator (Entity, ViewEntity), return the class itself.
+    // If used as a property decorator (Column, ViewColumn), return nothing.
+    return target;
+  };
+
+// --- Shimmed Types and Interfaces ---
+
+// 1. Shim for ObjectLiteral (TypeORM utility type)
+export type ObjectLiteral = { [key: string]: any };
+
+// 2. Shim for QueryDeepPartialEntity (TypeORM utility type)
+// This type alias allows using the type in a browser without TypeORM being loaded.
+// It is defined as a simple generic type for compilation safety.
+export type QueryDeepPartialEntity<T> = Partial<T>;
+
+// --- Decorator/Function Shim Logic ---
+
+let decorators: Record<string, any> = {};
+
+if (isBrowser) {
+  // Browser environment - immediately use no-op decorators
+  decorators = {
+    Entity: noop,
+    Column: noop,
+    PrimaryGeneratedColumn: noop,
+    PrimaryColumn: noop,
+    ManyToOne: noop,
+    OneToMany: noop,
+    JoinColumn: noop,
+    JoinTable: noop,
+    CreateDateColumn: noop,
+    UpdateDateColumn: noop,
+    VersionColumn: noop,
+    Index: noop,
+    Unique: noop,
+    // ✅ ADDED ViewEntity
+    ViewEntity: noop,
+    // ✅ ADDED ViewColumn
+    ViewColumn: noop,
+  };
+} else {
+  // Node.js environment - try to load TypeORM but with safe fallbacks
+  decorators = {
+    Entity: noop,
+    Column: noop,
+    PrimaryGeneratedColumn: noop,
+    PrimaryColumn: noop,
+    ManyToOne: noop,
+    OneToMany: noop,
+    JoinColumn: noop,
+    JoinTable: noop,
+    CreateDateColumn: noop,
+    UpdateDateColumn: noop,
+    VersionColumn: noop,
+    Index: noop,
+    Unique: noop,
+    // ✅ ADDED ViewEntity
+    ViewEntity: noop,
+    // ✅ ADDED ViewColumn
+    ViewColumn: noop,
+  };
+
+  // Async load for Node.js (non-blocking)
+  (async () => {
+    try {
+      // Use dynamic import to safely load TypeORM
+      const TypeORM = await import("typeorm");
+      if (TypeORM) {
+        decorators.Entity = TypeORM.Entity ?? noop;
+        decorators.Column = TypeORM.Column ?? noop;
+        decorators.PrimaryGeneratedColumn = TypeORM.PrimaryGeneratedColumn ?? noop;
+        decorators.PrimaryColumn = TypeORM.PrimaryColumn ?? noop;
+        decorators.ManyToOne = TypeORM.ManyToOne ?? noop;
+        decorators.OneToMany = TypeORM.OneToMany ?? noop;
+        decorators.JoinColumn = TypeORM.JoinColumn ?? noop;
+        decorators.JoinTable = TypeORM.JoinTable ?? noop;
+        decorators.CreateDateColumn = TypeORM.CreateDateColumn ?? noop;
+        decorators.UpdateDateColumn = TypeORM.UpdateDateColumn ?? noop;
+        decorators.VersionColumn = TypeORM.VersionColumn ?? noop;
+        decorators.Index = TypeORM.Index ?? noop;
+        decorators.Unique = TypeORM.Unique ?? noop;
+        // ✅ ADDED ViewEntity
+        decorators.ViewEntity = TypeORM.ViewEntity ?? noop;
+        // ✅ ADDED ViewColumn
+        decorators.ViewColumn = TypeORM.ViewColumn ?? noop;
+        console.log("[ORM SHIM] TypeORM loaded successfully");
+      }
+    } catch (error) {
+      console.warn(
+        "[ORM SHIM] TypeORM not available - using no-op decorators and shimmed types:",
+        error
+      );
+    }
+  })();
+}
+
+// Export decorators - always available immediately
+export const Entity = decorators.Entity;
+export const Column = decorators.Column;
+export const PrimaryGeneratedColumn = decorators.PrimaryGeneratedColumn;
+export const PrimaryColumn = decorators.PrimaryColumn;
+export const ManyToOne = decorators.ManyToOne;
+export const OneToMany = decorators.OneToMany;
+export const JoinColumn = decorators.JoinColumn;
+export const JoinTable = decorators.JoinTable;
+export const CreateDateColumn = decorators.CreateDateColumn;
+export const UpdateDateColumn = decorators.UpdateDateColumn;
+export const VersionColumn = decorators.VersionColumn;
+export const Index = decorators.Index;
+export const Unique = decorators.Unique;
+
+// ✅ EXPORTED NEW DECORATORS
+export const ViewEntity = decorators.ViewEntity;
+export const ViewColumn = decorators.ViewColumn;
+
+// Helper to check if we're using real TypeORM
+export const isTypeORMAvailable = () => !isBrowser;
+
+// NOTE on ObjectLiteral and QueryDeepPartialEntity:
+// We defined them at the top as type aliases/interfaces.
+// Since they are only types and not runtime values/functions,
+// they can be safely exported as-is for all environments.
+// If TypeORM is available, the consumer will use the real TypeORM types.
+// If TypeORM is unavailable, the consumer will use the shimmed local types.
+```
+
+////////////////////////////////////////
+Below are hieractical relationship of from the root to company.service.ts.
+Do some analisis to check if there is a definate cyclic dependency, which is currently being reported in the browser as a PWA application.
+These codes are inherited from cli and node projects where there has not been cyclic issue reported. 
+The current effort is to try to reuse them but manage any challeng due to evironmental incompatibilities.
+// src/CdShell/sys/base/i-base.ts
+```ts
+import { DataSource, DeleteResult, FindOptionsWhere, ObjectLiteral, UpdateResult } from "../utils/orm-shim";
+
+export interface BaseServiceInterface<T> {
+  create: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<T> | T | ICdResponse>;
+  read: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<T[]> | T[] | ICdResponse>;
+  update: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<UpdateResult> | UpdateResult | ICdResponse>;
+  delete: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<DeleteResult> | DeleteResult | ICdResponse>;
+}
+
+export abstract class AbstractBaseService<T> implements BaseServiceInterface<T> {
+  abstract create(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<T> | T | ICdResponse>;
+  abstract read(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<T[]> | T[] | ICdResponse>;
+  abstract update(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<UpdateResult> | UpdateResult | ICdResponse>;
+  abstract delete(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<DeleteResult> | DeleteResult | ICdResponse>;
+}
+```
+// src/CdShell/sys/base/generic-service.ts
+```ts
+import { ObjectLiteral } from '../utils/orm-shim.js';
+import { BaseService } from './base.service.js';
+import config from '../../../config.js';
+import {
+  CD_FX_FAIL,
+  CdFxReturn,
+  CreateIParams,
+  IQuery,
+  IServiceInput,
+} from './i-base.js';
+
+export class GenericService<T extends ObjectLiteral> {
+
+  constructor() {
+    // this.b = new BaseService<T>();
+  }
+
+  async create(
+    req,
+    res,
+    serviceInput: any,
+  ): Promise<CdFxReturn<T | ObjectLiteral | null>> {
+
+    const b = new BaseService<T>();
+    const result = await b.create(req, res, serviceInput);
+
+    if ('state' in result && result.state) {
+      return result as CdFxReturn<T | ObjectLiteral | null>;
+    } else {
+      return CD_FX_FAIL;
+    }
+  }
+
+  async createI(
+    req,
+    res,
+    createIParams: CreateIParams<T>,
+  ): Promise<T | boolean> {
+    const b = new BaseService<T>();
+    return await b.createI(req, res, createIParams);
+  }
+
+  async read(
+    req,
+    res,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<T[] | ObjectLiteral[] | unknown>> {
+    const b = new BaseService<T>();
+    const result = await b.read(req, req, serviceInput);
+
+    return 'state' in result ? result : CD_FX_FAIL;
+  }
+
+  async update(
+    req,
+    res,
+    serviceInput: any,
+  ): Promise<CdFxReturn<T | ObjectLiteral | null>> {
+    const b = new BaseService<T>();
+    const result = await b.update(req, req, serviceInput);
+    return 'state' in result ? result : CD_FX_FAIL;
+  }
+
+  async updateI(req, res, createIParams: CreateIParams<T>): Promise<any> {
+    const b = new BaseService<T>();
+    return b.updateI(req, res, createIParams);
+  }
+
+  async delete(
+    req,
+    res,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<ObjectLiteral[] | unknown>> {
+    const b = new BaseService<T>();
+    const result = await b.delete(req, req, serviceInput);
+    return 'state' in result ? result : CD_FX_FAIL;
+  }
+}
+```
+
+// src/CdShell/sys/base/base.service.ts
+```ts
+import "../../../CdShell/sys/utils/process-shim"; // sets global process shim for browser
+
+// Conditional imports for Node.js vs Browser
+import { getEnvironment } from "../../../environment";
+const isNode = getEnvironment() === "node" || getEnvironment() === "cli";
+
+import {
+  ObjectLiteral,
+  DeepPartial,
+  UpdateResult,
+  DeleteResult,
+  FindOptionsWhere,
+  FindManyOptions,
+  EntityMetadata,
+  getConnection,
+} from "typeorm";
+import { SessionService } from "../cd-user/services/session.service";
+import * as Lá from "lodash";
+import {
+  AbstractBaseService,
+  CacheData,
+  CD_FX_FAIL,
+  CdFxStateLevel,
+  CreateIParams,
+  IQbFilter,
+  IQbInput,
+  MANAGED_FIELDS,
+  ObjectItem,
+  ValidationRules,
+  type BaseServiceInterface,
+  type CdFxReturn,
+  type ICdRequest,
+  type ICdResponse,
+  type IJsonUpdate,
+  type IQuery,
+  type IRespInfo,
+  type IServiceInput,
+  type ISessResp,
+} from "./i-base";
+import { SessionModel } from "../cd-user/models/session.model";
+import { EntityAdapter } from "../utils/entity-adapter";
+import config from "../../../config";
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
+import { DocModel } from "../moduleman/models/doc.model";
+import { DocService } from "../moduleman/services/doc.service";
+import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+// Query builder (use shim if needed)
+// import { QueryDeepPartialEntity } from "../../../CdShell/sys/utils/orm-shim";
+
+// import { createClient } from "redis";
+// Redis - conditional import
+let createClient: any = () => {
+  throw new Error("Redis not available in browser environment");
+};
+if (isNode) {
+  // Dynamic import for Node.js only
+  import("redis")
+    .then((redisModule) => {
+      createClient = redisModule.createClient;
+    })
+    .catch(() => {
+      console.warn("Redis module not available");
+    });
+}
+
+import { from, Observable } from "rxjs";
+import { SocketStore } from "../cd-push/models/cd-push-socket.model";
+import { QueryBuilderHelper } from "../utils/query-builder-helper";
+import { toKebabCase, toPascalCase } from "../utils/cd-naming.util";
+// import { inspect } from "util";
+// Util inspection - conditional
+let inspect: any = (obj: any) => JSON.stringify(obj, null, 2);
+if (isNode) {
+  import("util")
+    .then((utilModule) => {
+      inspect = utilModule.inspect;
+    })
+    .catch(() => {
+      // Fallback to JSON stringify
+    });
+}
+
+import { HttpService } from "./http.service";
+
+// import chalk from "chalk";
+// Chalk - conditional (Node.js only)
+let chalk: any = {
+  blue: (text: string) => text,
+  green: (text: string) => text,
+  red: (text: string) => text,
+  yellow: (text: string) => text,
+  // Add other chalk methods you use
+};
+if (isNode) {
+  import("chalk")
+    .then((chalkModule) => {
+      chalk = chalkModule.default || chalkModule;
+    })
+    .catch(() => {
+      console.warn("Chalk not available, using no-color fallback");
+    });
+}
+import { FxEventEmitter } from "./fx-event-emitter";
+
+const USER_ANON = 1000;
+const INVALID_REQUEST = "invalid request";
+
+export class BaseService<
+  T extends ObjectLiteral,
+> extends AbstractBaseService<T> {
+  err: string[] = []; // error messages
+  cuid = 1000;
+  cdToken = "";
+  cdResp!: ICdResponse; // cd response
+  pl;
+  i: IRespInfo = {
+    messages: [],
+    code: "",
+    app_msg: "",
+  };
+  isRegRequest = false;
+  // svSess: SessionService = new SessionService();
+  sess: SessionModel | any;
+  // // logger: Logging;
+
+  fx = new FxEventEmitter();
+
+  redisClient;
+  // svRedis!: RedisService;
+  db;
+  ds: any = null;
+  sqliteConn;
+  private repo: any;
+  isInvalidFields: string[] = [];
+  entityAdapter!: EntityAdapter;
+
+  http = new HttpService();
+
+  constructor() {
+    super();
+    // // this.logger = new Logging();
+    this.entityAdapter = new EntityAdapter();
+    this.cdResp = this.initCdResp();
+  }
+}
+```
+// src/CdShell/sys/moduleman/models/company.model.ts
+```ts
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from "../../../sys/utils/orm-shim";
+@Entity({
+  name: 'company',
+  synchronize: false,
+})
+// @CdModel
+export class CompanyModel {
+
+  @PrimaryGeneratedColumn({
+    name: 'company_id',
+  })
+  companyId?: number;
+
+  @Column({
+    name: 'company_guid',
+  })
+  companyGuid!: string;
+
+  @Column({
+    name: 'company_name',
+  })
+  companyName!: string;
+
+  @Column({
+    name: 'company_type_guid',
+  })
+  companyTypeGuid?: number;
+
+  @Column({
+    name: 'directory_category_guid',
+  })
+  directoryCategoryGuid!: string;
+
+  @Column('int', {
+    name: 'doc_id',
+  })
+  docId!: number;
+
+  @Column({
+    name: 'company_enabled',
+  })
+  companyEnabled?: boolean;
+
+  @Column({
+    name: 'postal_address',
+  })
+  postalAddress!: string;
+
+  @Column({
+    name: 'phone',
+  })
+  phone!: string;
+
+  @Column({
+    name: 'mobile',
+  })
+  mobile!: string;
+
+  @Column({
+    name: 'email',
+  })
+  email!: string;
+
+  @Column({
+    name: 'physical_location',
+  })
+  physicalLocation!: string;
+
+  @Column({
+    name: 'city',
+  })
+  city!: string;
+
+  @Column({
+    name: 'country',
+  })
+  country!: string;
+
+  @Column({
+    name: 'logo',
+  })
+  logo!: string;
+
+  @Column({
+    name: 'city_guid',
+  })
+  cityGuid!: string;
+
+  @Column({
+    name: 'company_description',
+  })
+  company_description?: string;
+
+  @Column({
+    name: 'parent_guid',
+  })
+  parentGuid?: string;
+
+  @Column({
+    name: 'consumer_guid',
+  })
+  consumerGuid?: string;
+
+  @Column({
+    name: 'search_tags',
+  })
+  searchTags!: string;
+}
+```
+
+// src/CdShell/sys/moduleman/services/company.service.ts
+```ts
+import type { ObjectLiteral } from '../../utils/orm-shim';
+import { GenericService } from '../../base';
+import { BaseService } from '../../base/base.service.js';
+import type { CdFxReturn, IQuery } from '../../base/i-base';
+
+// Concrete imports
+import { CompanyModel } from '../models/company.model';
+import { CD_FX_FAIL } from '../../base/i-base';
+import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+
+
+export class CompanyService extends GenericService<ObjectLiteral> {
+  b = new BaseService<CompanyModel>();
+  serviceModel = CompanyModel;
+  // Define validation rules
+  cRules: any = {
+    required: ['companyName', 'companyTypeGuid', 'companyGuid'],
+    noDuplicate: ['companyName', 'companyTypeGuid'],
+  };
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  // ADAPTATION FROM GENERIC SERVICE
+  constructor() {
+    super();
+  }
+```
+
+
+Notes:
+- ISessionDataExt was hosted in i-base.ts.
+It is what was creating need for the specific models to be imported to i-base.ts.moved it to session.model.ts.
+- other models associated with acl and menu have been moved to their model files.
+- updated all its dependants to adjust accordingly.
+- i-base.ts is shared below
+- all the other files remain the same
+
+However I am still expeciencing the issue:
+[ModuleService] Browser import failed: ReferenceError: can't access lexical declaration 'Kc' before initialization
+    <anonymous> https://localhost:5173/assets/index-BcL4E4P7.js:6
+index-B8vrXxyX.js:31:8600
+[BOOTSTRAP ERROR] ReferenceError: can't access lexical declaration 'Kc' before initialization
+    <anonymous> https://localhost:5173/assets/index-BcL4E4P7.js:6
+
+```ts
+export interface ISessionDataExt {
+  currentUser: UserModel;
+  currentUserProfile: IUserProfile;
+  currentSession: SessionModel;
+  currentConsumer: ConsumerModel;
+  currentCompany: CompanyModel;
+}
+```
+// i-base.ts
+```ts
+import { DataSource, DeleteResult, FindOptionsWhere, ObjectLiteral, UpdateResult } from "../utils/orm-shim";
+
+export interface BaseServiceInterface<T> {
+  create: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<T> | T | ICdResponse>;
+  read: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<T[]> | T[] | ICdResponse>;
+  update: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<UpdateResult> | UpdateResult | ICdResponse>;
+  delete: (
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ) => Promise<CdFxReturn<DeleteResult> | DeleteResult | ICdResponse>;
+}
+
+export abstract class AbstractBaseService<T> implements BaseServiceInterface<T> {
+  abstract create(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<T> | T | ICdResponse>;
+  abstract read(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<T[]> | T[] | ICdResponse>;
+  abstract update(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<UpdateResult> | UpdateResult | ICdResponse>;
+  abstract delete(
+    req: Request | null,
+    res: Response | null,
+    serviceInput: IServiceInput<T>,
+  ): Promise<CdFxReturn<DeleteResult> | DeleteResult | ICdResponse>;
+}
+```
+
+/////////////////////////////////////////
+
+## Completed:
 
 - Module Loader:module/services/module.service.ts → How modules are discovered and loaded.
   - build via 'npm run build'
@@ -6304,6 +7121,22 @@ Documentation:
   - main.ts calls module loader
   - run 'npm run preview
 
+- porting compliant codes for PWA environment
+  - create environment.ts
+  - modify node/cli restricted codes using shims.
+  - selected imports to be done conditionally based on environment
+  - cyclic codes in PWA/browser resolved using BaseService.get _svSess() with dynamic import.
+
+
+
+
+///////////////////////////////////////
+
+## ToDo:
+
+
+
+- Menu System:menu/services/menuRenderer.ts → How the raw menu config is turned into HTML/DOM.
 
 - Theme Loader:theme/services/theme-loader.ts → How CSS and JSON configs are applied dynamically.
 
@@ -6312,27 +7145,59 @@ Documentation:
 - Logger Utility:utils/logger.ts → For developers to know how to debug and integrate logs in their modules.
 
 Classing the codes:
+
 - convert the codes from function to classes (Done)
 - Make sure the process can compile all the codes into dist-ts
 
-- update of documentation for 
+- update of documentation for
   - module loading (doc0005)
   - directives (doc0007)
 
+
+
 Change the design for lifecycle of dev-controllers to runtime-controller
-  Goal:
-  - raising the bar for live interactions with dev browser
-  - borrow from cd-cli code in terms of saving dev-code as objects
-  - is it possible to make use of git state in a given file to manage auto updates
-  - how can we implement watcher that can update browser during development
-  - use of descriptors
-  - goal: when codes are being changed, the browser can be configured to respond simultenously
-    - capacity to make changes vie (manaual, cd-cli or ai)
-    - capacity to run visual tests of functions for a given module which displays browser or device.
-Implementation:
+Goal:
+
+- raising the bar for live interactions with dev browser
+- borrow from cd-cli code in terms of saving dev-code as objects
+- is it possible to make use of git state in a given file to manage auto updates
+- how can we implement watcher that can update browser during development
+- use of descriptors
+- goal: when codes are being changed, the browser can be configured to respond simultenously - capacity to make changes vie (manaual, cd-cli or ai) - capacity to run visual tests of functions for a given module which displays browser or device.
+  Implementation:
 - proof of concept (convert dev-controller to runtime-controller)
 - implementation plan
 - integration of cd-cli
-  
+
+
+////////////////////////////////////////////////////////////
+
+Notes for improvement of rfc:
+
+Note from both login process and dev-sync example:
+- The communication can work as inter and intra application
+- The communication can work as inter component communication
+- Application users can also setup communication between individuals and groups communications.
+Base on the above, intra communication expects the launching process to publish appId.
+This publication should be available to other recources that are candidates for cd-sio communication.
+For example in module federtion, the cd-shell/SidbarComponent represent the whole application to initiate and save the appId in LocalStorage.
+Thereafter all remote modules are able to acdess the appId.
+Note that each component however have their own resourceGuid and resourceName in the CdObjId.
+
+
+
+The life cycle need to show that:
+- The consumer imports and initialize svSio: SioClientService,
+  - it is this import that manageds the detail of socket.io-client details including
+    - connection()
+    - event listening
+    - actual sending of messages
+    
+- initialize() hosts setAppId() and initSioClient()
+At this stage, details for setAppId() and initSioClient() can be given
+- Note how, the component just calls listening in very simple sytax
+- but also notice there is one main listen(event) in the class that does all the donkey work based on corpdesk cd-sio implementation details. And this is on top of socket.io-client as an import in form of svSioClient.
+It is worth noting that in the future corpdesk listen() method will be shared and not coded in each consumer.
+
 
 

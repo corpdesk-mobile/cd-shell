@@ -54,9 +54,6 @@ import config, { mailConfig } from '../../../../config.js';
 import { Comm } from '../models/comm.model.js';
 import { CdPushController } from '../../cd-push/controllers/cdpush.controller.js';
 export class NodemailerService {
-    // logger: Logging;
-    b;
-    cdPush;
     constructor() {
         // console.log('starting NodemailerController::constructor()');
         this.b = new BaseService();

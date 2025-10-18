@@ -3,22 +3,23 @@
 import { CD_FX_FAIL, } from '../../base/i-base.js';
 import { ConsumerModel } from '../models/consumer.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 // import { Logger } from 'winston';
 import { CompanyService } from './company.service.js';
 export class ConsumerService extends GenericService {
-    // b = new BaseService<ConsumerModel>();
-    // logger: Logger;
-    // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['consumerName', 'consumerTypeGuid', 'consumerGuid'],
-        noDuplicate: ['consumerName', 'consumerTypeGuid'],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(ConsumerModel);
+        super();
+        this.b = new BaseService();
+        // logger: Logger;
+        // defaultDs = config.ds.sqlite;
+        // Define validation rules
+        this.cRules = {
+            required: ['consumerName', 'consumerTypeGuid', 'consumerGuid'],
+            noDuplicate: ['consumerName', 'consumerTypeGuid'],
+        };
         // this.logger = new Logger();
     }
     /**

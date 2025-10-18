@@ -1,10 +1,8 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
 import { UserModel } from '../../cd-user/models/user.model.js';
 
 @Entity({

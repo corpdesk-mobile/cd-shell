@@ -15,7 +15,7 @@ import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 
 export class GroupMemberService extends GenericService<GroupMemberModel> {
-  // private b = new BaseService<GroupMemberModel>();
+  private b = new BaseService<GroupMemberModel>();
 
   // // defaultDs = config.ds.sqlite;
   serviceModel = GroupMemberModel;
@@ -31,7 +31,7 @@ export class GroupMemberService extends GenericService<GroupMemberModel> {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    super(GroupMemberModel);
+    super();
   }
 
   async createI(

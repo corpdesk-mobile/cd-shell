@@ -1,23 +1,23 @@
 // import { SqliteStore } from "../store/SqliteStore";
 // import { UserModel } from "../entities/UserModel";
 import { CD_FX_FAIL, } from '../../base/i-base.js';
+import { DocModel } from '../../moduleman/models/doc.model.js';
 import { UserModel } from '../models/user.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { GenericService } from '../../base/generic-service.js';
-import { DocModel } from '../../moduleman/models/doc.model.js';
+import { BaseService } from '../../base/base.service.js';
 // import { ProfileServiceHelper } from '../../utils/profile-service-helper.js';
-export class UserService extends GenericService {
-    // private b = new BaseService<UserModel>();
-    // defaultDs = config.ds.sqlite;
-    // Define validation rules
-    cRules = {
-        required: ['userName', 'email', 'password'],
-        noDuplicate: ['userName', 'email'],
-    };
+export class UserService /* extends GenericService<UserModel> */ {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(UserModel);
+        this.b = new BaseService();
+        // defaultDs = config.ds.sqlite;
+        // Define validation rules
+        this.cRules = {
+            required: ['userName', 'email', 'password'],
+            noDuplicate: ['userName', 'email'],
+        };
+        // super(UserModel);
     }
     /**
      * Validate input before processing create
@@ -136,7 +136,7 @@ export class UserService extends GenericService {
             },
             dSource: 1,
         };
-        return await this.read(req, res, serviceInput);
+        return await this.b.read(req, res, serviceInput);
     }
     async existingUserProfile(req, res, cuid) {
         const si = {

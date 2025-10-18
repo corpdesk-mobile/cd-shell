@@ -2,9 +2,8 @@
 import { Observable } from 'rxjs';
 import config from '../../../../config';
 export class CdPushController {
-    socket;
-    url = '';
     constructor() {
+        this.url = '';
         // this.socket = io(`${environment.HOST}:` + environment.SOCKET_IO_PORT);
         // this.socket = io.connect('https://localhost', {secure: true});
         this.url = `${config.push.serverHost}:` + config.push.serverPort;

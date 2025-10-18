@@ -1,7 +1,4 @@
 export class LoggerService {
-    context;
-    level;
-    silent;
     constructor(options = {}) {
         this.context = options.context || 'Shell';
         this.level = options.level || 'debug';

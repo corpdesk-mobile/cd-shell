@@ -2,23 +2,24 @@
 // import { GroupMemberModel } from "../entities/GroupMemberModel";
 import { CD_FX_FAIL, } from '../../base/i-base.js';
 import { GroupMemberModel } from '../models/group-member.model.js';
+import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 export class GroupMemberService extends GenericService {
-    // private b = new BaseService<GroupMemberModel>();
-    // // defaultDs = config.ds.sqlite;
-    serviceModel = GroupMemberModel;
-    // Define validation rules
-    /*
-     * create rules
-     */
-    cRules = {
-        required: ['memberGuid', 'groupGuidParent', 'cdObjTypeId'],
-        noDuplicate: ['memberGuid', 'groupGuidParent'],
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        super(GroupMemberModel);
+        super();
+        this.b = new BaseService();
+        // // defaultDs = config.ds.sqlite;
+        this.serviceModel = GroupMemberModel;
+        // Define validation rules
+        /*
+         * create rules
+         */
+        this.cRules = {
+            required: ['memberGuid', 'groupGuidParent', 'cdObjTypeId'],
+            noDuplicate: ['memberGuid', 'groupGuidParent'],
+        };
     }
     async createI(req, res, createIParams) {
         // const svSess = new SessionService()

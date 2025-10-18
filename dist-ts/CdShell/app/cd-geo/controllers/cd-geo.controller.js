@@ -2,9 +2,6 @@ import { BaseService } from '../../../sys/base/base.service.js';
 import { CdGeoTypeService } from '../services/cd-geo-type.service.js';
 import { CdGeoService } from '../services/cd-geo.service.js';
 export class CdGeoController {
-    b;
-    svCdGeo;
-    svCdGeoType;
     constructor() {
         this.b = new BaseService();
         this.svCdGeo = new CdGeoService();

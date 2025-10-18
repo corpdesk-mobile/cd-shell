@@ -1,8 +1,6 @@
 import { BaseService } from '../../../sys/base/base.service';
 import { CdGeoPhysicalTypeService } from '../services/cd-geo-physical-type.service';
 export class CdGeoPhysicalTypeController {
-    b;
-    svCdGeoPhysicalType;
     constructor() {
         this.b = new BaseService();
         this.svCdGeoPhysicalType = new CdGeoPhysicalTypeService();
