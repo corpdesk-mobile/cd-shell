@@ -3,14 +3,12 @@
 import { CD_FX_FAIL } from '../../base/i-base.js';
 import { CdObjModel } from '../models/cd-obj.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 export class CdObjService extends GenericService {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
         super();
-        this.b = new BaseService();
         // defaultDs = config.ds.sqlite;
         // Define validation rules
         this.cRules = {

@@ -1,7 +1,7 @@
 // import { SqliteStore } from "../store/SqliteStore";
 // import { SessionModel } from "../entities/SessionModel";
 import { CD_FX_FAIL, } from '../../base/i-base.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 import { SessionModel } from '../models/session.model.js';
@@ -15,7 +15,7 @@ export class SessionService extends GenericService {
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
         super();
-        this.b = new BaseService();
+        // private b = new BaseService<SessionModel>();
         // logger: Logging = new Logging();
         // private redisService: RedisService;
         this.sessModel = new SessionModel();

@@ -5,13 +5,13 @@ import { ObjectLiteral } from 'typeorm';
 import { CD_FX_FAIL, CdFxReturn, CreateIParams, IQuery, IServiceInput } from '../../base/i-base.js';
 import { CdObjModel } from '../models/cd-obj.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 import { SessionService } from '../../cd-user/services/session.service.js';
 
 export class CdObjService extends GenericService<CdObjModel> {
-  private b = new BaseService<CdObjModel>();
+  // private b = new BaseService<CdObjModel>();
   serviceModel?: CdObjModel;
   // defaultDs = config.ds.sqlite;
   // Define validation rules

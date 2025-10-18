@@ -13,7 +13,7 @@
 // import type { GenericService } from '../../base/generic-service.js';
 import type { ObjectLiteral } from '../../utils/orm-shim';
 import { GenericService } from '../../base';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import type { CdFxReturn, IQuery } from '../../base/i-base';
 
 // Concrete imports
@@ -23,7 +23,7 @@ import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
 
 
 export class CompanyService extends GenericService<ObjectLiteral> {
-  b = new BaseService<CompanyModel>();
+  // b = new BaseService<CompanyModel>();
   serviceModel = CompanyModel;
   // Define validation rules
   cRules: any = {

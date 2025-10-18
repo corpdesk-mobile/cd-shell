@@ -1,4 +1,3 @@
-import { BaseService } from '../../base/base.service.js';
 import { CompanyService } from '../../moduleman/services/company.service.js';
 import { ConsumerService } from '../../moduleman/services/consumer.service.js';
 import { GroupTypeModel } from '../models/group-type.model.js';
@@ -20,7 +19,7 @@ export class GroupService extends GenericService {
         };
         this.uRules = [];
         this.dRules = [];
-        this.b = new BaseService();
+        // this.b = new BaseService();
         this.serviceModel = new GroupModel();
     }
     getMemoSummary(cuid) {

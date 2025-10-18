@@ -8,7 +8,7 @@
 //  consumer_resource_enabled, consumer_id, obj_id, cd_obj_id, consumer_resource_type_id,
 //  consumer_guid, obj_guid, cd_obj_guid, consumer_resource_type_guid
 
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import { SessionService } from '../../cd-user/services/session.service.js';
 import { UserService } from '../../cd-user/services/user.service.js';
 import {
@@ -25,9 +25,10 @@ import { CdObjModel } from '../models/cd-obj.model.js';
 import { GenericService } from '../../base/generic-service.js';
 import { CompanyModel } from '../models/company.model.js';
 import { CdGeoProximityModel } from '../../../app/cd-geo/index.js';
+import { ConsumerService } from './consumer.service.js';
 
 export class ConsumerResourceService extends GenericService<ConsumerResourceModel> {
-  b: BaseService<CdGeoProximityModel>; // instance of BaseService
+  // b: BaseService<CdGeoProximityModel>; // instance of BaseService
   cdToken!: string;
   srvSess!: SessionService;
   srvUser!: UserService;
@@ -48,7 +49,7 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
 
   constructor() {
     super();
-    this.b = new BaseService();
+    // this.b = new BaseService();
     this.serviceModel = new ConsumerResourceModel();
   }
 
@@ -202,10 +203,10 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
       'moduleman/ConsumerResourceService::beforeCreate()/serviceInput:',
       serviceInput,
     );
-    const b = new BaseService<CdObjModel>();
+    // const b = new BaseService<CdObjModel>();
     if (req) {
       // let q: IQuery = { where: { cdObjGuid: pl.cdObjGuid } };
-      const cdObjData = (await b.read(req, res, serviceInput)) as CdObjModel[];
+      const cdObjData = (await this.b.read(req, res, serviceInput)) as CdObjModel[];
       console.log('ConsumerResourceService::beforeCreate::validateCreate()/02');
       console.log(
         'ConsumerResourceService::beforeCreate::validateCreate()/cdObjData:',
@@ -217,7 +218,7 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
       });
       this.b.setPlData(req, { key: 'cdObjId', value: cdObjData[0].cdObjId });
     } else {
-      const result = (await b.read(req, res, serviceInput)) as CdFxReturn<
+      const result = (await this.b.read(req, res, serviceInput)) as CdFxReturn<
         CdObjModel[]
       >;
       if (!result.state || !result.data || !result.data) {
@@ -245,9 +246,9 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
     //   select: ['consumerId'],
     //   where: { consumerGuid: pl.consumerGuid },
     // };
-    const bConsumer = new BaseService<ConsumerModel>();
+    const svConsumer = new ConsumerService();
     if (req) {
-      const consumerData: ConsumerModel[] = (await bConsumer.read(
+      const consumerData: ConsumerModel[] = (await svConsumer.b.read(
         req,
         res,
         serviceInputCdObj,
@@ -365,7 +366,6 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
       this.b.setAppState(false, this.b.i, svSess.sessResp);
     }
     console.log('moduleman/ConsumerResourceService::validateCreate()/06');
-    const b = new BaseService<ConsumerModel>();
     if (req) {
       ///////////////////////////////////////////////////////////////////
       // 2. confirm the cdObjTypeId referenced exists
@@ -393,7 +393,7 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
         'moduleman/ConsumerResourceService::validateCreate()/serviceInput:',
         JSON.stringify(serviceInput),
       );
-      const r: any = await b.read(req, res, serviceInput);
+      const r: any = await this.b.read(req, res, serviceInput);
       console.log('moduleman/ConsumerResourceService::validateCreate()/r:', r);
       if (r.length > 0) {
         console.log('moduleman/ConsumerResourceService::validateCreate()/13');
@@ -588,20 +588,16 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
   }
 
   async getConsumerResourcesMap(req, res): Promise<any> {
-    // Initialize the service
-    // await this.b.init(req, res);
-
-    const b = new BaseService<ConsumerResourceViewModel>();
 
     // Register the mapping from the entity to ensure the data is correctly transformed
-    b.entityAdapter.registerMappingFromEntity(ConsumerResourceViewModel);
+    this.b.entityAdapter.registerMappingFromEntity(ConsumerResourceViewModel);
 
     // Prepare the query to fetch all consumer resources
-    const query = b.getQuery(req);
+    const query = this.b.getQuery(req);
 
     // Define the service input structure
-    const serviceInput: IServiceInput<ConsumerResourceViewModel> = {
-      serviceModel: ConsumerResourceViewModel,
+    const serviceInput: IServiceInput<ConsumerResourceModel> = {
+      serviceModel: ConsumerResourceModel,
       docName: 'ConsumerResourceService::getConsumerResources',
       cmd: {
         action: 'find',
@@ -611,7 +607,7 @@ export class ConsumerResourceService extends GenericService<ConsumerResourceMode
     };
 
     // Fetch data using the base service's readQB method
-    const result = await b.readQB(req, res, serviceInput);
+    const result = await this.b.readQB(req, res, serviceInput);
 
     // Transform the flat data structure into a hierarchical structure
     const consumerResourceMap = this.transformToConsumerResourceTree(

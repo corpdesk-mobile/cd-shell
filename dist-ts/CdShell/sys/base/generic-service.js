@@ -1,7 +1,6 @@
 import { BaseService } from './base.service.js';
 import { CD_FX_FAIL, } from './i-base.js';
 export class GenericService {
-    // b: BaseService<T>;
     // protected // defaultDs = config.ds.sqlite;
     constructor() {
         // this.b = new BaseService<T>();

@@ -5,13 +5,13 @@ import { ObjectLiteral } from 'typeorm';
 import { CD_FX_FAIL, CdFxReturn, IQuery } from '../../base/i-base.js';
 import { DocModel } from '../models/doc.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 import { DocTypeModel } from '../models/doc-type.model.js';
 
 export class DocService extends GenericService<DocModel> {
-    private b = new BaseService<DocModel>();
+    // private b = new BaseService<DocModel>();
 
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -172,6 +172,7 @@ export class DocService extends GenericService<DocModel> {
   }
 
   async createDocType(pl: DocTypeModel): Promise<CdFxReturn<DocTypeModel | null >> {
+    const { BaseService } = await import("../../../sys/base/base.service.js");
     const b = new BaseService<DocTypeModel>();
     const serviceInput = {
       serviceModel: DocTypeModel,
@@ -201,6 +202,7 @@ export class DocService extends GenericService<DocModel> {
     res: Request | null,
     docTypeName: string,
   ): Promise<CdFxReturn<DocTypeModel[] | null >> {
+    const { BaseService } = await import("../../../sys/base/base.service.js");
     const b = new BaseService<DocTypeModel>();
     const serviceInput = {
       serviceModel: DocTypeModel,

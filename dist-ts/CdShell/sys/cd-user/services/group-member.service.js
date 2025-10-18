@@ -2,14 +2,13 @@
 // import { GroupMemberModel } from "../entities/GroupMemberModel";
 import { CD_FX_FAIL, } from '../../base/i-base.js';
 import { GroupMemberModel } from '../models/group-member.model.js';
-import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 export class GroupMemberService extends GenericService {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
         super();
-        this.b = new BaseService();
+        // private b = new BaseService<GroupMemberModel>();
         // // defaultDs = config.ds.sqlite;
         this.serviceModel = GroupMemberModel;
         // Define validation rules

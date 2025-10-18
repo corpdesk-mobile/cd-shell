@@ -4,20 +4,20 @@ import { CD_FX_FAIL, } from '../../base/i-base.js';
 import { DocModel } from '../../moduleman/models/doc.model.js';
 import { UserModel } from '../models/user.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+import { GenericService } from '../../base/generic-service.js';
 // import { ProfileServiceHelper } from '../../utils/profile-service-helper.js';
-export class UserService /* extends GenericService<UserModel> */ {
+export class UserService extends GenericService {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
-        this.b = new BaseService();
+        super();
+        // b = new BaseService<UserModel>();
         // defaultDs = config.ds.sqlite;
         // Define validation rules
         this.cRules = {
             required: ['userName', 'email', 'password'],
             noDuplicate: ['userName', 'email'],
         };
-        // super(UserModel);
     }
     /**
      * Validate input before processing create

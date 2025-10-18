@@ -12,7 +12,7 @@ import {
 
 
 export class GenericService<T extends ObjectLiteral> {
-  // b: BaseService<T>;
+  b: BaseService<T>;
   // protected // defaultDs = config.ds.sqlite;
 
   constructor() {

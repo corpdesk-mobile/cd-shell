@@ -1,7 +1,6 @@
 // import { ObjectLiteral } from 'typeorm';
 // import { CD_FX_FAIL, CdFxReturn, IQuery } from '../../base/i-base.js';
 import { GenericService } from '../../base';
-import { BaseService } from '../../base/base.service.js';
 // Concrete imports
 import { CompanyModel } from '../models/company.model';
 import { CD_FX_FAIL } from '../../base/i-base';
@@ -11,7 +10,7 @@ export class CompanyService extends GenericService {
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
         super();
-        this.b = new BaseService();
+        // b = new BaseService<CompanyModel>();
         this.serviceModel = CompanyModel;
         // Define validation rules
         this.cRules = {

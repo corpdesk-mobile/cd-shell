@@ -11,14 +11,14 @@ import {
 import { DocModel } from '../../moduleman/models/doc.model.js';
 import { UserModel } from '../models/user.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 
 // import { ProfileServiceHelper } from '../../utils/profile-service-helper.js';
 
-export class UserService /* extends GenericService<UserModel> */ {
-  b = new BaseService<UserModel>();
+export class UserService extends GenericService<UserModel> {
+  // b = new BaseService<UserModel>();
 
   // defaultDs = config.ds.sqlite;
   // Define validation rules
@@ -30,7 +30,7 @@ export class UserService /* extends GenericService<UserModel> */ {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // ADAPTATION FROM GENERIC SERVICE
   constructor() {
-    // super(UserModel);
+    super();
   }
 
   /**

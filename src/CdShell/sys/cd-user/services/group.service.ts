@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import {
   CD_FX_FAIL,
   CdFxReturn,
@@ -25,7 +25,7 @@ import { ObjectLiteral } from 'typeorm';
 export class GroupService extends GenericService<ObjectLiteral> {
   cdToken!: string;
   srvSess: SessionService = new SessionService();
-  b: BaseService<GroupModel>;
+  // b: BaseService<GroupModel>;
   // declare b: BaseService<ObjectLiteral>; // 👈 Allowing it to work with any entity
   serviceModel: GroupModel;
 
@@ -40,7 +40,7 @@ export class GroupService extends GenericService<ObjectLiteral> {
   dRules: any[] = [];
   constructor() {
     super();
-    this.b = new BaseService();
+    // this.b = new BaseService();
     this.serviceModel = new GroupModel();
   }
 

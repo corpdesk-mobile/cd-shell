@@ -4,14 +4,14 @@
 import { ObjectLiteral } from 'typeorm';
 import { CD_FX_FAIL, CdFxReturn, IQuery } from '../../base/i-base.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 import { DocModel } from '../models/doc.model.js';
 import { JwtModel } from '../models/jwt.model.js';
 
 export class JwtService extends GenericService<JwtModel> {
-  private b = new BaseService<JwtModel>();
+  // private b = new BaseService<JwtModel>();
 
   // defaultDs = config.ds.sqlite;
   // Define validation rules

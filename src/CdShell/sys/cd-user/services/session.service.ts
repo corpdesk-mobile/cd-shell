@@ -10,7 +10,7 @@ import {
   ISessResp,
 } from '../../base/i-base.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 import { ISessionDataExt, SessionModel } from '../models/session.model.js';
@@ -23,7 +23,7 @@ import { UserService } from './user.service.js';
 import { ConsumerService } from '../../moduleman/services/consumer.service.js';
 
 export class SessionService extends GenericService<SessionModel> {
-  private b = new BaseService<SessionModel>();
+  // private b = new BaseService<SessionModel>();
 
   // logger: Logging = new Logging();
   // private redisService: RedisService;

@@ -6,7 +6,7 @@
 //  consumer_resource_id, consumer_resource_guid, doc_id, cd_obj_type_id,
 //  consumer_resource_enabled, consumer_id, obj_id, cd_obj_id, consumer_resource_type_id,
 //  consumer_guid, obj_guid, cd_obj_guid, consumer_resource_type_guid
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import { SessionService } from '../../cd-user/services/session.service.js';
 import { ConsumerResourceModel } from '../models/consumer-resource.model.js';
 import { ConsumerResourceViewModel } from '../models/consumer-resource-view.model.js';
@@ -14,6 +14,7 @@ import { ConsumerResourceTypeModel } from '../models/consumer-resource-type.mode
 import { ConsumerModel } from '../models/consumer.model.js';
 import { CdObjModel } from '../models/cd-obj.model.js';
 import { GenericService } from '../../base/generic-service.js';
+import { ConsumerService } from './consumer.service.js';
 export class ConsumerResourceService extends GenericService {
     constructor() {
         super();
@@ -25,7 +26,7 @@ export class ConsumerResourceService extends GenericService {
             required: ['consumerGuid', 'cdObjGuid'],
             noDuplicate: ['consumerGuid', 'cdObjGuid'],
         };
-        this.b = new BaseService();
+        // this.b = new BaseService();
         this.serviceModel = new ConsumerResourceModel();
     }
     /**
@@ -163,10 +164,10 @@ export class ConsumerResourceService extends GenericService {
             dSource: 1,
         };
         console.log('moduleman/ConsumerResourceService::beforeCreate()/serviceInput:', serviceInput);
-        const b = new BaseService();
+        // const b = new BaseService<CdObjModel>();
         if (req) {
             // let q: IQuery = { where: { cdObjGuid: pl.cdObjGuid } };
-            const cdObjData = (await b.read(req, res, serviceInput));
+            const cdObjData = (await this.b.read(req, res, serviceInput));
             console.log('ConsumerResourceService::beforeCreate::validateCreate()/02');
             console.log('ConsumerResourceService::beforeCreate::validateCreate()/cdObjData:', cdObjData);
             this.b.setPlData(req, {
@@ -176,7 +177,7 @@ export class ConsumerResourceService extends GenericService {
             this.b.setPlData(req, { key: 'cdObjId', value: cdObjData[0].cdObjId });
         }
         else {
-            const result = (await b.read(req, res, serviceInput));
+            const result = (await this.b.read(req, res, serviceInput));
             if (!result.state || !result.data || !result.data) {
                 pl.cdObjId = -1;
             }
@@ -202,9 +203,9 @@ export class ConsumerResourceService extends GenericService {
         //   select: ['consumerId'],
         //   where: { consumerGuid: pl.consumerGuid },
         // };
-        const bConsumer = new BaseService();
+        const svConsumer = new ConsumerService();
         if (req) {
-            const consumerData = (await bConsumer.read(req, res, serviceInputCdObj));
+            const consumerData = (await svConsumer.b.read(req, res, serviceInputCdObj));
             console.log('ConsumerResourceService::beforeCreate::validateCreate()/03');
             this.b.setPlData(req, {
                 key: 'consumerId',
@@ -310,7 +311,6 @@ export class ConsumerResourceService extends GenericService {
             this.b.setAppState(false, this.b.i, svSess.sessResp);
         }
         console.log('moduleman/ConsumerResourceService::validateCreate()/06');
-        const b = new BaseService();
         if (req) {
             ///////////////////////////////////////////////////////////////////
             // 2. confirm the cdObjTypeId referenced exists
@@ -331,7 +331,7 @@ export class ConsumerResourceService extends GenericService {
                 dSource: 1,
             };
             console.log('moduleman/ConsumerResourceService::validateCreate()/serviceInput:', JSON.stringify(serviceInput));
-            const r = await b.read(req, res, serviceInput);
+            const r = await this.b.read(req, res, serviceInput);
             console.log('moduleman/ConsumerResourceService::validateCreate()/r:', r);
             if (r.length > 0) {
                 console.log('moduleman/ConsumerResourceService::validateCreate()/13');
@@ -519,16 +519,13 @@ export class ConsumerResourceService extends GenericService {
         });
     }
     async getConsumerResourcesMap(req, res) {
-        // Initialize the service
-        // await this.b.init(req, res);
-        const b = new BaseService();
         // Register the mapping from the entity to ensure the data is correctly transformed
-        b.entityAdapter.registerMappingFromEntity(ConsumerResourceViewModel);
+        this.b.entityAdapter.registerMappingFromEntity(ConsumerResourceViewModel);
         // Prepare the query to fetch all consumer resources
-        const query = b.getQuery(req);
+        const query = this.b.getQuery(req);
         // Define the service input structure
         const serviceInput = {
-            serviceModel: ConsumerResourceViewModel,
+            serviceModel: ConsumerResourceModel,
             docName: 'ConsumerResourceService::getConsumerResources',
             cmd: {
                 action: 'find',
@@ -537,7 +534,7 @@ export class ConsumerResourceService extends GenericService {
             dSource: 1,
         };
         // Fetch data using the base service's readQB method
-        const result = await b.readQB(req, res, serviceInput);
+        const result = await this.b.readQB(req, res, serviceInput);
         // Transform the flat data structure into a hierarchical structure
         const consumerResourceMap = this.transformToConsumerResourceTree(result.items);
         // Set the response data

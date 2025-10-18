@@ -3,7 +3,6 @@
 import { CD_FX_FAIL } from '../../base/i-base.js';
 import { DocModel } from '../models/doc.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 import { DocTypeModel } from '../models/doc-type.model.js';
 export class DocService extends GenericService {
@@ -11,7 +10,7 @@ export class DocService extends GenericService {
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
         super();
-        this.b = new BaseService();
+        // private b = new BaseService<DocModel>();
         // defaultDs = config.ds.sqlite;
         // Define validation rules
         this.cRules = {
@@ -152,6 +151,7 @@ export class DocService extends GenericService {
         return await ret;
     }
     async createDocType(pl) {
+        const { BaseService } = await import("../../../sys/base/base.service.js");
         const b = new BaseService();
         const serviceInput = {
             serviceModel: DocTypeModel,
@@ -174,6 +174,7 @@ export class DocService extends GenericService {
         return q;
     }
     async getDocTypeByName(req, res, docTypeName) {
+        const { BaseService } = await import("../../../sys/base/base.service.js");
         const b = new BaseService();
         const serviceInput = {
             serviceModel: DocTypeModel,

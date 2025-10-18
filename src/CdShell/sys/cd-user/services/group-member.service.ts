@@ -10,12 +10,12 @@ import {
 } from '../../base/i-base.js';
 import { GroupMemberModel } from '../models/group-member.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
+// import { BaseService } from '../../base/base.service.js';
 import config from '../../../../config.js';
 import { GenericService } from '../../base/generic-service.js';
 
 export class GroupMemberService extends GenericService<GroupMemberModel> {
-  private b = new BaseService<GroupMemberModel>();
+  // private b = new BaseService<GroupMemberModel>();
 
   // // defaultDs = config.ds.sqlite;
   serviceModel = GroupMemberModel;

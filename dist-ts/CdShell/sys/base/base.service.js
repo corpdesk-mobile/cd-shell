@@ -516,19 +516,8 @@ export class BaseService extends AbstractBaseService {
     async readSL(req, res, serviceInput) {
         try {
             this.initSqlite(req, res);
-            // const repo = this.sqliteConn.getRepository(serviceInput.serviceModel);
             await this.setRepo(serviceInput);
-            // this.setRepo(serviceInput.serviceModel)
             const repo = this.repo;
-            // const { SessionService } = await import("../cd-user/services/session.service");
-            // const svSess = new SessionService();
-            // const billRepository = this.sqliteConn.getRepository(BillModel)
-            // const allBills = await billRepository.find()
-            // console.log('allBills:', allBills)
-            // this.i.app_msg = '';
-            // this.setAppState(true, this.i, svSess.sessResp);
-            // this.cdResp.data = allBills;
-            // const r = await this.respond(req, res);
             let r = null;
             switch (serviceInput.cmd?.action) {
                 case "find":
@@ -792,10 +781,7 @@ export class BaseService extends AbstractBaseService {
     async updateSL(req, res, serviceInput) {
         console.log("BillService::updateSL()/01");
         await this.initSqlite(req, res);
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
-        // const repo: any = await this.sqliteConn.getRepository(serviceInput.serviceModel);
-        // this.setRepo(serviceInput.serviceModel)
+        const svSess = this.svSess;
         await this.setRepo(serviceInput);
         const repo = this.repo;
         const result = await repo.update(serviceInput.cmd?.query.where, await this.fieldsAdaptorSL(req, res, serviceInput.cmd?.query.update, serviceInput));
@@ -952,8 +938,7 @@ export class BaseService extends AbstractBaseService {
     }
     //////////////////////////////////////////////////////////////////////////////////////
     async serviceErr(req, res, e, eCode, lineNumber = null) {
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         try {
             svSess.sessResp.cd_token = req.post.dat.token;
         }
@@ -1192,8 +1177,7 @@ export class BaseService extends AbstractBaseService {
         return filteredData;
     }
     async validateRequired(req, res, cRules) {
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         const rqFieldNames = cRules.required;
         this.isInvalidFields = await rqFieldNames.filter((fieldName) => {
             if (!(fieldName in this.getPlData(req))) {
@@ -1327,9 +1311,7 @@ export class BaseService extends AbstractBaseService {
         return ret;
     }
     async setSess(req, res) {
-        // console.log('BaseService::setSess()/01');
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         if (await !this.cdToken) {
             // console.log('BaseService::setSess()/02');
             try {
@@ -1636,8 +1618,7 @@ export class BaseService extends AbstractBaseService {
     async getPlData(req, extData = null, fValsIndex = null) {
         console.info("BaseService::getPlData()/01");
         let ret = null;
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         if (await this.validatePlData(req, extData)) {
             try {
                 if (extData) {
@@ -1675,8 +1656,7 @@ export class BaseService extends AbstractBaseService {
     async getPlQuery(req, extData = null, fValsIndex = null) {
         console.info("BaseService::getPlQuery()/01");
         let ret = null;
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         if (await this.validatePlData(req, extData)) {
             try {
                 if (extData) {
@@ -1749,8 +1729,7 @@ export class BaseService extends AbstractBaseService {
      * @param extData
      */
     async validatePlData(req, extData) {
-        const { SessionService } = await import("../cd-user/services/session.service");
-        const svSess = new SessionService();
+        const svSess = this.svSess;
         let ret = false;
         if (extData) {
             if (extData in req.post.dat.f_vals[0]) {
@@ -1948,33 +1927,10 @@ export class BaseService extends AbstractBaseService {
         await this.setAppState(false, i, svSess.sessResp);
         this.cdResp.data = [];
     }
-    // async bFetch(req, res, serviceInput: IServiceInput<T>) {
-    //   try {
-    //     console.log('BaseService::fetch()/01');
-    //     const response = await fetch(
-    //       serviceInput.fetchInput.url,
-    //       serviceInput.fetchInput.optins,
-    //     );
-    //     const data = await response.json();
-    //     // console.log(JSON.stringify(data, null, 2));
-    //     return data;
-    //   } catch (e: any) {
-    //     this.err.push((e as Error).toString());
-    //     const i = {
-    //       messages: this.err,
-    //       code: 'BaseService:update',
-    //       app_msg: '',
-    //     };
-    //     // await this.setAppState(false, i, null);
-    //     await this.serviceErr(req, res, e, i.code);
-    //     return this.cdResp;
-    //   }
-    // }
     successResponse(req, res, result, appMsg = null) {
         if (appMsg) {
             this.i.app_msg = appMsg;
         }
-        // const { SessionService } = await import("../cd-user/services/session.service");
         const svSess = this.svSess;
         svSess.sessResp.cd_token = req.post.dat.token;
         svSess.sessResp.ttl = svSess.getTtl();

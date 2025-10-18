@@ -2,7 +2,6 @@
 // import { JwtModel } from "../entities/JwtModel";
 import { CD_FX_FAIL } from '../../base/i-base.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { BaseService } from '../../base/base.service.js';
 import { GenericService } from '../../base/generic-service.js';
 import { JwtModel } from '../models/jwt.model.js';
 export class JwtService extends GenericService {
@@ -10,7 +9,7 @@ export class JwtService extends GenericService {
     // ADAPTATION FROM GENERIC SERVICE
     constructor() {
         super();
-        this.b = new BaseService();
+        // private b = new BaseService<JwtModel>();
         // defaultDs = config.ds.sqlite;
         // Define validation rules
         this.cRules = {
