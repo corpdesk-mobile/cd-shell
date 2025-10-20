@@ -80,6 +80,30 @@ export interface ICdModule {
 
 ---
 
+### Sample module data
+
+```ts
+export const cdUserModule = {
+  ctx: 'sys',
+  moduleId: 'cd-user',
+  moduleName: 'User Management',
+  moduleGuid: 'user-guid-123',
+  template: ctlSignIn.template(),
+  menu: [
+    {
+      label: 'User',
+      route: 'sys/cd-user',
+      children: [
+        { label: 'Sign In', route: 'sys/cd-user/sign-in', template: ctlSignIn.template() },
+        { label: 'Sign Up', route: 'sys/cd-user/sign-up', template: ctlSignUp.template() }
+      ]
+    }
+  ]
+};
+```
+
+---
+
 ### `loadModule(ctx, moduleId)`
 
 Responsible for loading and integrating modules dynamically.

@@ -28,6 +28,7 @@ export class IdeAgentService {
   // corpdesk-rfc-0004 protocol methods
   ///////////////////////////////////////////////////////////
   async initialize() {
+    console.log("dev-sync::IdeAgentService::initialize()/01");
     this.setAppId();
     this.initSioClient();
     this.startSaveWatcher();

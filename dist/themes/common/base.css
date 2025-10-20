@@ -1,0 +1,46 @@
+:root {
+  /* --- Theme Tokens (shared across themes) --- */
+  --cd-color-valid: #2ecc71;
+  --cd-color-invalid: #e74c3c;
+  --cd-color-hint: #999;
+  --cd-border-radius: 4px;
+  --cd-transition: 0.2s ease;
+}
+
+/* --- Base form layout --- */
+.cd-form-field {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.cd-form-field input {
+  border: 1px solid #ccc;
+  border-radius: var(--cd-border-radius);
+  padding: 0.6rem;
+  transition: border-color var(--cd-transition), box-shadow var(--cd-transition);
+}
+
+/* --- Validation States --- */
+.cd-form-field input.cd-valid {
+  border-color: var(--cd-color-valid);
+  box-shadow: 0 0 4px var(--cd-color-valid);
+}
+
+.cd-form-field input.cd-invalid {
+  border-color: var(--cd-color-invalid);
+  box-shadow: 0 0 4px var(--cd-color-invalid);
+}
+
+/* --- Validation Feedback --- */
+.error-message,
+.cd-hint {
+  font-size: 0.85rem;
+  margin-top: 4px;
+  color: var(--cd-color-hint);
+}
+
+.cd-form-field input.cd-invalid + .error-message,
+.cd-form-field input.cd-invalid + .cd-hint {
+  color: var(--cd-color-invalid);
+}

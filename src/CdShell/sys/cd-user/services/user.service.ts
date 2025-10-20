@@ -215,4 +215,119 @@ export class UserService extends GenericService<UserModel> {
     }
     return true;
   }
+
+  // login(fg: any) {
+  //   console.info("starting cd-user/LoginComponent::login");
+  //   let authData: AuthData = fg.value;
+  //   const valid = fg.valid;
+  //   console.info("cd-user/LoginComponent::login/01");
+  //   console.info("cd-user/LoginComponent::login/fg:", fg);
+  //   console.info("cd-user/LoginComponent::login/valid:", valid);
+  //   this.submitted = true;
+  //   const consumerGuid = { consumerGuid: environment.consumerToken };
+  //   authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
+  //   try {
+  //     console.info("cd-user/LoginComponent::login/02");
+  //     if (valid) {
+  //       console.info("cd-user/LoginComponent::login/03");
+  //       this.initSession(authData);
+  //     }
+  //   } catch (err) {
+  //     console.info("cd-user/LoginComponent::login/04");
+  //     this.errMsg = "Something went wrong!!";
+  //     this.loginInvalid = true;
+  //   }
+  // }
+
+  // /**
+  //  * Following login request to cd-api server, this method is called to
+  //  * 1. Create a session via svSess.createSess()
+  //  * 2. Save current user data in svUser.currentUser
+  //  * 3. Set user menu in svNav.userMenu
+  //  * 4. Notify cd-shell/SidbarComponent of login status while availing menu data to cd-shell/SidebarComponent via cd-sio server
+  //  * 5. Navigate to the initial page defined in environment.initialPage
+  //  * @param authData 
+  //  */
+  // initSession(authData: AuthData) {
+  //   console.info("cd-user/LoginComponent::initSession/01");
+  //   this.svUser.auth$(authData).subscribe((res: any) => {
+  //     if (res.app_state.success === true) {
+  //       console.info(
+  //         "cd-user/LoginComponent::initSession/res:",
+  //         JSON.stringify(res)
+  //       );
+  //       this.svSess.appState = res.app_state;
+  //       /*
+  //       create a session on successfull authentication.
+  //       For subsequeng successull request to the server,
+  //       use renewSess(res);
+  //       */
+  //       if (res.app_state.sess.cd_token !== null && res.app_state.success) {
+  //         console.info("cd-user/LoginComponent::initSession/02");
+
+  //         /**
+  //          * Prepare the push payload to send menu data to cd-shell/SidebarComponent
+  //          */
+  //         const envl: ICdPushEnvelop = this.configPushPayload(
+  //           "login",
+  //           "push-menu",
+  //           res.data.userData.userId
+  //         );
+  //         envl.pushData.m = res.data.menuData;
+  //         envl.pushData.token = res.app_state.sess.cd_token;
+  //         console.info("cd-user/LoginComponent::initSession/envl:", envl);
+
+  //         /**
+  //          * Send the menu data to cd-shell/SidebarComponent via the cd-sio server
+  //          */
+  //         if (environment.wsMode === "sio") {
+  //           console.info(
+  //             "cd-user/LoginComponent::initSession/envl:...using sio"
+  //           );
+  //           this.sendSioMessage(envl);
+  //         }
+
+  //         /**
+  //          * If environment.wsMode is set to wss, then use the WebSocketService to send the menu data to cd-shell/SidebarComponent via the cd-sio server
+  //          */
+  //         if (environment.wsMode === "wss") {
+  //           console.info(
+  //             "cd-user/LoginComponent::initSession/envl:...using wss"
+  //           );
+  //           this.svWss.sendMsg(envl);
+  //         }
+
+  //         ///////////////////////////////////////
+  //         this.svSess.createSess(res, this.svMenu);
+  //         this.svUser.currentUser = {
+  //           name: `${res.data.userData.userName}`,
+  //           picture: `${environment.shellHost}/user-resources/${res.data.userData.userGuid}/avatar-01/a.jpg`,
+  //         };
+  //         this.svNav.userMenu = [
+  //           { title: "Profile", link: "/pages/cd-auth/register" },
+  //           { title: "Log out", link: "/pages/cd-auth/logout" },
+  //         ];
+  //         // this.baseModel.sess = res.app_state.sess;
+  //         const params = {
+  //           queryParams: { token: res.app_state.sess.cd_token },
+  //           skipLocationChange: true,
+  //           replaceUrl: false,
+  //         };
+  //         // below: old method
+  //         // this.route.navigate(['/comm'], params);
+  //         // this.route.navigate(['/dashboard'], params);
+  //         this.route.navigate([environment.initialPage], params);
+
+  //         // below new method based on this.baseModel;
+  //         // this.svNav.nsNavigate(this,'/comm','message from cd-user')
+  //       }
+  //     } else {
+  //       this.errMsg = "The userName and password were not valid";
+  //       this.loginInvalid = true;
+  //       this.svSess.logout();
+  //     }
+  //   });
+  // }
+
+  
 }

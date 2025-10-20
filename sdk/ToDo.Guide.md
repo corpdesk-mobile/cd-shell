@@ -7107,6 +7107,1674 @@ export abstract class AbstractBaseService<T> implements BaseServiceInterface<T> 
 }
 ```
 
+/////////////////////////////////////////////////////////////
+We are currently working on a system we call corpdesk.
+At the moment we are working on systematic patterns for coding in PWA environment.
+We have controllers that gets compiled into a views directory.
+By design, ts controller files(in controller directory) are suppose to compile into js files (in views directory)
+Illustration 1 show example of strucure of original code and Illustration 2 shows a sample of a compiled code.
+Note some similarity with Angular where 'template' in the controller file manages the html scripts but has relationship with methods in the same controller file. But away from Angular, we are keeping it light without much of decorations.
+At this stage we are not automating the compilation, but manually coding the compiled file in order to engineer how the commiled codes should work.
+In this post, we are focussing on how data forms should work.
+The vision is for it to work something similar to reactive forms in Angular.
+Note that, as per corpdesk-rfc-0001, we have 4 sets of directories:
+- controllers
+- models
+- services
+- views
+In the example given below, SignInController(Illustaton 1)  would be relying on UserModel(Illustaton 5)  to process sign-in operation.
+UserModelwould be an interface with user properties.
+Note: One of the requrements is to develop codes that can be used accross different environments.
+The current models are based on typeorm conventions.
+To use it in PWA environment, we use it via orm-shim implementation.
+I would like you to assist me to develop class or sets of classes that allows us process forms in similar manner as Reactive Forms in Angular.
+No decorations should be used.
+No injection on constructors should be used
+No rxjs, 
+Just light conventional OOP.
+For naming, you can adopt use of cd-<x>, or Cd<X>, cd<X> [kebab, Pascal, Camel] cases.
+'cd' stand for corpdesk.
+Example CdFormControl instead of FormControl: Developer declares a CdFormControl instance in a controller class associated with a form.
+We can implement some way of declaring form in the template.
+<label for="name">Name: </label><input id="name" type="text" [formControl]="name">
+Note that we are already have a work in progress DirectiveBinder(Illustration 6) for templates. This can be taken advantage of.
+We then need some systematic way similar to Angular, how the form data is managed in the controller.
+Note that the sample template already has some directives.
+
+Illustration 1:
+// src/CdShell/sys/cd-user/controllers/sign-in.controller.ts
+```ts
+import config from "../../../../config";
+import { BaseService, ICdResponse } from "../../base";
+import { CdShellController } from "../../base/cd-shell.controller";
+import { ConsumerModel } from "../../moduleman/models/consumer.model";
+import { UserModel } from "../models/user.model";
+
+export class SignInController extends CdShellController {
+  workspacePath = config.viteWorkspacePath;
+  private b = new BaseService();
+
+    __template(): string {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  setup(): void {
+    const form = document.getElementById("signInForm");
+    if (!form) return;
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const { username, password } = this.processFormData();
+      const data = {
+        user: { userName: username, password } as UserModel,
+        consumer: {
+          consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD",
+        } as ConsumerModel,
+      };
+      this.auth(data);
+    });
+  }
+
+  processFormData(): { username: string; password: string } {
+    const username =
+      (document.querySelector('[cd-model="username"]') as HTMLInputElement)
+        ?.value || "";
+    const password =
+      (document.querySelector('[cd-model="password"]') as HTMLInputElement)
+        ?.value || "";
+    return { username, password };
+  }
+
+  async auth(data: {
+    user: UserModel;
+    consumer: ConsumerModel;
+  }): Promise<void> {
+    console.log('starting SignInController:auth()')
+    console.log('SignInController:auth()/data:', data)
+    window.cdShell?.progress?.start("Signing in...");
+    try {
+      const request = this.b.buildBaseRequest(
+        { ctx: "Sys", name: "User" },
+        { name: "User" },
+        "Login",
+        { data: data.user, consumer: data.consumer },
+        null
+      );
+
+      const result = (await this.b.handleRequest(request)) as ICdResponse;
+      if (result.app_state.success) {
+        window.cdShell?.notify?.success("Login successful");
+        window.cdShell?.progress?.done();
+        // Proceed to dashboard or main shell load
+      } else {
+        window.cdShell?.notify?.error(
+          result.app_state.info.app_msg || "Login failed"
+        );
+      }
+    } catch (e: any) {
+      window.cdShell?.notify?.error(e.message || "Unexpected error");
+    } finally {
+      window.cdShell?.progress?.done();
+    }
+  }
+}
+
+```
+Illustration 2:
+// src/CdShell/sys/cd-user/view/sign-in.controller.js
+```js
+import { IdeAgentService } from "../../dev-sync/services/ide-agent.service";
+import config from "../../../../config";
+
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+    __template() {
+    return `
+      <form class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.info("[cd-user] Initializing IdeAgentService (runtime)...");
+
+    try {
+      // const endpoint = config.cdSio.endpoint;
+      this.svIdeAgent = new IdeAgentService();
+
+
+      // Listen for messages from IDE
+      this.svIdeAgent.initialize(() => {
+        // this.onDevSyncMessage(payload);
+      });
+
+      console.log("[cd-user] svIdeAgent initialized successfully");
+    } catch (err) {
+      console.error("[cd-user] Failed to initialize svIdeAgent:", err);
+    }
+
+    // Attach form listener
+    const form = document.getElementById("signInForm");
+    if (!form) {
+      console.warn("[cd-user] signInForm not found");
+      return;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.auth();
+    });
+
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+
+    // Prepare payload for IDE (chat partner)
+    const payload = {
+      source: { appId: this.devSync.appId },
+      target: "ide-agent",
+      action: "AUTH_ATTEMPT",
+      data: {
+        username: this.username,
+        password: this.password,
+        timestamp: new Date().toISOString(),
+      },
+    };
+
+    this.devSync.emitPayload(payload);
+    alert(`Hello, ${this.username}!`);
+  },
+
+  onDevSyncMessage(payload) {
+    const { source, action, data } = payload;
+
+    // Avoid acting on own messages
+    if (source.appId === this.devSync.appId) return;
+
+    switch (action) {
+      case "AUTH_RESULT":
+        console.log("[cd-user] Auth result received:", data);
+        alert(data.message);
+        break;
+
+      case "UPDATE_CONTROLLER":
+        console.log("[cd-user] Controller update payload:", data);
+        this.applyControllerUpdate(data);
+        break;
+
+      default:
+        console.log("[cd-user] Unknown DevSync action:", action);
+    }
+  },
+
+  applyControllerUpdate(updateData) {
+    console.log("[cd-user] Applying runtime update:", updateData);
+    // In future, handle live controller patching here
+  },
+};
+```
+Illustration 3:
+// From Angular project
+// projects/cd-user/src/app/modules/user/login/login.component.ts
+```ts
+export class UserService{
+auth(fg: any) {
+    this.logger.info("starting cd-user/LoginComponent::login");
+    let authData: AuthData = fg.value;
+    const valid = fg.valid;
+    this.logger.info("cd-user/LoginComponent::login/01");
+    this.logger.info("cd-user/LoginComponent::login/fg:", fg);
+    this.logger.info("cd-user/LoginComponent::login/valid:", valid);
+    this.submitted = true;
+    const consumerGuid = { consumerGuid: environment.consumerToken };
+    authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
+    try {
+      this.logger.info("cd-user/LoginComponent::login/02");
+      if (valid) {
+        this.logger.info("cd-user/LoginComponent::login/03");
+        this.initSession(authData);
+      }
+    } catch (err) {
+      this.logger.info("cd-user/LoginComponent::login/04");
+      this.errMsg = "Something went wrong!!";
+      this.loginInvalid = true;
+    }
+  } 
+```
+Illustration 4:
+// src/CdShell/sys/guig/services/forms.service.ts
+```ts
+export async function processFormData(
+  formData: FormData,
+  formId: string,
+  cdToken?: string
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const form = document.getElementById(formId) as HTMLFormElement;
+    if (!form) {
+      reject(new Error(`Form with ID ${formId} not found`));
+      return;
+    }
+
+    const data = Object.fromEntries(formData.entries());
+    // this.logger.debug("Form data processed:", data);
+
+    // Simulate an API call
+    setTimeout(() => {
+      resolve(data);
+    }, 1000);
+  });
+}
+```
+Illustration 5:
+Model sample
+```ts
+@Entity({
+  name: 'user',
+  synchronize: false,
+})
+export class UserModel {
+  @PrimaryGeneratedColumn({
+    name: 'user_id',
+  })
+  userId?: number;
+
+  @Column({
+    name: 'user_guid',
+    length: 36,
+  })
+  userGuid?: string;
+
+  @Column('varchar', {
+    name: 'user_name',
+    length: 50,
+    nullable: true,
+  })
+  userName!: string;
+
+  @Column('char', {
+    name: 'password',
+    length: 60,
+    default: null,
+  })
+  password?: string;
+
+  @Column('varchar', {
+    length: 60,
+    unique: true,
+    nullable: true,
+  })
+  email?: string; 
+
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  docId?: number; 
+}
+```
+Illustration 6:
+// directive binder used by module loader to process views
+```ts
+// src/CdShell/core/directives/cd-directive-binder.js
+export class CdDirectiveBinder {
+  controller;
+  constructor(controller:any) {
+    this.controller = controller;
+  }
+
+  bind(rootElement: Document | HTMLElement = document): void {
+    if (!rootElement) return;
+
+    // --- cd-click ---
+    rootElement.querySelectorAll("[cd-click]").forEach((el) => {
+      const methodName = el.getAttribute("cd-click");
+      const method = this.controller[methodName];
+      if (typeof method === "function") {
+        el.addEventListener("click", method.bind(this.controller));
+      }
+    });
+
+    // --- cd-model ---
+    rootElement.querySelectorAll("[cd-model]").forEach((el) => {
+      const modelKey = el.getAttribute("cd-model");
+
+      // Initialize input value from controller (if exists)
+      if (this.controller[modelKey] !== undefined && el instanceof HTMLInputElement) {
+        el.value = this.controller[modelKey];
+      }
+
+      // Update controller value on input change
+      el.addEventListener("input", (e) => {
+        this.controller[modelKey] = (e.target as HTMLInputElement).value;
+      });
+    });
+  }
+
+  unbind(rootElement = document) {
+    // optional cleanup: we can later add teardown logic if needed
+  }
+}
+```
+
+////////////////////////////////////////////////////
+
+Below is the initial suggestion on how sign-in.controller.ts is meant to be set up.
+Remember it is then compiled to src/CdShell/sys/cd-user/view/sign-in.controller.js as runtime code.
+I have shared a sample strucure of compiled code. Note that the whole codes is exported as:
+export const ctlSignIn;
+We still do not want to go into coding the compilation process untill we have all the fundamental process established.
+I would like to manually genetate the equivalent of src/CdShell/sys/cd-user/controllers/sign-in.controller.ts shown below.
+We need to be able to use the code to process the form.
+Consider this as work in progress and we will keep on doing refinment.
+
+// src/CdShell/sys/cd-user/controllers/sign-in.controller.ts
+```ts
+import { CdDirectiveBinder } from "../../base/cd-directive-binder";
+import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
+import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
+import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
+import { UserModel } from "../models/user.model";
+
+export class SignInController {
+  form: CdFormGroup;
+
+  constructor() {
+    this.form = new CdFormGroup({
+      username: new CdFormControl("", [CdValidators.required]),
+      password: new CdFormControl("", [CdValidators.required, CdValidators.minLength(4)]),
+    });
+  }
+
+  __template(): string {
+    return `
+      <form id="signInForm" class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="form.controls.username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="form.controls.password" type="password" placeholder="Password" />
+
+        <button type="button" cd-click="auth">Sign In</button>
+      </form>
+    `;
+  }
+
+  __setup(): void {
+    const binder = new CdDirectiveBinder(this);
+    binder.bind();
+
+    const form = document.getElementById("signInForm");
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.auth();
+    });
+  }
+
+  async auth(): Promise<void> {
+    this.form.validateAll();
+    if (!this.form.valid) {
+      console.error("Form invalid:", this.form);
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const user = this.form.value as UserModel;
+    console.log("Authenticating with:", user);
+    // call service or proceed with logic
+  }
+}
+```
+// sample structure of expected compiled code.
+```js
+export const ctlSignIn = {
+  username: "",
+  password: "",
+
+  __template() {
+    return `
+      <form id="signInForm" class="cd-sign-in">
+        <h1 class="cd-heading">Sign In</h1>
+
+        <label>Username</label>
+        <input cd-model="username" placeholder="Username" />
+
+        <label>Password</label>
+        <input cd-model="password" type="password" placeholder="Password" />
+
+        <button type="submit">Sign In</button>
+      </form>
+    `;
+  },
+
+  __setup() {
+    console.info("[cd-user] Initializing IdeAgentService (runtime)...");
+
+    try {
+      // const endpoint = config.cdSio.endpoint;
+      this.svIdeAgent = new IdeAgentService();
+
+
+      // Listen for messages from IDE
+      this.svIdeAgent.initialize(() => {
+        // this.onDevSyncMessage(payload);
+      });
+
+      console.log("[cd-user] svIdeAgent initialized successfully");
+    } catch (err) {
+      console.error("[cd-user] Failed to initialize svIdeAgent:", err);
+    }
+
+    // Attach form listener
+    const form = document.getElementById("signInForm");
+    if (!form) {
+      console.warn("[cd-user] signInForm not found");
+      return;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.auth();
+    });
+
+    console.log("[cd-user] Controller setup complete");
+  },
+
+  auth() {
+    console.log("Auth triggered with:", this.username, this.password);
+
+    // Prepare payload for IDE (chat partner)
+    const payload = {
+      source: { appId: this.devSync.appId },
+      target: "ide-agent",
+      action: "AUTH_ATTEMPT",
+      data: {
+        username: this.username,
+        password: this.password,
+        timestamp: new Date().toISOString(),
+      },
+    };
+
+    this.devSync.emitPayload(payload);
+    alert(`Hello, ${this.username}!`);
+  },
+
+  onDevSyncMessage(payload) {
+    const { source, action, data } = payload;
+
+    // Avoid acting on own messages
+    if (source.appId === this.devSync.appId) return;
+
+    switch (action) {
+      case "AUTH_RESULT":
+        console.log("[cd-user] Auth result received:", data);
+        alert(data.message);
+        break;
+
+      case "UPDATE_CONTROLLER":
+        console.log("[cd-user] Controller update payload:", data);
+        this.applyControllerUpdate(data);
+        break;
+
+      default:
+        console.log("[cd-user] Unknown DevSync action:", action);
+    }
+  },
+
+  applyControllerUpdate(updateData) {
+    console.log("[cd-user] Applying runtime update:", updateData);
+    // In future, handle live controller patching here
+  },
+};
+```
+
+////////////////////////////////////////////////
+Thanks for the explanation. Much as we keep it light, we have to have the end user having a great UX. I am not very particular how we implement but so long as what the developer codes, is what will be reflected.  I would like us to go to the next level of testing where we have either one label controller for the whole form or one for each controller that can allow nice graphic experience during validation. This can be done with standard colour changes of controls validation is not passed and text lables to guide the user.
+We need a POC that shows how we can enhance the same example to have standard visual responsece when the form is being processed.
+Note that this system already has some theming system (work in progress).
+We may need to update css to have the above requirements
+Whatever changes we make need to be integrated with the theming system so that they are not isolated from the already laid workfolw.
+We also need to stich these new development to the validation system that is already being developed.
+We also need to be able to have the develper do his part but the compiled code (which is now bieng managed manually) also respects what the developer has in the codes.
+First, do a developer guide how this can be implemented.
+If you need any more information to get this done, let me know.
+// index.html
+```ts
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Corpdesk Shell</title>
+    <!-- app global styles -->
+    <link rel="stylesheet" href="src/assets/css/index.css" />
+    <!-- Theme layout structure (public path) -->
+    <link rel="stylesheet" href="/themes/common/base.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    
+    <header id="cd-header">
+      <button id="cd-burger">&#9776;</button>
+      <!-- Burger icon -->
+      <img id="cd-logo" alt="Logo" />
+      <span id="cd-app-name">Corpdesk Shell</span>
+    </header>
+    <div id="cd-layout">
+      <div id="cd-overlay" class="hidden"></div>
+      <aside id="cd-sidebar"></aside>
+      <main id="cd-main-content"></main>
+    </div>
+
+    <script type="module" src="/src/app.ts"></script>
+  </body>
+</html>
+
+```
+
+```ts
+import { ThempeLoaderService } from './CdShell/sys/theme/services/theme-loader.service';
+import { Main } from './main';
+// import { loadShellConfig } from './config/shell.config.old';
+// import { ShellConfig } from './CdShell/sys/base/i-base_';
+// import { loadTheme } from './CdShell/sys/theme/services/theme-loader.service';
+
+export async function startShell(): Promise<void> {
+  console.log('🟢 Starting PWA-OS (cd-shell)...');
+
+  const m = new Main();
+  const svThempeLoader = new ThempeLoaderService()
+  const shellConfig  = await m.loadShellConfig();
+  console.log('📄 Shell config loaded:', shellConfig);
+
+  await svThempeLoader.loadTheme(shellConfig.themeConfig.currentThemePath);
+  console.log('🎨 Theme applied:', shellConfig.themeConfig);
+  const app = new Main();
+  await app.run();
+  console.log('✅ Shell bootstrapped successfully');
+}
+
+// Auto-start if not being imported as library
+if (require.main === module) {
+  startShell().catch(err => {
+    console.error('❌ Failed to start shell:', err);
+  });
+}
+```
+
+```sh
+public/
+├── assets
+│   ├── css
+│   │   └── index.css
+│   ├── fonts
+│   └── images
+├── shell.config.json
+└── themes
+    ├── common
+    │   ├── base.css
+    │   └── layout.json
+    ├── dark
+    │   └── theme.css
+    └── default
+        ├── logo.png
+        ├── menu-systems
+        │   └── metismenu.css
+        ├── theme.css
+        └── theme.json
+```
+//////////////////////////////////////////////////////////////////
+On the line:
+CdValidators.required("Username is required")
+
+Experiencing error: Type 'string' is not assignable to type '(value: string) => string'.ts(2322)
+
+```ts
+export class SignInController {
+  form: CdFormGroup;
+
+  constructor() {
+    this.form = new CdFormGroup({
+      username: new CdFormControl("", [
+        CdValidators.required("Username is required"),
+      ]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "Password must be at least 4 characters"),
+      ]),
+    });
+  }
+}
+```
+
+```ts
+export class CdValidators {
+  static required(value: any): string | null {
+    return value === null || value === undefined || value === ""
+      ? "This field is required"
+      : null;
+  }
+
+  static minLength(length: number) {
+    return (value: string) =>
+      value && value.length < length
+        ? `Minimum length is ${length}`
+        : null;
+  }
+
+  static email(value: string): string | null {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+      ? null
+      : "Invalid email address";
+  }
+}
+```
+
+///////////////////////////////////////////
+
+Property 'applyValidationStyles' does not exist on type 'CdDirectiveBinder'.ts(2339)
+```ts
+export class SignInController {
+  form: CdFormGroup;
+async auth(): Promise<void> {
+    const result = this.form.validateAll();
+    const binder = new CdDirectiveBinder(this);
+    binder.applyValidationStyles(result);
+
+    if (!this.form.valid) {
+      alert("Please correct the highlighted errors.");
+      return;
+    }
+
+    console.log("Authenticating:", this.form.value);
+  }
+}
+```
+
+```ts
+export class CdDirectiveBinder {
+  controller;
+  constructor(controller:any) {
+    this.controller = controller;
+  }
+
+  bind(rootElement: Document | HTMLElement = document): void {
+    if (!rootElement) return;
+
+    // --- cd-click ---
+    rootElement.querySelectorAll("[cd-click]").forEach((el) => {
+      const methodName = el.getAttribute("cd-click");
+      const method = this.controller[methodName];
+      if (typeof method === "function") {
+        el.addEventListener("click", method.bind(this.controller));
+      }
+    });
+
+    // --- cd-model ---
+    rootElement.querySelectorAll("[cd-model]").forEach((el) => {
+      const modelKey = el.getAttribute("cd-model");
+
+      // Initialize input value from controller (if exists)
+      if (this.controller[modelKey] !== undefined && el instanceof HTMLInputElement) {
+        el.value = this.controller[modelKey];
+      }
+
+      // Update controller value on input change
+      el.addEventListener("input", (e) => {
+        this.controller[modelKey] = (e.target as HTMLInputElement).value;
+      });
+    });
+  }
+
+  unbind(rootElement = document) {
+    // optional cleanup: we can later add teardown logic if needed
+  }
+}
+```
+
+////////////////////////////////////////////////////
+Problematic line in validateAll():
+result[key] = control.error ?? null;
+Error:
+Property 'error' does not exist on type 'CdFormControl<any>'. Did you mean 'errors'?ts(2551)
+cd-form.control.ts(25, 7): 'errors' is declared here.
+
+```ts
+validateAll(): Record<string, string | null> {
+    const result: Record<string, string | null> = {};
+    this.valid = true;
+
+    Object.entries(this.controls).forEach(([key, control]) => {
+      const error = control.validate();
+      result[key] = control.error ?? null;
+      if (result[key]) this.valid = false;
+    });
+
+    return result;
+  }
+```
+
+```ts
+export class CdFormControl<T = any> {
+  private _value: T;
+  private _validators: ((value: T) => string | null)[];
+  private _errors: string[];
+
+  constructor(value: T = null, validators: ((value: T) => string | null)[] = []) {
+    this._value = value;
+    this._validators = validators;
+    this._errors = [];
+  }
+
+  get value(): T {
+    return this._value;
+  }
+
+  setValue(value: T): void {
+    this._value = value;
+    this.validate();
+  }
+
+  get valid(): boolean {
+    return this._errors.length === 0;
+  }
+
+  get errors(): string[] {
+    return this._errors;
+  }
+
+  validate(): void {
+    this._errors = [];
+    for (const validator of this._validators) {
+      const result = validator(this._value);
+      if (result) this._errors.push(result);
+    }
+  }
+
+  reset(value: T = null): void {
+    this._value = value;
+    this._errors = [];
+  }
+}
+```
+
+//////////////////////////////////////
+
+
+You have suggested the following css settings.
+Given the nature of the theming system, it would help to suggest which file should host the css settings given.
+I have shared the current status of public/themes/common/base.css and the directory structure of the public directory.
+Also confirm if the base.css remains the same.
+```css
+input.cd-valid {
+  border: 1px solid #2ecc71;
+  box-shadow: 0 0 3px rgba(46, 204, 113, 0.4);
+}
+
+input.cd-invalid {
+  border: 1px solid #e74c3c;
+  box-shadow: 0 0 3px rgba(231, 76, 60, 0.4);
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+```
+// public/themes/common/base.css
+```css
+:root {
+  --cd-color-valid: #2ecc71;
+  --cd-color-invalid: #e74c3c;
+  --cd-color-hint: #999;
+}
+
+.cd-form-field {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.cd-form-field input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.6rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cd-form-field input.cd-valid {
+  border-color: var(--cd-color-valid);
+  box-shadow: 0 0 4px var(--cd-color-valid);
+}
+
+.cd-form-field input.cd-invalid {
+  border-color: var(--cd-color-invalid);
+  box-shadow: 0 0 4px var(--cd-color-invalid);
+}
+
+.cd-hint {
+  font-size: 0.85rem;
+  color: var(--cd-color-hint);
+}
+
+.cd-form-field input.cd-invalid + .cd-hint {
+  color: var(--cd-color-invalid);
+}
+
+```
+Current directory structure
+```sh
+public/
+├── assets
+│   ├── css
+│   │   └── index.css
+│   ├── fonts
+│   └── images
+├── shell.config.json
+└── themes
+    ├── common
+    │   ├── base.css
+    │   └── layout.json
+    ├── dark
+    │   └── theme.css
+    └── default
+        ├── logo.png
+        ├── menu-systems
+        │   └── metismenu.css
+        ├── theme.css
+        └── theme.json
+```
+
+//////////////////////////////////////////////
+Illustration 1 shows the current state of developer version of sign-in.controller.ts.
+It has the structure that is the expected standard. The example you have given is shown in Illustation 2.
+Can you give the version that uses the current update of dependancies.
+For example Illustration 1 codes are throwing errors at the line:
+const binder = new CdDirectiveBinder(this);
+Error: 
+Expected 2 arguments, but got 1.ts(2554)
+cd-directive-binder.ts(81, 34): An argument for 'formSelector' was not provided.
+(alias) new CdDirectiveBinder(form: CdFormGroup, formSelector: string): CdDirectiveBinder
+import CdDirectiveBinder
+
+When giving the example based on the expected standard, Illustraton 1, a suggestion for matching template will also be expected.
+Illustration 1:
+// src/CdShell/sys/cd-user/controllers/sign-in.controller.ts
+```ts
+export class SignInController {
+  form: CdFormGroup;
+
+  constructor() {
+    this.form = new CdFormGroup({
+      username: new CdFormControl("", [
+        CdValidators.required("Username is required"),
+      ]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "Password must be at least 4 characters"),
+      ]),
+    });
+  }
+
+  __template(): string {
+    return `
+      <form id="loginForm">
+        <input name="username" cdFormControl />
+        <div class="error-message" data-error-for="username"></div>
+        <input type="password" name="password" cdFormControl />
+        <div class="error-message" data-error-for="password"></div>
+        <button type="submit">Login</button>
+      </form>
+    `;
+  }
+
+  __setup(): void {
+    const binder = new CdDirectiveBinder(this);
+    binder.bind();
+
+    const form = document.getElementById("signInForm");
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.auth();
+    });
+  }
+
+  async auth(): Promise<void> {
+    const result = this.form.validateAll();
+    const binder = new CdDirectiveBinder(this);
+    binder.applyValidationStyles(result);
+
+    if (!this.form.valid) {
+      alert("Please correct the highlighted errors.");
+      return;
+    }
+
+    console.log("Authenticating:", this.form.value);
+  }
+}
+```
+
+Illustration 2:
+// Example of application
+```ts
+import { CdFormGroup } from "./cd-form-group.control";
+import { CdFormControl } from "./cd-form.control";
+import { CdValidators } from "./cd-validators.controller";
+import { CdDirectiveBinder } from "./cd-directive.binder";
+
+export class LoginController {
+  private form: CdFormGroup;
+  private binder: CdDirectiveBinder;
+
+  constructor() {
+    this.form = new CdFormGroup({
+      username: new CdFormControl("", [CdValidators.required("Username is required")]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "At least 4 characters required"),
+      ]),
+    });
+
+    this.binder = new CdDirectiveBinder(this.form, "#loginForm");
+    this.initializeSubmit();
+  }
+
+  private initializeSubmit(): void {
+    const formElement = document.querySelector("#loginForm") as HTMLFormElement;
+    formElement.addEventListener("submit", (event) => {
+      event.preventDefault();
+      this.form.markAllAsTouched();
+      this.binder.validateAll();
+
+      if (this.form.valid) {
+        console.log("Form data:", this.form.value);
+      } else {
+        console.warn("Form invalid", this.form);
+      }
+    });
+  }
+}
+```
+
+//////////////////////////////////////////////////
+
+In the __setup(), you have suggested the line:
+this.binder.bind();
+But the latest CdDirectiveBinder does not have bind() method.
+What do you suggest.
+
+```ts
+import { CdFormGroup } from "../cd-guig/controllers/cd-form-group.control";
+
+export class CdDirectiveBinder {
+  private form: CdFormGroup;
+  private formElement: HTMLFormElement;
+
+  constructor(form: CdFormGroup, formSelector: string) {
+    this.form = form;
+    this.formElement = document.querySelector(formSelector) as HTMLFormElement;
+
+    if (!this.formElement) {
+      console.warn(`Form element not found: ${formSelector}`);
+      return;
+    }
+
+    this.initializeBindings();
+  }
+
+  private initializeBindings(): void {
+    Object.entries(this.form.controls).forEach(([key, control]) => {
+      const input = this.formElement.querySelector(`[name="${key}"]`) as HTMLInputElement;
+      if (!input) return;
+
+      // Initial value sync
+      input.value = control.value ?? "";
+
+      // Listen for changes
+      input.addEventListener("input", (e) => {
+        const target = e.target as HTMLInputElement;
+        control.setValue(target.value);
+        this.applyValidationStyles({ [key]: control.error });
+      });
+
+      input.addEventListener("blur", () => {
+        control.markAsTouched();
+        this.applyValidationStyles({ [key]: control.error });
+      });
+    });
+  }
+
+  validateAll(): void {
+    const result = this.form.validateAll();
+    this.applyValidationStyles(result);
+  }
+
+  applyValidationStyles(result: Record<string, string | null>): void {
+    for (const [key, error] of Object.entries(result)) {
+      const input = this.formElement.querySelector(`[name="${key}"]`) as HTMLInputElement;
+      const errorDiv = this.formElement.querySelector(`[data-error-for="${key}"]`) as HTMLElement;
+
+      if (!input) continue;
+
+      input.classList.remove("cd-valid", "cd-invalid");
+      if (error) {
+        input.classList.add("cd-invalid");
+        if (errorDiv) errorDiv.textContent = error;
+      } else {
+        input.classList.add("cd-valid");
+        if (errorDiv) errorDiv.textContent = "";
+      }
+    }
+  }
+}
+```
+
+/////////////////////////////////////////
+
+Line:
+const binder = new CdDirectiveBinder(moduleInfo.controller);
+Error:
+Expected 2 arguments, but got 1.ts(2554)
+cd-directive-binder.ts(81, 34): An argument for 'formSelector' was not provided.
+(alias) new CdDirectiveBinder(form: CdFormGroup, formSelector: string): CdDirectiveBinder
+import CdDirectiveBinder
+
+Line:
+binder.bind(container);
+Error:
+Property 'bind' does not exist on type 'CdDirectiveBinder'.ts(2339)
+any
+
+
+
+```ts
+export class ModuleService {
+async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+
+    // --- Step 0: Preload system modules (first run only) ---
+    if (!ModuleService.hasPreloaded) {
+      ModuleService.hasPreloaded = true;
+      await ModuleService.preloadModulesSequentially();
+    }
+
+    console.debug("ModuleService::loadModule()/01:");
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
+
+    // --- Step 1: Compute target path ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    console.debug("[ModuleService] expectedPathFragment:", expectedFragment);
+
+    // --- Step 2: Browser (Vite) Mode ---
+    if (isVite) {
+      console.debug("[ModuleService] 1");
+      const pathKey = Object.keys(this.modules).find((key) => {
+        const normalizedKey = key.replace(/^\.?\//, "");
+        return normalizedKey === expectedFragment;
+      });
+      console.debug("[ModuleService] 2");
+      if (!pathKey) {
+        console.error("[ModuleService] Available module keys:", Object.keys(this.modules));
+        throw new Error(`[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`);
+      }
+      console.debug("[ModuleService] 3");
+      try {
+        const loader = this.modules[pathKey];
+        console.debug("[ModuleService] 4");
+        const mod = (await loader()) as { module: ICdModule };
+        console.debug("[ModuleService] 5");
+        const moduleInfo = mod.module;
+        console.debug("[ModuleService] 6");
+
+        if (!moduleInfo)
+          throw new Error(`Missing 'module' export in: ${pathKey}`);
+        console.debug("[ModuleService] 7");
+        // Inject module template into DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+        console.debug("[ModuleService] 8");
+        // Initialize controller if defined
+        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
+        console.debug("[ModuleService] 9");
+        // Apply directive bindings
+        const binder = new CdDirectiveBinder(moduleInfo.controller);
+        console.debug("[ModuleService] 10");
+        binder.bind(container);
+        console.debug("[ModuleService] 11");
+        const now = new Date();
+        console.log(`[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleString()}`);
+        return moduleInfo;
+      } catch (err) {
+        console.debug("[ModuleService] 12");
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory.replace(/\\/g, "/").replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    console.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(`[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleString()}`);
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
+  }
+}
+```
+
+//////////////////////////////////
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Corpdesk Shell</title>
+    <!-- app global styles -->
+    <link rel="stylesheet" href="src/assets/css/index.css" />
+    <!-- Theme layout structure (public path) -->
+    <link rel="stylesheet" href="/themes/common/base.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    
+    <header id="cd-header">
+      <button id="cd-burger">&#9776;</button>
+      <!-- Burger icon -->
+      <img id="cd-logo" alt="Logo" />
+      <span id="cd-app-name">Corpdesk Shell</span>
+    </header>
+    <div id="cd-layout">
+      <div id="cd-overlay" class="hidden"></div>
+      <aside id="cd-sidebar"></aside>
+      <main id="cd-main-content"></main>
+    </div>
+
+    <script type="module" src="/src/app.ts"></script>
+  </body>
+</html>
+
+```
+
+///////////////////////////////////////////////
+Illustation 1 is the current developer version which is in class form.
+Kindly generate and equivalent compiled version which is expected in the form:
+export const ctlSignIn = {...codes...};
+
+Illustration 1:
+```ts
+export class SignInController {
+  form: CdFormGroup;
+  binder: CdDirectiveBinder;
+
+  constructor() {
+    // --- Define form structure ---
+    this.form = new CdFormGroup({
+      userName: new CdFormControl("", [
+        CdValidators.required("Username is required"),
+      ]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "Password must be at least 4 characters"),
+      ]),
+    });
+
+    // --- Initialize binder ---
+    // Form selector must match <form id="signInForm"> in template
+    this.binder = new CdDirectiveBinder(this.form, "#signInForm");
+  }
+
+  /**
+   * HTML template for this controller
+   */
+  __template(): string {
+    return `
+      <form id="signInForm" class="cd-form">
+        <div class="cd-form-field">
+          <label for="userName">Username</label>
+          <input
+            id="userName"
+            name="userName"
+            cdFormControl
+            placeholder="Enter userName"
+          />
+          <div class="error-message" data-error-for="userName"></div>
+        </div>
+
+        <div class="cd-form-field">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            cdFormControl
+            placeholder="Enter password"
+          />
+          <div class="error-message" data-error-for="password"></div>
+        </div>
+
+        <button type="submit">Sign In</button>
+      </form>
+    `;
+  }
+
+  /**
+   * Setup logic runs when the view is rendered
+   */
+  __setup(): void {
+    // binder already initialized in constructor; ensure form event is attached
+    const form = document.querySelector(
+      "#signInForm"
+    ) as HTMLFormElement | null;
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        this.auth();
+      });
+    }
+  }
+
+  /**
+   * Form authentication logic
+   */
+  async auth(): Promise<void> {
+    const validationResult = this.form.validateAll();
+    this.binder.applyValidationStyles(validationResult);
+
+    if (!this.form.valid) {
+      alert("Please correct the highlighted errors.");
+      return;
+    }
+
+    const user = this.form.value as UserModel;
+    console.log("Authenticating:", user);
+    alert(`Welcome, ${user.userName}!`);
+  }
+}
+```
+
+////////////////////////////////////////////////////////////////
+Now all seem well except:
+Earlier menu was loading ok.
+As were were working on recent updates, menu stopped loading but we had to just focus on the items that were being developed.
+I have shared the MenuService and ModuleService.loadModule()
+
+// src/CdShell/sys/moduleman/services/menu.service.ts
+```ts
+import { IMenuAdapter, MenuItem } from "../models/menu.model";
+import type { ITheme } from "../../theme/models/themes.model";
+import { MetisMenuAdapter } from "./metismenu-adaptor.service";
+// import { logger } from "../../../utils/logger";
+
+export class MenuService {
+  currentAdapter: any = null;
+
+  renderMenuWithSystem(
+    menu: MenuItem[],
+    theme: ITheme,
+    containerId = "cd-sidebar"
+  ) {
+    // this.logger.debug("Starting renderMenuWithSystem()");
+    // this.logger.debug("renderMenuWithSystem()/01");
+    // Always render plain HTML
+    this.renderPlainMenu(menu, containerId);
+
+    // Initialize adapter if needed
+    const system = theme?.layout?.sidebar?.menu?.menuSystem || "plain";
+    const adapter = this.menuAdapterFactory(system);
+    // this.logger.debug("renderMenuWithSystem()/adapter:", JSON.stringify(adapter));
+    if (this.currentAdapter?.destroy) {
+      // this.logger.debug("renderMenuWithSystem()/02");
+      this.currentAdapter.destroy();
+    }
+    if (adapter) {
+      // this.logger.debug("renderMenuWithSystem()/03");
+      adapter.initialize(containerId, theme.id);
+      this.currentAdapter = adapter;
+    }
+    // this.logger.debug("renderMenuWithSystem()/04");
+  }
+
+  renderPlainMenu(
+    menu: MenuItem[],
+    containerId: string = "sidebar",
+    cdToken?: string
+  ) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = `<ul class="cd-menu-root">${this.renderMenuHtml(
+      menu
+    )}</ul>`;
+    // Attach handlers to <li> elements
+    this.attachClickHandlers(container, menu, cdToken);
+  }
+
+  attachClickHandlers(
+    container: HTMLElement,
+    menu: MenuItem[],
+    cdToken?: string
+  ) {
+    const items = container.querySelectorAll(".cd-menu-item");
+    let index = 0;
+    this.walkMenu(menu, container, items, index, cdToken);
+  }
+
+  walkMenu(
+    menu: MenuItem[],
+    parentEl: Element | HTMLElement,
+    items: NodeListOf<Element>,
+    index: number,
+    cdToken: string
+  ) {
+    for (const item of menu) {
+      const li = items[index++];
+      if (li) {
+        li.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this.onMenuClick(item, cdToken);
+        });
+      }
+      if (item.children?.length) {
+        this.walkMenu(item.children, li, items, index, cdToken);
+      }
+    }
+  }
+
+  onMenuClick(item: MenuItem, cdToken?: string) {
+    // this.logger.debug("onMenuClick()/01:", item);
+    // this.logger.debug("onMenuClick()/item:", item);
+    // this.logger.debug("Menu clicked:", item.label);
+
+    if (item.itemType === "action") {
+      // this.logger.debug("onMenuClick()/02:", item);
+      if (item.action) {
+        // this.logger.debug("Executing action for item:", item.label);
+        item.action();
+        return;
+      }
+    }
+
+    if (item.itemType === "template") {
+      // this.logger.debug("onMenuClick()/03:", item);
+      if (item.template) {
+        // this.logger.debug("Loading template for item:", item.label);
+        this.loadResource({ cdToken, item });
+        return;
+      }
+    }
+
+    // this.logger.debug("onMenuClick()/04:", item);
+    // Fallback to route if present
+    if (item.itemType === "route" && item.route) {
+      // this.logger.debug(`Navigating to route: ${item.route}`);
+      if (item.route) {
+        window.location.hash = item.route;
+      }
+    }
+  }
+
+  loadResource(options: { cdToken?: string; item?: MenuItem } = {}) {
+    // this.logger.debug("loadResource()/01:");
+    const { cdToken, item } = options;
+
+    // Example authorization guard (placeholder)
+    const isAuthorized = true; // Replace with real logic
+    if (!isAuthorized) {
+      // this.logger.debug("loadResource()/02:");
+      // this.logger.warn("Access denied for", item?.label);
+      return;
+    }
+
+    if (item?.template) {
+      // this.logger.debug("loadResource()/03:");
+      const html =
+        typeof item.template === "function" ? item.template() : item.template;
+      // this.logger.debug("Loaded HTML:", html);
+      const contentEl = document.getElementById("cd-main-content");
+      if (contentEl) {
+        // this.logger.debug("loadResource()/04:");
+        contentEl.innerHTML = html;
+        const controller = item.controller;
+        if (controller?.__setup && typeof controller.__setup === "function") {
+          controller.__setup(); // 🔁 safely attach event listeners
+        }
+      }
+    }
+
+    // Optional lifecycle hook
+    if (window.cdShell?.lifecycle?.onViewLoaded) {
+      // this.logger.debug("loadResource()/05:");
+      window.cdShell.lifecycle.onViewLoaded(item, cdToken);
+    }
+  }
+
+  /**
+   * Recursively renders the menu items into HTML.
+   * @param menu - The menu items to render.
+   * @returns The rendered HTML string.
+   */
+
+  renderMenuHtml(menu: MenuItem[]): string {
+    return menu
+      .map((item) => {
+        const hasChildren = item.children && item.children.length > 0;
+        const route = item.route || "";
+        const encodedIcon = item.icon ? btoa(JSON.stringify(item.icon)) : "";
+
+        return `
+        <li 
+          class="cd-menu-item" 
+          data-route="${route}" 
+          ${encodedIcon ? `data-icon="${encodedIcon}"` : ""}
+        >
+          <span class="cd-menu-label">${item.label}</span>
+          ${
+            hasChildren
+              ? `<ul class="cd-submenu">${this.renderMenuHtml(item.children!)}</ul>`
+              : ""
+          }
+        </li>
+      `;
+      })
+      .join("");
+  }
+
+  /**
+   * Factory function to create a menu adapter based on the system type.
+   * @param system - The system type (e.g., "metismenu", "plain").
+   * @returns An instance of the corresponding menu adapter or null if no adapter is needed.
+   */
+  menuAdapterFactory(system: string): IMenuAdapter | null {
+    switch (system) {
+      case "metismenu":
+        return new MetisMenuAdapter();
+      // Add more as needed
+      case "plain":
+      default:
+        return null; // plain menu needs no JS enhancement
+    }
+  }
+}
+
+```
+
+// src/CdShell/sys/moduleman/services/module.service.ts
+```ts
+export class ModuleService{
+async loadModule(ctx: string, moduleId: string): Promise<ICdModule> {
+    await ModuleService.ensureInitialized();
+
+    // --- Step 0: Preload system modules (first run only) ---
+    if (!ModuleService.hasPreloaded) {
+      ModuleService.hasPreloaded = true;
+      await ModuleService.preloadModulesSequentially();
+    }
+
+    console.debug("ModuleService::loadModule()/01:");
+    const isVite = this.isViteMode;
+    const baseDirectory = this.baseDir;
+
+    // --- Step 1: Compute target path ---
+    const expectedFragment = isVite
+      ? `src/CdShell/${ctx}/${moduleId}/view/index.js`
+      : `${baseDirectory}/${ctx}/${moduleId}/view/index.js`;
+
+    console.debug("[ModuleService] expectedPathFragment:", expectedFragment);
+
+    // --- Step 2: Browser (Vite) Mode ---
+    if (isVite) {
+      console.debug("[ModuleService] 1");
+      const pathKey = Object.keys(this.modules).find((key) => {
+        const normalizedKey = key.replace(/^\.?\//, "");
+        return normalizedKey === expectedFragment;
+      });
+
+      if (!pathKey) {
+        console.error(
+          "[ModuleService] Available module keys:",
+          Object.keys(this.modules)
+        );
+        throw new Error(
+          `[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`
+        );
+      }
+
+      try {
+        const loader = this.modules[pathKey];
+        const mod = (await loader()) as { module: ICdModule };
+        const moduleInfo = mod.module;
+
+        if (!moduleInfo)
+          throw new Error(`Missing 'module' export in: ${pathKey}`);
+
+        // Inject template into DOM
+        const container = document.getElementById("cd-main-content");
+        if (container) container.innerHTML = moduleInfo.template;
+
+        // Initialize controller
+        if (moduleInfo.controller?.__setup) {
+          moduleInfo.controller.__setup(); // Controller handles binder internally
+        }
+
+        const now = new Date();
+        console.log(
+          `[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleString()}`
+        );
+        return moduleInfo;
+      } catch (err) {
+        console.error("[ModuleService] Browser import failed:", err);
+        throw err;
+      }
+    }
+
+    // --- Step 3: Node (Non-Browser) Mode ---
+    const normalizedBase = baseDirectory
+      .replace(/\\/g, "/")
+      .replace(/\/+$/, "");
+    const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
+
+    console.debug("[ModuleService] Importing (Node):", filePath);
+
+    try {
+      const fileUrl = url.pathToFileURL(filePath).href;
+      const mod = await import(fileUrl);
+      const now = new Date();
+      console.log(
+        `[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleString()}`
+      );
+      return mod.module;
+    } catch (err) {
+      console.error("[ModuleService] Node import failed:", err);
+      throw err;
+    }
+  }
+}
+```
+////////////////////////////////////////////
+
+```log
+oduleService] Browser import failed: TypeError: au.template is not a function
+    <anonymous> https://localhost:5173/assets/index-CA7u3xwT.js:88
+index-e4wH-QbE.js:31:7666
+[BOOTSTRAP ERROR] TypeError: au.template is not a function
+    <anonymous> https://localhost:5173/assets/index-CA7u3xwT.js:88
+```
+
+////////////////////////////////////////////
+We have reached a milestone that can be summarised with the following points
+- Developing compiled code with support to integrate:
+  - Reactive corpdesk forms
+    - CdFormGroup
+    - CdFormControl
+    - CdValidators
+    - CdDirectiveBinder
+    - Model
+
+Do for me a documentation recap of the above as a developer guide:
+
+
+
+
+
+
+
 /////////////////////////////////////////
 
 ## Completed:
@@ -7127,6 +8795,14 @@ export abstract class AbstractBaseService<T> implements BaseServiceInterface<T> 
   - selected imports to be done conditionally based on environment
   - cyclic codes in PWA/browser resolved using BaseService.get _svSess() with dynamic import.
 
+- Developing compiled code with support to integrate:
+  - Reactive corpdesk forms
+    - CdFormGroup
+    - CdFormControl
+    - CdValidators
+    - CdDirectiveBinder
+    - Model
+
 
 
 
@@ -7135,14 +8811,36 @@ export abstract class AbstractBaseService<T> implements BaseServiceInterface<T> 
 ## ToDo:
 
 
+PWA Technoloties and Documentation:
 
-- Menu System:menu/services/menuRenderer.ts → How the raw menu config is turned into HTML/DOM.
 
-- Theme Loader:theme/services/theme-loader.ts → How CSS and JSON configs are applied dynamically.
+- Menu System:
+  - menu/services/menuRenderer.ts → How the raw menu config is turned into HTML/DOM.
 
-- Config Files: config/shell.config.ts and config/themeConfig.ts → Default settings, structure, and developer extension points.
+- Theme Loader:
+  - theme/services/theme-loader.ts → How CSS and JSON configs are applied dynamically.
 
-- Logger Utility:utils/logger.ts → For developers to know how to debug and integrate logs in their modules.
+- Config Files: 
+  - config/shell.config.ts
+  - config/themeConfig.ts → Default settings, structure, and developer extension points.
+  - environment and cross-environment code reuse
+
+- Logger: 
+  - Utility:utils/logger.ts → For developers to know how to debug and integrate logs in their modules.
+
+- Directives
+- Forms: 
+  - Emulate angular form groups
+  - Use the initial codes for form processing to do POC
+  - mould the codes to work as Angulare corpdesk login process.
+- cd-push: 
+  - sharing cd-push codes
+  - define cd-push, cd-sio, cd-wss
+
+- tesing controller loading
+  - optional websocket node is working
+  - forms working similar to Angular reactive forms
+  - compile controller to view 
 
 Classing the codes:
 
@@ -7168,6 +8866,8 @@ Goal:
 - proof of concept (convert dev-controller to runtime-controller)
 - implementation plan
 - integration of cd-cli
+
+
 
 
 ////////////////////////////////////////////////////////////

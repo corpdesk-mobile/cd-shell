@@ -2,13 +2,16 @@ import { v4 as uuidv4 } from "uuid";
 import { BehaviorSubject, Observable, fromEvent } from "rxjs";
 import { Socket, io } from "socket.io-client";
 import { CdObjId, ICdPushEnvelop } from "../../base";
+import config from "../../../../config";
 export class SioClientService {
   env: any = null;
   jwtToken = "";
   socket: Socket;
   public message$: BehaviorSubject<string> = new BehaviorSubject("");
   pushDataList: ICdPushEnvelop[] = [];
-  constructor() {}
+  constructor() {
+    
+  }
 
   setEnv(env: any) {
     this.env = env;
@@ -67,7 +70,7 @@ export class SioClientService {
    */
   initSio(cls: any, action: any) {
     console.log("cdUiLib::SioClientService::initSio()/01");
-    this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
+    this.socket = io(`${config.cdSio.endpoint}`,config.cdSio.options);
     console.log(
       "cdUiLib::SioClientService::initSio()/this.socket:",
       this.socket

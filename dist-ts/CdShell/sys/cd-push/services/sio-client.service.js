@@ -1,5 +1,6 @@
 import { BehaviorSubject, Observable, fromEvent } from "rxjs";
 import { io } from "socket.io-client";
+import config from "../../../../config";
 export class SioClientService {
     constructor() {
         this.env = null;
@@ -148,7 +149,7 @@ export class SioClientService {
      */
     initSio(cls, action) {
         console.log("cdUiLib::SioClientService::initSio()/01");
-        this.socket = io(this.env.sioEndpoint, this.env.sioOptions);
+        this.socket = io(`${config.cdSio.endpoint}`, config.cdSio.options);
         console.log("cdUiLib::SioClientService::initSio()/this.socket:", this.socket);
         // this.registerResource(rGuid)
         /**

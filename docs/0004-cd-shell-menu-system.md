@@ -255,6 +255,24 @@ export interface MenuItem {
 }
 ```
 
+### Sample Menu data
+
+```ts
+const menu = [
+    {
+      label: 'User',
+      route: 'sys/cd-user',
+      children: [
+        { label: 'Sign In', route: 'sys/cd-user/sign-in', template: ctlSignIn.template() },
+        { label: 'Sign Up', route: 'sys/cd-user/sign-up', template: ctlSignUp.template() }
+      ]
+    }
+  ]
+```
+
+
+
+---
 #### 🔹 Properties
 
 * **`label`**:

@@ -2,8 +2,6 @@
 // import { CdDirectiveBinder } from "../../base/cd-directive-binder";
 // import { ICdModule } from "../models/module.model";
 
-
-
 // // Node.js module placeholders
 // let fs: any;
 // let path: any;
@@ -181,8 +179,6 @@
 //   }
 // }
 
-
-
 // --------------------------------------
 // Imports
 // --------------------------------------
@@ -291,7 +287,10 @@ export class ModuleService {
         const loaded = await instance.loadModule(mod.ctx, mod.moduleId);
 
         // Run controller setup if available
-        if (loaded?.controller && typeof loaded.controller.__setup === "function") {
+        if (
+          loaded?.controller &&
+          typeof loaded.controller.__setup === "function"
+        ) {
           console.debug(`[Preload] Setting up ${mod.component}`);
           await loaded.controller.__setup();
         }
@@ -333,47 +332,49 @@ export class ModuleService {
         const normalizedKey = key.replace(/^\.?\//, "");
         return normalizedKey === expectedFragment;
       });
-      console.debug("[ModuleService] 2");
+
       if (!pathKey) {
-        console.error("[ModuleService] Available module keys:", Object.keys(this.modules));
-        throw new Error(`[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`);
+        console.error(
+          "[ModuleService] Available module keys:",
+          Object.keys(this.modules)
+        );
+        throw new Error(
+          `[ModuleService] Module not found for ctx=${ctx}, moduleId=${moduleId}`
+        );
       }
-      console.debug("[ModuleService] 3");
+
       try {
         const loader = this.modules[pathKey];
-        console.debug("[ModuleService] 4");
         const mod = (await loader()) as { module: ICdModule };
-        console.debug("[ModuleService] 5");
         const moduleInfo = mod.module;
-        console.debug("[ModuleService] 6");
 
         if (!moduleInfo)
           throw new Error(`Missing 'module' export in: ${pathKey}`);
-        console.debug("[ModuleService] 7");
-        // Inject module template into DOM
+
+        // Inject template into DOM
         const container = document.getElementById("cd-main-content");
         if (container) container.innerHTML = moduleInfo.template;
-        console.debug("[ModuleService] 8");
-        // Initialize controller if defined
-        if (moduleInfo.controller?.__setup) moduleInfo.controller.__setup();
-        console.debug("[ModuleService] 9");
-        // Apply directive bindings
-        const binder = new CdDirectiveBinder(moduleInfo.controller);
-        console.debug("[ModuleService] 10");
-        binder.bind(container);
-        console.debug("[ModuleService] 11");
+
+        // Initialize controller
+        if (moduleInfo.controller?.__setup) {
+          moduleInfo.controller.__setup(); // Controller handles binder internally
+        }
+
         const now = new Date();
-        console.log(`[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleString()}`);
+        console.log(
+          `[ModuleService] Loaded '${moduleId}' (Vite mode) at ${now.toLocaleString()}`
+        );
         return moduleInfo;
       } catch (err) {
-        console.debug("[ModuleService] 12");
         console.error("[ModuleService] Browser import failed:", err);
         throw err;
       }
     }
 
     // --- Step 3: Node (Non-Browser) Mode ---
-    const normalizedBase = baseDirectory.replace(/\\/g, "/").replace(/\/+$/, "");
+    const normalizedBase = baseDirectory
+      .replace(/\\/g, "/")
+      .replace(/\/+$/, "");
     const filePath = `${normalizedBase}/${ctx}/${moduleId}/view/index.js`;
 
     console.debug("[ModuleService] Importing (Node):", filePath);
@@ -382,7 +383,9 @@ export class ModuleService {
       const fileUrl = url.pathToFileURL(filePath).href;
       const mod = await import(fileUrl);
       const now = new Date();
-      console.log(`[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleString()}`);
+      console.log(
+        `[ModuleService] Loaded '${moduleId}' (Node mode) at ${now.toLocaleString()}`
+      );
       return mod.module;
     } catch (err) {
       console.error("[ModuleService] Node import failed:", err);

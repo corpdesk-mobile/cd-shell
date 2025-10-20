@@ -62,113 +62,206 @@
 // };
 ////////////////////////////////////////////////////
 
-import { DevSyncClientService } from "../../dev-sync/services/dev-sync-client.service";
+// import { IdeAgentService } from "../../dev-sync/services/ide-agent.service";
+// import config from "../../../../config";
+
+// export const ctlSignIn = {
+//   username: "",
+//   password: "",
+
+//   __template() {
+//     return `
+//       <form id="signInForm" class="cd-sign-in">
+//         <h1 class="cd-heading">Sign In</h1>
+
+//         <label>Username</label>
+//         <input cd-model="username" placeholder="Username" />
+
+//         <label>Password</label>
+//         <input cd-model="password" type="password" placeholder="Password" />
+
+//         <button type="submit">Sign In</button>
+//       </form>
+//     `;
+//   },
+
+//   __setup() {
+//     console.info("[cd-user] Initializing IdeAgentService (runtime)...");
+
+//     try {
+//       // const endpoint = config.cdSio.endpoint;
+//       this.svIdeAgent = new IdeAgentService();
+
+
+//       // Listen for messages from IDE
+//       this.svIdeAgent.initialize(() => {
+//         // this.onDevSyncMessage(payload);
+//       });
+
+//       console.log("[cd-user] svIdeAgent initialized successfully");
+//     } catch (err) {
+//       console.error("[cd-user] Failed to initialize svIdeAgent:", err);
+//     }
+
+//     // Attach form listener
+//     const form = document.getElementById("signInForm");
+//     if (!form) {
+//       console.warn("[cd-user] signInForm not found");
+//       return;
+//     }
+
+//     form.addEventListener("submit", (e) => {
+//       e.preventDefault();
+//       this.auth();
+//     });
+
+//     console.log("[cd-user] Controller setup complete");
+//   },
+
+//   auth() {
+//     console.log("Auth triggered with:", this.username, this.password);
+
+//     // Prepare payload for IDE (chat partner)
+//     const payload = {
+//       source: { appId: this.devSync.appId },
+//       target: "ide-agent",
+//       action: "AUTH_ATTEMPT",
+//       data: {
+//         username: this.username,
+//         password: this.password,
+//         timestamp: new Date().toISOString(),
+//       },
+//     };
+
+//     this.devSync.emitPayload(payload);
+//     alert(`Hello, ${this.username}!`);
+//   },
+
+//   onDevSyncMessage(payload) {
+//     const { source, action, data } = payload;
+
+//     // Avoid acting on own messages
+//     if (source.appId === this.devSync.appId) return;
+
+//     switch (action) {
+//       case "AUTH_RESULT":
+//         console.log("[cd-user] Auth result received:", data);
+//         alert(data.message);
+//         break;
+
+//       case "UPDATE_CONTROLLER":
+//         console.log("[cd-user] Controller update payload:", data);
+//         this.applyControllerUpdate(data);
+//         break;
+
+//       default:
+//         console.log("[cd-user] Unknown DevSync action:", action);
+//     }
+//   },
+
+//   applyControllerUpdate(updateData) {
+//     console.log("[cd-user] Applying runtime update:", updateData);
+//     // In future, handle live controller patching here
+//   },
+// };
+
+//////////////////////////////////////////////////////////////////
+
+import { IdeAgentService } from "../../dev-sync/services/ide-agent.service";
 import config from "../../../../config";
 
-export const ctlSignIn = {
-  username: "",
-  password: "",
+import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
+import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
+import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
+import { CdDirectiveBinder } from "../../base/cd-directive-binder";
 
+
+export const ctlSignIn = {
+  form: null,
+  binder: null,
+
+  /**
+   * Initializes the controller — constructs the form and binder.
+   */
+  __init() {
+    this.form = new CdFormGroup({
+      userName: new CdFormControl("", [
+        CdValidators.required("Username is required"),
+      ]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "Password must be at least 4 characters"),
+      ]),
+    });
+
+    // Initialize binder — form selector must match template form ID
+    this.binder = new CdDirectiveBinder(this.form, "#signInForm");
+  },
+
+  /**
+   * HTML template for the view.
+   */
   __template() {
     return `
-      <form id="signInForm" class="cd-sign-in">
-        <h1 class="cd-heading">Sign In</h1>
+      <form id="signInForm" class="cd-form">
+        <div class="cd-form-field">
+          <label for="userName">Username</label>
+          <input
+            id="userName"
+            name="userName"
+            cdFormControl
+            placeholder="Enter username"
+          />
+          <div class="error-message" data-error-for="userName"></div>
+        </div>
 
-        <label>Username</label>
-        <input cd-model="username" placeholder="Username" />
-
-        <label>Password</label>
-        <input cd-model="password" type="password" placeholder="Password" />
+        <div class="cd-form-field">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            cdFormControl
+            placeholder="Enter password"
+          />
+          <div class="error-message" data-error-for="password"></div>
+        </div>
 
         <button type="submit">Sign In</button>
       </form>
     `;
   },
 
+  /**
+   * Runs after template is rendered to DOM.
+   */
   __setup() {
-    console.info("[cd-user] Initializing DevSyncClient (runtime)...");
+    // Initialize form and binder if not already
+    if (!this.form) this.__init();
 
-    try {
-      // const endpoint = config.cdSio.endpoint;
-      this.devSync = new DevSyncClientService();
-
-      // Assign a unique runtime identity (browser app instance)
-      this.devSync.setAppId("vite-runtime");
-
-      // Register this controller as a chat user
-      this.devSync.registerClient({
-        role: "runtime",
-        controller: "sign-in",
+    const form = document.querySelector("#signInForm");
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        this.auth();
       });
-
-      // Listen for messages from IDE
-      this.devSync.onPayload((payload) => {
-        this.onDevSyncMessage(payload);
-      });
-
-      console.log("[cd-user] DevSyncClient initialized successfully");
-    } catch (err) {
-      console.error("[cd-user] Failed to initialize DevSyncClient:", err);
     }
+  },
 
-    // Attach form listener
-    const form = document.getElementById("signInForm");
-    if (!form) {
-      console.warn("[cd-user] signInForm not found");
+  /**
+   * Authentication handler.
+   */
+  async auth() {
+    const validationResult = this.form.validateAll();
+    this.binder.applyValidationStyles(validationResult);
+
+    if (!this.form.valid) {
+      alert("Please correct the highlighted errors.");
       return;
     }
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.auth();
-    });
-
-    console.log("[cd-user] Controller setup complete");
-  },
-
-  auth() {
-    console.log("Auth triggered with:", this.username, this.password);
-
-    // Prepare payload for IDE (chat partner)
-    const payload = {
-      source: { appId: this.devSync.appId },
-      target: "ide-agent",
-      action: "AUTH_ATTEMPT",
-      data: {
-        username: this.username,
-        password: this.password,
-        timestamp: new Date().toISOString(),
-      },
-    };
-
-    this.devSync.emitPayload(payload);
-    alert(`Hello, ${this.username}!`);
-  },
-
-  onDevSyncMessage(payload) {
-    const { source, action, data } = payload;
-
-    // Avoid acting on own messages
-    if (source.appId === this.devSync.appId) return;
-
-    switch (action) {
-      case "AUTH_RESULT":
-        console.log("[cd-user] Auth result received:", data);
-        alert(data.message);
-        break;
-
-      case "UPDATE_CONTROLLER":
-        console.log("[cd-user] Controller update payload:", data);
-        this.applyControllerUpdate(data);
-        break;
-
-      default:
-        console.log("[cd-user] Unknown DevSync action:", action);
-    }
-  },
-
-  applyControllerUpdate(updateData) {
-    console.log("[cd-user] Applying runtime update:", updateData);
-    // In future, handle live controller patching here
+    const user = this.form.value;
+    console.log("Authenticating:", user);
+    alert(`Welcome, ${user.userName}!`);
   },
 };

@@ -1,11 +1,11 @@
-export const ctlSignIn = {
+export const ctlSignUp = {
   username: "",
   password: "",
 
   __template() {
     return `
-      <form class="cd-sign-in">
-        <h1 class="cd-heading">Sign In</h1>
+      <form class="cd-sign-up">
+        <h1 class="cd-heading">Signup</h1>
 
         <label>Username</label>
         <input cd-model="username" placeholder="Username" />
@@ -13,7 +13,7 @@ export const ctlSignIn = {
         <label>Password</label>
         <input cd-model="password" type="password" placeholder="Password" />
 
-        <button type="button" cd-click="auth">Sign In</button>
+        <button type="button" cd-click="auth">Signup</button>
       </form>
     `;
   },
@@ -23,7 +23,7 @@ export const ctlSignIn = {
   },
 
   auth() {
-    console.log("Auth triggered with:", this.username, this.password);
+    console.log("Signup triggered with:", this.username, this.password);
     alert(`Hello, ${this.username}!`);
   },
 };

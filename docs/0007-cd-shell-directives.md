@@ -1,7 +1,12 @@
 
----
+
 
 # 🧩  Corpdesk CdShell Directives Developer Guide
+
+Refs:
+- docs/0007-cd-shell-directives.md
+- docs/0021-cd-reactive-forms-implementation.md
+- docs/0020-cd-shell-form-processing.md
 
 
 ## 1. Overview

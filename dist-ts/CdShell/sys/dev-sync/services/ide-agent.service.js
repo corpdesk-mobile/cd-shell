@@ -1,6 +1,7 @@
 // import config from "../../../../config";
 import path from "path";
 import fs from "fs";
+// import { DevSyncClientService } from "./dev-sync-client.service";
 import config from "../../../../config";
 import { SioClientService } from "../../cd-push/services/sio-client.service";
 import { BaseService, } from "../../base";
@@ -18,15 +19,15 @@ export class IdeAgentService {
     // corpdesk-rfc-0004 protocol methods
     ///////////////////////////////////////////////////////////
     async initialize() {
+        this.svSio.initSio(null, null);
         this.setAppId();
         this.initSioClient();
         this.startSaveWatcher();
     }
     setAppId() {
         console.log("dev-sync::IdeAgentService::setAppId()/01");
-        console.log("dev-sync::IdeAgentService::setAppId()/this.svSio.socket:", this.svSio.socket);
         localStorage.removeItem("appId");
-        // localStorage.setItem('appId', this.svBase.getGuid());
+        localStorage.setItem('appId', this.b.getGuid());
     }
     initSioClient() {
         const appId = localStorage.getItem("appId");
