@@ -4,7 +4,7 @@
 //   constructor(controller: any) {
 //     this.controller = controller;
 //   }
-export class CdDirectiveBinder {
+export class CdDirectiveBinderService {
     constructor(form, formSelector) {
         this.form = form;
         this.formElement = document.querySelector(formSelector);

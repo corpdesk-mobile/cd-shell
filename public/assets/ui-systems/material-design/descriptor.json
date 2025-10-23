@@ -1,0 +1,18 @@
+{
+    "id": "material",
+    "name": "Material Design (MDC)",
+    "version": "1.0",
+    "assetPath": "/assets/ui-systems/material-design",
+    "conceptMappings": {},
+    "themes": [
+        {
+            "name": "default",
+            "file": "material-components-web.min.css",
+            "default": true
+        }
+    ],
+    "directiveMap": {
+        "cd-tooltip": "data-mdc-tooltip"
+    },
+    "translator": "material-translator"
+}

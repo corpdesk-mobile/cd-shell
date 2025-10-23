@@ -173,7 +173,7 @@ import config from "../../../../config";
 import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
 import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
 import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
-import { CdDirectiveBinder } from "../../base/cd-directive-binder";
+import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
 
 
 export const ctlSignIn = {
@@ -195,7 +195,7 @@ export const ctlSignIn = {
     });
 
     // Initialize binder — form selector must match template form ID
-    this.binder = new CdDirectiveBinder(this.form, "#signInForm");
+    this.binder = new CdDirectiveBinderService(this.form, "#signInForm");
   },
 
   /**

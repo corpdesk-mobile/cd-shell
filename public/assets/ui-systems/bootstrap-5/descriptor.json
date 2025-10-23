@@ -1,0 +1,25 @@
+{
+    "id": "bootstrap-5",
+    "name": "Bootstrap 5",
+    "version": "5.3.0",
+    "assetPath": "/assets/ui-systems/bootstrap-5",
+    "conceptMappings": {
+        "button": {
+            "class": "btn btn-primary"
+        },
+        "card": {
+            "class": "card"
+        }
+    },
+    "themes": [
+        {
+            "name": "default",
+            "file": "bootstrap.min.css",
+            "default": true
+        }
+    ],
+    "directiveMap": {
+        "cd-tooltip": "data-bs-toggle=\"tooltip\""
+    },
+    "translator": "bootstrap-translator"
+}

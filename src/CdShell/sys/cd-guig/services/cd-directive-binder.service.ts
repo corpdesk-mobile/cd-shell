@@ -72,9 +72,9 @@
 //   }
 // }
 
-import { CdFormGroup } from "../cd-guig/controllers/cd-form-group.control";
+import { CdFormGroup } from "../controllers/cd-form-group.control";
 
-export class CdDirectiveBinder {
+export class CdDirectiveBinderService {
   private form: CdFormGroup;
   private formElement: HTMLFormElement;
 

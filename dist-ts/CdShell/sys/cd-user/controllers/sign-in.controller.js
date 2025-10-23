@@ -126,7 +126,7 @@
 import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
 import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
 import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
-import { CdDirectiveBinder } from "../../base/cd-directive-binder";
+import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
 export class SignInController {
     constructor() {
         // --- Define form structure ---
@@ -141,7 +141,7 @@ export class SignInController {
         });
         // --- Initialize binder ---
         // Form selector must match <form id="signInForm"> in template
-        this.binder = new CdDirectiveBinder(this.form, "#signInForm");
+        this.binder = new CdDirectiveBinderService(this.form, "#signInForm");
     }
     /**
      * HTML template for this controller
