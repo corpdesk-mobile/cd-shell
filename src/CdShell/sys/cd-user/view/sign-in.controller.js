@@ -167,9 +167,6 @@
 
 //////////////////////////////////////////////////////////////////
 
-import { IdeAgentService } from "../../dev-sync/services/ide-agent.service";
-import config from "../../../../config";
-
 import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
 import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
 import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";

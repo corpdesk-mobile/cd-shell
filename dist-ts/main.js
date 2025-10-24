@@ -1,4 +1,4 @@
-import 'reflect-metadata'; // MUST BE FIRST IMPORT
+import "reflect-metadata"; // MUST BE FIRST IMPORT
 import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
 import { LoggerService } from "./CdShell/utils/logger.service";
 import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
@@ -69,22 +69,57 @@ export class Main {
             this.logger.debug("bootstrapShell()/ctx:", ctx);
             this.logger.debug("bootstrapShell()/moduleId:", moduleId);
             this.logger.debug("bootstrapShell()/10:");
-            // 👉 Load module
-            const moduleInfo = await this.svModule.loadModule(ctx, moduleId);
-            if (moduleInfo.menu) {
-                this.logger.debug("Main::loadModule()/menu:", moduleInfo.menu);
-                // Load theme config for menu rendering
-                const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
-                if (!resTheme.ok) {
-                    const errorText = await resTheme.text();
-                    throw new Error(`Theme fetch failed: ${resTheme.status} ${resTheme.statusText}. Body: ${errorText}`);
+            // 👉 Experimental: Load allowed modules (currently cd-user + cd-admin)
+            const allowedModules = await this.svModule.getAllowedModules();
+            this.logger.debug("Main::allowedModules", allowedModules);
+            // Merge all menus into a single array, conforming to MenuItem[]
+            // const mergedMenu: MenuItem[] = allowedModules.map((mod: ICdModule) => ({
+            //   label: mod.moduleId.replace(/^cd-/, "").toUpperCase(),
+            //   itemType: "route",
+            //   route: `${mod.ctx}/${mod.moduleId}`,
+            //   icon: { iconType: "fontawesome", icon: "fa-folder" },
+            //   children: mod.menu || [],
+            // }));
+            const mergedMenu = allowedModules.map((mod) => {
+                const moduleRoot = mod.menu?.length === 1 ? mod.menu[0] : null;
+                if (moduleRoot &&
+                    moduleRoot.label.toLowerCase() ===
+                        mod.moduleId.replace(/^cd-/, "").toLowerCase()) {
+                    // ✅ Use existing menu root directly, but ensure its route is complete
+                    return {
+                        ...moduleRoot,
+                        route: `${mod.ctx}/${mod.moduleId}`,
+                        children: moduleRoot.children || [],
+                    };
                 }
-                const theme = (await resTheme.json());
-                this.logger.debug("Main::loadModule()/theme:", theme);
-                this.svMenu.renderMenuWithSystem(moduleInfo.menu, theme);
+                // 🧩 Otherwise, wrap safely
+                return {
+                    label: mod.moduleId.replace(/^cd-/, "").toUpperCase(),
+                    itemType: "route",
+                    route: `${mod.ctx}/${mod.moduleId}`,
+                    icon: { iconType: "fontawesome", icon: "fa-folder" },
+                    children: mod.menu || [],
+                };
+            });
+            // Log to verify
+            this.logger.debug("Main::mergedMenu", JSON.stringify(mergedMenu, null, 2));
+            // Load theme config for menu rendering
+            const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
+            if (!resTheme.ok) {
+                const errorText = await resTheme.text();
+                throw new Error(`Theme fetch failed: ${resTheme.status} ${resTheme.statusText}. Body: ${errorText}`);
             }
-            else {
-                this.logger.debug("Main::loadModule()/no menu to render");
+            const theme = (await resTheme.json());
+            // Render combined menu
+            this.svMenu.renderMenuWithSystem(mergedMenu, theme);
+            // OPTIONAL: Automatically load default module's main view
+            const defaultModule = allowedModules.find((m) => m.isDefault);
+            if (defaultModule && defaultModule.template) {
+                const contentEl = document.getElementById("cd-main-content");
+                if (contentEl)
+                    contentEl.innerHTML = defaultModule.template;
+                if (defaultModule.controller?.__setup)
+                    defaultModule.controller.__setup();
             }
             this.logger.debug("bootstrapShell()/11:");
         }

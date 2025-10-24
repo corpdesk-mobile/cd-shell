@@ -141,4 +141,5 @@ export interface ICdModule {
   moduleUrl?: string;
   moduleType?: string;
   moduleConfig?: string;
+  isDefault?: boolean;
 }

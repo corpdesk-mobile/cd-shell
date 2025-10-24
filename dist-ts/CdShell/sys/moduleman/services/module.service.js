@@ -170,4 +170,27 @@ export class ModuleService {
             throw err;
         }
     }
+    /**
+     * Returns an array of moduleInfo objects for all currently allowed modules.
+     * For now, this returns hardcoded cd-user (default) and cd-admin.
+     * Eventually, this will query the ACL system to filter by permissions.
+     * isDefault should not be property of ICdModule.
+     * This is an admin or user setting concern and should be Isolated in that area
+     */
+    async getAllowedModules() {
+        const allowedModules = [];
+        // Load cd-user (default)
+        const userModule = await this.loadModule("sys", "cd-user");
+        if (userModule) {
+            userModule.isDefault = true;
+            allowedModules.push(userModule);
+        }
+        // Load cd-admin
+        const adminModule = await this.loadModule("sys", "cd-admin");
+        if (adminModule) {
+            adminModule.isDefault = false;
+            allowedModules.push(adminModule);
+        }
+        return allowedModules;
+    }
 }

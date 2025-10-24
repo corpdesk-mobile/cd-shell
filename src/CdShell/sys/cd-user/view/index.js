@@ -4,7 +4,7 @@ import { ctlSignIn } from "./sign-in.controller.js";
 import { ctlSignUp } from "./sign-up.controller.js";
 // import { ctlUser } from "./user.controller.js";
 
-export const cduserModule = {
+export const cdUserModule = {
   ctx: "sys",
   moduleId: "cd-user",
   moduleName: "Auto-Generated Module",
@@ -13,14 +13,14 @@ export const cduserModule = {
   template: ctlSignIn.__template(),
   menu: [ // Menu structure is generated separately or hardcoded
     {
-      label: 'User',
+      label: 'user',
       route: 'sys/cd-user',
       children: [
-        { label: 'Sign In', route: 'sys/cd-user/sign-in', template: ctlSignIn.__template() },
-        { label: 'Sign Up', route: 'sys/cd-user/sign-up', template: ctlSignUp.__template() }
+        { label: 'sign-in', route: 'sys/cd-user/sign-in', template: ctlSignIn.__template() },
+        { label: 'sign-up', route: 'sys/cd-user/sign-up', template: ctlSignUp.__template() }
       ]
     }
   ], 
 };
 
-export const module = cduserModule;
+export const module = cdUserModule;

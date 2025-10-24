@@ -10,7 +10,7 @@ export class MenuService {
     menu: MenuItem[],
     theme: ITheme,
     containerId = "cd-sidebar"
-  ) {
+  ): void {
     // this.logger.debug("Starting renderMenuWithSystem()");
     // this.logger.debug("renderMenuWithSystem()/01");
     // Always render plain HTML
