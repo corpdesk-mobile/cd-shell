@@ -1,57 +1,62 @@
-// import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control.js";
-// import { CdFormControl } from "../../cd-guig/controllers/cd-form.control.js";
-// import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller.js";
-// import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service.js";
 import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
 import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
 import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
 import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
+import { inspect } from "util";
+
+import { SysCacheService } from "../../moduleman/services/sys-cache.service";
+import { CdAdminService } from "../services/cd-admin.service";
 
 export const ctlCdAdminSettings = {
   form: null,
   binder: null,
+  uiSystemLoader: null,
+  uiThemeLoader: null,
+  svCdAdmin: null,
+  currentUiSystemId: "",
 
-  /**
-   * Initializes the controller — constructs the form and binder.
-   */
   __init() {
+    console.log("[ctlCdAdminSettings][__init] start...");
+    const sysCache = SysCacheService.getInstance();
+
+    // Access cached loaders safely
+    this.uiSystemLoader = sysCache.uiSystemLoader ?? null;
+    this.uiThemeLoader = sysCache.uiThemeLoader ?? null;
+
+    this.svCdAdmin = new CdAdminService(sysCache);
+
     this.form = new CdFormGroup({
-      uiSystem: new CdFormControl("", [
-        CdValidators.required("UI System selection is required"),
-      ]),
-      theme: new CdFormControl("", [
-        CdValidators.required("Theme selection is required"),
-      ]),
+      uiSystem: new CdFormControl("", [CdValidators.required("Select UI System")]),
+      theme: new CdFormControl("", [CdValidators.required("Select Theme")]),
+      formType: new CdFormControl("", [CdValidators.required("Select Form Type")]),
     });
 
-    // Initialize binder — form selector must match template form ID
-    this.binder = new CdDirectiveBinderService(this.form, "#settingsForm");
+    this.binder = new CdDirectiveBinderService(this.form, "#settingsForm", this);
   },
 
-  /**
-   * HTML template for the view.
-   */
   __template() {
+    console.log("[ctlCdAdminSettings][__template] start...");
     return `
       <form id="settingsForm" class="cd-form">
         <div class="cd-form-field">
           <label for="uiSystem">UI System</label>
-          <select id="uiSystem" name="uiSystem" cdFormControl>
-            <option value="">-- Select UI System --</option>
-            <option value="bootstrap-5">Bootstrap 5</option>
-            <option value="material-design">Material Design</option>
+          <select id="uiSystem" name="uiSystem" cdFormControl (change)="onUiSystemChange($event)">
+            ${this.uiSystemOptionsHtml}
           </select>
-          <div class="error-message" data-error-for="uiSystem"></div>
         </div>
 
         <div class="cd-form-field">
           <label for="theme">Theme</label>
-          <select id="theme" name="theme" cdFormControl>
-            <option value="">-- Select Theme --</option>
-            <option value="default">Default</option>
-            <option value="dark">Dark</option>
+          <select id="theme" name="theme" cdFormControl (change)="onThemeChange($event)">
+            ${this.themeOptionsHtml}
           </select>
-          <div class="error-message" data-error-for="theme"></div>
+        </div>
+
+        <div class="cd-form-field">
+          <label for="formType">Form Variant</label>
+          <select id="formType" name="formType" cdFormControl (change)="onFormVariantChange($event)">
+            ${this.formVariantOptionsHtml}
+          </select>
         </div>
 
         <button type="submit">Apply Settings</button>
@@ -59,35 +64,100 @@ export const ctlCdAdminSettings = {
     `;
   },
 
-  /**
-   * Runs after template is rendered to DOM.
-   */
-  __setup() {
-    if (!this.form) this.__init();
+  // ------------------------
+  // FIXED GETTERS
+  // ------------------------
+  get uiSystemOptionsHtml() {
+    console.log("[ctlCdAdminSettings][uiSystemOptionsHtml] start...");
+    const sysCache = SysCacheService.getInstance();
+    const uiSystems = sysCache.getUiSystems();
+    console.log("[ctlCdAdminSettings][uiSystemOptionsHtml] uiSystems:", inspect(uiSystems, { depth: 2 }));
 
-    const form = document.querySelector("#settingsForm");
-    if (form) {
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        this.applySettings();
-      });
-    }
+    if (!uiSystems.length) return `<option value="">-- No Systems Found --</option>`;
+
+    const options = uiSystems
+      .map((sys) => `<option value="${sys.id}">${sys.displayName ?? sys.name}</option>`)
+      .join("");
+
+    return `<option value="">-- Select UI System --</option>${options}`;
   },
 
-  /**
-   * Handles settings application
-   */
-  async applySettings() {
-    const validationResult = this.form.validateAll();
-    this.binder.applyValidationStyles(validationResult);
+  get themeOptionsHtml() {
+    console.log("[ctlCdAdminSettings][themeOptionsHtml] start...");
+    const sysCache = SysCacheService.getInstance();
+    const themesObj = sysCache.getThemes();
+    console.log("[ctlCdAdminSettings][themeOptionsHtml] themes:", inspect(themesObj, { depth: 2 }));
 
-    if (!this.form.valid) {
-      alert("Please select both UI System and Theme.");
-      return;
-    }
+    const themes = Array.isArray(themesObj) ? themesObj : themesObj?.themes || [];
 
-    const selections = this.form.value;
-    console.log("Selected Configuration:", selections);
-    alert(`Selected UI: ${selections.uiSystem}, Theme: ${selections.theme}`);
+    if (!themes.length) return `<option value="">-- No Themes Available --</option>`;
+
+    const options = themes
+      .map((t) => `<option value="${t.id}">${t.displayName ?? t.name}</option>`)
+      .join("");
+
+    return `<option value="">-- Select Theme --</option>${options}`;
+  },
+
+  get formVariantOptionsHtml() {
+    console.log("[ctlCdAdminSettings][formVariantOptionsHtml] start...");
+    const sysCache = SysCacheService.getInstance();
+    const variants = sysCache.getFormVariants();
+    console.log("[ctlCdAdminSettings][formVariantOptionsHtml] variants:", inspect(variants, { depth: 2 }));
+
+    if (!variants.length) return `<option value="">-- No Variants --</option>`;
+
+    const options = variants
+      .map((v) => `<option value="${v.id}">${v.displayName ?? v.name}</option>`)
+      .join("");
+
+    return `<option value="">-- Select Variant --</option>${options}`;
+  },
+
+  async __setup() {
+    console.log("[ctlCdAdminSettings][__setup] start...");
+    const sysCache = SysCacheService.getInstance();
+    await sysCache.ensureReady();
+  },
+
+  async __activate() {
+    console.log("[ctlCdAdminSettings][__activate] start...");
+    if (this.binder?.bindToDom) await this.binder.bindToDom();
+  },
+
+  async __afterInit() {
+    console.log("[ctlCdAdminSettings][__afterInit] start...");
+    const formControls = this.form.controls;
+    const sysCache = SysCacheService.getInstance();
+
+    const systems = sysCache.getUiSystems();
+    const themesObj = sysCache.getThemes();
+    const themes = Array.isArray(themesObj) ? themesObj : themesObj?.themes || [];
+    const variants = sysCache.getFormVariants();
+
+    if (systems.length) formControls.uiSystem.setValue(systems[0].id);
+    if (themes.length) formControls.theme.setValue(themes[0].id);
+    if (variants.length) formControls.formType.setValue(variants[0].id);
+
+    if (this.binder?.refreshView) this.binder.refreshView();
+    console.log("[ctlCdAdminSettings][__afterInit] end.");
+  },
+
+  __deactivate() {
+    console.log("[ctlCdAdminSettings][__deactivate]");
+    if (this.binder?.unbindAllDomEvents) this.binder.unbindAllDomEvents();
+  },
+
+  async onUiSystemChange(e) {
+    console.log("🧩 UI System changed:", e.target.value);
+    this.currentUiSystemId = e.target.value;
+  },
+
+  async onThemeChange(e) {
+    console.log("🎨 Theme changed:", e.target.value);
+  },
+
+  async onFormVariantChange(e) {
+    console.log("🧱 Form Variant changed:", e.target.value);
   },
 };

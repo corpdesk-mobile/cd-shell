@@ -6,18 +6,24 @@ import { ctlSignUp } from "./sign-up.controller.js";
 
 export const cdUserModule = {
   ctx: "sys",
+  isDefault: true,
   moduleId: "cd-user",
   moduleName: "Auto-Generated Module",
   moduleGuid: "auto-guid",
-  controller: ctlSignIn,
-  template: ctlSignIn.__template(),
+  // controller: ctlSignIn,
+  // template: ctlSignIn.__template(),
+  controllers: [
+    { name: "sign-in", instance: ctlSignIn, template: ctlSignIn.__template(), default: true, },
+    { name: "sign-up", instance: ctlSignUp, template: ctlSignUp.__template(), default: false, },
+    // { name: "session", instance: ctlSession, template: ctlSession.__template(), default: false, },
+  ],
   menu: [ // Menu structure is generated separately or hardcoded
     {
-      label: 'user',
+      label: 'cd-user',
       route: 'sys/cd-user',
       children: [
-        { label: 'sign-in', route: 'sys/cd-user/sign-in', template: ctlSignIn.__template() },
-        { label: 'sign-up', route: 'sys/cd-user/sign-up', template: ctlSignUp.__template() }
+        { label: 'sign-in', itemType: 'route',  route: 'sys/cd-user/sign-in', template: ctlSignIn.__template() },
+        { label: 'sign-up', itemType: 'route', route: 'sys/cd-user/sign-up', template: ctlSignUp.__template() }
       ]
     }
   ], 

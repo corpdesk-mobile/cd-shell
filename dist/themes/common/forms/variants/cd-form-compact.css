@@ -1,0 +1,17 @@
+@import "../cd-forms.css";
+
+/* Compact variant: tighter spacing and smaller inputs */
+.cd-form-field {
+  margin-bottom: 0.5rem;
+}
+
+.cd-form-field input,
+.cd-form-field select {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.cd-form button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}

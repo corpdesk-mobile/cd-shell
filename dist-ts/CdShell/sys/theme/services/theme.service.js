@@ -1,20 +1,30 @@
+// import { ITheme } from "../models/themes.model";
 export class ThemeService {
+    // Define static field with proper type
+    static { this.currentTheme = null; }
+    async loadThemeConfig(themeId = "default") {
+        console.debug(`ThemeService::loadThemeConfig(${themeId})`);
+        const res = await fetch(`/themes/${themeId}/theme.json`);
+        if (!res.ok)
+            throw new Error(`Failed to load theme config: ${res.statusText}`);
+        const theme = (await res.json());
+        ThemeService.setActiveTheme(theme);
+        return theme;
+    }
     static setActiveTheme(theme) {
-        this.currentTheme = theme;
+        ThemeService.currentTheme = theme;
+        // Apply colors as CSS variables
+        if (theme?.colors) {
+            Object.entries(theme.colors).forEach(([key, value]) => {
+                const val = String(value);
+                document.documentElement.style.setProperty(`--cd-${key}-color`, val);
+            });
+        }
     }
     static get layout() {
-        return this.currentTheme?.layout || {};
+        return ThemeService.currentTheme?.layout || {};
     }
-    async loadThemeConfig() {
-        console.debug("ThemeService::loadThemeConfig(): 01");
-        const res = await fetch("/themes/default/theme.json");
-        console.debug("ThemeService::loadThemeConfig(): 01");
-        console.debug("ThemeService::loadThemeConfig()/res:", res);
-        if (!res.ok) {
-            console.debug("ThemeService::loadThemeConfig(): 02");
-            throw new Error(`ThemeService::loadThemeConfig:Failed to load shell config: ${res.statusText}`);
-        }
-        console.debug("ThemeService::loadThemeConfig(): 03");
-        return res.json();
+    static get activeTheme() {
+        return ThemeService.currentTheme;
     }
 }

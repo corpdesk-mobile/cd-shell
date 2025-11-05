@@ -1,10 +1,25 @@
 :root {
-  /* --- Theme Tokens (shared across themes) --- */
+  /* --- Base Tokens (default values, can be overridden by themes) --- */
+  --cd-color-bg: #ffffff;
+  --cd-color-text: #000000;
+  --cd-color-primary: #0055ff;
   --cd-color-valid: #2ecc71;
   --cd-color-invalid: #e74c3c;
   --cd-color-hint: #999;
   --cd-border-radius: 4px;
   --cd-transition: 0.2s ease;
+
+  /* --- Typography --- */
+  --cd-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --cd-font-size: 14px;
+}
+
+/* --- Base Body --- */
+body {
+  font-family: var(--cd-font-family);
+  font-size: var(--cd-font-size);
+  color: var(--cd-color-text);
+  background-color: var(--cd-color-bg);
 }
 
 /* --- Base form layout --- */
@@ -43,4 +58,11 @@
 .cd-form-field input.cd-invalid + .error-message,
 .cd-form-field input.cd-invalid + .cd-hint {
   color: var(--cd-color-invalid);
+}
+
+/* --- Simple Transitions & Focus Effects --- */
+input:focus {
+  border-color: var(--cd-color-primary);
+  box-shadow: 0 0 5px var(--cd-color-primary);
+  outline: none;
 }

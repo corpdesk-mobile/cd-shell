@@ -32,74 +32,74 @@ export var HttpFxEventType;
 export const CD_FX_SUCCESS = {
     data: null,
     state: CdFxStateLevel.Success,
-    message: 'Success!',
+    message: "Success!",
 };
 export const CD_FX_FAIL = {
     data: null,
     state: CdFxStateLevel.Error,
-    message: 'Failed!',
+    message: "Failed!",
 };
 export const CD_FX_PARTIAL_SUCCESS = {
     data: null,
     state: CdFxStateLevel.PartialSuccess,
-    message: 'Partial success.',
+    message: "Partial success.",
 };
 export const CD_FX_LOGICAL_FAILURE = {
     data: null,
     state: CdFxStateLevel.LogicalFailure,
-    message: 'Logical failure.',
+    message: "Logical failure.",
 };
 export const CD_FX_WARNING = {
     data: null,
     state: CdFxStateLevel.Warning,
-    message: 'Warning issued.',
+    message: "Warning issued.",
 };
 export const CD_FX_RECOVERABLE = {
     data: null,
     state: CdFxStateLevel.Recoverable,
-    message: 'Recoverable state.',
+    message: "Recoverable state.",
 };
 export const CD_FX_INFO = {
     data: null,
     state: CdFxStateLevel.Info,
-    message: 'Informational message.',
+    message: "Informational message.",
 };
 export const CD_FX_PENDING = {
     data: null,
     state: CdFxStateLevel.Pending,
-    message: 'Pending operation.',
+    message: "Pending operation.",
 };
 export const CD_FX_CANCELLED = {
     data: null,
     state: CdFxStateLevel.Cancelled,
-    message: 'Operation cancelled.',
+    message: "Operation cancelled.",
 };
 export const CD_FX_NOT_FOUND = {
     data: null,
     state: CdFxStateLevel.NotFound,
-    message: 'Not found.',
+    message: "Not found.",
 };
 export const CD_FX_NOT_IMPLEMENTED = {
     data: null,
     state: CdFxStateLevel.NotImplemented,
-    message: 'Not implemented yet.',
+    message: "Not implemented yet.",
 };
 export const CD_FX_SYSTEM_ERROR = {
     data: null,
     state: CdFxStateLevel.SystemError,
-    message: 'System-level error occurred.',
+    message: "System-level error occurred.",
 };
 export const CD_FX_FATAL = {
     data: null,
     state: CdFxStateLevel.Fatal,
-    message: 'Fatal error.',
+    message: "Fatal error.",
 };
 export const CD_FX_UNKNOWN = {
     data: null,
     state: CdFxStateLevel.Unknown,
-    message: 'Unknown state or error.',
+    message: "Unknown state or error.",
 };
-export const SYS_CTX = 'Sys';
+export const SYS_CTX = "Sys";
 export const DEFAULT_DAT = {
     f_vals: [
         {
@@ -112,49 +112,49 @@ export const DEFAULT_DAT = {
 export const DEFAULT_ARGS = {};
 export const DEFAULT_ENVELOPE_CREATE = {
     ctx: SYS_CTX,
-    m: '',
-    c: '',
-    a: 'Create',
+    m: "",
+    c: "",
+    a: "Create",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
 export const DEFAULT_ENVELOPE_GET = {
     ctx: SYS_CTX,
-    m: '',
-    c: '',
-    a: 'Get',
+    m: "",
+    c: "",
+    a: "Get",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
 export const DEFAULT_ENVELOPE_GET_PAGED = {
     ctx: SYS_CTX,
-    m: '',
-    c: '',
-    a: 'GetCount',
+    m: "",
+    c: "",
+    a: "GetCount",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
 export const DEFAULT_ENVELOPE_GET_TYPE = {
     ctx: SYS_CTX,
-    m: '',
-    c: '',
-    a: 'GetCount',
+    m: "",
+    c: "",
+    a: "GetCount",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
 export const DEFAULT_ENVELOPE_UPDATE = {
     ctx: SYS_CTX,
-    m: '',
-    c: '',
-    a: 'Update',
+    m: "",
+    c: "",
+    a: "Update",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
 export const DEFAULT_ENVELOPE_DELETE = {
     ctx: SYS_CTX,
-    m: '',
-    c: '',
-    a: 'Delete',
+    m: "",
+    c: "",
+    a: "Delete",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
@@ -164,11 +164,11 @@ export const DEFAULT_CD_RESPONSE = {
         success: false,
         info: {
             messages: [],
-            code: '',
-            app_msg: '',
+            code: "",
+            app_msg: "",
         },
         sess: {
-            cd_token: '',
+            cd_token: "",
             jwt: null,
             ttl: 600,
         },
@@ -177,10 +177,10 @@ export const DEFAULT_CD_RESPONSE = {
     data: [],
 };
 export const DEFAULT_CD_REQUEST = {
-    ctx: 'Sys',
-    m: '',
-    c: '',
-    a: '',
+    ctx: "Sys",
+    m: "",
+    c: "",
+    a: "",
     dat: DEFAULT_DAT,
     args: DEFAULT_ARGS,
 };
@@ -190,7 +190,7 @@ export var ModuleScope;
     ModuleScope[ModuleScope["App"] = 1] = "App";
 })(ModuleScope || (ModuleScope = {}));
 /** Fields managed by backend that must not be supplied by client */
-export const MANAGED_FIELDS = ['Guid', 'docId', 'Enabled'];
+export const MANAGED_FIELDS = ["Guid", "docId", "Enabled"];
 export const DEFAULT_COMM_TRACK = {
     initTime: null,
     relayTime: null,
@@ -237,8 +237,8 @@ export const INIT_CD_RESP = {
         success: false,
         info: {
             messages: [],
-            code: '',
-            app_msg: '',
+            code: "",
+            app_msg: "",
         },
         sess: {
             cd_token: null,
@@ -262,17 +262,17 @@ export class ColumnNumericTransformer {
  * File extension to Prettier parser map
  */
 export const formatterConfig = {
-    '.ts': { parser: 'typescript' },
-    '.cts': { parser: 'typescript' },
-    '.mts': { parser: 'typescript' },
-    '.js': { parser: 'babel' },
-    '.cjs': { parser: 'babel' },
-    '.mjs': { parser: 'babel' },
-    '.json': { parser: 'json' },
-    '.html': { parser: 'html' },
-    '.md': { parser: 'markdown' },
-    '.css': { parser: 'css' },
-    '.scss': { parser: 'scss' },
-    '.yml': { parser: 'yaml' },
-    '.yaml': { parser: 'yaml' },
+    ".ts": { parser: "typescript" },
+    ".cts": { parser: "typescript" },
+    ".mts": { parser: "typescript" },
+    ".js": { parser: "babel" },
+    ".cjs": { parser: "babel" },
+    ".mjs": { parser: "babel" },
+    ".json": { parser: "json" },
+    ".html": { parser: "html" },
+    ".md": { parser: "markdown" },
+    ".css": { parser: "css" },
+    ".scss": { parser: "scss" },
+    ".yml": { parser: "yaml" },
+    ".yaml": { parser: "yaml" },
 };

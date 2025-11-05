@@ -146,3 +146,17 @@ export const EnvPurge = {
     },
     args: null,
 };
+// export interface ICdModule {
+//   ctx: string;
+//   moduleId: string;
+//   moduleName: string;
+//   moduleGuid?: string;
+//   menu?: MenuItem[];
+//   isDefault?: boolean; // True if this module is the default module
+//   // 🛑 REMOVE: controller and template are now inside controllers array
+//   // controller: any; 
+//   // template?: any; 
+//   // 💡 NEW: Array of all controllers and their metadata
+//   controllers: IControllerInfo[]; 
+//   // ... (other optional properties) ...
+// }

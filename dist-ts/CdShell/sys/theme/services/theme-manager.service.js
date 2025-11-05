@@ -1,10 +1,11 @@
 import shellConfig from "../../../../../public/shell.config.json";
-import { ThempeLoaderService } from "./theme-loader.service";
+import { ThemeLoaderService } from "./theme-loader.service";
+// import { ThempeLoaderService } from "./theme-loader.service";
 // import { loadTheme } from "./theme-loader.service";
 export class ThemeManagerService {
     constructor() {
         this.config = shellConfig.themeConfig;
-        this.svThemeLoader = new ThempeLoaderService();
+        this.svThemeLoader = new ThemeLoaderService();
     }
     async getAvailableThemes() {
         const themes = [];

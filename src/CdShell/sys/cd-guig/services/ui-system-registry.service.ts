@@ -9,12 +9,12 @@ export class UiSystemRegistryService {
     this.systems.push(system);
   }
 
-  static activate(id: string): void {
-    const sys = this.systems.find(s => s.id === id);
-    if (!sys) throw new Error(`UI system not found: ${id}`);
-    this.activeSystemId = id;
-    UiThemeLoaderService.loadActiveTheme(sys);
-  }
+  // static activate(id: string): void {
+  //   const sys = this.systems.find(s => s.id === id);
+  //   if (!sys) throw new Error(`UI system not found: ${id}`);
+  //   this.activeSystemId = id;
+  //   UiThemeLoaderService.loadActiveTheme(sys);
+  // }
 
   static getActive(): UiSystemSchema | null {
     return this.systems.find(s => s.id === this.activeSystemId) ?? null;

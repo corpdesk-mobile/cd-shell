@@ -1,0 +1,70 @@
+/* -------------------------------
+   COMMON FORM FOUNDATION (UUD-ready)
+---------------------------------- */
+
+.cd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--form-bg, #fff);
+  border-radius: var(--form-radius, 8px);
+  box-shadow: var(--form-shadow, 0 2px 6px rgba(0, 0, 0, 0.08));
+  max-width: 480px;
+  margin: 0 auto;
+  font-family: var(--form-font, 'Inter', sans-serif);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cd-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cd-form-field label {
+  font-weight: 500;
+  color: var(--label-color, #333);
+}
+
+.cd-form-field input,
+.cd-form-field select,
+.cd-form-field textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--input-border, #ccc);
+  border-radius: 4px;
+  background: var(--input-bg, #fff);
+  font-size: 1rem;
+  color: var(--input-color, #222);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cd-form-field input:focus,
+.cd-form-field select:focus,
+.cd-form-field textarea:focus {
+  outline: none;
+  border-color: var(--input-focus-border, #007bff);
+  box-shadow: 0 0 0 2px var(--input-focus-ring, rgba(0, 123, 255, 0.25));
+}
+
+.error-message {
+  color: var(--error-color, #d33);
+  font-size: 0.875rem;
+  min-height: 1.25rem;
+}
+
+/* Buttons */
+.cd-form button[type="submit"] {
+  padding: 0.75rem;
+  background: var(--btn-bg, #007bff);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.cd-form button[type="submit"]:hover {
+  background: var(--btn-hover-bg, #0056b3);
+}

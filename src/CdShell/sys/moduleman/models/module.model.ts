@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from ".
 import { v4 as uuidv4 } from 'uuid';
 import { validateOrReject } from 'class-validator';
 import { MenuItem } from "./menu.model";
+import { IControllerInfo } from "./controller.model";
 
 @Entity({
   name: 'module',
@@ -132,9 +133,10 @@ export interface ICdModule {
   ctx: string;
   moduleId: string;
   moduleName: string;
-  controller: any;
+  // controller: any;
+  controllers: IControllerInfo[]; 
   moduleGuid?: string;
-  template?: any;
+  // template?: any;
   menu?: MenuItem[];
   moduleVersion?: string;
   modulePath?: string;
@@ -143,3 +145,21 @@ export interface ICdModule {
   moduleConfig?: string;
   isDefault?: boolean;
 }
+
+// export interface ICdModule {
+//   ctx: string;
+//   moduleId: string;
+//   moduleName: string;
+//   moduleGuid?: string;
+//   menu?: MenuItem[];
+//   isDefault?: boolean; // True if this module is the default module
+  
+//   // 🛑 REMOVE: controller and template are now inside controllers array
+//   // controller: any; 
+//   // template?: any; 
+  
+//   // 💡 NEW: Array of all controllers and their metadata
+//   controllers: IControllerInfo[]; 
+  
+//   // ... (other optional properties) ...
+// }

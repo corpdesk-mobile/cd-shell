@@ -7,8 +7,13 @@ export const cdpushModule = {
   moduleId: "cd-push",
   moduleName: "Auto-Generated Module",
   moduleGuid: "auto-guid",
-  controller: ctlSignIn,
-  template: ctlSignIn.__template(),
+  // controller: ctlSignIn,
+  // template: ctlSignIn.__template(),
+  controllers: [
+    { name: "sign-in", instance: ctlSignIn, template: ctlSignIn.__template(), default: true, },
+    // { name: "sign-up", instance: ctlSignUp, template: ctlSignUp.__template(), default: false, },
+    // { name: "session", instance: ctlSession, template: ctlSession.__template(), default: false, },
+  ],
   menu: [], // Menu structure must be generated separately or hardcoded
 };
 

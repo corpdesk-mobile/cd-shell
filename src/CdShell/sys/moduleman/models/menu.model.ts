@@ -159,14 +159,17 @@ export class MenuModel {
 }
 
 export interface MenuItem {
+  menuId?: string;
+  moduleId?: string;
   label: string;
   itemType: "action" | "template" | "route";
   action?: () => void; // optional custom handler
   template?: () => string; // optional for resource loading
   route?: string; // optional, legacy
   icon?: IMenuIcon;
-  controller?: any; // optional, legacy
+  controller?: any; // controller instance
   children?: MenuItem[];
+  moduleDefault?: boolean;
 }
 
 export interface IMenuIcon {

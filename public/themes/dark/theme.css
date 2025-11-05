@@ -1,5 +1,8 @@
-.theme-dark {
-  --cd-background-color: #1a1a1a;
-  --cd-text-color: #f0f0f0;
-  --cd-primary-color: #0d6efd;
+:root {
+  --cd-color-bg: #1a1a1a;
+  --cd-color-text: #f0f0f0;
+  --cd-color-primary: #0d6efd;
+  --cd-color-hint: #aaa;
+  --cd-color-valid: #2ecc71;
+  --cd-color-invalid: #e74c3c;
 }

@@ -1,12 +1,20 @@
-/* Basic menu structure */
+/* ------------------------------
+   BASIC MENU STRUCTURE
+------------------------------ */
 .metismenu {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.metismenu ul {
+/* new amendments */
+/* .metismenu ul {
   list-style: none;
+  padding-left: 1rem;
+  margin: 0;
+} */
+.metismenu ul { /* Targets all child lists */
+  list-style: none !important; /* Force it to override common/neutral styles */
   padding-left: 1rem;
   margin: 0;
 }
@@ -15,14 +23,19 @@
   position: relative;
 }
 
+/* ------------------------------
+   MENU LINKS
+------------------------------ */
 .metismenu a {
-  display: flex; /* ✅ Use flex to align icon + label */
+  display: flex; /* Align icon, label, and arrow on one line */
   align-items: center;
-  gap: 0.5rem; /* ✅ spacing between icon and label */
+  justify-content: flex-start;
+  gap: 0.5rem; /* Space between icon and label */
   padding: 10px 15px;
   text-decoration: none;
   color: var(--menu-text-color, #333);
   font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .metismenu a:hover,
@@ -31,23 +44,57 @@
   color: var(--menu-hover-color, #000);
 }
 
-.metismenu i {
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
-
+/* ------------------------------
+   ICON HANDLING
+------------------------------ */
 .metismenu .menu-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 18px; /* Prevent jittering when no icon is present */
+  color: inherit;
 }
 
-.metismenu .mm-active > a.has-arrow::after {
-  transform: rotate(90deg);
+.metismenu i {
+  vertical-align: middle;
 }
 
-/* Optional: icon arrow at the end */
+/* ------------------------------
+   DROPDOWN ARROW HANDLING
+------------------------------ */
+.metismenu .has-arrow {
+  position: relative;
+}
+
 .metismenu .menu-arrow {
-  margin-left: auto;
+  margin-left: auto; /* ✅ Push arrow to the far right */
   font-size: 0.8em;
+  color: var(--menu-arrow-color, #666);
+  transition: transform 0.25s ease;
+}
+
+/* Rotate arrow when expanded */
+.metismenu .mm-active > a.has-arrow .menu-arrow {
+  transform: rotate(90deg);
+  color: var(--menu-arrow-active-color, #000);
+}
+
+/* ------------------------------
+   SUBMENU STYLING
+------------------------------ */
+.metismenu ul {
+  overflow: hidden;
+  transition: height 0.25s ease;
+}
+
+.metismenu ul a {
+  padding-left: 2rem;
+  font-weight: 400;
+  color: var(--menu-sub-text-color, #555);
+}
+
+/* Active submenu item */
+.metismenu li.mm-active > a {
+  background-color: var(--menu-active-bg, #e6e6e6);
+  color: var(--menu-active-color, #000);
 }

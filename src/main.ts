@@ -1,23 +1,37 @@
 import "reflect-metadata"; // MUST BE FIRST IMPORT
-import { ShellConfig } from "./CdShell/sys/base/i-base";
+// import { ShellConfig } from "./CdShell/sys/base/i-base";
 import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
 import { ITheme } from "./CdShell/sys/theme/models/themes.model";
 import { LoggerService } from "./CdShell/utils/logger.service";
 import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
-import { ThempeLoaderService } from "./CdShell/sys/theme/services/theme-loader.service";
+import { ThemeLoaderService } from "./CdShell/sys/theme/services/theme-loader.service";
 import { ModuleService } from "./CdShell/sys/moduleman/services/module.service";
 import { ICdModule } from "./CdShell/sys/moduleman/models/module.model";
 import { MenuItem } from "./CdShell/sys/moduleman/models/menu.model";
+import { ControllerService } from "./CdShell/sys/moduleman/services/controller.service";
+import { inspect } from "util";
+import { ShellConfig } from "./CdShell/sys/moduleman/models/config.model";
+import { SysCacheService } from "./CdShell/sys/moduleman/services/sys-cache.service";
+import { UiSystemLoaderService } from "./CdShell/sys/cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "./CdShell/sys/cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./CdShell/sys/moduleman/services/config.service";
 
 export class Main {
+  private svSysCache!: SysCacheService;
+  private svUiSystemLoader!: UiSystemLoaderService;
+  private svConfig: ConfigService;
   private svModule!: ModuleService;
   private svMenu!: MenuService;
+  private svController!: ControllerService;
+  private svUiThemeLoader!: UiThemeLoaderService;
   private svTheme!: ThemeService;
-  private svThemeLoader!: ThempeLoaderService;
+  // private svThemeLoader!: ThemeLoaderService;
   private logger = new LoggerService();
 
   constructor() {
     // intentionally empty — setup moved to init()
+    this.svConfig = new ConfigService();
+    this.svSysCache = new SysCacheService(this.svConfig);
   }
 
   /**
@@ -40,10 +54,13 @@ export class Main {
     }
 
     // ✅ Instantiate services
+    this.svConfig = new ConfigService();
+    this.svSysCache = new SysCacheService(this.svConfig);
     this.svModule = new ModuleService();
     this.svMenu = new MenuService();
+    this.svController = new ControllerService();
     this.svTheme = new ThemeService();
-    this.svThemeLoader = new ThempeLoaderService();
+    // this.svUiThemeLoader = new UiThemeLoaderService(this.svSysCache);
 
     // ✅ Load shell config and apply log level
     const shellConfig = await this.loadShellConfig();
@@ -55,34 +72,80 @@ export class Main {
   }
 
   async run() {
+    // ----------------------------
+    // STEP 1: Initialize Logger
+    // ----------------------------
     this.logger.setLevel("debug");
     this.logger.debug("starting bootstrapShell()");
-    this.logger.debug("bootstrapShell()/01:");
 
     const shellConfig: ShellConfig = await this.loadShellConfig();
-    this.logger.debug("bootstrapShell()/02:");
     if (shellConfig.logLevel) {
       this.logger.setLevel(shellConfig.logLevel);
     }
-    this.logger.debug("bootstrapShell()/03:");
 
-    const themeConfig = await this.svTheme.loadThemeConfig();
-    this.logger.debug("bootstrapShell()/04:");
-    this.logger.debug("bootstrapShell()/themeConfig:", themeConfig);
+    // ----------------------------
+    // STEP 2: Initialize Core Services
+    // ----------------------------
+    this.svUiSystemLoader = new UiSystemLoaderService(this.svSysCache);
+    this.svUiThemeLoader = new UiThemeLoaderService(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
 
-    // Set title
-    document.title =
-      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
-    this.logger.debug("bootstrapShell()/05:");
+    // ----------------------------
+    // STEP 3: Load and Cache All Data
+    // ----------------------------
+    this.logger.debug("Main::run()/03 → Loading cache data...");
+    await this.svSysCache.loadAndCacheAll();
 
-    // Set logo
-    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
-    this.logger.debug("bootstrapShell()/06:");
-    if (logoEl && themeConfig.logo) {
-      logoEl.src = themeConfig.logo;
+    // ----------------------------
+    // STEP 4: Apply Boot-Time Default Activations
+    // ----------------------------
+    const uiConfig = this.svSysCache.get("uiConfig");
+
+    if (uiConfig) {
+      const { defaultUiSystemId, defaultThemeId, defaultFormVariant } =
+        uiConfig;
+      this.logger.debug(
+        "[Main] Applying boot defaults from uiConfig:",
+        uiConfig
+      );
+
+      // ✅ Activate default UI system
+      this.logger.debug(
+        `[Main] Activating default UI system: ${defaultUiSystemId}`
+      );
+      await this.svUiSystemLoader.activate(defaultUiSystemId);
+
+      // ✅ Activate default theme
+      this.logger.debug(`[Main] Activating default theme: ${defaultThemeId}`);
+      this.svUiThemeLoader.setActiveThemeId(defaultThemeId);
+      await this.svUiThemeLoader.loadThemeById(defaultThemeId);
+
+      // ✅ Activate default form variant
+      this.logger.debug(
+        `[Main] Activating default form variant: ${defaultFormVariant}`
+      );
+      this.svUiThemeLoader.setActiveFormVariantId(defaultFormVariant);
+      await this.svUiThemeLoader.loadFormVariant(defaultFormVariant);
+    } else {
+      this.logger.warn(
+        "[Main] No uiConfig found in SysCache — skipping defaults."
+      );
     }
 
-    this.logger.debug("bootstrapShell()/07:");
+    // ----------------------------
+    // STEP 5: Load Theme Config (For Global Assets)
+    // ----------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+
+    // ----------------------------
+    // STEP 6: Apply Basic UI Setup
+    // ----------------------------
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
     if (themeConfig.colors.primary) {
       document.documentElement.style.setProperty(
         "--theme-color",
@@ -90,88 +153,132 @@ export class Main {
       );
     }
 
-    this.logger.debug("bootstrapShell()/08:");
+    // ----------------------------
+    // STEP 7: Load Default Module Path
+    // ----------------------------
     if (shellConfig.defaultModulePath) {
-      this.logger.debug("bootstrapShell()/09:");
-      const [ctx, moduleId] = shellConfig.defaultModulePath.split("/");
-      this.logger.debug("bootstrapShell()/ctx:", ctx);
-      this.logger.debug("bootstrapShell()/moduleId:", moduleId);
-      this.logger.debug("bootstrapShell()/10:");
+      // ⭐ EAGER LOAD SYSTEM METADATA ⭐
+      const sysCacheInstance = SysCacheService.getInstance(this.svConfig);
 
-      // 👉 Experimental: Load allowed modules (currently cd-user + cd-admin)
+      const uiSystemLoaderInstance = new UiSystemLoaderService(
+        sysCacheInstance
+      );
+      const uiThemeLoaderInstance = new UiThemeLoaderService(sysCacheInstance);
+
+      this.svUiSystemLoader = uiSystemLoaderInstance;
+      this.svUiThemeLoader = uiThemeLoaderInstance;
+
+      sysCacheInstance.setLoaders(
+        uiSystemLoaderInstance,
+        uiThemeLoaderInstance
+      );
+
+      this.logger.debug(
+        "Main::bootstrapShell()/07 → Awaiting SysCacheService Eager Load."
+      );
+      await sysCacheInstance.loadAndCacheAll();
+
+      // ----------------------------
+      // STEP 8: Load Allowed Modules
+      // ----------------------------
       const allowedModules: ICdModule[] =
         await this.svModule.getAllowedModules();
       this.logger.debug("Main::allowedModules", allowedModules);
 
-      // Merge all menus into a single array, conforming to MenuItem[]
-      // const mergedMenu: MenuItem[] = allowedModules.map((mod: ICdModule) => ({
-      //   label: mod.moduleId.replace(/^cd-/, "").toUpperCase(),
-      //   itemType: "route",
-      //   route: `${mod.ctx}/${mod.moduleId}`,
-      //   icon: { iconType: "fontawesome", icon: "fa-folder" },
-      //   children: mod.menu || [],
-      // }));
-      const mergedMenu: MenuItem[] = allowedModules.map((mod: ICdModule) => {
-        const moduleRoot = mod.menu?.length === 1 ? mod.menu[0] : null;
+      const defaultModule = allowedModules.find((m) => m.isDefault);
+      const defaultControllerName = defaultModule?.controllers.find(
+        (c) => c.default === true
+      )?.name;
 
-        if (
-          moduleRoot &&
-          moduleRoot.label.toLowerCase() ===
-            mod.moduleId.replace(/^cd-/, "").toLowerCase()
-        ) {
-          // ✅ Use existing menu root directly, but ensure its route is complete
-          return {
-            ...moduleRoot,
-            route: `${mod.ctx}/${mod.moduleId}`,
-            children: moduleRoot.children || [],
-          };
-        }
+      // ----------------------------
+      // STEP 9: Construct Base Menu & Inject Controller Metadata
+      // ----------------------------
+      const rawMenu: MenuItem[] = allowedModules.flatMap((mod: ICdModule) => {
+        const processMenuChildren = (items: MenuItem[]): MenuItem[] => {
+          return items.map((item) => {
+            if (item.itemType === "route" && item.route) {
+              const controllerInfo =
+                this.svController.findControllerInfoByRoute(mod, item.route);
 
-        // 🧩 Otherwise, wrap safely
-        return {
-          label: mod.moduleId.replace(/^cd-/, "").toUpperCase(),
-          itemType: "route",
-          route: `${mod.ctx}/${mod.moduleId}`,
-          icon: { iconType: "fontawesome", icon: "fa-folder" },
-          children: mod.menu || [],
+              if (controllerInfo) {
+                (item as any).controller = controllerInfo.instance;
+                (item as any).template =
+                  typeof controllerInfo.template === "function"
+                    ? controllerInfo.template
+                    : () => controllerInfo.template;
+
+                (item as any).moduleId = mod.moduleId;
+
+                if (
+                  mod.isDefault &&
+                  controllerInfo.name === defaultControllerName
+                ) {
+                  (item as any).moduleDefault = true;
+                  this.logger.debug(
+                    `[Main][processMenuChildren] Marked default menu item: ${item.route}`
+                  );
+                }
+              } else if (!item.controller) {
+                this.logger.warn(
+                  `Menu item route ${item.route} not mapped to a specific controller.`
+                );
+              }
+            }
+
+            if (item.children) {
+              item.children = processMenuChildren(item.children);
+            }
+            return item;
+          });
         };
+        return processMenuChildren(mod.menu || []);
       });
 
-      // Log to verify
+      // ----------------------------
+      // STEP 10: Prepare Menu via MenuService
+      // ----------------------------
+      const preparedMenu = this.svMenu.prepareMenu(rawMenu);
       this.logger.debug(
-        "Main::mergedMenu",
-        JSON.stringify(mergedMenu, null, 2)
+        "Main::preparedMenu",
+        inspect(preparedMenu, { depth: 4 })
       );
 
-      // Load theme config for menu rendering
+      // ----------------------------
+      // STEP 11: Load Theme and Render Menu
+      // ----------------------------
       const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
-      if (!resTheme.ok) {
-        const errorText = await resTheme.text();
-        throw new Error(
-          `Theme fetch failed: ${resTheme.status} ${resTheme.statusText}. Body: ${errorText}`
+      const theme = (await resTheme.json()) as ITheme;
+      this.svMenu.renderMenuWithSystem(preparedMenu, theme);
+
+      // ----------------------------
+      // STEP 12: Auto-load Default Module View
+      // ----------------------------
+      const defaultModuleMenu = preparedMenu.find(
+        (m) => m.label === defaultModule.moduleId
+      );
+      const defaultMenuItem = defaultModuleMenu?.children?.find(
+        (item) => item.moduleDefault === true
+      );
+
+      if (defaultMenuItem) {
+        this.logger.debug(
+          `Main::bootstrapShell()/12 → Triggering MenuService for default view: ${defaultMenuItem.route}`
+        );
+        this.svMenu.loadResource({ item: defaultMenuItem });
+      } else {
+        this.logger.warn(
+          "Default menu item not found or marked. Auto-load skipped."
         );
       }
-      const theme = (await resTheme.json()) as ITheme;
 
-      // Render combined menu
-      this.svMenu.renderMenuWithSystem(mergedMenu, theme);
-
-      // OPTIONAL: Automatically load default module's main view
-      const defaultModule = allowedModules.find((m) => m.isDefault);
-      if (defaultModule && defaultModule.template) {
-        const contentEl = document.getElementById("cd-main-content");
-        if (contentEl) contentEl.innerHTML = defaultModule.template;
-        if (defaultModule.controller?.__setup)
-          defaultModule.controller.__setup();
-      }
-
-      this.logger.debug("bootstrapShell()/11:");
+      this.logger.debug("bootstrapShell()/13: End of initialization sequence.");
     }
 
-    // Load theme
-    this.svThemeLoader.loadTheme("default");
+    // ----------------------------
+    // STEP 14: Final UI Setup (Sidebar/Menu Toggle)
+    // ----------------------------
+    this.svUiThemeLoader.loadThemeById("default");
 
-    // Menu toggle
     const burger = document.getElementById("cd-burger")!;
     const sidebar = document.getElementById("cd-sidebar")!;
     const overlay = document.getElementById("cd-overlay")!;

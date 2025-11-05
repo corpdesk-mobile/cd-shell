@@ -92,7 +92,6 @@
 //       // const endpoint = config.cdSio.endpoint;
 //       this.svIdeAgent = new IdeAgentService();
 
-
 //       // Listen for messages from IDE
 //       this.svIdeAgent.initialize(() => {
 //         // this.onDevSyncMessage(payload);
@@ -172,7 +171,6 @@ import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
 import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
 import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
 
-
 export const ctlSignIn = {
   form: null,
   binder: null,
@@ -192,7 +190,7 @@ export const ctlSignIn = {
     });
 
     // Initialize binder — form selector must match template form ID
-    this.binder = new CdDirectiveBinderService(this.form, "#signInForm");
+    this.binder = new CdDirectiveBinderService(this.form, "#signInForm", this);
   },
 
   /**
@@ -260,5 +258,27 @@ export const ctlSignIn = {
     const user = this.form.value;
     console.log("Authenticating:", user);
     alert(`Welcome, ${user.userName}!`);
+  },
+
+  // 💡 NEW: Deactivation Hook - Runs when user clicks *away*
+  __deactivate() {
+    console.log('[ctlSignIn][__deactivate] 01')
+    // Stop any active animations, remove DOM-dependent listeners, etc.
+    // The binder must provide a way to remove all listeners.
+    if (this.binder?.unbindAllDomEvents) {
+      this.binder.unbindAllDomEvents();
+    }
+  },
+
+  // 💡 NEW: Activation Hook - Runs when view is *injected*
+  async __activate() {
+    console.log('[ctlSignIn][__activate] 01')
+    // Re-establish DOM bindings and apply current form state
+    if (this.binder?.bindToDom) {
+      // This method must find the newly injected DOM (#settingsForm)
+      // and re-attach all form control listeners (input, change, blur)
+      await this.binder.bindToDom();
+    }
+    // Optional: Restore scroll position, run focus logic, etc.
   },
 };

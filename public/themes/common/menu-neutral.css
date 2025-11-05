@@ -1,0 +1,43 @@
+/* .cd-menu-root,
+.cd-submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cd-menu-item {
+  margin: 0;
+  padding: 0;
+} */
+
+cd-menu-root,
+.cd-submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cd-menu-item {
+  margin: 0;
+  padding: 0;
+  /* 💡 NEW FIX: Ensure LI elements have no marker */
+  list-style: none; 
+}
+
+.cd-menu-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 8px 12px;
+}
+
+.cd-menu-label {
+  margin-left: 8px;
+}
+
+/* Neutralize unstyled FA pseudo-content before the font loads */
+.fa::before {
+  content: "" !important;
+}
+

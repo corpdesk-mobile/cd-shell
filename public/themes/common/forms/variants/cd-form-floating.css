@@ -1,0 +1,27 @@
+@import "../cd-forms.css";
+
+/* Floating label variant */
+.cd-form-field {
+  position: relative;
+  margin-bottom: 1.2rem;
+}
+
+.cd-form-field label {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.75rem;
+  background: var(--cd-background-color, #fff);
+  padding: 0 0.3rem;
+  color: var(--cd-color-hint, #777);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.cd-form-field input:focus + label,
+.cd-form-field input:not(:placeholder-shown) + label,
+.cd-form-field select:focus + label {
+  top: -0.5rem;
+  left: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--theme-color, #007bff);
+}

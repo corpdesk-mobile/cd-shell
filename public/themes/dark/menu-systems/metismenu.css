@@ -1,0 +1,72 @@
+/* -------------------------------------
+   DARK THEME METISMENU OVERRIDES
+-------------------------------------- */
+
+/* Base background and text */
+.metismenu {
+  background-color: var(--menu-bg, #1e1e1e);
+  color: var(--menu-text-color, #ddd);
+}
+
+.metismenu a {
+  color: var(--menu-link-color, #ccc);
+  background-color: transparent;
+}
+
+.metismenu a:hover,
+.metismenu a:focus {
+  background-color: var(--menu-hover-bg, #2a2a2a);
+  color: var(--menu-hover-color, #fff);
+}
+
+/* Active link (open parent or current page) */
+.metismenu li.mm-active > a {
+  background-color: var(--menu-active-bg, #333);
+  color: var(--menu-active-color, #fff);
+}
+
+/* Icon and arrow coloring */
+.metismenu .menu-icon {
+  color: var(--menu-icon-color, #bbb);
+}
+
+.metismenu .menu-arrow {
+  color: var(--menu-arrow-color, #888);
+}
+
+.metismenu .mm-active > a.has-arrow .menu-arrow {
+  color: var(--menu-arrow-active-color, #fff);
+  transform: rotate(90deg);
+}
+
+/* Submenu */
+.metismenu ul {
+  background-color: var(--submenu-bg, #252525);
+}
+
+.metismenu ul a {
+  color: var(--menu-sub-text-color, #aaa);
+}
+
+.metismenu ul a:hover {
+  background-color: var(--submenu-hover-bg, #333);
+  color: var(--submenu-hover-color, #fff);
+}
+
+/* Scrollbar styling (optional, modern browsers only) */
+.metismenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.metismenu::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.metismenu::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 3px;
+}
+
+.metismenu::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}

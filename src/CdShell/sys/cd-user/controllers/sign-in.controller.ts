@@ -169,7 +169,7 @@ export class SignInController {
 
     // --- Initialize binder ---
     // Form selector must match <form id="signInForm"> in template
-    this.binder = new CdDirectiveBinderService(this.form, "#signInForm");
+    this.binder = new CdDirectiveBinderService(this.form, "#signInForm", this);
   }
 
   /**

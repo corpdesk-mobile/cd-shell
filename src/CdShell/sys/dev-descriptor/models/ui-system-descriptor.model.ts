@@ -25,7 +25,16 @@ export interface UiSystemDescriptor {
   description?: string;
   components?: UiComponentDescriptor[];
   containers?: UiContainerDescriptor[];
-  theme?: UiThemeDescriptor;
+  // theme?: UiThemeDescriptor;
+  /** * An array listing all available theme options for this UI system. 
+   * Used to populate the Admin Settings dropdown.
+   */
+  themesAvailable?: UiThemeDescriptor[]; // NEW PROPERTY (Array of choices)
+
+  /** * The currently active theme descriptor for this UI System. 
+   * Represents the theme that is *currently loaded* at runtime.
+   */
+  themeActive?: UiThemeDescriptor; // NEW PROPERTY (The current selection)
   scripts?: string[];
   stylesheets?: string[];
   author?: string;

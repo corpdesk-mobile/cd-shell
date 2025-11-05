@@ -3,6 +3,7 @@
 // --------------------------------------
 // import { CdDirectiveBinder } from "../../cd-guig/services/cd-directive-binder.service";
 import { ICdModule } from "../models/module.model";
+import { MenuService } from "./menu.service";
 
 // --------------------------------------
 // Node dynamic imports (preserve legacy behavior)
@@ -97,22 +98,42 @@ export class ModuleService {
   // --------------------------------------
   // Preload Pipeline
   // --------------------------------------
+
   private static async preloadModulesSequentially(): Promise<void> {
     const instance = ModuleService.getInstance();
 
     for (const mod of this.preloadModules) {
       try {
         console.debug(`[Preload] Loading ${mod.moduleId}`);
+
+        // loaded will now be of type ICdModule with the 'controllers' array
         const loaded = await instance.loadModule(mod.ctx, mod.moduleId);
+
+        // --- 💡 UPDATE START: Find the specific controller instance ---
+
+        // 1. Attempt to find the IControllerInfo that matches the component name
+        // (Assuming mod.component name matches the IControllerInfo.name property)
+        const targetControllerInfo = loaded.controllers.find(
+          (c) => c.name === mod.component
+        );
 
         // Run controller setup if available
         if (
-          loaded?.controller &&
-          typeof loaded.controller.__setup === "function"
+          targetControllerInfo?.instance &&
+          typeof targetControllerInfo.instance.__setup === "function"
         ) {
+          const controllerInstance = targetControllerInfo.instance;
+
           console.debug(`[Preload] Setting up ${mod.component}`);
-          await loaded.controller.__setup();
+          // Use 'await' to ensure the asynchronous __setup completes
+          await controllerInstance.__setup();
+        } else {
+          // Log if the target component/controller wasn't found in the module's definition
+          console.warn(
+            `[Preload] Controller component '${mod.component}' not found in module ${mod.moduleId}.`
+          );
         }
+        // --- 💡 UPDATE END ---
 
         console.debug(`[Preload] Completed ${mod.component}`);
       } catch (err) {
@@ -163,20 +184,96 @@ export class ModuleService {
       }
 
       try {
+        console.debug("[ModuleService][loadModule] pathKey:", pathKey);
         const loader = this.modules[pathKey];
         const mod = (await loader()) as { module: ICdModule };
-        const moduleInfo = mod.module;
+        const moduleInfo = mod.module; // Now contains 'controllers' array
 
         if (!moduleInfo)
           throw new Error(`Missing 'module' export in: ${pathKey}`);
 
-        // Inject template into DOM
-        const container = document.getElementById("cd-main-content");
-        if (container) container.innerHTML = moduleInfo.template;
+        console.debug("[ModuleService][loadModule] moduleInfo:", moduleInfo);
+        console.debug(
+          "[ModuleService][loadModule] moduleInfo.controllers:",
+          moduleInfo.controllers
+        );
+        // 💡 NEW LOGIC: Identify the default controller for potential launch
+        const defaultControllerInfo = moduleInfo.controllers.find(
+          (c) => c.default === true
+        );
 
-        // Initialize controller
-        if (moduleInfo.controller?.__setup) {
-          moduleInfo.controller.__setup(); // Controller handles binder internally
+        /////////////////////////////////
+        // DEPRICATED
+        // 🛑 CRITICAL FIX: Only run __setup() and inject template if:
+        // 1. The module is marked as the application's default module (set in getAllowedModules).
+        // 2. A default controller exists for this module.
+        // if (moduleInfo.isDefault && defaultControllerInfo) {
+        //   const controller = defaultControllerInfo.instance;
+        //   const template = defaultControllerInfo.template;
+
+        //   // Inject the default controller's template into DOM
+        //   const container = document.getElementById("cd-main-content");
+        //   if (container && template) {
+        //     console.debug(
+        //       `[ModuleService] Injecting default template for: ${moduleId}/${defaultControllerInfo.name}`
+        //     );
+        //     container.innerHTML = template;
+        //   }
+
+        //   // Initialize the default controller
+        //   if (controller?.__setup && typeof controller.__setup === "function") {
+        //     console.debug(
+        //       `[ModuleService] Executing __setup() for default controller: ${defaultControllerInfo.name}`
+        //     );
+        //     await controller.__setup();
+        //   }
+        // }
+
+        // NEW RECOMENDATION
+        // ...
+        // 🛑 CRITICAL FIX: Only run __setup() and inject template if:
+        // 1. The module is marked as the application's default module (set in getAllowedModules).
+        // 2. A default controller exists for this module.
+        if (moduleInfo.isDefault && defaultControllerInfo) {
+          // const controller = defaultControllerInfo.instance;
+          // const template = defaultControllerInfo.template;
+
+          // // Inject the default controller's template into DOM
+          // const container = document.getElementById("cd-main-content");
+          // if (container && template) {
+          //   console.debug(
+          //     `[ModuleService] Injecting default template for: ${moduleId}/${defaultControllerInfo.name}`
+          //   );
+          //   container.innerHTML = template;
+          // }
+
+          // 🔴 REMOVE THIS BLOCK! Setup must be handled by MenuService.loadResource() or the central boot.
+          /*
+            if (controller?.__setup && typeof controller.__setup === "function") {
+                console.debug(
+                    `[ModuleService] Executing __setup() for default controller: ${defaultControllerInfo.name}`
+                );
+                await controller.__setup();
+            }
+            */
+
+          // 💡 NEW POLICY: For default module, call MenuService.loadResource() to complete lifecycle
+          // const svMenu = new MenuService();
+          // svMenu.loadResource({
+          //   item: {
+          //     // Create a pseudo-menu item to launch the default controller
+          //     route: "default-app-route",
+          //     controller: controller,
+          //     template: template,
+          //   },
+          // });
+        } 
+        
+        else {
+          // All other modules (cd-admin) or non-default controllers are loaded passively.
+          console.debug(
+            `[ModuleService] Loaded module metadata passively: ${moduleId}. Setup skipped.`
+          );
         }
 
         const now = new Date();
@@ -216,22 +313,43 @@ export class ModuleService {
    * Returns an array of moduleInfo objects for all currently allowed modules.
    * For now, this returns hardcoded cd-user (default) and cd-admin.
    * Eventually, this will query the ACL system to filter by permissions.
-   * isDefault should not be property of ICdModule. 
+   * isDefault should not be property of ICdModule.
    * This is an admin or user setting concern and should be Isolated in that area
    */
+  // async getAllowedModules(): Promise<ICdModule[]> {
+  //   const allowedModules: ICdModule[] = [];
+
+  //   // Load cd-user (default)
+  //   const userModule = await this.loadModule("sys", "cd-user");
+  //   if (userModule) {
+  //     userModule.isDefault = true;
+  //     allowedModules.push(userModule);
+  //   }
+
+  //   // Load cd-admin
+  //   const adminModule = await this.loadModule("sys", "cd-admin");
+  //   if (adminModule) {
+  //     adminModule.isDefault = false;
+  //     allowedModules.push(adminModule);
+  //   }
+
+  //   return allowedModules;
+  // }
   async getAllowedModules(): Promise<ICdModule[]> {
     const allowedModules: ICdModule[] = [];
 
     // Load cd-user (default)
     const userModule = await this.loadModule("sys", "cd-user");
     if (userModule) {
+      // 💡 Set the isDefault flag after loading
       userModule.isDefault = true;
       allowedModules.push(userModule);
     }
 
-    // Load cd-admin
+    // Load cd-admin (non-default)
     const adminModule = await this.loadModule("sys", "cd-admin");
     if (adminModule) {
+      // 💡 Set the isDefault flag after loading
       adminModule.isDefault = false;
       allowedModules.push(adminModule);
     }

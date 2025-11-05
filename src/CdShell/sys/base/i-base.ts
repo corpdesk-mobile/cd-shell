@@ -1,48 +1,56 @@
-import { DataSource, DeleteResult, FindOptionsWhere, ObjectLiteral, UpdateResult } from "../utils/orm-shim";
+import {
+  DataSource,
+  DeleteResult,
+  FindOptionsWhere,
+  ObjectLiteral,
+  UpdateResult,
+} from "../utils/orm-shim";
 
 export interface BaseServiceInterface<T> {
   create: (
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ) => Promise<CdFxReturn<T> | T | ICdResponse>;
   read: (
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ) => Promise<CdFxReturn<T[]> | T[] | ICdResponse>;
   update: (
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ) => Promise<CdFxReturn<UpdateResult> | UpdateResult | ICdResponse>;
   delete: (
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ) => Promise<CdFxReturn<DeleteResult> | DeleteResult | ICdResponse>;
 }
 
-export abstract class AbstractBaseService<T> implements BaseServiceInterface<T> {
+export abstract class AbstractBaseService<T>
+  implements BaseServiceInterface<T>
+{
   abstract create(
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ): Promise<CdFxReturn<T> | T | ICdResponse>;
   abstract read(
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ): Promise<CdFxReturn<T[]> | T[] | ICdResponse>;
   abstract update(
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ): Promise<CdFxReturn<UpdateResult> | UpdateResult | ICdResponse>;
   abstract delete(
     req: Request | null,
     res: Response | null,
-    serviceInput: IServiceInput<T>,
+    serviceInput: IServiceInput<T>
   ): Promise<CdFxReturn<DeleteResult> | DeleteResult | ICdResponse>;
 }
 
@@ -86,21 +94,20 @@ export enum CdFxStateLevel {
 }
 
 export enum HttpFxEventType {
-  Start = 'Start',
-  UploadProgress = 'UploadProgress',
-  DownloadProgress = 'DownloadProgress',
-  Success = 'Success',
-  Error = 'Error',
-  Complete = 'Complete'
+  Start = "Start",
+  UploadProgress = "UploadProgress",
+  DownloadProgress = "DownloadProgress",
+  Success = "Success",
+  Error = "Error",
+  Complete = "Complete",
 }
-
 
 export interface HttpFxEvent {
   type: HttpFxEventType;
   request: ICdRequest;
   progress?: number; // 0–100
   message?: string;
-  direction?: 'upload' | 'download';
+  direction?: "upload" | "download";
   data?: any; // optional payload for context
 }
 
@@ -112,7 +119,6 @@ export interface CdFxOperation<T = any> {
   notify?: boolean;
 }
 
-
 // ─── Assertion Return Type ────────────────────────
 export type CdAssertReturn = CdFxReturn<boolean>;
 
@@ -121,8 +127,8 @@ export interface FxStateMeta {
   label: string;
   color?: string;
   icon?: string;
-  severity?: 'low' | 'medium' | 'high' | 'critical';
-  category?: 'error' | 'success' | 'warning' | 'info';
+  severity?: "low" | "medium" | "high" | "critical";
+  category?: "error" | "success" | "warning" | "info";
 }
 
 export interface FxStateSemantics {
@@ -134,85 +140,85 @@ export interface FxStateSemantics {
 export const CD_FX_SUCCESS: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Success,
-  message: 'Success!',
+  message: "Success!",
 };
 
 export const CD_FX_FAIL: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Error,
-  message: 'Failed!',
+  message: "Failed!",
 };
 
 export const CD_FX_PARTIAL_SUCCESS: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.PartialSuccess,
-  message: 'Partial success.',
+  message: "Partial success.",
 };
 
 export const CD_FX_LOGICAL_FAILURE: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.LogicalFailure,
-  message: 'Logical failure.',
+  message: "Logical failure.",
 };
 
 export const CD_FX_WARNING: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Warning,
-  message: 'Warning issued.',
+  message: "Warning issued.",
 };
 
 export const CD_FX_RECOVERABLE: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Recoverable,
-  message: 'Recoverable state.',
+  message: "Recoverable state.",
 };
 
 export const CD_FX_INFO: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Info,
-  message: 'Informational message.',
+  message: "Informational message.",
 };
 
 export const CD_FX_PENDING: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Pending,
-  message: 'Pending operation.',
+  message: "Pending operation.",
 };
 
 export const CD_FX_CANCELLED: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Cancelled,
-  message: 'Operation cancelled.',
+  message: "Operation cancelled.",
 };
 
 export const CD_FX_NOT_FOUND: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.NotFound,
-  message: 'Not found.',
+  message: "Not found.",
 };
 
 export const CD_FX_NOT_IMPLEMENTED: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.NotImplemented,
-  message: 'Not implemented yet.',
+  message: "Not implemented yet.",
 };
 
 export const CD_FX_SYSTEM_ERROR: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.SystemError,
-  message: 'System-level error occurred.',
+  message: "System-level error occurred.",
 };
 
 export const CD_FX_FATAL: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Fatal,
-  message: 'Fatal error.',
+  message: "Fatal error.",
 };
 
 export const CD_FX_UNKNOWN: CdFxReturn<null> = {
   data: null,
   state: CdFxStateLevel.Unknown,
-  message: 'Unknown state or error.',
+  message: "Unknown state or error.",
 };
 
 /**
@@ -319,7 +325,7 @@ export interface EnvConfig {
   firebaseConfig?: any;
 }
 
-export const SYS_CTX = 'Sys';
+export const SYS_CTX = "Sys";
 export const DEFAULT_DAT: EnvelopDat = {
   f_vals: [
     {
@@ -334,54 +340,54 @@ export const DEFAULT_ARGS = {};
 
 export const DEFAULT_ENVELOPE_CREATE: ICdRequest = {
   ctx: SYS_CTX,
-  m: '',
-  c: '',
-  a: 'Create',
+  m: "",
+  c: "",
+  a: "Create",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
 
 export const DEFAULT_ENVELOPE_GET: ICdRequest = {
   ctx: SYS_CTX,
-  m: '',
-  c: '',
-  a: 'Get',
+  m: "",
+  c: "",
+  a: "Get",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
 
 export const DEFAULT_ENVELOPE_GET_PAGED: ICdRequest = {
   ctx: SYS_CTX,
-  m: '',
-  c: '',
-  a: 'GetCount',
+  m: "",
+  c: "",
+  a: "GetCount",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
 
 export const DEFAULT_ENVELOPE_GET_TYPE: ICdRequest = {
   ctx: SYS_CTX,
-  m: '',
-  c: '',
-  a: 'GetCount',
+  m: "",
+  c: "",
+  a: "GetCount",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
 
 export const DEFAULT_ENVELOPE_UPDATE: ICdRequest = {
   ctx: SYS_CTX,
-  m: '',
-  c: '',
-  a: 'Update',
+  m: "",
+  c: "",
+  a: "Update",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
 
 export const DEFAULT_ENVELOPE_DELETE: ICdRequest = {
   ctx: SYS_CTX,
-  m: '',
-  c: '',
-  a: 'Delete',
+  m: "",
+  c: "",
+  a: "Delete",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
@@ -398,11 +404,11 @@ export const DEFAULT_CD_RESPONSE: ICdResponse = {
     success: false,
     info: {
       messages: [],
-      code: '',
-      app_msg: '',
+      code: "",
+      app_msg: "",
     },
     sess: {
-      cd_token: '',
+      cd_token: "",
       jwt: null,
       ttl: 600,
     },
@@ -412,10 +418,10 @@ export const DEFAULT_CD_RESPONSE: ICdResponse = {
 };
 
 export const DEFAULT_CD_REQUEST: ICdRequest = {
-  ctx: 'Sys',
-  m: '',
-  c: '',
-  a: '',
+  ctx: "Sys",
+  m: "",
+  c: "",
+  a: "",
   dat: DEFAULT_DAT,
   args: DEFAULT_ARGS,
 };
@@ -473,7 +479,7 @@ export interface ICdPushEnvelop {
 }
 
 /** Fields managed by backend that must not be supplied by client */
-export const MANAGED_FIELDS = ['Guid', 'docId', 'Enabled'];
+export const MANAGED_FIELDS = ["Guid", "docId", "Enabled"];
 
 export interface ISocketItem {
   socketId: string;
@@ -547,9 +553,9 @@ export interface IFetchInput {
     method?: string;
     body?: string;
     headers?: {
-      'Content-Type'?: string;
-      'X-Parse-Application-Id'?: string;
-      'X-Parse-REST-API-Key'?: string;
+      "Content-Type"?: string;
+      "X-Parse-Application-Id"?: string;
+      "X-Parse-REST-API-Key"?: string;
     };
   };
 }
@@ -686,9 +692,9 @@ export interface IFetchInput {
     method?: string;
     body?: string;
     headers?: {
-      'Content-Type'?: string;
-      'X-Parse-Application-Id'?: string;
-      'X-Parse-REST-API-Key'?: string;
+      "Content-Type"?: string;
+      "X-Parse-Application-Id"?: string;
+      "X-Parse-REST-API-Key"?: string;
     };
   };
 }
@@ -780,21 +786,19 @@ export interface CommTrack {
   savedTime?: number | string | null;
 }
 
-
-
 export declare enum StorageType {
-    CdObjId = 0,
-    IAppState = 1,
-    File = 2,
-    Redis = 3,
-    Local = 4,
-    Session = 5,
-    Memory = 6,
-    SqLite = 7,
-    MySQL = 8,
-    Postgres = 9,
-    MongoDb = 10,
-    IndexedDb = 11
+  CdObjId = 0,
+  IAppState = 1,
+  File = 2,
+  Redis = 3,
+  Local = 4,
+  Session = 5,
+  Memory = 6,
+  SqLite = 7,
+  MySQL = 8,
+  Postgres = 9,
+  MongoDb = 10,
+  IndexedDb = 11,
 }
 
 export interface LsFilter {
@@ -885,8 +889,8 @@ export const INIT_CD_RESP = {
     success: false,
     info: {
       messages: [],
-      code: '',
-      app_msg: '',
+      code: "",
+      app_msg: "",
     },
     sess: {
       cd_token: null,
@@ -962,7 +966,7 @@ export type SearchTerm = { term: string } | string;
 export interface ExecOptions {
   cwd?: string; // Optional working directory
   env?: NodeJS.ProcessEnv; // Optional environment variables
-  mode?: 'sync' | 'async'; // Execution mode
+  mode?: "sync" | "async"; // Execution mode
 }
 
 export interface CreateIParams<T> {
@@ -1002,7 +1006,7 @@ export class ColumnNumericTransformer {
 // prettier-config.ts
 
 export interface FormatterConfigEntry {
-  parser: import('prettier').BuiltInParserName;
+  parser: import("prettier").BuiltInParserName;
   // Add more properties if needed, e.g., printWidth, tabWidth, etc.
 }
 
@@ -1012,39 +1016,67 @@ export type FormatterConfigMap = Record<string, FormatterConfigEntry>;
  * File extension to Prettier parser map
  */
 export const formatterConfig: FormatterConfigMap = {
-  '.ts': { parser: 'typescript' },
-  '.cts': { parser: 'typescript' },
-  '.mts': { parser: 'typescript' },
-  '.js': { parser: 'babel' },
-  '.cjs': { parser: 'babel' },
-  '.mjs': { parser: 'babel' },
-  '.json': { parser: 'json' },
-  '.html': { parser: 'html' },
-  '.md': { parser: 'markdown' },
-  '.css': { parser: 'css' },
-  '.scss': { parser: 'scss' },
-  '.yml': { parser: 'yaml' },
-  '.yaml': { parser: 'yaml' },
+  ".ts": { parser: "typescript" },
+  ".cts": { parser: "typescript" },
+  ".mts": { parser: "typescript" },
+  ".js": { parser: "babel" },
+  ".cjs": { parser: "babel" },
+  ".mjs": { parser: "babel" },
+  ".json": { parser: "json" },
+  ".html": { parser: "html" },
+  ".md": { parser: "markdown" },
+  ".css": { parser: "css" },
+  ".scss": { parser: "scss" },
+  ".yml": { parser: "yaml" },
+  ".yaml": { parser: "yaml" },
 };
 
-export interface ShellConfig {
-  appName: string;
-  fallbackTitle: string;
-  themeConfig: ThemeConfig;
-  defaultModulePath: string;
-  defaultLanguage?: string;
-  logLevel?: "debug" | "info" | "warn" | "error";
-  logToFile?: boolean;
-  logFilePath?: string;
-  logFileName?: string;
-  logFileMaxSize?: number;
-  logFileMaxFiles?: number;
-}
+// export interface ShellConfig {
+//   appName: string;
+//   fallbackTitle: string;
+//   themeConfig: ThemeConfig;
+//   defaultModulePath: string;
+//   defaultLanguage?: string;
+//   logLevel?: "debug" | "info" | "warn" | "error";
+//   logToFile?: boolean;
+//   logFilePath?: string;
+//   logFileName?: string;
+//   logFileMaxSize?: number;
+//   logFileMaxFiles?: number;
+// }
 
 export interface ThemeConfig {
   currentThemePath: string;
   accessibleThemes: string[];
 }
 
+// /** Theme configuration section within the shell config */
+// export interface ThemeShellConfig {
+//   /** Path to the currently active theme JSON */
+//   currentThemePath: string;
+
+//   /** List of theme IDs accessible to the user/system */
+//   accessibleThemes: string[];
+
+//   /** (Optional) Whether user can switch themes manually */
+//   allowUserSelection?: boolean;
+
+//   /** (Optional) Default theme ID if none is set */
+//   defaultThemeId?: string;
+// }
 
 
+
+export interface ThemeShellConfig {
+  currentThemePath: string;
+  accessibleThemes: string[];
+  allowUserSelection?: boolean;
+  defaultThemeId?: string;
+
+  /** Optional mapping for UUD integration */
+  uiSystem?: {
+    base: "bootstrap" | "material" | "antd" | "tailwind" | "corpdesk";
+    overrideCss?: boolean;
+    componentMap?: Record<string, string>;
+  };
+}
