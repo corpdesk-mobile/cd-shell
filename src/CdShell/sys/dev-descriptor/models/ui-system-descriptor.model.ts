@@ -12,50 +12,34 @@ import { UiDomDescriptor } from "./ui-dom-descriptor.model";
 import { UiThemeDescriptor } from "./ui-theme-descriptor.model";
 
 export interface UiSystemDescriptor {
-  id: string;                        // e.g. 'bootstrap', 'material', 'tailwind'
+  id: string;
   name?: string;
   version?: string;
+
   cssUrl?: string | null;
   jsUrl?: string | null;
-  tokenMap?: Record<string, string>; // global tokens (colors, spacing names)
-  conceptMappings?: Record<string, UiSystemMapping>;
-  renderRules?: Record<string, (domNode: UiDomDescriptor, props:any) => string>; // optional
-  metadata?: Record<string, any>; // licensing, provider, aiHints
-  // Add missing properties to match the second declaration
-  description?: string;
-  components?: UiComponentDescriptor[];
-  containers?: UiContainerDescriptor[];
-  // theme?: UiThemeDescriptor;
-  /** * An array listing all available theme options for this UI system. 
-   * Used to populate the Admin Settings dropdown.
-   */
-  themesAvailable?: UiThemeDescriptor[]; // NEW PROPERTY (Array of choices)
 
-  /** * The currently active theme descriptor for this UI System. 
-   * Represents the theme that is *currently loaded* at runtime.
-   */
-  themeActive?: UiThemeDescriptor; // NEW PROPERTY (The current selection)
-  scripts?: string[];
   stylesheets?: string[];
+  scripts?: string[];
+
+  description?: string;
   author?: string;
   license?: string;
   repository?: string;
+
+  tokenMap?: Record<string, string>;
+  conceptMappings?: Record<string, { class?: string; [k: string]: any }>;
+  renderRules?: Record<string, (domNode: UiDomDescriptor, props:any) => string>;
+
+  containers?: UiContainerDescriptor[];
+  components?: UiComponentDescriptor[];
+
+  metadata?: Record<string, any>;
   extensions?: Record<string, any>;
+
+  themesAvailable?: UiThemeDescriptor[];
+  themeActive?: string;
 }
-
-// export interface UiSystemDescriptor {
-// id: string; // e.g. 'bootstrap-5'
-// name?: string;
-// version?: string;
-// assetPath?: string; // relative public assets path
-// tokenMap?: Record<string,string>;
-// conceptMappings?: Record<string, UiSystemMapping>;
-// renderRules?: Record<string, (domNode: UiDomDescriptor, props:any)=>string>;
-// themes?: { name:string; file:string; default?: boolean }[];
-// directiveMap?: Record<string,string>;
-// metadata?: Record<string, any>;
-// }
-
 
 export interface UiSystemMapping {
   // how to map the canonical DOM node or concept to classes/attributes/render logic
@@ -65,21 +49,6 @@ export interface UiSystemMapping {
   wrapper?: UiDomDescriptor | null; // optional wrapper structure
   render?: (domNode: UiDomDescriptor, props:any) => string; // optional explicit renderer
 }
-
-// export interface UiSystemMapping {
-// class?: string | ((props:any)=>string | string[]);
-// tag?: string | ((props:any)=>string);
-// attr?: Record<string,string | ((props:any)=>string)>;
-// wrapper?: UiDomDescriptor | null;
-// render?: (domNode: UiDomDescriptor, props:any)=>string | HTMLElement;
-// }
-
-// export interface UiComponentDescriptor {
-//   componentType: string;
-//   bindings?: UiDataBindingDescriptor[];
-//   events?: UiEventDescriptor[];
-//   styleRefs?: string[];
-// }
 
 /**
  * Represents a basic DOM component or widget within the UI system.

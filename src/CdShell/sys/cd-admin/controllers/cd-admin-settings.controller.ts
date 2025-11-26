@@ -32,7 +32,7 @@
 //           <label for="uiSystem">UI System</label>
 //           <select id="uiSystem" name="uiSystem" cdFormControl>
 //             <option value="">-- Select UI System --</option>
-//             <option value="bootstrap-5">Bootstrap 5</option>
+//             <option value="bootstrap-502">Bootstrap 5</option>
 //             <option value="material-design">Material Design</option>
 //           </select>
 //           <div class="error-message" data-error-for="uiSystem"></div>

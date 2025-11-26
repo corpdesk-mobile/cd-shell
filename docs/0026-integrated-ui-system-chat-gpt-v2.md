@@ -652,7 +652,7 @@ Defines the universal contract for all translators.
 
 ```ts
 export interface IUiTranslator {
-  readonly systemId: string; // e.g. 'material-design', 'bootstrap-5'
+  readonly systemId: string; // e.g. 'material-design', 'bootstrap-502'
   readonly version: string;
 
   translateLayout(descriptor: UiLayoutDescriptor): any;
@@ -990,7 +990,7 @@ This schema defines **the holistic shape of a UI system** — its assets, theme 
 
 ```ts
 export interface UiSystemSchema {
-  id: string;                           // e.g. "material-design" or "bootstrap-5"
+  id: string;                           // e.g. "material-design" or "bootstrap-502"
   displayName: string;
   version: string;
 
@@ -1161,7 +1161,7 @@ Each UI-system has its own directory under `/assets/ui-systems/`.
 │   │   ├── button.html
 │   │   ├── card.html
 │   └── descriptor.json  ← system schema (loaded by registry)
-├── bootstrap-5/
+├── bootstrap-502/
 │   ├── themes/
 │   │   ├── bootstrap.min.css
 │   ├── components/
@@ -1184,7 +1184,7 @@ The process is elegantly straightforward:
 
 ```ts
 // Developer decides to switch to Bootstrap 5
-UiSystemRegistryService.activate("bootstrap-5");
+UiSystemRegistryService.activate("bootstrap-502");
 
 // Now all future render operations use BootstrapTranslator
 const ui = UiRenderEngineService.render(myUudComponent);

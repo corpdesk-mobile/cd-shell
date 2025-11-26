@@ -1,4 +1,4 @@
-import{C as o,a,b as s,c as n}from"./cd-directive-binder.service-P6kntAs5.js";const t={form:null,binder:null,__init(){this.form=new o({userName:new a("",[s.required("Username is required")]),password:new a("",[s.required("Password is required"),s.minLength(4,"Password must be at least 4 characters")])}),this.binder=new n(this.form,"#signInForm",this)},__template(){return`
+import{C as o,a,b as s,c as n}from"./cd-directive-binder.service-DGbLY5eG.js";const t={form:null,binder:null,__init(){this.form=new o({userName:new a("",[s.required("Username is required")]),password:new a("",[s.required("Password is required"),s.minLength(4,"Password must be at least 4 characters")])}),this.binder=new n(this.form,"#signInForm",this)},__template(){return`
       <form id="signInForm" class="cd-form">
         <div class="cd-form-field">
           <label for="userName">Username</label>
@@ -23,7 +23,7 @@ import{C as o,a,b as s,c as n}from"./cd-directive-binder.service-P6kntAs5.js";co
           <div class="error-message" data-error-for="password"></div>
         </div>
 
-        <button type="submit">Sign In</button>
+        <button cdButton>Sign In</button>
       </form>
     `},__setup(){this.form||this.__init();const e=document.querySelector("#signInForm");e&&e.addEventListener("submit",r=>{r.preventDefault(),this.auth()})},async auth(){const e=this.form.validateAll();if(this.binder.applyValidationStyles(e),!this.form.valid){alert("Please correct the highlighted errors.");return}const r=this.form.value;console.log("Authenticating:",r),alert(`Welcome, ${r.userName}!`)},__deactivate(){var e;console.log("[ctlSignIn][__deactivate] 01"),(e=this.binder)!=null&&e.unbindAllDomEvents&&this.binder.unbindAllDomEvents()},async __activate(){var e;console.log("[ctlSignIn][__activate] 01"),(e=this.binder)!=null&&e.bindToDom&&await this.binder.bindToDom()}},i={username:"",password:"",binder:null,__init(){this.form=new CdFormGroup({userName:new CdFormControl("",[CdValidators.required("Username is required")]),password:new CdFormControl("",[CdValidators.required("Password is required"),CdValidators.minLength(4,"Password must be at least 4 characters")])}),this.binder=new CdDirectiveBinderService(this.form,"#signUpForm",this)},__template(){return`
       <form id="signUpForm" class="cd-sign-up">

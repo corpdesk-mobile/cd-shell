@@ -1,19 +1,27 @@
-export class UiSystemRegistryService {
-    static { this.systems = []; }
-    static { this.activeSystemId = ""; }
-    static register(system) {
-        this.systems.push(system);
+// export class UiSystemRegistryService {
+//   private static systems: UiSystemSchema[] = [];
+//   private static activeSystemId: string = "";
+//   private static registry = new Map<string, IUiSystemAdapter>();
+//   static register(system: UiSystemSchema): void {
+//     this.systems.push(system);
+//   }
+//   static getActive(): UiSystemSchema | null {
+//     return this.systems.find(s => s.id === this.activeSystemId) ?? null;
+//   }
+//   static list(): UiSystemSchema[] {
+//     return [...this.systems];
+//   }
+// }
+export class UiSystemAdapterRegistry {
+    static { this.registry = new Map(); }
+    static register(id, adapter) {
+        console.log("[UiSystemAdapterRegistry] register:", id, adapter);
+        this.registry.set(id, adapter);
     }
-    // static activate(id: string): void {
-    //   const sys = this.systems.find(s => s.id === id);
-    //   if (!sys) throw new Error(`UI system not found: ${id}`);
-    //   this.activeSystemId = id;
-    //   UiThemeLoaderService.loadActiveTheme(sys);
-    // }
-    static getActive() {
-        return this.systems.find(s => s.id === this.activeSystemId) ?? null;
+    static get(id) {
+        return this.registry.get(id) || null;
     }
     static list() {
-        return [...this.systems];
+        return Array.from(this.registry.keys());
     }
 }

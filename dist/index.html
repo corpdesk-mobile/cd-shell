@@ -1,28 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Corpdesk Shell</title>
+
+    <!-- Vendor-only static dependencies -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <!-- app global styles -->
-    <!-- Theme layout structure (public path) -->
-    <link rel="stylesheet" href="/themes/common/base.css" />
-    
-    <script type="module" crossorigin src="/assets/index-C9EmojYW.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-C_EefWij.css">
+    <script type="module" crossorigin src="/assets/index-B35E8Ip-.js"></script>
   </head>
 
   <body>
-    
     <header id="cd-header">
-      <button id="cd-burger">&#9776;</button>
-      <!-- Burger icon -->
+      <button id="cd-burger" aria-label="Menu toggle">
+        <span class="bar top"></span>
+        <span class="bar middle"></span>
+        <span class="bar bottom"></span>
+      </button>
+
       <img id="cd-logo" alt="Logo" />
       <span id="cd-app-name">Corpdesk Shell</span>
     </header>
+
     <div id="cd-layout">
       <div id="cd-overlay" class="hidden"></div>
       <aside id="cd-sidebar"></aside>

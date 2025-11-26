@@ -1,15 +1,3 @@
-/* .cd-menu-root,
-.cd-submenu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cd-menu-item {
-  margin: 0;
-  padding: 0;
-} */
-
 cd-menu-root,
 .cd-submenu {
   list-style: none;

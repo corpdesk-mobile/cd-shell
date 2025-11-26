@@ -1,8 +1,24 @@
-:root {
-  --cd-color-bg: #1a1a1a;
-  --cd-color-text: #f0f0f0;
+/* ============================================================
+   CORPDESK DARK THEME — applies ONLY when:
+   <html data-bs-theme="dark">
+   ============================================================ */
+
+html[data-bs-theme='dark'] {
+  --cd-color-bg: #121212;
+  --cd-color-surface: #1e1e1e;
+  --cd-color-text: #e6e6e6;
+
   --cd-color-primary: #0d6efd;
-  --cd-color-hint: #aaa;
+
+  --cd-color-hint: #aaaaaa;
   --cd-color-valid: #2ecc71;
   --cd-color-invalid: #e74c3c;
+
+  --cd-color-border: #333333;
+  --cd-color-hover: #2a2a2a;
+
+  /* Sidebar + menu */
+  --cd-menu-bg: #1c1c1c;
+  --cd-menu-text: #e2e2e2;
+  --cd-menu-text-active: #0d6efd;
 }

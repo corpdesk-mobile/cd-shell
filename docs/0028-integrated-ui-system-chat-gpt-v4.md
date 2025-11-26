@@ -47,7 +47,7 @@ template() {
           <label for="uiSystem">UI System</label>
           <select id="uiSystem" name="uiSystem" cdFormControl>
             <option value="">-- Select UI System --</option>
-            <option value="bootstrap-5">Bootstrap 5</option>
+            <option value="bootstrap-502">Bootstrap 5</option>
             <option value="material-design">Material Design</option>
           </select>
           <div class="error-message" data-error-for="uiSystem"></div>
@@ -264,11 +264,11 @@ At this level we’re standardizing **layout structure**, **component anatomy**,
 Each **UI system** would then have its own stylesheet overrides, like:
 
 ```
-/themes/ui-systems/bootstrap-5/forms.css
+/themes/ui-systems/bootstrap-502/forms.css
 /themes/ui-systems/material-design/forms.css
 ```
 
-When `uiSystem = "bootstrap-5"`, you load that CSS layer dynamically.
+When `uiSystem = "bootstrap-502"`, you load that CSS layer dynamically.
 
 ---
 
@@ -338,7 +338,7 @@ UUD will eventually make this **configurable at component-level** (like form, me
 ```json
 {
   "form": {
-    "uiSystem": "bootstrap-5",
+    "uiSystem": "bootstrap-502",
     "theme": "dark",
     "layout": "stacked",
     "animations": "smooth"
@@ -373,7 +373,7 @@ Perfect — I’ve reviewed your attached proposal (**0026-integrated-ui-system-
 ### ✅ How This Relates to Your Question on Form Consistency
 
 The “smoother” appearance of the **sign-in form** versus **admin-settings** form comes down to the *UI-system layer* (form layout, border radius, shadows, transitions) — not the theme.
-Right now, both forms share the same `.cd-form` base style, but there’s **no active UI-system CSS** (e.g., `/themes/common/ui/bootstrap-5.css` or `/themes/common/ui/material-design.css`).
+Right now, both forms share the same `.cd-form` base style, but there’s **no active UI-system CSS** (e.g., `/themes/common/ui/bootstrap-502.css` or `/themes/common/ui/material-design.css`).
 
 ---
 
@@ -386,7 +386,7 @@ We’ll extend what’s in your proposal as follows:
 Add a `uiSystem` field in your `/themes/default/theme.json` and `/themes/dark/theme.json`:
 
 ```json
-"uiSystem": "bootstrap-5"
+"uiSystem": "bootstrap-502"
 ```
 
 #### 2. Load Corresponding UI CSS in `ThemeLoaderService`
@@ -465,7 +465,7 @@ This gives a neutral look that can be overridden by UI-system-specific CSS (Boot
 
 ---
 
-#### 4. Prepare `/themes/common/ui/bootstrap-5.css` (example)
+#### 4. Prepare `/themes/common/ui/bootstrap-502.css` (example)
 
 ```css
 .cd-form-field input,
@@ -489,7 +489,7 @@ This gives a neutral look that can be overridden by UI-system-specific CSS (Boot
 
 | Setting                        | Effect                                  |
 | ------------------------------ | --------------------------------------- |
-| `uiSystem = "bootstrap-5"`     | Forms use rounded Bootstrap look        |
+| `uiSystem = "bootstrap-502"`     | Forms use rounded Bootstrap look        |
 | `uiSystem = "material-design"` | Forms get flatter, card-like appearance |
 | `theme = "dark"`               | Color palette shifts to dark tones      |
 
@@ -497,7 +497,7 @@ Both **sign-in** and **admin-settings** will now render identically, governed by
 
 ---
 
-Would you like me to generate the starter files for `/themes/common/ui/bootstrap-5.css` and `/themes/common/ui/material-design.css` so the system becomes plug-ready?
+Would you like me to generate the starter files for `/themes/common/ui/bootstrap-502.css` and `/themes/common/ui/material-design.css` so the system becomes plug-ready?
 
 ---
 
@@ -525,7 +525,7 @@ public/
 │   ├── fonts
 │   ├── images
 │   └── ui-systems
-│       ├── bootstrap-5
+│       ├── bootstrap-502
 │       │   └── descriptor.json
 │       └── material-design
 │           └── descriptor.json
@@ -610,7 +610,7 @@ and for **admin-settings**:
     <label for="uiSystem">UI System</label>
     <select id="uiSystem" name="uiSystem" cdFormControl class="cd-input">
       <option value="">-- Select UI System --</option>
-      <option value="bootstrap-5">Bootstrap 5</option>
+      <option value="bootstrap-502">Bootstrap 5</option>
       <option value="material-design">Material Design</option>
     </select>
   </div>

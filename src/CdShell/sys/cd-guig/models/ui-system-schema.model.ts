@@ -4,7 +4,7 @@ import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descri
 import { UiThemeDescriptor } from "../../dev-descriptor/models/ui-theme-descriptor.model";
 
 export interface UiSystemSchema {
-  id: string; // e.g. "material-design" or "bootstrap-5"
+  id: string; // e.g. "material-design" or "bootstrap-502"
   displayName: string;
   version: string;
 
@@ -22,94 +22,99 @@ export interface UiSystemSchema {
   translator: string; // name of service implementing IUiSystemTranslator
 }
 
+export interface UiConfig {
+  defaultFormVariant: string;
+  defaultThemeId: string;
+  defaultUiSystemId: string;
+  uiSystemBasePath: string;
+}
+
 // --- NEW: Static array for manual registration fallback ---
-// export const STATIC_UI_SYSTEM_REGISTRY: UiSystemDescriptor[] = [
-//   {
-//     id: "bootstrap-5",
-//     name: "Bootstrap 5",
-//     description: "Modern, mobile-first design system.",
-//     version: "5.3.0",
-//     scripts: [], // Add core scripts if needed
-//     themesAvailable: [
-//       {
-//         id: "default",
-//         name: "Default Light",
-//         isDefault: true,
-//         stylesheets: ["/assets/themes/bs5/default.css"],
-//       },
-//       {
-//         id: "dark",
-//         name: "Dark Mode",
-//         isDefault: false,
-//         stylesheets: ["/assets/themes/bs5/dark.css"],
-//       },
-//     ],
-//     // The default system is the active one for activation.
-//     themeActive: {
-//       id: "default",
-//       name: "Default Light",
-//       stylesheets: ["/assets/themes/bs5/default.css"],
-//     },
-//   },
-//   {
-//     id: "corpdesk-ui",
-//     name: "Corpdesk UI (WIP)",
-//     description: "Custom Corpdesk component library.",
-//     version: "1.0.0",
-//     scripts: [],
-//     themesAvailable: [
-//       {
-//         id: "corp-default",
-//         name: "Corpdesk Default",
-//         isDefault: true,
-//         stylesheets: ["/assets/themes/corp/default.css"],
-//       },
-//     ],
-//     themeActive: {
-//       id: "corp-default",
-//       name: "Corpdesk Default",
-//       stylesheets: ["/assets/themes/corp/default.css"],
-//     },
-//   },
-// ];
 
 export const STATIC_UI_SYSTEM_REGISTRY: UiSystemDescriptor[] = [
+  //
+  // ──────────────────────────────────────────────────────────
+  //  Bootstrap 5.0.2 (legacy)
+  // ──────────────────────────────────────────────────────────
+  //
   {
-    id: "bootstrap-5",
-    name: "Bootstrap 5",
-    scripts: ["/assets/ui-systems/bootstrap-5/bootstrap.min.js"],
+    id: "bootstrap-502",
+    name: "Bootstrap 5.0.2",
+    version: "5.0.2",
+    cssUrl: "/assets/ui-systems/bootstrap-502/bootstrap.min.css",
+    jsUrl: "/assets/ui-systems/bootstrap-502/bootstrap.min.js",
+    scripts: ["/assets/ui-systems/bootstrap-502/bootstrap.min.js"],
+    stylesheets: ["/assets/ui-systems/bootstrap-502/bootstrap.min.css"],
+
     themesAvailable: [
       {
         id: "default",
         name: "Default Light",
         isDefault: true,
-        stylesheets: ["/assets/ui-systems/bootstrap-5/bootstrap.min.css"],
+        stylesheets: ["/assets/ui-systems/bootstrap-502/bootstrap.min.css"],
       },
     ],
-    themeActive: {
-      id: "default",
-      name: "Default Light",
-      stylesheets: ["/assets/ui-systems/bootstrap-5/bootstrap.min.css"],
-    },
+
+    themeActive: "default",
   },
 
+  //
+  // ──────────────────────────────────────────────────────────
+  //  Bootstrap 5.3.8 (NEW)
+  // ──────────────────────────────────────────────────────────
+  //
+  {
+    id: "bootstrap-538",
+    name: "Bootstrap 5.3.8",
+    version: "5.3.8",
+    cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css",
+    jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js",
+
+    scripts: ["/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js"],
+    stylesheets: ["/assets/ui-systems/bootstrap-538/bootstrap.min.css"],
+
+    themesAvailable: [
+      {
+        id: "default",
+        name: "Bootstrap 5.3 Default",
+        isDefault: true,
+        stylesheets: ["/assets/ui-systems/bootstrap-538/bootstrap.min.css"],
+      },
+    ],
+
+    themeActive: "default",
+  },
+
+  //
+  // ──────────────────────────────────────────────────────────
+  //  Material Design
+  // ──────────────────────────────────────────────────────────
+  //
   {
     id: "material-design",
     name: "Material Design",
-    scripts: ["/assets/ui-systems/material-design/material-components-web.min.js"],
+    cssUrl:
+      "/assets/ui-systems/material-design/material-components-web.min.css",
+    jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js",
+
+    scripts: [
+      "/assets/ui-systems/material-design/material-components-web.min.js",
+    ],
+    stylesheets: [
+      "/assets/ui-systems/material-design/material-components-web.min.css",
+    ],
+
     themesAvailable: [
       {
         id: "default",
         name: "Material Default",
         isDefault: true,
-        stylesheets: ["/assets/ui-systems/material-design/material-components-web.min.css"],
+        stylesheets: [
+          "/assets/ui-systems/material-design/material-components-web.min.css",
+        ],
       },
     ],
-    themeActive: {
-      id: "default",
-      name: "Material Default",
-      stylesheets: ["/assets/ui-systems/material-design/material-components-web.min.css"],
-    },
+
+    themeActive: "default",
   },
 ];
-

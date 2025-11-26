@@ -1,7 +1,7 @@
-// import { UiSystemDescriptor } from "../../models/ui-system-descriptor.model";
-// import { UiGenericAdaptorService } from "./ui-generic-adaptor.service";
-// import { SysCacheService } from "../../moduleman/services/controller-cache.service";
-import { STATIC_UI_SYSTEM_REGISTRY } from "../models/ui-system-schema.model";
+import { diag_css } from "../../utils/diagnosis";
+import { DEFAULT_SYSTEM, } from "../models/ui-system-adaptor.model";
+// import { UiSystemAdapterFactory } from "./ui-system-adapters";
+import { UiSystemAdapterRegistry } from "./ui-system-registry.service";
 /**
  * @class UiSystemLoaderService
  * @description
@@ -22,96 +22,288 @@ import { STATIC_UI_SYSTEM_REGISTRY } from "../models/ui-system-schema.model";
  * Each `descriptor.json` must comply with `UiSystemDescriptor` format.
  */
 export class UiSystemLoaderService {
+    static { this.instance = null; }
     constructor(sysCache) {
-        this.sysCache = sysCache;
-        // REMOVED: private configService = new ConfigService(); 
         this.activeSystem = null;
-        // this.sysCache is now the data source.
+        this.sysCache = sysCache;
     }
-    /**
-     * ⭐ fetchAvailableSystems: Now takes the pre-loaded config (uiConfig: UiConfig).
-     */
+    static getInstance(sysCache) {
+        if (!UiSystemLoaderService.instance) {
+            if (!sysCache)
+                throw new Error("UiSystemLoaderService.getInstance requires SysCacheService on first call.");
+            UiSystemLoaderService.instance = new UiSystemLoaderService(sysCache);
+        }
+        return UiSystemLoaderService.instance;
+    }
     async fetchAvailableSystems(uiConfig) {
-        console.log('[UiSystemLoaderService][fetchAvailableSystems] starting async data load.');
-        // Config is provided. No redundant await this.configService.loadConfig() here.
-        const systems = [];
-        // Simulate 'discover' logic 
-        STATIC_UI_SYSTEM_REGISTRY.forEach(descriptor => {
-            systems.push(descriptor);
-        });
-        return systems;
+        const baseFolder = uiConfig.uiSystemBasePath || "/public/assets/ui-systems/";
+        const systemIds = UiSystemAdapterRegistry.list();
+        console.log("[UiSystemLoaderService] Registered UI Systems:", systemIds);
+        const descriptors = [];
+        for (const id of systemIds) {
+            const descriptorUrl = `${baseFolder}${id}/descriptor.json`;
+            try {
+                console.log(`[UiSystemLoaderService] Loading descriptor: ${descriptorUrl}`);
+                const res = await fetch(descriptorUrl);
+                if (!res.ok)
+                    throw new Error(`HTTP ${res.status}`);
+                const json = await res.json();
+                // Build absolute path prefix
+                const prefix = `${baseFolder}${id}/`;
+                descriptors.push({
+                    ...json,
+                    // ensure id (in case descriptor uses a different internal id)
+                    id,
+                    // Expand asset URLs
+                    cssUrl: json.cssUrl ? prefix + json.cssUrl : undefined,
+                    jsUrl: json.jsUrl ? prefix + json.jsUrl : undefined,
+                    stylesheets: (json.stylesheets || []).map((file) => prefix + file),
+                    scripts: (json.scripts || []).map((file) => prefix + file),
+                    // keep themes as-is, they already define absolute paths typically
+                    themesAvailable: json.themesAvailable || [],
+                    themeActive: json.themeActive || null,
+                    conceptMappings: json.conceptMappings || {},
+                    directiveMap: json.directiveMap || {},
+                });
+            }
+            catch (err) {
+                console.warn(`[UiSystemLoaderService] Failed to load ${descriptorUrl}`, err);
+                // fallback minimal descriptor (bootstrap-538 had wrong mappings before)
+                const prefix = `${baseFolder}${id}/`;
+                descriptors.push({
+                    id,
+                    name: id,
+                    version: "unknown",
+                    cssUrl: `${prefix}${id}.min.css`,
+                    jsUrl: `${prefix}${id}.min.js`,
+                    stylesheets: [],
+                    scripts: [],
+                    conceptMappings: {},
+                    themesAvailable: [],
+                    themeActive: null,
+                });
+            }
+        }
+        return descriptors;
     }
-    /**
-     * 2. REFACTORED: Returns a single registered UI system descriptor by ID.
-     * Reads from the Singleton cache.
-     */
-    getSystemById(id) {
-        // Retrieves the array of systems from the cache and searches it.
-        const availableSystems = this.sysCache.get('uiSystems');
-        return availableSystems.find(system => system.id === id);
-    }
-    /**
-     * 3. REFACTORED: Returns a list of all registered UI systems.
-     * Reads from the Singleton cache.
-     */
     list() {
-        // Reads directly from the guaranteed populated cache.
-        return this.sysCache.get('uiSystems');
+        return this.sysCache.get("uiSystems") || [];
     }
-    // 4. REMOVED: async loadDescriptor()
-    //    (This logic should be integrated into fetchAvailableSystems and only deals with transient I/O).
-    // 5. REMOVED: register()
-    //    (Registration is now implicit during the single SysCacheService load).
-    /**
-     * 6. REFACTORED: Activates the given UI system by ID.
-     * Now uses getSystemById() (which uses the cache) to find the descriptor.
-     */
-    /**
-     * Activates the given UI system by ID.
-     * This process now loads the core system assets and the assets
-     * defined by the currently active theme (themeActive).
-     */
+    getSystemById(id) {
+        const available = this.sysCache.get("uiSystems") || [];
+        return available.find((s) => s.id === id);
+    }
     async activate(id) {
-        console.log('[UiSystemLoaderService][activate] start');
-        // Use the cache-dependent method to find the descriptor
-        const descriptor = this.getSystemById(id);
-        if (!descriptor)
-            throw new Error(`UI system not found: ${id}`);
+        diag_css("[UiSystemLoaderService.activate] START", { id });
+        await this.sysCache.ensureReady();
+        if (!id) {
+            const auto = this.detectUiSystem?.();
+            if (auto?.id)
+                id = auto.id;
+        }
+        // 🔥 FIXED: USE FULL DESCRIPTOR
+        const descriptorFromCache = this.getFullDescriptor(id);
+        console.log("[UiSystemLoaderService.activate] descriptorFromCache:", descriptorFromCache);
+        const fallbackDescriptor = {
+            id,
+            cssUrl: `/assets/ui-systems/${id}/${id}.min.css`,
+            jsUrl: `/assets/ui-systems/${id}/${id}.min.js`,
+            assetPath: `/assets/ui-systems/${id}`,
+            stylesheets: [],
+            scripts: [],
+            conceptMappings: {}, // included for safety
+            directiveMap: {},
+            metadata: {},
+            extensions: {},
+        };
+        const descriptor = descriptorFromCache || fallbackDescriptor;
         this.activeSystem = descriptor;
-        console.log(`[UiSystemLoaderService] Activating UI system: ${descriptor.name}`);
-        // ... (rest of activate logic for loading scripts and CSS remains the same) ...
+        // Expose runtime descriptor (adapters/services read this)
+        try {
+            window.CdActiveUiDescriptor = descriptor;
+            window.CD_ACTIVE_UISYSTEM = id;
+            window.CdShellActiveUiSystem = id;
+        }
+        catch (err) {
+            console.warn("[UiSystemLoaderService.activate] Could not set global descriptor", err);
+        }
+        // 3) Remove previous ui-system assets
+        document
+            .querySelectorAll("link[data-cd-uisystem], script[data-cd-uisystem]")
+            .forEach((el) => el.remove());
+        diag_css("[UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS", {});
+        // 4) Resolve paths
+        const cssPath = descriptor.cssUrl ||
+            `${descriptor.assetPath || `/assets/ui-systems/${id}`}/bootstrap.min.css`;
+        const jsPath = descriptor.jsUrl ||
+            `${descriptor.assetPath || `/assets/ui-systems/${id}`}/${id}.min.js`;
+        const bridgeCssPath = `${descriptor.assetPath || `/assets/ui-systems/${id}`}/bridge.css`;
+        diag_css("[UiSystemLoaderService.activate] RESOLVED PATHS", {
+            cssPath,
+            jsPath,
+            bridgeCssPath,
+        });
+        // 5) Load main CSS
+        try {
+            await this.loadCSS(cssPath, id);
+            diag_css("[UiSystemLoaderService.activate] CSS LOADED", { cssPath });
+        }
+        catch (err) {
+            diag_css("[UiSystemLoaderService.activate] CSS LOAD FAILED", {
+                cssPath,
+                err,
+            });
+        }
+        // 6) Load optional bridge.css (non-fatal)
+        try {
+            await this.loadCSS(bridgeCssPath, `${id}-bridge`);
+            diag_css("[UiSystemLoaderService.activate] BRIDGE CSS LOADED", {
+                bridgeCssPath,
+            });
+        }
+        catch (err) {
+            console.log(`[UiSystemLoaderService.activate] bridge.css not found for ${id} (optional)`);
+            diag_css("[UiSystemLoaderService.activate] BRIDGE CSS LOAD FAILED", {
+                bridgeCssPath,
+                err,
+            });
+        }
+        // 7) Load system JS (optional)
+        try {
+            await this.loadScript(jsPath, id);
+            diag_css("[UiSystemLoaderService.activate] SCRIPT LOADED", { jsPath });
+        }
+        catch (err) {
+            console.warn("[UiSystemLoaderService.activate] script load failed", err);
+            diag_css("[UiSystemLoaderService.activate] SCRIPT LOAD FAILED", {
+                jsPath,
+                err,
+            });
+        }
+        // 8) Tell the in-app adapter (registered via UiSystemAdapterRegistry) to activate
+        try {
+            // UiSystemAdapterRegistry should expose a `get(id)` (or similar) that returns a registered adapter instance
+            const { UiSystemAdapterRegistry } = await import("./ui-system-registry.service");
+            const adapter = UiSystemAdapterRegistry.get(id);
+            if (adapter && typeof adapter.activate === "function") {
+                await adapter.activate(descriptor);
+                diag_css("[UiSystemLoaderService.activate] ADAPTER ACTIVATED", { id });
+            }
+            else {
+                console.log(`[UiSystemLoaderService.activate] No in-app adapter registered for ${id} (skipping)`);
+            }
+        }
+        catch (err) {
+            console.warn("[UiSystemLoaderService.activate] adapter activation failed", err);
+        }
+        // 9) Done
+        diag_css("[UiSystemLoaderService.activate] COMPLETE", { activeSystem: id });
     }
     /**
-     * Returns the currently active UI system.
+     * applyTheme(systemId, themeId)
+     * - find adapter for systemId, fetch theme descriptor via SysCacheService / UiThemeLoaderService
+     * - call adapter.applyTheme(themeDescriptor)
      */
+    async applyTheme(systemId, themeId) {
+        diag_css("[UiSystemLoaderService.applyTheme] start", { systemId, themeId });
+        // const adapter = UiSystemAdapterFactory.getAdapter(systemId);
+        const adapter = UiSystemAdapterRegistry.get(systemId);
+        console.log("[UiSystemLoaderService.applyTheme] adapter received:", adapter);
+        if (!adapter) {
+            console.warn("[UiSystemLoaderService.applyTheme] no adapter for", systemId);
+            return;
+        }
+        // get theme descriptor from cache
+        const descriptors = this.sysCache.get("themeDescriptors") || [];
+        console.log("[UiSystemLoaderService][applyTheme] descriptors:", descriptors);
+        const themeDescriptor = descriptors.find((d) => d.id === themeId);
+        console.log("[UiSystemLoaderService][applyTheme] descriptors:", themeDescriptor);
+        // supply descriptor if found, else just themeId
+        await adapter.applyTheme(themeDescriptor || themeId);
+        diag_css("[UiSystemLoaderService.applyTheme] done", { systemId, themeId });
+    }
+    async loadCSS(path, id) {
+        diag_css("[UiSystemLoaderService.loadCSS] REQUEST", { path, id });
+        return new Promise((resolve, reject) => {
+            try {
+                const head = document.head || document.getElementsByTagName("head")[0];
+                if (!head)
+                    return reject(new Error("document.head missing"));
+                const link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.href = path;
+                link.setAttribute("data-cd-uisystem", id);
+                link.setAttribute("data-cd-origin", "ui-system");
+                link.onload = () => {
+                    const resolved = link.href;
+                    diag_css("[UiSystemLoaderService.loadCSS] LOADED", {
+                        path,
+                        id,
+                        resolved,
+                        order: Array.from(head.querySelectorAll("link")).map((l) => l.href),
+                    });
+                    resolve(resolved);
+                };
+                link.onerror = (ev) => {
+                    diag_css("[UiSystemLoaderService.loadCSS] ERROR", { path, id, ev });
+                    reject(new Error(`Failed to load CSS: ${path}`));
+                };
+                head.insertAdjacentElement("beforeend", link);
+            }
+            catch (err) {
+                diag_css("[UiSystemLoaderService.loadCSS] EXCEPTION", {
+                    path,
+                    id,
+                    err,
+                });
+                reject(err);
+            }
+        });
+    }
+    async loadScript(path, id) {
+        return new Promise((resolve, reject) => {
+            try {
+                const script = document.createElement("script");
+                script.src = path;
+                script.async = true;
+                script.setAttribute("data-cd-uisystem", id);
+                script.setAttribute("data-cd-origin", "ui-system");
+                script.onload = () => resolve();
+                script.onerror = (ev) => reject(ev);
+                const body = document.body || document.getElementsByTagName("body")[0];
+                if (!body)
+                    return reject(new Error("document.body missing"));
+                body.appendChild(script);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    }
     getActive() {
-        // This remains the same, referring to the *active* state managed by this instance
+        console.log(`[UiSystemLoaderService][getActive] start.`);
         return this.activeSystem;
     }
-    /**
-     * Utility: load a CSS file dynamically.
-     */
-    async loadCSS(path) {
-        return new Promise((resolve, reject) => {
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = path;
-            link.onload = () => resolve();
-            link.onerror = () => reject(`Failed to load CSS: ${path}`);
-            document.head.appendChild(link);
-        });
+    detectFromRuntime() {
+        return window.CdShellActiveUiSystem || window.CD_ACTIVE_UISYSTEM || null;
     }
-    /**
-     * Utility: load a JavaScript file dynamically.
-     */
-    async loadScript(path) {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement("script");
-            script.src = path;
-            script.async = true;
-            script.onload = () => resolve();
-            script.onerror = () => reject(`Failed to load script: ${path}`);
-            document.body.appendChild(script);
-        });
+    detectFromMeta() {
+        const meta = document.querySelector('meta[name="cd-uiform"]');
+        return meta?.content || null;
+    }
+    detectUiSystem() {
+        const runtimeId = this.detectFromRuntime();
+        if (runtimeId) {
+            return { ...DEFAULT_SYSTEM, id: runtimeId };
+        }
+        const metaId = this.detectFromMeta();
+        if (metaId) {
+            return { ...DEFAULT_SYSTEM, id: metaId };
+        }
+        return DEFAULT_SYSTEM;
+    }
+    getFullDescriptor(id) {
+        const list = this.sysCache.get("uiSystemDescriptors") || [];
+        return list.find((d) => d.id === id);
     }
 }

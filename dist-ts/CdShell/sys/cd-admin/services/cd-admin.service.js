@@ -73,7 +73,7 @@ export class CdAdminService {
     /**
      * Generates the HTML string for the Theme <select> options for a given UI system ID.
      *
-     * @param uiSystemId The ID of the currently selected UI System (e.g., 'bootstrap-5').
+     * @param uiSystemId The ID of the currently selected UI System (e.g., 'bootstrap-502').
      * @param activeThemeId The ID of the currently active theme (to pre-select the option).
      */
     generateThemeOptions(uiSystemId, activeThemeId) {

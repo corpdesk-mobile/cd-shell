@@ -1,0 +1,59 @@
+{
+    "id": "bootstrap-538",
+    "name": "Bootstrap 5",
+    "version": "5.3.8",
+    "description": "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.",
+    "author": "Bootstrap Authors",
+    "license": "MIT",
+    "assetPath": "/assets/ui-systems/bootstrap-538",
+    "cssUrl": "bootstrap.min.css",
+    "jsUrl": "bootstrap.bundle.min.js",
+    "stylesheets": [
+        "bootstrap.min.css"
+    ],
+    "scripts": [
+        "bootstrap.bundle.min.js"
+    ],
+    "conceptMappings": {
+        "button": {
+            "class": "btn btn-primary"
+        },
+        "card": {
+            "class": "card"
+        },
+        "input": {
+            "class": "form-control"
+        },
+        "formGroup": {
+            "class": "mb-3"
+        }
+    },
+    "directiveMap": {
+        "cd-tooltip": "data-bs-toggle=\"tooltip\""
+    },
+    "themesAvailable": [
+        {
+            "id": "default",
+            "name": "Default",
+            "displayName": "Default Theme",
+            "css": "/themes/default/theme.css",
+            "mode": "light"
+        },
+        {
+            "id": "dark",
+            "name": "Dark Mode",
+            "displayName": "Dark Theme",
+            "css": "/themes/dark/theme.css",
+            "mode": "dark"
+        }
+    ],
+    "themeActive": null,
+    "metadata": {
+        "supportsDarkMode": true,
+        "supportsBootstrapThemeSwitch": true
+    },
+    "extensions": {
+        "adapter": "Bootstrap5Adapter",
+        "versionTag": "bootstrap-538"
+    }
+}

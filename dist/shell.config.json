@@ -7,9 +7,9 @@
    "defaultModulePath": "sys/cd-user",
   "logLevel": "debug",
   "uiConfig": {
-    "defaultUiSystemId": "bootstrap-5", 
-    "defaultThemeId": "default", 
+    "defaultUiSystemId": "bootstrap-538", 
+    "defaultThemeId": "dark", 
     "defaultFormVariant": "standard",
-    "uiSystemBasePath": "/public/assets/ui-systems/"
+    "uiSystemBasePath": "/assets/ui-systems/"
   }
 }

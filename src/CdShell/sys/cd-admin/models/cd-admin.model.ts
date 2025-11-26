@@ -1,4 +1,4 @@
-// src/CdShell/adm/admin/models/cd-admin.model.ts
+import config from "../../../../config";
 
 /**
  * Defines the configuration state managed by the Admin module.
@@ -12,8 +12,8 @@ export interface IAdminConfig {
 }
 
 export class AdminConfigModel implements IAdminConfig {
-  activeUiSystemId: string = 'bootstrap-5';
-  activeThemePath: string = '/themes/bootstrap-5/default.json';
+  activeUiSystemId: string = config.defaultUiConfig?.defaultUiSystemId || 'bootstrap-538';
+  activeThemePath: string = '/themes/bootstrap-502/default.json';
   logLevel: 'debug' | 'info' | 'warn' | 'error' = 'debug';
 
   constructor(data?: Partial<IAdminConfig>) {

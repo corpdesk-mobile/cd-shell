@@ -2,6 +2,8 @@
   "name": "Default Theme",
   "id": "default",
   "logo": "/themes/default/logo.png",
+  "css": "/themes/default/theme.css",
+  "mode": "light",
   "font": "Arial, sans-serif",
   "colors": {
     "secondary": "#eeeeee",

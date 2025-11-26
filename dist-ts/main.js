@@ -5,11 +5,11 @@ import { LoggerService } from "./CdShell/utils/logger.service";
 import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
 import { ModuleService } from "./CdShell/sys/moduleman/services/module.service";
 import { ControllerService } from "./CdShell/sys/moduleman/services/controller.service";
-import { inspect } from "util";
 import { SysCacheService } from "./CdShell/sys/moduleman/services/sys-cache.service";
 import { UiSystemLoaderService } from "./CdShell/sys/cd-guig/services/ui-system-loader.service";
 import { UiThemeLoaderService } from "./CdShell/sys/cd-guig/services/ui-theme-loader.service";
 import { ConfigService } from "./CdShell/sys/moduleman/services/config.service";
+import { diag_css, diag_sidebar } from "./CdShell/sys/utils/diagnosis";
 export class Main {
     constructor() {
         // private svThemeLoader!: ThemeLoaderService;
@@ -48,156 +48,192 @@ export class Main {
         this.logger.debug("[Main] init(): completed");
     }
     async run() {
-        // ----------------------------
-        // STEP 1: Initialize Logger
-        // ----------------------------
         this.logger.setLevel("debug");
         this.logger.debug("starting bootstrapShell()");
+        diag_css("Main.run() started");
+        // ----------------------------
+        // STEP 0: Load shell config
+        // ----------------------------
         const shellConfig = await this.loadShellConfig();
-        if (shellConfig.logLevel) {
+        if (shellConfig.logLevel)
             this.logger.setLevel(shellConfig.logLevel);
-        }
         // ----------------------------
-        // STEP 2: Initialize Core Services
+        // STEP 1: Core service instantiation
         // ----------------------------
-        this.svUiSystemLoader = new UiSystemLoaderService(this.svSysCache);
-        this.svUiThemeLoader = new UiThemeLoaderService(this.svSysCache);
+        this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+        this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
         this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
         // ----------------------------
-        // STEP 3: Load and Cache All Data
+        // STEP 2: Load all cached metadata
         // ----------------------------
-        this.logger.debug("Main::run()/03 → Loading cache data...");
         await this.svSysCache.loadAndCacheAll();
+        diag_css("Cache loaded");
         // ----------------------------
-        // STEP 4: Apply Boot-Time Default Activations
+        // STEP 3: Apply UI-system + Theme pipeline
         // ----------------------------
-        const uiConfig = this.svSysCache.get("uiConfig");
-        if (uiConfig) {
-            const { defaultUiSystemId, defaultThemeId, defaultFormVariant } = uiConfig;
-            this.logger.debug("[Main] Applying boot defaults from uiConfig:", uiConfig);
-            // ✅ Activate default UI system
-            this.logger.debug(`[Main] Activating default UI system: ${defaultUiSystemId}`);
-            await this.svUiSystemLoader.activate(defaultUiSystemId);
-            // ✅ Activate default theme
-            this.logger.debug(`[Main] Activating default theme: ${defaultThemeId}`);
-            this.svUiThemeLoader.setActiveThemeId(defaultThemeId);
-            await this.svUiThemeLoader.loadThemeById(defaultThemeId);
-            // ✅ Activate default form variant
-            this.logger.debug(`[Main] Activating default form variant: ${defaultFormVariant}`);
-            this.svUiThemeLoader.setActiveFormVariantId(defaultFormVariant);
-            await this.svUiThemeLoader.loadFormVariant(defaultFormVariant);
-        }
-        else {
-            this.logger.warn("[Main] No uiConfig found in SysCache — skipping defaults.");
-        }
+        await this.applyStartupUiSettings();
+        diag_css("UI-System + Theme applied");
         // ----------------------------
-        // STEP 5: Load Theme Config (For Global Assets)
+        // STEP 4: Theme config (logo + title)
         // ----------------------------
         const themeConfig = await this.svTheme.loadThemeConfig();
-        // ----------------------------
-        // STEP 6: Apply Basic UI Setup
-        // ----------------------------
+        diag_css("ThemeConfig loaded", themeConfig);
         document.title =
             shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
         const logoEl = document.getElementById("cd-logo");
-        if (logoEl && themeConfig.logo)
+        if (logoEl && themeConfig.logo) {
             logoEl.src = themeConfig.logo;
-        if (themeConfig.colors.primary) {
-            document.documentElement.style.setProperty("--theme-color", themeConfig.colors.primary);
         }
         // ----------------------------
-        // STEP 7: Load Default Module Path
+        // STEP 5: Prepare menu
         // ----------------------------
-        if (shellConfig.defaultModulePath) {
-            // ⭐ EAGER LOAD SYSTEM METADATA ⭐
-            const sysCacheInstance = SysCacheService.getInstance(this.svConfig);
-            const uiSystemLoaderInstance = new UiSystemLoaderService(sysCacheInstance);
-            const uiThemeLoaderInstance = new UiThemeLoaderService(sysCacheInstance);
-            this.svUiSystemLoader = uiSystemLoaderInstance;
-            this.svUiThemeLoader = uiThemeLoaderInstance;
-            sysCacheInstance.setLoaders(uiSystemLoaderInstance, uiThemeLoaderInstance);
-            this.logger.debug("Main::bootstrapShell()/07 → Awaiting SysCacheService Eager Load.");
-            await sysCacheInstance.loadAndCacheAll();
-            // ----------------------------
-            // STEP 8: Load Allowed Modules
-            // ----------------------------
-            const allowedModules = await this.svModule.getAllowedModules();
-            this.logger.debug("Main::allowedModules", allowedModules);
-            const defaultModule = allowedModules.find((m) => m.isDefault);
-            const defaultControllerName = defaultModule?.controllers.find((c) => c.default === true)?.name;
-            // ----------------------------
-            // STEP 9: Construct Base Menu & Inject Controller Metadata
-            // ----------------------------
-            const rawMenu = allowedModules.flatMap((mod) => {
-                const processMenuChildren = (items) => {
-                    return items.map((item) => {
-                        if (item.itemType === "route" && item.route) {
-                            const controllerInfo = this.svController.findControllerInfoByRoute(mod, item.route);
-                            if (controllerInfo) {
-                                item.controller = controllerInfo.instance;
-                                item.template =
-                                    typeof controllerInfo.template === "function"
-                                        ? controllerInfo.template
-                                        : () => controllerInfo.template;
-                                item.moduleId = mod.moduleId;
-                                if (mod.isDefault &&
-                                    controllerInfo.name === defaultControllerName) {
-                                    item.moduleDefault = true;
-                                    this.logger.debug(`[Main][processMenuChildren] Marked default menu item: ${item.route}`);
-                                }
-                            }
-                            else if (!item.controller) {
-                                this.logger.warn(`Menu item route ${item.route} not mapped to a specific controller.`);
-                            }
+        const allowedModules = await this.svModule.getAllowedModules();
+        const defaultModule = allowedModules.find((m) => m.isDefault);
+        const defaultControllerName = defaultModule?.controllers.find((c) => c.default)?.name;
+        diag_css("Modules Loaded", { allowedModules });
+        const rawMenu = allowedModules.flatMap((mod) => {
+            const recursive = (items) => {
+                return items.map((item) => {
+                    if (item.itemType === "route" && item.route) {
+                        const cinfo = this.svController.findControllerInfoByRoute(mod, item.route);
+                        if (cinfo) {
+                            item.controller = cinfo.instance;
+                            item.template =
+                                typeof cinfo.template === "function"
+                                    ? cinfo.template
+                                    : () => cinfo.template;
+                            item.moduleId = mod.moduleId;
+                            if (mod.isDefault && cinfo.name === defaultControllerName)
+                                item.moduleDefault = true;
                         }
-                        if (item.children) {
-                            item.children = processMenuChildren(item.children);
-                        }
-                        return item;
-                    });
-                };
-                return processMenuChildren(mod.menu || []);
-            });
-            // ----------------------------
-            // STEP 10: Prepare Menu via MenuService
-            // ----------------------------
-            const preparedMenu = this.svMenu.prepareMenu(rawMenu);
-            this.logger.debug("Main::preparedMenu", inspect(preparedMenu, { depth: 4 }));
-            // ----------------------------
-            // STEP 11: Load Theme and Render Menu
-            // ----------------------------
+                    }
+                    if (item.children)
+                        item.children = recursive(item.children);
+                    return item;
+                });
+            };
+            return recursive(mod.menu || []);
+        });
+        const preparedMenu = this.svMenu.prepareMenu(rawMenu);
+        diag_css("Menu prepared", preparedMenu);
+        // ----------------------------
+        // STEP 6: Render sidebar
+        // ----------------------------
+        try {
             const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
             const theme = (await resTheme.json());
             this.svMenu.renderMenuWithSystem(preparedMenu, theme);
-            // ----------------------------
-            // STEP 12: Auto-load Default Module View
-            // ----------------------------
-            const defaultModuleMenu = preparedMenu.find((m) => m.label === defaultModule.moduleId);
-            const defaultMenuItem = defaultModuleMenu?.children?.find((item) => item.moduleDefault === true);
-            if (defaultMenuItem) {
-                this.logger.debug(`Main::bootstrapShell()/12 → Triggering MenuService for default view: ${defaultMenuItem.route}`);
-                this.svMenu.loadResource({ item: defaultMenuItem });
+            const sidebarEl = document.getElementById("cd-sidebar");
+            if (sidebarEl &&
+                (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")) {
+                this.svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
             }
-            else {
-                this.logger.warn("Default menu item not found or marked. Auto-load skipped.");
-            }
-            this.logger.debug("bootstrapShell()/13: End of initialization sequence.");
+            diag_css("Sidebar rendered");
+            diag_sidebar();
+        }
+        catch (err) {
+            console.error("[Main] Failed rendering menu", err);
         }
         // ----------------------------
-        // STEP 14: Final UI Setup (Sidebar/Menu Toggle)
+        // STEP 7: Auto-load default controller
         // ----------------------------
-        this.svUiThemeLoader.loadThemeById("default");
+        try {
+            const defaultModuleMenu = preparedMenu.find((m) => m.label === defaultModule?.moduleId);
+            const defaultMenuItem = defaultModuleMenu?.children?.find((it) => it.moduleDefault);
+            if (defaultMenuItem) {
+                await this.svMenu.loadResource({ item: defaultMenuItem });
+            }
+            diag_css("Default controller loaded");
+        }
+        catch (err) {
+            console.warn("[Main] auto-load default view failed", err);
+        }
+        // ----------------------------
+        // STEP 8: Burger + Mobile UX
+        // ----------------------------
         const burger = document.getElementById("cd-burger");
         const sidebar = document.getElementById("cd-sidebar");
         const overlay = document.getElementById("cd-overlay");
-        burger.addEventListener("click", () => {
-            sidebar.classList.toggle("open");
-            overlay.classList.toggle("hidden");
-        });
-        overlay.addEventListener("click", () => {
-            sidebar.classList.remove("open");
-            overlay.classList.add("hidden");
-        });
+        const isMobile = () => window.matchMedia("(max-width: 900px)").matches;
+        const applyMobileState = () => {
+            if (!isMobile()) {
+                sidebar.classList.remove("open");
+                overlay.classList.add("hidden");
+                burger.classList.remove("open");
+            }
+        };
+        if (burger && sidebar && overlay) {
+            burger.addEventListener("click", () => {
+                burger.classList.toggle("open");
+                sidebar.classList.toggle("open");
+                overlay.classList.toggle("hidden");
+            });
+            overlay.addEventListener("click", () => {
+                burger.classList.remove("open");
+                sidebar.classList.remove("open");
+                overlay.classList.add("hidden");
+            });
+            window.addEventListener("resize", applyMobileState);
+            applyMobileState();
+        }
+        this.logger.debug("bootstrapShell(): run() complete");
+        diag_css("Main.run() complete");
+    }
+    /**
+     * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
+     */
+    async applyStartupUiSettings() {
+        const cfgSvc = ConfigService.getInstance();
+        // ensure sys cache is ready
+        await this.svSysCache.ensureReady();
+        const uiConfig = this.svSysCache.get("uiConfig");
+        if (!uiConfig) {
+            console.warn("[Main.applyStartupUiSettings] uiConfig missing");
+            return;
+        }
+        const systemId = uiConfig.defaultUiSystemId;
+        const themeId = uiConfig.defaultThemeId;
+        diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
+        // Use singletons bound to same SysCache instance
+        const uiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+        const uiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+        // 1) Activate UI system (loads CSS + JS)
+        try {
+            await uiSystemLoader.activate(systemId);
+            diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
+                systemId,
+            });
+        }
+        catch (err) {
+            console.warn("[MAIN.applyStartupUiSettings] activate failed", err);
+            diag_css("[MAIN.applyStartupUiSettings] activate failed", { err });
+        }
+        // 2) Load structural shell CSS (base + index) AFTER system to ensure layering
+        try {
+            await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
+            await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
+            diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded", {});
+        }
+        catch (err) {
+            console.warn("[MAIN.applyStartupUiSettings] shell CSS load failed", err);
+        }
+        // 3) load theme override CSS
+        try {
+            await uiThemeLoader.loadThemeById(themeId);
+            diag_css("[MAIN.applyStartupUiSettings] theme css injected", { themeId });
+        }
+        catch (err) {
+            console.warn("[MAIN.applyStartupUiSettings] theme load failed", err);
+        }
+        // 4) per-system applyTheme (sets data-bs-theme, md classes, etc.)
+        try {
+            await uiSystemLoader.applyTheme(systemId, themeId);
+            diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete", {});
+        }
+        catch (err) {
+            console.warn("[MAIN.applyStartupUiSettings] applyTheme failed", err);
+        }
+        diag_css("[MAIN.applyStartupUiSettings] done", {});
     }
     async loadShellConfig() {
         const res = await fetch("/shell.config.json");

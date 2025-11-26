@@ -2,10 +2,14 @@
   --cd-primary-color: #1976d2;
   --cd-secondary-color: #eeeeee;
   --cd-accent-color: #ff4081;
+
   --cd-background-color: #ffffff;
   --cd-text-color: #000000;
 }
 
+/* ---------------------------------------------
+   GLOBAL
+---------------------------------------------- */
 body {
   margin: 0;
   padding: 0;
@@ -13,11 +17,16 @@ body {
   color: var(--cd-text-color);
 }
 
+/* ---------------------------------------------
+   HEADER
+---------------------------------------------- */
 #cd-header {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 10px 16px;
+  height: 60px;
   background-color: var(--cd-primary-color);
+  color: #ffffff;
 }
 
 #cd-logo {
@@ -25,36 +34,38 @@ body {
   margin-right: 10px;
 }
 
-/***************************************************/
-/* Layout container below header */
+/* ---------------------------------------------
+   MAIN LAYOUT WRAPPER
+---------------------------------------------- */
 #cd-layout {
   display: flex;
-  height: calc(100vh - 60px); /* adjust if your header is taller */
+  height: calc(100vh - 60px); /* below header */
 }
 
-/* Sidebar styles */
-/* #cd-sidebar {
-  width: 250px;
-  background-color: var(--cd-secondary-color);
-  overflow-y: auto;
-  padding: 10px;
-} */
-
-/* Content area styles */
+/* ---------------------------------------------
+   CONTENT AREA
+---------------------------------------------- */
 #cd-main-content {
   flex: 1;
   padding: 20px;
-  background-color: var(--cd-background-color);
   overflow-y: auto;
 }
 
-/* Optional: fix the header height */
-#cd-header {
-  height: 60px;
+/* ---------------------------------------------
+   SIDEBAR (desktop mode)
+---------------------------------------------- */
+#cd-sidebar {
+  width: var(--cd-sidebar-width, 250px);
+  background-color: var(--cd-secondary-color);
+  overflow-y: auto;
+  padding: 10px;
+  transition: left 0.3s ease;
+  position: relative; /* desktop default */
 }
 
-/************************************************/
-/* Hide burger by default (visible on small screens) */
+/* ---------------------------------------------
+   BURGER BUTTON (hidden by default)
+---------------------------------------------- */
 #cd-burger {
   display: none;
   font-size: 24px;
@@ -65,39 +76,46 @@ body {
   cursor: pointer;
 }
 
-/* Sidebar base styles */
-#cd-sidebar {
-  width: 250px;
-  background-color: var(--cd-secondary-color);
-  overflow-y: auto;
-  padding: 10px;
-  transition: transform 0.3s ease;
-}
+/* ---------------------------------------------
+   RESPONSIVE: MOBILE & TABLET VIEW
+   Activate burger mode at <= 900px
+---------------------------------------------- */
+@media (max-width: 900px) {
 
-/* Hide sidebar by default on mobile */
-@media (max-width: 768px) {
+  /* Show burger */
   #cd-burger {
     display: block;
   }
 
+  /* Hide logo next to burger */
+  #cd-logo {
+    display: none;
+  }
+
+  /* Make layout relative so sidebar can overlay */
   #cd-layout {
     position: relative;
   }
 
+  /* Sidebar becomes sliding drawer */
   #cd-sidebar {
     position: fixed;
-    top: 60px; /* below header */
-    left: 0;
+    top: 60px;
+    left: calc(-1 * var(--cd-sidebar-width, 250px));
     height: calc(100vh - 60px);
-    transform: translateX(-100%);
     z-index: 1000;
+    background-color: var(--cd-secondary-color);
+    overflow-y: auto;
+    transition: left 0.3s ease;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
 
+  /* Sidebar open state (triggered by Main.ts) */
   #cd-sidebar.open {
-    transform: translateX(0);
+    left: 0;
   }
 
+  /* Overlay */
   #cd-overlay {
     display: block;
     position: fixed;
@@ -109,9 +127,8 @@ body {
     z-index: 999;
   }
 
+  /* Hidden overlay when sidebar closed */
   #cd-overlay.hidden {
     display: none;
   }
 }
-
-

@@ -1,0 +1,199 @@
+/* ============================================================
+   CORPDESK BRIDGE FOR BOOTSTRAP 5.3.x
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. ROOT VARIABLES (Light Mode Defaults)
+   ------------------------------------------------------------ */
+:root {
+  --cd-bridge-body-font-family: var(--bs-body-font-family, system-ui, sans-serif);
+  --cd-bridge-body-font-size: var(--bs-body-font-size, 1rem);
+  --cd-bridge-border-radius: var(--bs-border-radius, .375rem);
+
+  --cd-color-border: var(--bs-border-color, #ced4da);
+  --cd-input-text-color: var(--bs-body-color, #212529);
+
+  /* Sidebar defaults (light mode) */
+  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
+  --cd-menu-text: var(--bs-body-color, #212529);
+
+  /* Active (selected) row – light */
+  --cd-menu-active-bg: #e6e6e6;
+  --cd-menu-active-text: #000;
+
+  /* Hover (light) */
+  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
+}
+
+
+/* ------------------------------------------------------------
+   2. LIGHT MODE
+   ------------------------------------------------------------ */
+:root[data-bs-theme="light"] {
+  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
+  --cd-menu-text: var(--bs-body-color, #212529);
+
+  --cd-menu-active-bg: #e2e2e2;
+  --cd-menu-active-text: #000;
+
+  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
+}
+
+
+/* ------------------------------------------------------------
+   3. DARK MODE  (Option A – Neutral Grey)
+   ------------------------------------------------------------ */
+:root[data-bs-theme="dark"] {
+  --cd-input-text-color: var(--bs-body-color, #e6e6e6);
+  --cd-color-border: var(--bs-border-color, #495057);
+
+  /* Sidebar surface + text */
+  --cd-menu-bg: #1e1e1e;
+  --cd-menu-text: #dcdcdc;
+
+  /* Active row — neutral dark */
+  --cd-menu-active-bg: #2f3640;
+  --cd-menu-active-text: #ffffff;
+
+  /* Hover (dark) */
+  --cd-menu-hover-bg: rgba(255, 255, 255, 0.07);
+
+  /* Bootstrap form background */
+  --bs-form-control-bg: var(--bs-gray-900, #2b3035);
+}
+
+
+/* ------------------------------------------------------------
+   4. FORM LABELS
+   ------------------------------------------------------------ */
+.cd-form-field > label {
+  font-size: .875rem;
+  font-weight: 500;
+  color: var(--cd-input-text-color);
+}
+
+
+/* ------------------------------------------------------------
+   5. INPUTS
+   ------------------------------------------------------------ */
+.cd-form-field input,
+.cd-form-field textarea,
+.cd-form-field select {
+  width: 100%;
+  padding: var(--bs-form-control-padding-y, .375rem)
+           var(--bs-form-control-padding-x, .75rem);
+  font-size: var(--bs-body-font-size, 1rem);
+  font-family: var(--cd-bridge-body-font-family);
+  color: var(--cd-input-text-color);
+  background-color: var(--bs-form-control-bg, #fff);
+  border: 1px solid var(--cd-color-border);
+  border-radius: var(--cd-bridge-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  box-sizing: border-box;
+}
+
+
+/* ------------------------------------------------------------
+   6. VALID / INVALID STATES
+   ------------------------------------------------------------ */
+.cd-form-field input.cd-valid,
+.cd-form-field select.cd-valid,
+.cd-form-field textarea.cd-valid {
+  border-color: var(--bs-success, #198754) !important;
+  box-shadow: 0 0 0 .2rem rgba(var(--bs-success-rgb, 25,135,84), .15);
+}
+
+.cd-form-field input.cd-invalid,
+.cd-form-field select.cd-invalid,
+.cd-form-field textarea.cd-invalid {
+  border-color: var(--bs-danger, #dc3545) !important;
+  box-shadow: 0 0 0 .2rem rgba(var(--bs-danger-rgb, 220,53,69), .15);
+}
+
+
+/* ------------------------------------------------------------
+   7. BUTTONS
+   ------------------------------------------------------------ */
+button[cdButton],
+.cd-button {
+  font-family: var(--cd-bridge-body-font-family);
+  border-radius: var(--cd-bridge-border-radius);
+}
+
+
+/* ------------------------------------------------------------
+   8. SIDEBAR / MENU BASE
+   ------------------------------------------------------------ */
+#cd-sidebar {
+  background-color: var(--cd-menu-bg);
+  color: var(--cd-menu-text);
+}
+
+/* ------------------------------------------------------------
+   8B. FIX OVERRIDES FOR METISMENU ACTIVE + HOVER
+   ------------------------------------------------------------ */
+#cd-sidebar .metismenu a:hover {
+  background-color: var(--cd-menu-hover-bg) !important;
+  color: var(--cd-menu-active-text) !important;
+}
+
+#cd-sidebar .metismenu li.mm-active > a {
+  background-color: var(--cd-menu-active-bg) !important;
+  color: var(--cd-menu-active-text) !important;
+}
+
+/* ------------------------------------------------------------
+   🔧 FIXED TEXT CONTRAST FOR ALL MENU LINKS
+   ------------------------------------------------------------ */
+#cd-sidebar a.cd-menu-link {
+  color: var(--cd-menu-text) !important;
+}
+
+/* Each clickable row — full width */
+.cd-menu-entry {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Main label side */
+.cd-menu-link {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Right-side arrow */
+.cd-menu-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 0.8rem;
+}
+
+/* Hover */
+.cd-menu-entry:hover {
+  background-color: var(--cd-menu-hover-bg);
+  color: var(--cd-menu-active-text);
+}
+
+/* Active row */
+.metismenu li.mm-active > .cd-menu-entry,
+.metismenu li.mm-active > .cd-menu-entry:hover {
+  background-color: var(--cd-menu-active-bg) !important;
+  color: var(--cd-menu-active-text) !important;
+}
+
+/* IMPORTANT: Hide only MetisMenu's auto-generated pseudo arrow */
+.metismenu .has-arrow::before {
+  display: none !important;
+  content: none !important;
+}
+

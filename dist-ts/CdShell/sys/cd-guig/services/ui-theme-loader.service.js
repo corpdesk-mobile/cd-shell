@@ -1,223 +1,296 @@
-import { loadStyle } from "../../../utils/load-style.service";
 import { ConfigService } from "../../moduleman/services/config.service";
+import { diag_css } from "../../utils/diagnosis";
+// export class UiThemeLoaderService {
+//   private static readonly ACTIVE_THEME_KEY = "cd-active-theme-id";
+//   private static readonly ACTIVE_FORM_VARIANT_KEY = "cd-active-form-variant";
+//   private configService = new ConfigService();
+//   private static instance: UiThemeLoaderService | null = null;
+//   constructor(private sysCache: SysCacheService) {}
+//   static getInstance(): UiThemeLoaderService {
+//     if (!UiThemeLoaderService.instance) {
+//       UiThemeLoaderService.instance = new UiThemeLoaderService(
+//         SysCacheService.getInstance()
+//       );
+//     }
+//     return UiThemeLoaderService.instance;
+//   }
+//   /**
+//    * Bootstraps the Theme Loader:
+//    * - Reads configuration defaults
+//    * - Checks localStorage for existing user choices
+//    * - Loads and activates the saved or default theme and form variant
+//    */
+//   async bootstrap(): Promise<void> {
+//     console.log(`[UiThemeLoaderService][bootstrap] start.`);
+//     const uiConfig: UiConfig = await this.configService.loadConfig();
+//     console.log("[UiThemeLoaderService][bootstrap] uiConfig:", uiConfig);
+//     // --- Theme setup ---
+//     let activeThemeId = this.getActiveThemeId();
+//     if (!activeThemeId) {
+//       activeThemeId = uiConfig.defaultThemeId;
+//       this.setActiveThemeId(activeThemeId);
+//     }
+//     try {
+//       await this.loadThemeById(activeThemeId);
+//     } catch (e) {
+//       console.warn(
+//         `[UiThemeLoaderService] Failed to load theme: ${activeThemeId}`,
+//         e
+//       );
+//     }
+//     // --- Form variant setup ---
+//     let activeVariantId = this.getActiveFormVariantId();
+//     if (
+//       activeVariantId === "standard" &&
+//       uiConfig.defaultFormVariant !== "standard"
+//     ) {
+//       activeVariantId = uiConfig.defaultFormVariant;
+//       this.setActiveFormVariantId(activeVariantId);
+//     }
+//     try {
+//       await this.loadFormVariant(activeVariantId);
+//     } catch (e) {
+//       console.warn(
+//         `[UiThemeLoaderService] Failed to load form variant: ${activeVariantId}`,
+//         e
+//       );
+//     }
+//     console.log(
+//       `[UiThemeLoaderService] Bootstrapped: theme=${activeThemeId}, variant=${activeVariantId}`
+//     );
+//   }
+//   /**
+//    * Dynamically loads theme CSS layers in order:
+//    * - Theme-specific overrides only (base + index should be loaded by Main after UI system activation)
+//    */
+//   async loadThemeById(themeId: string): Promise<void> {
+//     console.log(`[UiThemeLoaderService][loadThemeById] start.`);
+//     console.log(`[UiThemeLoaderService][loadThemeById] themeId: ${themeId}`);
+//     this.setActiveThemeId(themeId);
+//     // Clean previously injected theme links
+//     document
+//       .querySelectorAll("link[data-cd-theme]")
+//       .forEach((el) => el.remove());
+//     const themeCss = `/themes/${themeId}/theme.css`;
+//     await this.injectStyle(themeCss, themeId, "theme");
+//     console.debug(
+//       `[UiThemeLoaderService] Active theme fully applied: ${themeId}`
+//     );
+//   }
+//   /**
+//    * ⭐ fetchAvailableThemes: Now takes the pre-loaded config (uiConfig: UiConfig).
+//    */
+//   async fetchAvailableThemes(uiConfig: UiConfig): Promise<any> {
+//     console.log(
+//       "[UiThemeLoaderService][fetchAvailableThemes] starting async data load."
+//     );
+//     const themesData = [
+//       { id: uiConfig.defaultThemeId, name: "Default Theme (from config)" },
+//       { id: "dark", name: "Dark Mode" },
+//     ];
+//     const variantsData = [
+//       { id: "standard", name: "Standard" },
+//       { id: "rounded", name: "Rounded" },
+//       { id: "outlined", name: "Outlined" },
+//     ];
+//     return {
+//       themes: themesData,
+//       variants: variantsData,
+//       uiConfig: uiConfig,
+//     };
+//   }
+//   /**
+//    * Loads a specific form variant CSS
+//    */
+//   async loadFormVariant(formType = "standard"): Promise<void> {
+//     console.log(`[UiThemeLoaderService][loadFormVariant] start.`);
+//     // Remove existing form variant CSS
+//     document
+//       .querySelectorAll("link[data-cd-form]")
+//       .forEach((el) => el.remove());
+//     const path = `/themes/common/forms/variants/cd-form-${formType}.css`;
+//     await this.injectStyle(path, formType, "form");
+//     this.setActiveFormVariantId(formType);
+//     console.debug(`[UiThemeLoaderService] Form variant loaded: ${formType}`);
+//   }
+//   /**
+//    * Injects a stylesheet and tags it with data attributes so it can be removed or identified later.
+//    * - type = "theme" => link.dataset.cdTheme = key
+//    * - type = "form"  => link.dataset.cdForm  = key
+//    */
+//   private async injectStyle(
+//     path: string,
+//     key: string,
+//     type: "theme" | "form" = "theme"
+//   ): Promise<void> {
+//     console.log(
+//       `[UiThemeLoaderService][injectStyle] injecting: ${path} as ${type}/${key}`
+//     );
+//     return new Promise((resolve, reject) => {
+//       const link = document.createElement("link");
+//       link.rel = "stylesheet";
+//       link.href = path;
+//       if (type === "theme") {
+//         link.dataset.cdTheme = key;
+//       } else {
+//         link.dataset.cdForm = key;
+//       }
+//       link.onload = () => resolve();
+//       link.onerror = () => reject(new Error(`Failed to load CSS: ${path}`));
+//       // Preserve order by appending to end of head
+//       document.head.insertAdjacentElement("beforeend", link);
+//     });
+//   }
+//   getActiveThemeId(): string {
+//     console.log(`[UiThemeLoaderService][getActiveThemeId] start.`);
+//     return localStorage.getItem(UiThemeLoaderService.ACTIVE_THEME_KEY) || "";
+//   }
+//   setActiveThemeId(themeId: string): void {
+//     console.log(`[UiThemeLoaderService][setActiveThemeId] start.`);
+//     localStorage.setItem(UiThemeLoaderService.ACTIVE_THEME_KEY, themeId);
+//   }
+//   getActiveFormVariantId(): string {
+//     return (
+//       localStorage.getItem(UiThemeLoaderService.ACTIVE_FORM_VARIANT_KEY) ||
+//       "standard"
+//     );
+//   }
+//   setActiveFormVariantId(variantId: string): void {
+//     console.log(`[UiThemeLoaderService][setActiveFormVariantId] start.`);
+//     localStorage.setItem(
+//       UiThemeLoaderService.ACTIVE_FORM_VARIANT_KEY,
+//       variantId
+//     );
+//   }
+// }
 export class UiThemeLoaderService {
-    // private static readonly ACTIVE_THEME_KEY = "cd-active-theme-id";
     static { this.ACTIVE_THEME_KEY = "cd-active-theme-id"; }
-    // NEW: Key for storing the active form variant
     static { this.ACTIVE_FORM_VARIANT_KEY = "cd-active-form-variant"; }
+    static { this.instance = null; }
     constructor(sysCache) {
+        this.configService = ConfigService.getInstance();
         this.sysCache = sysCache;
-        this.configService = new ConfigService();
-        // this.sysCache is now the data source.
+    }
+    static getInstance(sysCache) {
+        if (!UiThemeLoaderService.instance) {
+            if (!sysCache)
+                throw new Error("UiThemeLoaderService.getInstance requires SysCacheService on first call.");
+            UiThemeLoaderService.instance = new UiThemeLoaderService(sysCache);
+        }
+        return UiThemeLoaderService.instance;
     }
     /**
-     * NEW METHOD: Bootstraps the Theme Loader and applies initial settings.
-     * 1. Reads configuration defaults.
-     * 2. Checks localStorage for existing user choices.
-     * 3. Loads and activates the saved or default theme/form variant.
-     */
-    async bootstrap() {
-        // const uiConfig = this.configService.getUiConfig(); // Config must be loaded beforehand
-        // 1. Load configuration defaults
-        const uiConfig = await this.configService.loadConfig();
-        console.log("[UiSystemLoaderService][bootstrap] uiConfig:", uiConfig);
-        // --- 1. Initialize Active Theme ---
-        let activeThemeId = this.getActiveThemeId();
-        if (!activeThemeId) {
-            // If no theme is saved in localStorage, use the default from config
-            activeThemeId = uiConfig.defaultThemeId;
-            this.setActiveThemeId(activeThemeId); // Persist the default
-        }
-        // Attempt to load the final active theme asset (if necessary for global styling)
-        // NOTE: The main system activation logic might already load the theme, but
-        // this ensures persistence and state is set early.
-        try {
-            await this.loadThemeById(activeThemeId);
-        }
-        catch (e) {
-            console.warn(`[UiThemeLoaderService] Failed to load default theme assets for ID: ${activeThemeId}`);
-        }
-        // --- 2. Initialize Form Variant ---
-        let activeVariantId = this.getActiveFormVariantId();
-        if (activeVariantId === "standard" &&
-            uiConfig.defaultFormVariant !== "standard") {
-            // Only override if the persisted value is the hardcoded default "standard"
-            // AND the config is different.
-            activeVariantId = uiConfig.defaultFormVariant;
-            this.setActiveFormVariantId(activeVariantId); // Persist the default
-        }
-        // Load the active form variant asset
-        try {
-            await this.loadFormVariant(activeVariantId);
-        }
-        catch (e) {
-            console.warn(`[UiThemeLoaderService] Failed to load default form variant: ${activeVariantId}`);
-        }
-        console.log(`[UiThemeLoaderService] Bootstrapped. Theme: ${this.getActiveThemeId()}, Variant: ${this.getActiveFormVariantId()}`);
-    }
-    /**
-     * ⭐ fetchAvailableThemes: Now takes the pre-loaded config (uiConfig: UiConfig).
+     * Fetch available themes:
+     * - Read uiConfig.accessibleThemes or infer
+     * - For each theme id, fetch /themes/<id>/theme.json (descriptor)
+     * - Return shape: { themes: [{id,name}], variants: [...], descriptors: [full objects], uiConfig }
      */
     async fetchAvailableThemes(uiConfig) {
-        console.log("[UiThemeLoaderService][fetchAvailableThemes] starting async data load.");
-        // 1. Configuration is provided by SysCacheService.
-        // 2. Simulate Discovery/Configuration based on uiConfig.
-        const themesData = [
-            { id: uiConfig.defaultThemeId, name: "Default Theme (from config)" },
-            { id: "dark", name: "Dark Mode" },
-            // ...
+        console.log("[UiThemeLoaderService][fetchAvailableThemes] start", uiConfig);
+        const accessible = (uiConfig && uiConfig.accessibleThemes) ||
+            this.configService.config?.themeConfig?.accessibleThemes || [
+            "default",
+            "dark",
         ];
-        const variantsData = [
-            { id: "standard", name: "Standard" },
-            { id: "rounded", name: "Rounded" },
-            { id: "outlined", name: "Outlined" },
-        ];
-        return {
-            themes: themesData,
-            variants: variantsData,
-            uiConfig: uiConfig,
-        };
-    }
-    listThemes() {
-        const data = this.sysCache.get("themes");
-        return data?.themes || [];
-    }
-    listFormVariants() {
-        const data = this.sysCache.get("themes");
-        return data?.variants || [];
-    }
-    /**
-     * Loads all available theme assets defined in a UiSystemSchema for the purpose
-     * of runtime theme switching.
-     *
-     * @param system The descriptor containing the list of available themes.
-     */
-    async loadAvailableThemes(system) {
-        // NOTE: This method should be revised if the intent is to load ALL theme assets
-        // into memory at once, which is typically avoided in production.
-        // For now, we update it to use the correct 'stylesheets' property.
-        const availableThemes = system.themes;
-        if (!availableThemes || availableThemes.length === 0) {
-            console.warn(`[UiThemeLoaderService] No themes found for ${system.displayName}`);
-            return;
-        }
-        for (const theme of availableThemes) {
-            // FIX: Check for the 'stylesheets' array and iterate over paths
-            if (theme.stylesheets) {
-                for (const path of theme.stylesheets) {
-                    // In a real app, you might only load the active theme,
-                    // or load all stylesheets with unique IDs for easy removal/switching.
-                    await loadStyle(path);
-                    console.debug(`[UiThemeLoaderService] Pre-loaded theme asset: ${theme.name} (${path})`);
+        const descriptors = [];
+        for (const id of accessible) {
+            const path = `/themes/${id}/theme.json`;
+            try {
+                const res = await fetch(path);
+                if (!res.ok) {
+                    console.warn(`[UiThemeLoaderService] theme descriptor not found: ${path}`);
+                    continue;
                 }
+                const desc = await res.json();
+                descriptors.push(desc);
+            }
+            catch (err) {
+                console.warn(`[UiThemeLoaderService] error fetching theme descriptor ${path}`, err);
             }
         }
+        // produce lightweight lists
+        const themes = descriptors.map((d) => ({ id: d.id, name: d.name }));
+        const variants = [
+            { id: "standard", name: "Standard" },
+            { id: "compact", name: "Compact" },
+            { id: "floating", name: "Floating" },
+        ];
+        return {
+            themes,
+            variants,
+            descriptors,
+            uiConfig,
+        };
     }
     /**
-     * Loads a specific theme by ID and persists it as the active theme.
-     * This is intended to be called when the user selects a theme in the GUI.
+     * loadThemeById - injects ONLY the theme override CSS (theme.css)
+     * base + index should be loaded by Main (or UiSystemLoader) earlier
      */
-    // async loadThemeById(themeId: string): Promise<void> {
-    //   // In a real scenario, this would:
-    //   // 1. Find the full UiThemeDescriptor for themeId.
-    //   // 2. Remove old theme stylesheets.
-    //   // 3. Inject new theme stylesheets (theme.stylesheets).
-    //   // For now, we only persist the selection:
-    //   this.setActiveThemeId(themeId);
-    //   // Example path loading (assuming common theme structure):
-    //   const path = `/themes/common/style/${themeId}.css`;
-    //   await loadStyle(path);
-    //   console.debug(
-    //     `[UiThemeLoaderService] Active theme asset loaded: ${themeId}`
-    //   );
-    // }
     async loadThemeById(themeId) {
-        // In a real scenario, this would:
-        // 1. Find the full UiThemeDescriptor for themeId.
-        // 2. Remove old theme stylesheets.
-        // 3. Inject new theme stylesheets (theme.stylesheets).
-        // ... (persists selection) ...
-        this.setActiveThemeId(themeId);
-        // FIX: Updated path to point to the theme-specific theme.css file
-        const path = `/themes/${themeId}/theme.css`;
-        // Fallback: Check if the theme is part of a UI System that loaded it already
-        // If not, proceed to load the asset manually.
-        await loadStyle(path);
-        console.debug(`[UiThemeLoaderService] Active theme asset loaded: ${themeId}`);
+        diag_css("[UiThemeLoaderService.loadThemeById] start", { themeId });
+        // remove previous theme links (data-cd-theme)
+        document.querySelectorAll("link[data-cd-theme]").forEach((l) => l.remove());
+        const desc = this.getThemeDescriptor(themeId);
+        if (!desc) {
+            diag_css("[UiThemeLoaderService.loadThemeById] descriptor not found", {
+                themeId,
+            });
+            // still try fallback path
+            const fallback = `/themes/${themeId}/theme.css`;
+            await this.injectStyle(fallback, themeId, "theme");
+            return;
+        }
+        // prefer descriptor.css or descriptor.css path
+        const cssPath = desc.css || desc.cssPath || `/themes/${themeId}/theme.css`;
+        await this.injectStyle(cssPath, themeId, "theme");
+        diag_css("[UiThemeLoaderService.loadThemeById] loaded", {
+            themeId,
+            cssPath,
+        });
     }
-    // -------------------------------------------------------------------
-    // State Management Implementation (Resolves Point 2)
-    // -------------------------------------------------------------------
-    // /**
-    //  * Returns the ID of the theme currently selected and persisted in storage.
-    //  * Resolves the method used by CdAdminService.
-    //  */
-    // getActiveThemeId(): string {
-    //   // Retrieve the ID from localStorage, defaulting to an empty string if not set.
-    //   return localStorage.getItem(UiThemeLoaderService.ACTIVE_THEME_KEY) || "";
-    // }
     /**
-     * Returns the ID of the theme currently selected and persisted in storage.
+     * Return full descriptor previously cached in SysCacheService
      */
+    getThemeDescriptor(themeId) {
+        const descriptors = this.sysCache.get("themeDescriptors") || [];
+        return descriptors.find((d) => d.id === themeId);
+    }
+    async loadFormVariant(formType = "standard") {
+        document
+            .querySelectorAll("link[data-cd-form]")
+            .forEach((el) => el.remove());
+        const path = `/themes/common/forms/variants/cd-form-${formType}.css`;
+        await this.injectStyle(path, formType, "form");
+    }
+    async injectStyle(path, key, type = "theme") {
+        return new Promise((resolve, reject) => {
+            try {
+                const head = document.head || document.getElementsByTagName("head")[0];
+                if (!head)
+                    return reject(new Error("document.head missing"));
+                const link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.href = path;
+                if (type === "theme")
+                    link.setAttribute("data-cd-theme", key);
+                else
+                    link.setAttribute("data-cd-form", key);
+                link.onload = () => resolve();
+                link.onerror = (ev) => reject(new Error(`failed to load ${path}`));
+                // preserve order: append to head end
+                head.insertAdjacentElement("beforeend", link);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    }
     getActiveThemeId() {
-        // Retrieve the ID from localStorage, defaulting to an empty string if not set.
+        console.log(`[UiThemeLoaderService][getActiveThemeId] start.`);
         return localStorage.getItem(UiThemeLoaderService.ACTIVE_THEME_KEY) || "";
     }
-    /**
-     * Persists the newly selected active theme ID.
-     */
-    setActiveThemeId(themeId) {
-        localStorage.setItem(UiThemeLoaderService.ACTIVE_THEME_KEY, themeId);
-    }
-    // -------------------------------------------------------------------
-    // Original methods remain, with minor fixes if applicable
-    // -------------------------------------------------------------------
-    // /**
-    //  * Loads a specific form variant (standard, rounded, outlined, etc.)
-    //  */
-    // async loadFormVariant(formType = "standard"): Promise<void> {
-    //   const path = `/themes/common/forms/variants/cd-form-${formType}.css`;
-    //   await loadStyle(path);
-    //   localStorage.setItem("cd-form-variant", formType);
-    //   console.debug(`[UiThemeLoaderService] Form variant loaded: ${formType}`);
-    // }
-    // -------------------------------------------------------------------
-    // NEW: Form Variant State Management
-    // -------------------------------------------------------------------
-    // /**
-    //  * Returns the ID of the form variant currently selected and persisted in storage.
-    //  */
-    // getActiveFormVariantId(): string {
-    //   // Retrieve the ID from localStorage, defaulting to 'standard' if not set.
-    //   return (
-    //     localStorage.getItem(UiThemeLoaderService.ACTIVE_FORM_VARIANT_KEY) ||
-    //     "standard"
-    //   );
-    // }
-    /**
-     * Returns the ID of the form variant currently selected and persisted in storage.
-     */
     getActiveFormVariantId() {
-        // Retrieve the ID from localStorage, defaulting to 'standard' if not set.
         return (localStorage.getItem(UiThemeLoaderService.ACTIVE_FORM_VARIANT_KEY) ||
             "standard");
-    }
-    /**
-     * Persists the newly selected active form variant ID.
-     */
-    setActiveFormVariantId(variantId) {
-        localStorage.setItem(UiThemeLoaderService.ACTIVE_FORM_VARIANT_KEY, variantId);
-    }
-    /**
-     * Loads a specific form variant (standard, rounded, outlined, etc.)
-     * This method remains async and returns void, as its job is to perform an action (load CSS).
-     * It now uses the new state management methods.
-     */
-    async loadFormVariant(formType = "standard") {
-        const path = `/themes/common/forms/variants/cd-form-${formType}.css`;
-        await loadStyle(path);
-        // Use the new setter method
-        this.setActiveFormVariantId(formType);
-        console.debug(`[UiThemeLoaderService] Form variant loaded: ${formType}`);
     }
 }

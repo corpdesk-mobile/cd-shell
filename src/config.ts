@@ -170,6 +170,12 @@ export default {
       // optional if needed later
     },
   },
+  defaultUiConfig: {
+    defaultUiSystemId: "bootstrap-538",
+    defaultThemeId: "dark",
+    defaultFormVariant: "standard",
+    uiSystemBasePath: "/public/assets/ui-systems/",
+  },
 };
 
 export let AllowModelSyncing = false;

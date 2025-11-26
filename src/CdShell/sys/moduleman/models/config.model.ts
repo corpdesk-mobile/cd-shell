@@ -38,9 +38,28 @@ export interface UiConfig {
   defaultThemeId: string;
   defaultFormVariant: string;
   uiSystemBasePath: string;
+  accessibleThemes?: string[];
 }
 
 export interface ShellConfig {
   appConfig: any;
   uiConfig: UiConfig;
+}
+
+export interface ShellConfig {
+  appName: string;
+  fallbackTitle: string;
+  appVersion: string;
+  appDescription: string;
+  themeConfig: ThemeShellConfig;
+  defaultModulePath: string;
+  logLevel?: "debug" | "info" | "warn" | "error";
+  uiConfig: {
+    defaultUiSystemId: string;
+    defaultThemeId: string;
+    defaultFormVariant: string;
+    uiSystemBasePath: string;
+    accessibleThemes?: string[];
+  };
+  accessibleThemes?: string[];
 }

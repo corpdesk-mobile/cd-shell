@@ -2,6 +2,8 @@
     "name": "Dark Theme",
     "id": "dark",
     "logo": "/themes/default/logo.png",
+    "css": "/themes/dark/theme.css",
+    "mode": "dark",
     "font": "Arial, sans-serif",
     "colors": {
         "secondary": "#333333",

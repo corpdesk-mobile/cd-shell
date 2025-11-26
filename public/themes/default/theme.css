@@ -1,8 +1,22 @@
+/* ============================================================
+   CORPDESK DEFAULT (LIGHT) THEME — Global light palette
+   ============================================================ */
+
 :root {
   --cd-color-bg: #ffffff;
+  --cd-color-surface: #f8f8f8;
   --cd-color-text: #000000;
+
   --cd-color-primary: #007bff;
   --cd-color-hint: #666;
   --cd-color-valid: #28a745;
   --cd-color-invalid: #dc3545;
+
+  --cd-color-border: #cccccc;
+  --cd-color-hover: #f0f0f0;
+
+  /* Sidebar + menu */
+  --cd-menu-bg: #f8f9fa;
+  --cd-menu-text: #333333;
+  --cd-menu-text-active: #0d6efd;
 }

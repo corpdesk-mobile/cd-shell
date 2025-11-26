@@ -2,7 +2,7 @@
 import { UiSystemSchema } from "./ui-system-schema.model";
 
 export interface IUiTranslator {
-  readonly systemId: string; // e.g. 'material-design', 'bootstrap-5'
+  readonly systemId: string; // e.g. 'material-design', 'bootstrap-502'
   readonly version: string;
 
   // translateLayout(descriptor: UiLayoutDescriptor): any;

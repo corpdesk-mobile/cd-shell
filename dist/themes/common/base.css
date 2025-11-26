@@ -1,42 +1,124 @@
+/* ============================================================
+   CORPDESK BASE THEME TOKENS
+   These are intentionally minimal so UI systems remain in control.
+   Themes override only these variables.
+   ============================================================ */
+
 :root {
-  /* --- Base Tokens (default values, can be overridden by themes) --- */
   --cd-color-bg: #ffffff;
+  --cd-color-surface: #f5f5f5;
   --cd-color-text: #000000;
   --cd-color-primary: #0055ff;
+
   --cd-color-valid: #2ecc71;
   --cd-color-invalid: #e74c3c;
   --cd-color-hint: #999;
+
+  --cd-color-border: #cccccc;
+  --cd-color-hover: rgba(0, 0, 0, 0.05);
+
   --cd-border-radius: 4px;
   --cd-transition: 0.2s ease;
 
-  /* --- Typography --- */
   --cd-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --cd-font-size: 14px;
+
+  /* Shell layout metrics */
+  --cd-header-height: 60px;
+  --cd-sidebar-width: 260px;
 }
 
-/* --- Base Body --- */
-body {
+/* ============================================================
+   GLOBAL DEFAULTS (Safe — does not break Bootstrap)
+   ============================================================ */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: var(--cd-font-family);
   font-size: var(--cd-font-size);
-  color: var(--cd-color-text);
-  background-color: var(--cd-color-bg);
+  /* Global colors controlled by Bootstrap theme */
 }
 
-/* --- Base form layout --- */
-.cd-form-field {
-  margin-bottom: 1rem;
+/* ============================================================
+   SHELL LAYOUT (Isolated from UI systems)
+   ============================================================ */
+
+/* HEADER (fixed-height bar) */
+#cd-header {
+  height: var(--cd-header-height);
+  background: var(--cd-color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+/* LAYOUT WRAPPER */
+#cd-layout {
+  display: flex;
+  height: calc(100vh - var(--cd-header-height));
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* SIDEBAR */
+#cd-sidebar {
+  width: var(--cd-sidebar-width);
+  flex-shrink: 0;
+  background: var(--cd-color-surface);
+  border-right: 1px solid var(--cd-color-border);
+  overflow-y: auto;
+  z-index: 10;
   display: flex;
   flex-direction: column;
 }
 
-.cd-form-field input {
-  border: 1px solid #ccc;
-  border-radius: var(--cd-border-radius);
-  padding: 0.6rem;
-  transition: border-color var(--cd-transition), box-shadow var(--cd-transition);
+/* OVERLAY (mobile) */
+#cd-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
 }
 
-/* --- Validation States --- */
+#cd-overlay.visible {
+  display: block;
+}
+
+/* MAIN CONTENT */
+#cd-main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  /* background controlled by Bootstrap or global theme variables */
+  min-width: 0; /* Fixes flex children overflow */
+}
+
+/* ============================================================
+   FORM ELEMENTS (Non-destructive, Bootstrap-safe)
+   ============================================================ */
+
+.cd-form-field {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  /* Background/color controlled by Bootstrap theme */
+}
+
+.cd-form-field input {
+  /* Background/color controlled by Bootstrap theme */
+  border: 1px solid var(--cd-color-border);
+  border-radius: var(--cd-border-radius);
+  padding: 0.6rem;
+  transition:
+    border-color var(--cd-transition),
+    box-shadow var(--cd-transition);
+}
+
+/* Validation */
 .cd-form-field input.cd-valid {
   border-color: var(--cd-color-valid);
   box-shadow: 0 0 4px var(--cd-color-valid);
@@ -47,7 +129,7 @@ body {
   box-shadow: 0 0 4px var(--cd-color-invalid);
 }
 
-/* --- Validation Feedback --- */
+/* Feedback */
 .error-message,
 .cd-hint {
   font-size: 0.85rem;
@@ -60,8 +142,8 @@ body {
   color: var(--cd-color-invalid);
 }
 
-/* --- Simple Transitions & Focus Effects --- */
-input:focus {
+/* Focus */
+.cd-form-field input:focus {
   border-color: var(--cd-color-primary);
   box-shadow: 0 0 5px var(--cd-color-primary);
   outline: none;

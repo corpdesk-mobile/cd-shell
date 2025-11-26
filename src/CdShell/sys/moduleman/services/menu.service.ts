@@ -106,31 +106,6 @@ export class MenuService {
     }
   }
 
-  // onMenuClick(item: MenuItem, cdToken?: string) {
-  //   console.debug(`Menu clicked → ID: ${item.menuId}, Label: ${item.label}`);
-  //   console.debug(
-  //     "MenuService:onMenuClick()/item:",
-  //     inspect(item, { depth: 2 })
-  //   );
-
-  //   if (item.itemType === "action" && item.action) {
-  //     item.action();
-  //     return;
-  //   }
-
-  //   if (item.itemType === "template" && item.template) {
-  //     this.loadResource({ cdToken, item });
-  //     return;
-  //   }
-
-  //   if (item.itemType === "route" && item.route) {
-  //     this.loadResource({ cdToken, item });
-  //     return;
-  //   }
-
-  //   console.warn("Unhandled menu item type:", item.itemType);
-  // }
-
   onMenuClick(item: MenuItem, cdToken?: string) {
     console.debug(`Menu clicked → ID: ${item.menuId}, Label: ${item.label}`);
     console.debug(
@@ -153,7 +128,7 @@ export class MenuService {
     }
 
     // 🔹 CASE 3: TEMPLATE ITEMS (legacy or static templates)
-    if (item.itemType === "template" && item.template  && item.controller) {
+    if (item.itemType === "template" && item.template && item.controller) {
       console.debug(`[MenuService] Loading template for '${item.label}'`);
       this.loadResource({ cdToken, item });
       return;
@@ -296,6 +271,49 @@ export class MenuService {
    * @returns The rendered HTML string.
    */
 
+  // renderMenuHtml(menu: MenuItem[]): string {
+  //   return menu
+  //     .map((item, index) => {
+  //       const hasChildren = item.children && item.children.length > 0;
+  //       const encodedIcon = item.icon ? btoa(JSON.stringify(item.icon)) : "";
+  //       const itemType = item.itemType || "route";
+  //       const route = item.route || "";
+  //       const itemId =
+  //         item.menuId ||
+  //         `auto-${index}-${Math.random().toString(36).slice(2, 8)}`;
+
+  //       // 🔁 Ensure stable id for later lookup
+  //       item.menuId = itemId;
+
+  //       return `
+  //       <li
+  //         id="menu-item-${itemId}"
+  //         class="cd-menu-item"
+  //         data-id="${itemId}"
+  //         data-type="${itemType}"
+  //         data-route="${route}"
+  //         ${encodedIcon ? `data-icon="${encodedIcon}"` : ""}
+  //         tabindex="0"
+  //         role="button"
+  //       >
+  //         <a href="#" class="cd-menu-link" data-id="${itemId}">
+  //           <span class="cd-menu-label">${item.label}</span>
+  //           ${
+  //             hasChildren
+  //               ? `<span class="cd-menu-toggle-icon fa fa-chevron-right"></span>`
+  //               : ""
+  //           }
+  //         </a>
+  //         ${
+  //           hasChildren
+  //             ? `<ul class="cd-submenu">${this.renderMenuHtml(item.children!)}</ul>`
+  //             : ""
+  //         }
+  //       </li>
+  //     `;
+  //     })
+  //     .join("");
+  // }
   renderMenuHtml(menu: MenuItem[]): string {
     return menu
       .map((item, index) => {
@@ -311,9 +329,9 @@ export class MenuService {
         item.menuId = itemId;
 
         return `
-        <li 
+        <li
           id="menu-item-${itemId}"
-          class="cd-menu-item" 
+          class="cd-menu-item"
           data-id="${itemId}"
           data-type="${itemType}"
           data-route="${route}"

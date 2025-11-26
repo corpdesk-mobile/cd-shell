@@ -1,26 +1,157 @@
-:root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-  --cd-background-color: #ffffff;
-  --cd-text-color: #000000;
-}
-
+/* ---------------------------------------------
+   GLOBAL RESET
+---------------------------------------------- */
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--cd-background-color);
-  color: var(--cd-text-color);
+  background-color: var(--cd-color-bg);
+  color: var(--cd-color-text);
 }
 
+/* ---------------------------------------------
+   HEADER
+---------------------------------------------- */
 #cd-header {
   display: flex;
   align-items: center;
-  padding: 10px;
-  background-color: var(--cd-primary-color);
+  gap: 12px;
+  padding: 10px 16px;
+  height: 60px;
+  background-color: var(--cd-color-primary, var(--cd-primary-color));
+  color: #ffffff;
 }
 
 #cd-logo {
   height: 40px;
-  margin-right: 10px;
+}
+
+/* ---------------------------------------------
+   BURGER BUTTON (animated)
+---------------------------------------------- */
+#cd-burger {
+  display: none;
+  width: 32px;
+  height: 24px;
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#cd-burger .bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: currentColor;
+  border-radius: 4px;
+  transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
+}
+
+#cd-burger .top { top: 0; }
+#cd-burger .middle { top: 10px; }
+#cd-burger .bottom { top: 20px; }
+
+/* OPEN STATE: transforms into an X */
+#cd-burger.open .top {
+  top: 10px;
+  transform: rotate(45deg);
+}
+
+#cd-burger.open .middle {
+  opacity: 0;
+}
+
+#cd-burger.open .bottom {
+  top: 10px;
+  transform: rotate(-45deg);
+}
+
+/* ---------------------------------------------
+   MAIN LAYOUT
+---------------------------------------------- */
+#cd-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+#cd-main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: var(--cd-color-bg);
+  color: var(--cd-color-text);
+}
+
+/* ---------------------------------------------
+   SIDEBAR (desktop)
+---------------------------------------------- */
+#cd-sidebar {
+  width: var(--cd-sidebar-width, 250px);
+  background-color: var(--cd-color-surface);
+  color: var(--cd-color-text);
+  overflow-y: auto;
+  padding: 10px;
+  transition: left 0.3s ease;
+  position: relative;
+}
+
+/* ---------------------------------------------
+   RESPONSIVE (≤ 900px)
+---------------------------------------------- */
+@media (max-width: 900px) {
+  #cd-burger {
+    display: block;
+    color: var(--cd-color-text);
+  }
+
+  #cd-logo {
+    display: none;
+  }
+
+  #cd-layout {
+    position: relative;
+  }
+
+  #cd-sidebar {
+    position: fixed !important;
+    top: 60px;
+    left: calc(-1 * var(--cd-sidebar-width, 250px));
+    height: calc(100vh - 60px);
+    z-index: 1000;
+    background-color: var(--cd-color-surface);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  }
+
+  #cd-sidebar.open {
+    left: 0 !important;
+  }
+
+  #cd-overlay {
+    display: block;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+  }
+
+  #cd-overlay.hidden {
+    display: none;
+  }
+}
+
+/* ----------------------------------------------
+   FIX: Remove unwanted Bootstrap focus highlight
+---------------------------------------------- */
+#cd-sidebar li:focus,
+#cd-sidebar li:focus-within,
+#cd-sidebar a:focus,
+#cd-sidebar a:focus-within {
+  background-color: inherit !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
