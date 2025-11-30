@@ -1,0 +1,42 @@
+/* ============================================================
+   CORPDESK BRIDGE FOR PRIMER CSS
+   ============================================================ */
+
+:root {
+  --cd-menu-bg: #f6f8fa;
+  --cd-menu-text: #24292e;
+  --cd-menu-hover-bg: #eaecef;
+  --cd-menu-active-bg: #dfe2e5;
+  --cd-menu-active-text: #000;
+
+  --cd-input-text-color: #24292e;
+  --cd-color-border: #d0d7de;
+  --cd-bridge-border-radius: 6px;
+}
+
+/* Dark Mode */
+:root[data-theme="dark"] {
+  --cd-menu-bg: #0d1117;
+  --cd-menu-text: #c9d1d9;
+  --cd-menu-hover-bg: #161b22;
+  --cd-menu-active-bg: #30363d;
+  --cd-menu-active-text: #fff;
+
+  --cd-input-text-color: #e6e6e6;
+  --cd-color-border: #30363d;
+}
+
+/* Inputs */
+.cd-form-field input,
+.cd-form-field select,
+.cd-form-field textarea {
+  border-radius: var(--cd-bridge-border-radius);
+  border: 1px solid var(--cd-color-border);
+  color: var(--cd-input-text-color);
+}
+
+/* Menu */
+#cd-sidebar {
+  background: var(--cd-menu-bg);
+  color: var(--cd-menu-text);
+}

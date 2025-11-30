@@ -1,0 +1,56 @@
+{
+    "id": "primer",
+    "name": "GitHub Primer",
+    "version": "21.0.0",
+    "description": "Primer CSS UI System (GitHub’s design system).",
+    "author": "GitHub",
+    "license": "MIT",
+    "assetPath": "/assets/ui-systems/primer",
+    "cssUrl": "primer.min.css",
+    "stylesheets": [
+        "primer.min.css",
+        "bridge.css"
+    ],
+    "scripts": [],
+    "conceptMappings": {
+        "button": {
+            "class": "btn btn-primary"
+        },
+        "card": {
+            "class": "Box"
+        },
+        "input": {
+            "class": "form-control"
+        },
+        "formGroup": {
+            "class": "form-group"
+        }
+    },
+    "directiveMap": {
+        "cd-tooltip": "data-tooltip"
+    },
+    "themesAvailable": [
+        {
+            "id": "default",
+            "name": "Primer Default",
+            "displayName": "Primer Light",
+            "css": "/themes/default/theme.css",
+            "mode": "light"
+        },
+        {
+            "id": "dark",
+            "name": "Primer Dark",
+            "displayName": "Primer Dark",
+            "css": "/themes/dark/theme.css",
+            "mode": "dark"
+        }
+    ],
+    "themeActive": null,
+    "metadata": {
+        "supportsDarkMode": true
+    },
+    "extensions": {
+        "adapter": "PrimerAdapterService",
+        "versionTag": "primer"
+    }
+}

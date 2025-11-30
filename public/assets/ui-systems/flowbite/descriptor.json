@@ -1,0 +1,59 @@
+{
+    "id": "flowbite",
+    "name": "Flowbite",
+    "version": "2.x",
+    "description": "Flowbite (Tailwind Component Library).",
+    "author": "Themesberg",
+    "license": "MIT",
+    "assetPath": "/assets/ui-systems/flowbite",
+    "cssUrl": "flowbite.min.css",
+    "jsUrl": "flowbite.min.js",
+    "stylesheets": [
+        "flowbite.min.css",
+        "bridge.css"
+    ],
+    "scripts": [
+        "flowbite.min.js"
+    ],
+    "conceptMappings": {
+        "button": {
+            "class": "px-4 py-2 font-medium text-white bg-blue-600 rounded"
+        },
+        "card": {
+            "class": "p-4 bg-white dark:bg-gray-800 rounded-lg shadow"
+        },
+        "input": {
+            "class": "border border-gray-300 dark:border-gray-600 rounded-lg p-2"
+        },
+        "formGroup": {
+            "class": "mb-4"
+        }
+    },
+    "directiveMap": {
+        "cd-tooltip": "data-tooltip-target"
+    },
+    "themesAvailable": [
+        {
+            "id": "default",
+            "name": "Default",
+            "displayName": "Flowbite Default",
+            "css": "/themes/default/theme.css",
+            "mode": "light"
+        },
+        {
+            "id": "dark",
+            "name": "Dark",
+            "displayName": "Flowbite Dark",
+            "css": "/themes/dark/theme.css",
+            "mode": "dark"
+        }
+    ],
+    "themeActive": null,
+    "metadata": {
+        "supportsDarkMode": true
+    },
+    "extensions": {
+        "adapter": "FlowbiteAdapterService",
+        "versionTag": "flowbite"
+    }
+}

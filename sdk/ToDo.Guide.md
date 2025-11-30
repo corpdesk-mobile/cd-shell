@@ -1,6759 +1,48 @@
 //////////////////////////////////////////////
-Hey Chase. We are still stuck with a page the cannot apply bootstrap.
-You are highly trained and intelligent machine. I am a seasoned developer. Yet we are failing on this.
-My take is that we need to assume we are reasearching and it not a matter of guessing but for every assertion we make, we must be able to proove and demonstrate the assertion.
-In effect I expect you to inform me of a suspect area and how to eliminate the suspicion or further test to confirm a given assertion.
-When you need details of given codes of suspect area just let me know. Some of the process may just be inserting more detail logs for provable or elimination of a given theory.
-We approach it as a process not like one round should lead to an eureka.
-Any theory has to be proovable.
-Attached is the latest logs.
 
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Corpdesk Shell</title>
-
-    <!-- Vendor-only static dependencies -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-
-    <!-- 🧩 All system and theme CSS are dynamically injected by UiSystemLoaderService & UiThemeLoaderService -->
-  </head>
-
-  <body>
-    <header id="cd-header">
-      <button id="cd-burger">&#9776;</button>
-      <img id="cd-logo" alt="Logo" />
-      <span id="cd-app-name">Corpdesk Shell</span>
-    </header>
-
-    <div id="cd-layout">
-      <div id="cd-overlay" class="hidden"></div>
-      <aside id="cd-sidebar"></aside>
-      <main id="cd-main-content"></main>
-    </div>
-
-    <script type="module" src="/src/app.ts"></script>
-  </body>
-</html>
-```
-
-// public/themes/common/base.css
-
-```css
-/* ============================================================
-   CORPDESK BASE THEME TOKENS
-   These are intentionally minimal so UI systems remain in control.
-   Themes override only these variables.
-   ============================================================ */
-
-:root {
-  --cd-color-bg: #ffffff;
-  --cd-color-surface: #f5f5f5;
-  --cd-color-text: #000000;
-  --cd-color-primary: #0055ff;
-
-  --cd-color-valid: #2ecc71;
-  --cd-color-invalid: #e74c3c;
-  --cd-color-hint: #999;
-
-  --cd-color-border: #cccccc;
-  --cd-color-hover: rgba(0, 0, 0, 0.05);
-
-  --cd-border-radius: 4px;
-  --cd-transition: 0.2s ease;
-
-  --cd-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --cd-font-size: 14px;
-
-  /* Shell layout metrics */
-  --cd-header-height: 60px;
-  --cd-sidebar-width: 260px;
-}
-
-/* ============================================================
-   GLOBAL DEFAULTS (Safe — does not break Bootstrap)
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-  /* Global colors controlled by Bootstrap theme */
-}
-
-/* ============================================================
-   SHELL LAYOUT (Isolated from UI systems)
-   ============================================================ */
-
-/* HEADER (fixed-height bar) */
-#cd-header {
-  height: var(--cd-header-height);
-  background: var(--cd-color-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-}
-
-/* LAYOUT WRAPPER */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - var(--cd-header-height));
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-}
-
-/* SIDEBAR */
-#cd-sidebar {
-  width: var(--cd-sidebar-width);
-  flex-shrink: 0;
-  background: var(--cd-color-surface);
-  border-right: 1px solid var(--cd-color-border);
-  overflow-y: auto;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-}
-
-/* OVERLAY (mobile) */
-#cd-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: none;
-}
-
-#cd-overlay.visible {
-  display: block;
-}
-
-/* MAIN CONTENT */
-#cd-main-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  /* background controlled by Bootstrap or global theme variables */
-  min-width: 0; /* Fixes flex children overflow */
-}
-
-/* ============================================================
-   FORM ELEMENTS (Non-destructive, Bootstrap-safe)
-   ============================================================ */
-
-.cd-form-field {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  /* Background/color controlled by Bootstrap theme */
-}
-
-.cd-form-field input {
-  /* Background/color controlled by Bootstrap theme */
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-border-radius);
-  padding: 0.6rem;
-  transition:
-    border-color var(--cd-transition),
-    box-shadow var(--cd-transition);
-}
-
-/* Validation */
-.cd-form-field input.cd-valid {
-  border-color: var(--cd-color-valid);
-  box-shadow: 0 0 4px var(--cd-color-valid);
-}
-
-.cd-form-field input.cd-invalid {
-  border-color: var(--cd-color-invalid);
-  box-shadow: 0 0 4px var(--cd-color-invalid);
-}
-
-/* Feedback */
-.error-message,
-.cd-hint {
-  font-size: 0.85rem;
-  margin-top: 4px;
-  color: var(--cd-color-hint);
-}
-
-.cd-form-field input.cd-invalid + .error-message,
-.cd-form-field input.cd-invalid + .cd-hint {
-  color: var(--cd-color-invalid);
-}
-
-/* Focus */
-.cd-form-field input:focus {
-  border-color: var(--cd-color-primary);
-  box-shadow: 0 0 5px var(--cd-color-primary);
-  outline: none;
-}
-```
-
-// public/assets/css/index.css
-
-```css
-:root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-}
-
-/* Global reset (safe) */
-html,
-body {
-  /* Global theme controlled by Bootstrap */
-}
-
-/* ---------------------------------------
-   HEADER (cosmetic overrides only)
----------------------------------------- */
-#cd-header {
-  /* Removed !important */
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  background-color: var(--cd-primary-color);
-  color: #ffffff;
-}
-
-/* LOGO */
-#cd-logo {
-  height: 40px;
-  margin-right: 12px;
-  display: block;
-}
-
-/* ---------------------------------------
-   Ensure sidebar honors theme vars
----------------------------------------- */
-#cd-sidebar {
-  /* Removed !important */
-  background-color: var(--cd-color-surface);
-  color: var(--cd-color-text);
-}
-
-/* Sidebar menu items */
-.cd-menu-item {
-  /* Removed !important */
-  background-color: var(--cd-color-surface);
-  color: var(--cd-color-text);
-}
-
-.cd-menu-item:hover {
-  /* Removed !important */
-  background-color: var(--cd-color-hover);
-}
-
-/* OPTIONAL: arbitrary utility classes */
-.cd-flex {
-  display: flex;
-}
-
-.cd-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-```
-
-```ts
-export class Main {
-  async run() {
-    this.logger.setLevel("debug");
-    this.logger.debug("starting bootstrapShell()");
-
-    // ----------------------------
-    // STEP 0: Load shell config
-    // ----------------------------
-    const shellConfig: ShellConfig = await this.loadShellConfig();
-    if (shellConfig.logLevel) this.logger.setLevel(shellConfig.logLevel);
-
-    // ----------------------------
-    // STEP 1: Core service instantiation
-    // ----------------------------
-
-    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
-    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
-
-    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
-
-    // ----------------------------
-    // STEP 2: Load all cached metadata (uiConfig, uiSystems, themes)
-    // ----------------------------
-    await this.svSysCache.loadAndCacheAll();
-
-    const uiConfig = this.svSysCache.get("uiConfig") as UiConfig;
-    console.log("[Main][run] uiConfig:", uiConfig);
-
-    // ----------------------------
-    // STEP 3: Apply UI-system + Theme pipeline
-    // ----------------------------
-    await this.applyStartupUiSettings();
-
-    // ----------------------------
-    // STEP 3B: Shell layout CSS (base.css + index.css)
-    // NOTE: Must load AFTER ui-system but BEFORE modules + menu
-    // ----------------------------
-    // try {
-    //   await this.svUiSystemLoader.loadCSS(
-    //     "/themes/common/base.css",
-    //     "shell-base"
-    //   );
-    //   await this.svUiSystemLoader.loadCSS(
-    //     "/assets/css/index.css",
-    //     "shell-index"
-    //   );
-    // } catch (err) {
-    //   console.warn("[Main] failed to load shell CSS", err);
-    // }
-
-    // ----------------------------
-    // STEP 4: Theme config (logo + title)
-    // ----------------------------
-    const themeConfig = await this.svTheme.loadThemeConfig();
-
-    document.title =
-      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
-
-    const logoEl = document.getElementById(
-      "cd-logo"
-    ) as HTMLImageElement | null;
-    if (logoEl && themeConfig.logo) {
-      logoEl.src = themeConfig.logo;
-    }
-
-    if (themeConfig.colors?.primary) {
-      document.documentElement.style.setProperty(
-        "--theme-color",
-        themeConfig.colors.primary
-      );
-    }
-
-    // ----------------------------
-    // STEP 5: Prepare menu using your existing logic
-    // ----------------------------
-    const allowedModules: ICdModule[] = await this.svModule.getAllowedModules();
-    const defaultModule = allowedModules.find((m) => m.isDefault);
-    const defaultControllerName = defaultModule?.controllers.find(
-      (c) => c.default
-    )?.name;
-
-    const rawMenu: MenuItem[] = allowedModules.flatMap((mod) => {
-      const recursive = (items: MenuItem[]): MenuItem[] => {
-        return items.map((item) => {
-          if (item.itemType === "route" && item.route) {
-            const cinfo = this.svController.findControllerInfoByRoute(
-              mod,
-              item.route
-            );
-            if (cinfo) {
-              (item as any).controller = cinfo.instance;
-              (item as any).template =
-                typeof cinfo.template === "function"
-                  ? cinfo.template
-                  : () => cinfo.template;
-
-              (item as any).moduleId = mod.moduleId;
-
-              if (mod.isDefault && cinfo.name === defaultControllerName)
-                (item as any).moduleDefault = true;
-            }
-          }
-          if (item.children) item.children = recursive(item.children);
-          return item;
-        });
-      };
-      return recursive(mod.menu || []);
-    });
-
-    const preparedMenu = this.svMenu.prepareMenu(rawMenu);
-
-    // ----------------------------
-    // STEP 6: Render sidebar with the active UI-system adapter
-    // ----------------------------
-    try {
-      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
-      const theme = (await resTheme.json()) as ITheme;
-
-      this.svMenu.renderMenuWithSystem(preparedMenu, theme);
-
-      const sidebarEl = document.getElementById("cd-sidebar");
-
-      if (
-        sidebarEl &&
-        (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")
-      ) {
-        this.svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
-      }
-    } catch (err) {
-      console.error("[Main] Failed rendering menu", err);
-    }
-
-    // ----------------------------
-    // STEP 7: Auto-load default controller
-    // ----------------------------
-    try {
-      const defaultModuleMenu = preparedMenu.find(
-        (m) => m.label === defaultModule?.moduleId
-      );
-
-      const defaultMenuItem = defaultModuleMenu?.children?.find(
-        (it) => it.moduleDefault
-      );
-
-      if (defaultMenuItem) {
-        await this.svMenu.loadResource({ item: defaultMenuItem });
-      }
-    } catch (err) {
-      console.warn("[Main] auto-load default view failed", err);
-    }
-
-    // ----------------------------
-    // STEP 8: Setup burger menu (unchanged)
-    // ----------------------------
-    const burger = document.getElementById("cd-burger");
-    const sidebar = document.getElementById("cd-sidebar");
-    const overlay = document.getElementById("cd-overlay");
-
-    if (burger && sidebar && overlay) {
-      burger.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("hidden");
-      });
-      overlay.addEventListener("click", () => {
-        sidebar.classList.remove("open");
-        overlay.classList.add("hidden");
-      });
-    }
-
-    this.logger.debug("bootstrapShell(): run() complete");
-  }
-
-  /**
-   * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
-   */
-  async applyStartupUiSettings(): Promise<void> {
-    const cfgSvc = ConfigService.getInstance();
-    // ensure sys cache is ready
-    await this.svSysCache.ensureReady();
-
-    const uiConfig = this.svSysCache.get("uiConfig") as UiConfig;
-    if (!uiConfig) {
-      console.warn("[Main.applyStartupUiSettings] uiConfig missing");
-      return;
-    }
-
-    const systemId = uiConfig.defaultUiSystemId;
-    const themeId = uiConfig.defaultThemeId;
-
-    diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
-
-    // Use singletons bound to same SysCache instance
-    const uiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
-    const uiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
-
-    // 1) Activate UI system (loads CSS + JS)
-    try {
-      await uiSystemLoader.activate(systemId);
-      diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
-        systemId,
-      });
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] activate failed", err);
-      diag_css("[MAIN.applyStartupUiSettings] activate failed", { err });
-    }
-
-    // 2) Load structural shell CSS (base + index) AFTER system to ensure layering
-    try {
-      await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
-      await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
-      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded", {});
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] shell CSS load failed", err);
-    }
-
-    // 3) load theme override CSS
-    try {
-      await uiThemeLoader.loadThemeById(themeId);
-      diag_css("[MAIN.applyStartupUiSettings] theme css injected", { themeId });
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] theme load failed", err);
-    }
-
-    // 4) per-system applyTheme (sets data-bs-theme, md classes, etc.)
-    try {
-      await uiSystemLoader.applyTheme(systemId, themeId);
-      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete", {});
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] applyTheme failed", err);
-    }
-
-    diag_css("[MAIN.applyStartupUiSettings] done", {});
-  }
-}
-```
-
-```ts
-export class UiSystemLoaderService {
-  /**
-   * applyTheme(systemId, themeId)
-   * - find adapter for systemId, fetch theme descriptor via SysCacheService / UiThemeLoaderService
-   * - call adapter.applyTheme(themeDescriptor)
-   */
-  public async applyTheme(systemId: string, themeId: string): Promise<void> {
-    diag_css("[UiSystemLoaderService.applyTheme] start", { systemId, themeId });
-    const adapter = UiSystemAdapterFactory.getAdapter(systemId);
-    console.log(
-      "[UiSystemLoaderService.applyTheme] adapter received:",
-      adapter
-    );
-    if (!adapter) {
-      console.warn(
-        "[UiSystemLoaderService.applyTheme] no adapter for",
-        systemId
-      );
-      return;
-    }
-
-    // get theme descriptor from cache
-    const descriptors = this.sysCache.get("themeDescriptors") || [];
-    console.log(
-      "[UiSystemLoaderService][applyTheme] descriptors:",
-      descriptors
-    );
-    const themeDescriptor = descriptors.find((d: any) => d.id === themeId);
-    console.log(
-      "[UiSystemLoaderService][applyTheme] descriptors:",
-      themeDescriptor
-    );
-
-    // supply descriptor if found, else just themeId
-    await adapter.applyTheme(themeDescriptor || themeId);
-    diag_css("[UiSystemLoaderService.applyTheme] done", { systemId, themeId });
-  }
-
-  public async loadCSS(path: string, id: string): Promise<string> {
-    diag_css("[UiSystemLoaderService.loadCSS] REQUEST", { path, id });
-
-    return new Promise((resolve, reject) => {
-      try {
-        const head = document.head || document.getElementsByTagName("head")[0];
-        if (!head) return reject(new Error("document.head missing"));
-
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = path;
-        link.setAttribute("data-cd-uisystem", id);
-        link.setAttribute("data-cd-origin", "ui-system");
-
-        link.onload = () => {
-          const resolved = (link as HTMLLinkElement).href;
-          diag_css("[UiSystemLoaderService.loadCSS] LOADED", {
-            path,
-            id,
-            resolved,
-            order: Array.from(head.querySelectorAll("link")).map(
-              (l) => (l as HTMLLinkElement).href
-            ),
-          });
-          resolve(resolved);
-        };
-
-        link.onerror = (ev) => {
-          diag_css("[UiSystemLoaderService.loadCSS] ERROR", { path, id, ev });
-          reject(new Error(`Failed to load CSS: ${path}`));
-        };
-
-        head.insertAdjacentElement("beforeend", link);
-      } catch (err) {
-        diag_css("[UiSystemLoaderService.loadCSS] EXCEPTION", {
-          path,
-          id,
-          err,
-        });
-        reject(err);
-      }
-    });
-  }
-
-  public async loadScript(path: string, id: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        const script = document.createElement("script");
-        script.src = path;
-        script.async = true;
-        script.setAttribute("data-cd-uisystem", id);
-        script.setAttribute("data-cd-origin", "ui-system");
-        script.onload = () => resolve();
-        script.onerror = (ev) => reject(ev);
-
-        const body = document.body || document.getElementsByTagName("body")[0];
-        if (!body) return reject(new Error("document.body missing"));
-        body.appendChild(script);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-}
-```
-
-```ts
-export class UiThemeLoaderService {
-  /**
-   * Fetch available themes:
-   * - Read uiConfig.accessibleThemes or infer
-   * - For each theme id, fetch /themes/<id>/theme.json (descriptor)
-   * - Return shape: { themes: [{id,name}], variants: [...], descriptors: [full objects], uiConfig }
-   */
-  public async fetchAvailableThemes(uiConfig: UiConfig): Promise<any> {
-    console.log("[UiThemeLoaderService][fetchAvailableThemes] start", uiConfig);
-
-    const accessible = (uiConfig && uiConfig.accessibleThemes) ||
-      (this.configService as any).config?.themeConfig?.accessibleThemes || [
-        "default",
-        "dark",
-      ];
-    const descriptors: any[] = [];
-
-    for (const id of accessible) {
-      const path = `/themes/${id}/theme.json`;
-      try {
-        const res = await fetch(path);
-        if (!res.ok) {
-          console.warn(
-            `[UiThemeLoaderService] theme descriptor not found: ${path}`
-          );
-          continue;
-        }
-        const desc = await res.json();
-        descriptors.push(desc);
-      } catch (err) {
-        console.warn(
-          `[UiThemeLoaderService] error fetching theme descriptor ${path}`,
-          err
-        );
-      }
-    }
-
-    // produce lightweight lists
-    const themes = descriptors.map((d) => ({ id: d.id, name: d.name }));
-    const variants = [
-      { id: "standard", name: "Standard" },
-      { id: "compact", name: "Compact" },
-      { id: "floating", name: "Floating" },
-    ];
-
-    return {
-      themes,
-      variants,
-      descriptors,
-      uiConfig,
-    };
-  }
-
-  /**
-   * loadThemeById - injects ONLY the theme override CSS (theme.css)
-   * base + index should be loaded by Main (or UiSystemLoader) earlier
-   */
-  public async loadThemeById(themeId: string): Promise<void> {
-    diag_css("[UiThemeLoaderService.loadThemeById] start", { themeId });
-    // remove previous theme links (data-cd-theme)
-    document.querySelectorAll("link[data-cd-theme]").forEach((l) => l.remove());
-
-    const desc = this.getThemeDescriptor(themeId);
-    if (!desc) {
-      diag_css("[UiThemeLoaderService.loadThemeById] descriptor not found", {
-        themeId,
-      });
-      // still try fallback path
-      const fallback = `/themes/${themeId}/theme.css`;
-      await this.injectStyle(fallback, themeId, "theme");
-      return;
-    }
-
-    // prefer descriptor.css or descriptor.css path
-    const cssPath = desc.css || desc.cssPath || `/themes/${themeId}/theme.css`;
-    await this.injectStyle(cssPath, themeId, "theme");
-
-    diag_css("[UiThemeLoaderService.loadThemeById] loaded", {
-      themeId,
-      cssPath,
-    });
-  }
-
-  /**
-   * Return full descriptor previously cached in SysCacheService
-   */
-  public getThemeDescriptor(themeId: string): any | undefined {
-    const descriptors = this.sysCache.get("themeDescriptors") || [];
-    return descriptors.find((d: any) => d.id === themeId);
-  }
-
-  public async loadFormVariant(formType = "standard"): Promise<void> {
-    document
-      .querySelectorAll("link[data-cd-form]")
-      .forEach((el) => el.remove());
-    const path = `/themes/common/forms/variants/cd-form-${formType}.css`;
-    await this.injectStyle(path, formType, "form");
-  }
-
-  private async injectStyle(
-    path: string,
-    key: string,
-    type: "theme" | "form" = "theme"
-  ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        const head = document.head || document.getElementsByTagName("head")[0];
-        if (!head) return reject(new Error("document.head missing"));
-
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = path;
-
-        if (type === "theme") link.setAttribute("data-cd-theme", key);
-        else link.setAttribute("data-cd-form", key);
-
-        link.onload = () => resolve();
-        link.onerror = (ev) => reject(new Error(`failed to load ${path}`));
-
-        // preserve order: append to head end
-        head.insertAdjacentElement("beforeend", link);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-}
-```
-
-```ts
-import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
-import { IUiSystemAdapter } from "../models/ui-system-adaptor.model";
-
-/**
- * Bootstrap502Adapter: sets data-bs-theme on <html> for Bootstrap v5.0.2
- */
-export class Bootstrap502Adapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap502Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap502Adapter] applyTheme error", err);
-    }
-  }
-}
-
-/**
- * Bootstrap538Adapter — supports Bootstrap 5.3.8 with official dark-mode variables
- * Dark mode works natively using the <html data-bs-theme="dark">
- */
-export class Bootstrap538Adapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    // No-op: CSS/JS already injected by UiSystemLoaderService
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    console.log("[Bootstrap538Adapter][applyTheme] start");
-    console.log(
-      "[Bootstrap538Adapter][applyTheme] themeDescriptorOrId:",
-      themeDescriptorOrId
-    );
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      // Bootstrap 5.3.x controls dark mode via:
-      // <html data-bs-theme="dark">
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap538Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap538Adapter] applyTheme error", err);
-    }
-  }
-}
-
-/**
- * MaterialAdapter — applies Material Design theme logic
- */
-export class MaterialAdapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-md-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    if (!themeDescriptorOrId) return;
-
-    const mode =
-      typeof themeDescriptorOrId === "string"
-        ? themeDescriptorOrId
-        : themeDescriptorOrId.mode;
-
-    if (mode === "dark") {
-      document.documentElement.classList.add("md-dark");
-      document.documentElement.classList.remove("md-light");
-    } else {
-      document.documentElement.classList.remove("md-dark");
-      document.documentElement.classList.add("md-light");
-    }
-
-    console.log("[MaterialAdapter] applyTheme:", mode);
-  }
-}
-
-/**
- * Factory for UI system adapters
- */
-export class UiSystemAdapterFactory {
-  public static getAdapter(systemId: string): IUiSystemAdapter | null {
-    console.group("[UiSystemAdapterFactory] Adapter Lookup");
-    console.log("Requested systemId:", JSON.stringify(systemId));
-
-    let adapter: IUiSystemAdapter | null = null;
-
-    switch (systemId) {
-      case "bootstrap-502":
-        adapter = new Bootstrap502Adapter();
-        break;
-
-      case "bootstrap-538":
-        adapter = new Bootstrap538Adapter();
-        break;
-
-      case "material":
-      case "material-design":
-        adapter = new MaterialAdapter();
-        break;
-
-      default:
-        console.warn(
-          "[UiSystemAdapterFactory] ❌ Unknown systemId — returning null"
-        );
-        console.groupEnd();
-        return null;
-    }
-
-    console.log("Resolved adapter instance:", adapter?.constructor.name);
-    console.groupEnd();
-    return adapter;
-  }
-}
-```
-
-/////////////////////////////////////////////
-
-```html
-<head>
-  <meta charset="UTF-8" />
-  <title>Corpdesk PWA</title>
-
-  <!-- Vendor-only static dependencies -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-
-  <!-- 🧩 All system and theme CSS are dynamically injected by UiSystemLoaderService & UiThemeLoaderService -->
-  <script type="module" crossorigin="" src="/assets/index-fOHRi1nm.js"></script>
-  <link
-    rel="stylesheet"
-    href="/assets/ui-systems/bootstrap-538/bootstrap.min.css"
-    data-cd-uisystem="bootstrap-538"
-    data-cd-origin="ui-system"
-  />
-  <link
-    rel="stylesheet"
-    href="/themes/common/base.css"
-    data-cd-uisystem="shell-base"
-    data-cd-origin="ui-system"
-  />
-  <link
-    rel="stylesheet"
-    href="/assets/css/index.css"
-    data-cd-uisystem="shell-index"
-    data-cd-origin="ui-system"
-  />
-  <link rel="stylesheet" href="/themes/dark/theme.css" data-cd-theme="dark" />
-  <link
-    rel="modulepreload"
-    as="script"
-    crossorigin=""
-    href="/assets/index-C9lWU5VA.js"
-  />
-  <link
-    rel="modulepreload"
-    as="script"
-    crossorigin=""
-    href="/assets/cd-directive-binder.service-P6kntAs5.js"
-  />
-  <link
-    rel="modulepreload"
-    as="script"
-    crossorigin=""
-    href="/assets/index-BJeR7udt.js"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/metismenujs/dist/metismenujs.min.css"
-  />
-  <script
-    src="https://cdn.jsdelivr.net/npm/metismenujs/dist/metismenujs.min.js"
-    async=""
-  ></script>
-  <link rel="stylesheet" href="/themes/default/menu-systems/metismenu.css" />
-</head>
-```
-
-/////////////////////////////////////////
-I have shared the relevant files and their contents for your consideration.
-For any that is modified, you can give me the full version to avoid introduction of any bug during changes.
-// public/themes/common/base.css
-
-```css
-/* ============================================================
-   CORPDESK BASE THEME TOKENS
-   These are intentionally minimal so UI systems remain in control.
-   Themes override only these variables.
-   ============================================================ */
-
-:root {
-  --cd-color-bg: #ffffff;
-  --cd-color-surface: #f5f5f5;
-  --cd-color-text: #000000;
-  --cd-color-primary: #0055ff;
-
-  --cd-color-valid: #2ecc71;
-  --cd-color-invalid: #e74c3c;
-  --cd-color-hint: #999;
-
-  --cd-color-border: #cccccc;
-  --cd-color-hover: rgba(0, 0, 0, 0.05);
-
-  --cd-border-radius: 4px;
-  --cd-transition: 0.2s ease;
-
-  --cd-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --cd-font-size: 14px;
-
-  /* Shell layout metrics */
-  --cd-header-height: 60px;
-  --cd-sidebar-width: 260px;
-}
-
-/* ============================================================
-   GLOBAL DEFAULTS (Safe — does not break Bootstrap)
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-  /* 💡 FIX: Removed conflicting color and background rules here. */
-  /* Let Bootstrap control global colors via [data-bs-theme] */
-}
-
-/* ============================================================
-   SHELL LAYOUT (Isolated from UI systems)
-   ============================================================ */
-
-/* HEADER (fixed-height bar) */
-#cd-header {
-  height: var(--cd-header-height);
-  background: var(--cd-color-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-}
-
-/* LAYOUT WRAPPER */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - var(--cd-header-height));
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-}
-
-/* SIDEBAR */
-#cd-sidebar {
-  width: var(--cd-sidebar-width);
-  flex-shrink: 0;
-  background: var(--cd-color-surface);
-  border-right: 1px solid var(--cd-color-border);
-  overflow-y: auto;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-}
-
-/* OVERLAY (mobile) */
-#cd-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: none;
-}
-
-#cd-overlay.visible {
-  display: block;
-}
-
-/* MAIN CONTENT */
-#cd-main-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  /* 💡 FIX: Removed conflicting background rule. */
-  /* background: var(--cd-color-bg); */
-  min-width: 0; /* Fixes flex children overflow */
-}
-
-/* ============================================================
-   FORM ELEMENTS (Non-destructive, Bootstrap-safe)
-   ============================================================ */
-
-.cd-form-field {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  /* 💡 FIX: Removed conflicting background/color rules to let Bootstrap theme control input appearance */
-  /* background: var(--cd-color-surface); */
-  /* color: var(--cd-color-text); */
-}
-
-.cd-form-field input {
-  /* 💡 FIX: Removed conflicting background/color rules to let Bootstrap theme control input appearance */
-  /* background: var(--cd-color-surface); */
-  /* color: var(--cd-color-text); */
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-border-radius);
-  padding: 0.6rem;
-  transition:
-    border-color var(--cd-transition),
-    box-shadow var(--cd-transition);
-}
-
-/* Validation */
-.cd-form-field input.cd-valid {
-  border-color: var(--cd-color-valid);
-  box-shadow: 0 0 4px var(--cd-color-valid);
-}
-
-.cd-form-field input.cd-invalid {
-  border-color: var(--cd-color-invalid);
-  box-shadow: 0 0 4px var(--cd-color-invalid);
-}
-
-/* Feedback */
-.error-message,
-.cd-hint {
-  font-size: 0.85rem;
-  margin-top: 4px;
-  color: var(--cd-color-hint);
-}
-
-.cd-form-field input.cd-invalid + .error-message,
-.cd-form-field input.cd-invalid + .cd-hint {
-  color: var(--cd-color-invalid);
-}
-
-/* Focus */
-.cd-form-field input:focus {
-  border-color: var(--cd-color-primary);
-  box-shadow: 0 0 5px var(--cd-color-primary);
-  outline: none;
-}
-```
-
-// public/assets/css/index.css
-
-```css
-:root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-
-  /* Keep as fallbacks only */
-  /* 💡 FIX: Removed redundant theme color variables. */
-  /* --cd-background-color: var(--cd-color-bg); */
-  /* --cd-text-color: var(--cd-color-text); */
-}
-
-/* Global reset (safe) */
-html,
-body {
-  /* ❌ REMOVED: Conflicting color and background rules with !important */
-  /* margin: 0 !important; */
-  /* padding: 0 !important; */
-  /* background-color: var(--cd-background-color); */
-  /* color: var(--cd-text-color); */
-}
-
-/* ---------------------------------------
-   HEADER (cosmetic overrides only)
----------------------------------------- */
-#cd-header {
-  /* 💡 Recommended: ID selector is already high-specificity. Removed !important. */
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  background-color: var(--cd-primary-color);
-  color: #ffffff;
-}
-
-/* LOGO */
-#cd-logo {
-  height: 40px;
-  margin-right: 12px;
-  display: block;
-}
-
-/* ---------------------------------------
-   Ensure sidebar honors theme vars
----------------------------------------- */
-#cd-sidebar {
-  /* 💡 Recommended: ID selector is high-specificity. Removed !important. */
-  background-color: var(--cd-color-surface);
-  color: var(--cd-color-text);
-}
-
-/* Sidebar menu items */
-.cd-menu-item {
-  /* 💡 Recommended: Removed !important. */
-  background-color: var(--cd-color-surface);
-  color: var(--cd-color-text);
-}
-
-.cd-menu-item:hover {
-  /* 💡 Recommended: Removed !important. */
-  background-color: var(--cd-color-hover);
-}
-
-/* OPTIONAL: arbitrary utility classes */
-.cd-flex {
-  display: flex;
-}
-
-.cd-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-```
-
-// public/themes/dark/theme.css
-
-```css
-:root {
-  --cd-color-bg: #121212;
-  --cd-color-surface: #1e1e1e;
-  --cd-color-text: #e6e6e6;
-
-  --cd-color-primary: #0d6efd;
-
-  --cd-color-hint: #aaaaaa;
-  --cd-color-valid: #2ecc71;
-  --cd-color-invalid: #e74c3c;
-
-  --cd-color-border: #333333;
-  --cd-color-hover: #2a2a2a;
-}
-```
-
-// public/themes/default/theme.css
-
-```css
-:root {
-  --cd-color-bg: #ffffff;
-  --cd-color-surface: #f8f8f8;
-  --cd-color-text: #000000;
-
-  --cd-color-primary: #007bff;
-  --cd-color-hint: #666;
-  --cd-color-valid: #28a745;
-  --cd-color-invalid: #dc3545;
-
-  --cd-color-border: #cccccc;
-  --cd-color-hover: #f0f0f0;
-}
-```
-
-// src/CdShell/sys/cd-guig/services/ui-system-adapters.ts
-
-```ts
-import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
-import { IUiSystemAdapter } from "../models/ui-system-adaptor.model";
-
-/**
- * Bootstrap502Adapter: sets data-bs-theme on <html> for Bootstrap v5.0.2
- */
-export class Bootstrap502Adapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap502Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap502Adapter] applyTheme error", err);
-    }
-  }
-}
-
-/**
- * Bootstrap538Adapter — supports Bootstrap 5.3.8 with official dark-mode variables
- * Dark mode works natively using the <html data-bs-theme="dark">
- */
-export class Bootstrap538Adapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    // No-op: CSS/JS already injected by UiSystemLoaderService
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    console.log("[Bootstrap538Adapter][applyTheme] start");
-    console.log(
-      "[Bootstrap538Adapter][applyTheme] themeDescriptorOrId:",
-      themeDescriptorOrId
-    );
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      // Bootstrap 5.3.x controls dark mode via:
-      // <html data-bs-theme="dark">
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap538Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap538Adapter] applyTheme error", err);
-    }
-  }
-}
-
-/**
- * MaterialAdapter — applies Material Design theme logic
- */
-export class MaterialAdapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-md-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    if (!themeDescriptorOrId) return;
-
-    const mode =
-      typeof themeDescriptorOrId === "string"
-        ? themeDescriptorOrId
-        : themeDescriptorOrId.mode;
-
-    if (mode === "dark") {
-      document.documentElement.classList.add("md-dark");
-      document.documentElement.classList.remove("md-light");
-    } else {
-      document.documentElement.classList.remove("md-dark");
-      document.documentElement.classList.add("md-light");
-    }
-
-    console.log("[MaterialAdapter] applyTheme:", mode);
-  }
-}
-
-/**
- * Factory for UI system adapters
- */
-export class UiSystemAdapterFactory {
-  public static getAdapter(systemId: string): IUiSystemAdapter | null {
-    console.group("[UiSystemAdapterFactory] Adapter Lookup");
-    console.log("Requested systemId:", JSON.stringify(systemId));
-
-    let adapter: IUiSystemAdapter | null = null;
-
-    switch (systemId) {
-      case "bootstrap-502":
-        adapter = new Bootstrap502Adapter();
-        break;
-
-      case "bootstrap-538":
-        adapter = new Bootstrap538Adapter();
-        break;
-
-      case "material":
-      case "material-design":
-        adapter = new MaterialAdapter();
-        break;
-
-      default:
-        console.warn(
-          "[UiSystemAdapterFactory] ❌ Unknown systemId — returning null"
-        );
-        console.groupEnd();
-        return null;
-    }
-
-    console.log("Resolved adapter instance:", adapter?.constructor.name);
-    console.groupEnd();
-    return adapter;
-  }
-}
-```
-
-/////////////////////////////////
-
-Note that there was a special utility that was meant to help show the exact order of css loading.
-So everywhere where UiSystemLoaderSersvice.loadCSS() was called, the utility was used to do some logging.
-You may want to review the logs with this in reference with the codes shared below.
-
-// src/CdShell/sys/utils/diagnosis.ts
-
-```ts
-export function diag_css(message: string, data: any = {}) {
-  console.log(
-    `%c[CSS-DIAG] ${message}`,
-    "background:#222;color:#0f0;padding:2px 4px;border-radius:3px",
-    data
-  );
-}
-
-export function diag_sidebar() {
-  const sb = document.getElementById("cd-sidebar");
-  if (!sb) return;
-
-  const style = window.getComputedStyle(sb);
-
-  console.warn(
-    "%c[SIDEBAR-DIAG] Sidebar State:",
-    "background:#440;color:#fff;padding:3px"
-  );
-
-  console.log("display:", style.display);
-  console.log("position:", style.position);
-  console.log("width:", style.width);
-  console.log("flex-direction:", style.flexDirection);
-  console.log("css file winning:", sb);
-}
-```
-
-```ts
-export class UiSystemLoaderSersvice {
-  public async loadCSS(path: string, id: string): Promise<string> {
-    diag_css("[UiSystemLoaderService.loadCSS] REQUEST", { path, id });
-
-    return new Promise((resolve, reject) => {
-      try {
-        const head = document.head || document.getElementsByTagName("head")[0];
-        if (!head) return reject(new Error("document.head missing"));
-
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = path;
-        link.setAttribute("data-cd-uisystem", id);
-        link.setAttribute("data-cd-origin", "ui-system");
-
-        link.onload = () => {
-          const resolved = (link as HTMLLinkElement).href;
-          diag_css("[UiSystemLoaderService.loadCSS] LOADED", {
-            path,
-            id,
-            resolved,
-            order: Array.from(head.querySelectorAll("link")).map(
-              (l) => (l as HTMLLinkElement).href
-            ),
-          });
-          resolve(resolved);
-        };
-
-        link.onerror = (ev) => {
-          diag_css("[UiSystemLoaderService.loadCSS] ERROR", { path, id, ev });
-          reject(new Error(`Failed to load CSS: ${path}`));
-        };
-
-        head.insertAdjacentElement("beforeend", link);
-      } catch (err) {
-        diag_css("[UiSystemLoaderService.loadCSS] EXCEPTION", {
-          path,
-          id,
-          err,
-        });
-        reject(err);
-      }
-    });
-  }
-
-  public async loadScript(path: string, id: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        const script = document.createElement("script");
-        script.src = path;
-        script.async = true;
-        script.setAttribute("data-cd-uisystem", id);
-        script.setAttribute("data-cd-origin", "ui-system");
-        script.onload = () => resolve();
-        script.onerror = (ev) => reject(ev);
-
-        const body = document.body || document.getElementsByTagName("body")[0];
-        if (!body) return reject(new Error("document.body missing"));
-        body.appendChild(script);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-}
-```
-
-////////////////////////////////////////////
-
-I will be sending the results one post at a time:
-The first one is based on testing the assertion: Bootstrap CSS is NEVER successfully loaded
-Searching for 'data-cd-uisystem="bootstrap-538"' in DevTools → Elements → head
-My observation is that this is not the case because the search came up positive.
-
-```html
-<head>
-  <meta charset="UTF-8" />
-  <title>Corpdesk PWA</title>
-
-  <!-- Vendor-only static dependencies -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-
-  <!-- 🧩 All system and theme CSS are dynamically injected by UiSystemLoaderService & UiThemeLoaderService -->
-  <script type="module" crossorigin="" src="/assets/index-fOHRi1nm.js"></script>
-  <link
-    rel="stylesheet"
-    href="/assets/ui-systems/bootstrap-538/bootstrap.min.css"
-    data-cd-uisystem="bootstrap-538"
-    data-cd-origin="ui-system"
-  />
-  <link
-    rel="stylesheet"
-    href="/themes/common/base.css"
-    data-cd-uisystem="shell-base"
-    data-cd-origin="ui-system"
-  />
-  <link
-    rel="stylesheet"
-    href="/assets/css/index.css"
-    data-cd-uisystem="shell-index"
-    data-cd-origin="ui-system"
-  />
-  <link rel="stylesheet" href="/themes/dark/theme.css" data-cd-theme="dark" />
-  <link
-    rel="modulepreload"
-    as="script"
-    crossorigin=""
-    href="/assets/index-C9lWU5VA.js"
-  />
-  <link
-    rel="modulepreload"
-    as="script"
-    crossorigin=""
-    href="/assets/cd-directive-binder.service-P6kntAs5.js"
-  />
-  <link
-    rel="modulepreload"
-    as="script"
-    crossorigin=""
-    href="/assets/index-BJeR7udt.js"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/metismenujs/dist/metismenujs.min.css"
-  />
-  <script
-    src="https://cdn.jsdelivr.net/npm/metismenujs/dist/metismenujs.min.js"
-    async=""
-  ></script>
-  <link rel="stylesheet" href="/themes/default/menu-systems/metismenu.css" />
-</head>
-```
-
-////////////////////////////////////////////////
-Below are the request/response headers.
-response screeshot is also attached
-Request headers
-
-```log
-GET /assets/ui-systems/bootstrap-538/bootstrap.min.css HTTP/2
-Host: localhost:5173
-User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0
-Accept: text/css,*/*;q=0.1
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br, zstd
-Connection: keep-alive
-Referer: https://localhost:5173/
-Sec-Fetch-Dest: style
-Sec-Fetch-Mode: no-cors
-Sec-Fetch-Site: same-origin
-Priority: u=2
-Pragma: no-cache
-Cache-Control: no-cache
-TE: trailers
-```
-
-// Response headers
-
-```log
-HTTP/2 200
-vary: Origin
-cross-origin-opener-policy: same-origin
-cross-origin-embedder-policy: require-corp
-content-type: text/css
-last-modified: Thu, 20 Nov 2025 19:17:01 GMT
-etag: W/"232111-1763666221278"
-cache-control: no-cache
-content-encoding: gzip
-date: Fri, 21 Nov 2025 07:36:33 GMT
-X-Firefox-Spdy: h2
-```
-
-/////////////////////////////////////////
-Unfortunately, I am being prevented from sharing any more images.
-However, injecting:
-<button class="btn btn-primary">Test</button>
-into the browser inspector as part of the form items was the most revealing.
-I could see a bootstrap blue button.
-I may have been the one who made a wrong assertion that the form elements did not reflect presence of bootstrap.
-Earlier, the generated form was typical bootsrap form and that is what I have been expecting.
-In retrospect, I think what we are seeing is the correct display. If we needed to make it fully bootstrap, we have to use bootstrap elements in out html construction.
-Below is a copy past of one of the css from the browser inspect/styles section.
-From here, I would be interested in your reflection of what is happening and where we are in terms of design goals and looking forward.
-
-```css
-.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #0d6efd;
-  --bs-btn-border-color: #0d6efd;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #0b5ed7;
-  --bs-btn-hover-border-color: #0a58ca;
-  --bs-btn-focus-shadow-rgb: 49, 132, 253;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #0a58ca;
-  --bs-btn-active-border-color: #0a53be;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #0d6efd;
-  --bs-btn-disabled-border-color: #0d6efd;
-}
-```
-
-///////////////////////////////////////////
-I am happy that we have scientifically proved that the bootstrap is available and working.
-You interpretation is very enlightening and rightfully put the right questions for determination.
-This is my response and we can discuss to chart way forward.
-My vision is based on what would work best for most developers in terms of working experience.
-Idealy this is the experience that I hope developers can have. I am not limiting myself to how difficult it is to achieve but what I believe development experience should be.
-Expectations:
-At its best, developers should just use a standard scripting without puting any ui-system specific elements.
-When the configuration has been set for bootstrap-538 and dark theme, the page should render a typical bootstrap page.
-It would be up to developer to set details like the dominant colour (default being blue) or layout preferences can be changed at the base configuration or changed during runtime (with option of locking for users by admin)
-This behaviour should cut accross for all ui-systems that have been worked for corpdesk ui system.
-Earlier in the development, this is how this interface was behaving. How did this happen? There must be some simple ways.
-In fact this was happening without applying 'dark' mode. So we introduced adaptors, made sure we moved from bootstrap-502 to bootstrap-538 with the expectation that the 'dark' mode would be applied to the typical bootstrap form.
-Now the question is how to achive this kind of experience.
-
-/////////////////////////////////////////////////
-I suggest, without doing this process in one shot, we do it step by step.
-First, we can start with setting up the sign-in.controller.js(supposedly compliled by for now being developed manually)
-Question: when we use systax like <input cdFormControl>, I am assuming we will be making use of already existing CdDirectiveBinderService?
-If this is the case, we may need to update the
-
-// src/CdShell/sys/cd-user/view/sign-in.controller.js
-
-```js
-import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
-import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
-import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
-import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
-
-export const ctlSignIn = {
-  form: null,
-  binder: null,
-
-  /**
-   * Initializes the controller — constructs the form and binder.
-   */
-  __init() {
-    this.form = new CdFormGroup({
-      userName: new CdFormControl("", [
-        CdValidators.required("Username is required"),
-      ]),
-      password: new CdFormControl("", [
-        CdValidators.required("Password is required"),
-        CdValidators.minLength(4, "Password must be at least 4 characters"),
-      ]),
-    });
-
-    // Initialize binder — form selector must match template form ID
-    this.binder = new CdDirectiveBinderService(this.form, "#signInForm", this);
-  },
-
-  /**
-   * HTML template for the view.
-   */
-  __template() {
-    return `
-      <form id="signInForm" class="cd-form">
-        <div class="cd-form-field">
-          <label for="userName">Username</label>
-          <input
-            id="userName"
-            name="userName"
-            cdFormControl
-            placeholder="Enter username"
-          />
-          <div class="error-message" data-error-for="userName"></div>
-        </div>
-
-        <div class="cd-form-field">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            cdFormControl
-            placeholder="Enter password"
-          />
-          <div class="error-message" data-error-for="password"></div>
-        </div>
-
-        <button type="submit">Sign In</button>
-      </form>
-    `;
-  },
-
-  /**
-   * Runs after template is rendered to DOM.
-   */
-  __setup() {
-    // Initialize form and binder if not already
-    if (!this.form) this.__init();
-
-    const form = document.querySelector("#signInForm");
-    if (form) {
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        this.auth();
-      });
-    }
-  },
-
-  /**
-   * Authentication handler.
-   */
-  async auth() {
-    const validationResult = this.form.validateAll();
-    this.binder.applyValidationStyles(validationResult);
-
-    if (!this.form.valid) {
-      alert("Please correct the highlighted errors.");
-      return;
-    }
-
-    const user = this.form.value;
-    console.log("Authenticating:", user);
-    alert(`Welcome, ${user.userName}!`);
-  },
-
-  // 💡 NEW: Deactivation Hook - Runs when user clicks *away*
-  __deactivate() {
-    console.log("[ctlSignIn][__deactivate] 01");
-    // Stop any active animations, remove DOM-dependent listeners, etc.
-    // The binder must provide a way to remove all listeners.
-    if (this.binder?.unbindAllDomEvents) {
-      this.binder.unbindAllDomEvents();
-    }
-  },
-
-  // 💡 NEW: Activation Hook - Runs when view is *injected*
-  async __activate() {
-    console.log("[ctlSignIn][__activate] 01");
-    // Re-establish DOM bindings and apply current form state
-    if (this.binder?.bindToDom) {
-      // This method must find the newly injected DOM (#settingsForm)
-      // and re-attach all form control listeners (input, change, blur)
-      await this.binder.bindToDom();
-    }
-    // Optional: Restore scroll position, run focus logic, etc.
-  },
-};
-```
-
-// src/CdShell/sys/cd-guig/services/cd-directive-binder.service.ts
-
-```ts
-import { CdFormGroup } from "../controllers/cd-form-group.control";
-
-export class CdDirectiveBinderService {
-  private form: CdFormGroup;
-  private formElement: HTMLFormElement; // Will be set later in bindToDom()
-  private controllerInstance: any;
-  private formSelector: string; // 💡 Store the selector here
-
-  // 💡 NEW: Array to store references for listener removal
-  private eventListeners: {
-    element: HTMLElement;
-    event: string;
-    handler: (e: Event) => void;
-  }[] = [];
-
-  constructor(
-    form: CdFormGroup,
-    formSelector: string,
-    controllerInstance: any
-  ) {
-    console.log(
-      "CdDirectiveBinderService::constructor()/start - DOM lookups deferred."
-    );
-    this.form = form;
-    this.controllerInstance = controllerInstance;
-    this.formSelector = formSelector; // Store the selector for later use in bindToDom()
-
-    // 🛑 All DOM querying logic is removed from the constructor.
-  }
-
-  // 💡 NEW: Binds control listeners to the current DOM elements
-  /**
-   * 💡 NEW: Binds control listeners and Angular-style event listeners to the current DOM elements.
-   */
-  public async bindToDom(): Promise<void> {
-    console.log("[CdDirectiveBinderService][bindToDom] 01");
-
-    // 1. Find the Form Element using the stored selector
-    this.formElement = document.querySelector(
-      this.formSelector
-    ) as HTMLFormElement;
-
-    if (!this.formElement) {
-      console.error(
-        `[Binder Error] Form element not found in DOM for selector: ${this.formSelector}`
-      );
-      // If the form isn't found, stop binding but don't crash.
-      return;
-    }
-
-    if (!this.formElement) return;
-
-    // --- 1. Bind cdFormControl inputs (Input/Blur) ---
-    Object.entries(this.form.controls).forEach(([key, control]) => {
-      const input = this.formElement.querySelector(
-        `[name="${key}"][cdFormControl]`
-      ) as HTMLInputElement;
-
-      if (!input) return;
-
-      // Handler for 'input' (value change)
-      const inputHandler = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        control.setValue(target.value);
-        this.applyValidationStyles({ [key]: control.error });
-      };
-
-      // Handler for 'blur' (touched state and validation)
-      const blurHandler = () => {
-        control.markAsTouched();
-        this.applyValidationStyles({ [key]: control.error });
-      };
-
-      input.addEventListener("input", inputHandler);
-      input.addEventListener("blur", blurHandler);
-
-      // 💡 Store references for removal
-      this.eventListeners.push({
-        element: input,
-        event: "input",
-        handler: inputHandler,
-      });
-      this.eventListeners.push({
-        element: input,
-        event: "blur",
-        handler: blurHandler,
-      });
-
-      // 4. Apply current control values and validation styles
-      input.value = control.value;
-      this.applyValidationStyles({ [key]: control.error });
-    });
-
-    // --- 2. Bind Angular-style event bindings ((change)="method()") ---
-    const elements = this.formElement.querySelectorAll("*");
-
-    elements.forEach((el) => {
-      Array.from(el.attributes).forEach((attr) => {
-        const match = attr.name.match(/^\(([^)]+)\)$/); // e.g., (change)
-        if (match) {
-          const eventName = match[1];
-          const expression = attr.value;
-
-          // Handler for the custom event binding
-          const customHandler = (e: Event) =>
-            this.invokeDirectiveMethod(expression, e);
-
-          el.addEventListener(eventName, customHandler);
-
-          // 💡 Store reference for removal
-          this.eventListeners.push({
-            element: el as HTMLElement,
-            event: eventName,
-            handler: customHandler,
-          });
-        }
-      });
-    });
-  }
-
-  // 💡 NEW: Removes all listeners created by bindToDom()
-  /**
-   * 💡 NEW: Removes all listeners created by bindToDom() from the DOM and clears the tracking array.
-   */
-  public unbindAllDomEvents(): void {
-    console.log(
-      `CdDirectiveBinderService: Unbinding ${this.eventListeners.length} listeners.`
-    );
-
-    // Iterate through the stored references and remove the listeners
-    this.eventListeners.forEach(({ element, event, handler }) => {
-      element.removeEventListener(event, handler);
-    });
-
-    // Crucial: Clear the array to prevent memory leaks in the binder itself
-    this.eventListeners = [];
-  }
-
-  /**
-   * Invokes a controller method referenced by directive attributes.
-   */
-  private invokeDirectiveMethod(expression: string, event: Event): void {
-    try {
-      const fnMatch = expression.match(/^([a-zA-Z0-9_]+)\s*\(([^)]*)\)/);
-      if (!fnMatch) return;
-
-      const fnName = fnMatch[1];
-      const hasEventArg = fnMatch[2]?.includes("$event");
-
-      const controller = this.controllerInstance; // 👈 USE STORED INSTANCE
-
-      if (controller && typeof controller[fnName] === "function") {
-        // 🛑 CRITICAL FIX: Use .call() or .apply() to set the 'this' context!
-        controller[fnName].call(controller, hasEventArg ? event : undefined);
-      } else {
-        console.warn(`[UUD] Method not found: ${fnName}`);
-      }
-    } catch (err) {
-      console.error(
-        `[UUD] Error invoking directive method: ${expression}`,
-        err
-      );
-    }
-  }
-
-  /**
-   * Detects which controller is currently active based on a naming convention.
-   * (You can refine this logic later for module contexts.)
-   */
-  validateAll(): void {
-    const result = this.form.validateAll();
-    this.applyValidationStyles(result);
-  }
-
-  applyValidationStyles(result: Record<string, string | null>): void {
-    for (const [key, error] of Object.entries(result)) {
-      const input = this.formElement.querySelector(
-        `[name="${key}"]`
-      ) as HTMLInputElement;
-      const errorDiv = this.formElement.querySelector(
-        `[data-error-for="${key}"]`
-      ) as HTMLElement;
-
-      if (!input) continue;
-
-      input.classList.remove("cd-valid", "cd-invalid");
-      if (error) {
-        input.classList.add("cd-invalid");
-        if (errorDiv) errorDiv.textContent = error;
-      } else {
-        input.classList.add("cd-valid");
-        if (errorDiv) errorDiv.textContent = "";
-      }
-    }
-  }
-}
-```
-
-//////////////////////////////////////////
-
-I am assuming you are suggesting:
-src/CdShell/sys/cd-user/view/sign-in.controller.js
-is good to go for now and that we can move to:
-src/CdShell/sys/cd-guig/services/cd-directive-binder.service.ts
-So we can "Add minimal UI-System-awareness to CdDirectiveBinderService"
-Or we start with it before coming back to src/CdShell/sys/cd-user/view/sign-in.controller.js.
-Either way I am ok with this.
-Below is its current state:
-
-// src/CdShell/sys/cd-guig/services/cd-directive-binder.service.ts
-
-```ts
-import { CdFormGroup } from "../controllers/cd-form-group.control";
-
-export class CdDirectiveBinderService {
-  private form: CdFormGroup;
-  private formElement: HTMLFormElement; // Will be set later in bindToDom()
-  private controllerInstance: any;
-  private formSelector: string; // 💡 Store the selector here
-
-  // 💡 NEW: Array to store references for listener removal
-  private eventListeners: {
-    element: HTMLElement;
-    event: string;
-    handler: (e: Event) => void;
-  }[] = [];
-
-  constructor(
-    form: CdFormGroup,
-    formSelector: string,
-    controllerInstance: any
-  ) {
-    console.log(
-      "CdDirectiveBinderService::constructor()/start - DOM lookups deferred."
-    );
-    this.form = form;
-    this.controllerInstance = controllerInstance;
-    this.formSelector = formSelector; // Store the selector for later use in bindToDom()
-
-    // 🛑 All DOM querying logic is removed from the constructor.
-  }
-
-  // 💡 NEW: Binds control listeners to the current DOM elements
-  /**
-   * 💡 NEW: Binds control listeners and Angular-style event listeners to the current DOM elements.
-   */
-  public async bindToDom(): Promise<void> {
-    console.log("[CdDirectiveBinderService][bindToDom] 01");
-
-    // 1. Find the Form Element using the stored selector
-    this.formElement = document.querySelector(
-      this.formSelector
-    ) as HTMLFormElement;
-
-    if (!this.formElement) {
-      console.error(
-        `[Binder Error] Form element not found in DOM for selector: ${this.formSelector}`
-      );
-      // If the form isn't found, stop binding but don't crash.
-      return;
-    }
-
-    if (!this.formElement) return;
-
-    // --- 1. Bind cdFormControl inputs (Input/Blur) ---
-    Object.entries(this.form.controls).forEach(([key, control]) => {
-      const input = this.formElement.querySelector(
-        `[name="${key}"][cdFormControl]`
-      ) as HTMLInputElement;
-
-      if (!input) return;
-
-      // Handler for 'input' (value change)
-      const inputHandler = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        control.setValue(target.value);
-        this.applyValidationStyles({ [key]: control.error });
-      };
-
-      // Handler for 'blur' (touched state and validation)
-      const blurHandler = () => {
-        control.markAsTouched();
-        this.applyValidationStyles({ [key]: control.error });
-      };
-
-      input.addEventListener("input", inputHandler);
-      input.addEventListener("blur", blurHandler);
-
-      // 💡 Store references for removal
-      this.eventListeners.push({
-        element: input,
-        event: "input",
-        handler: inputHandler,
-      });
-      this.eventListeners.push({
-        element: input,
-        event: "blur",
-        handler: blurHandler,
-      });
-
-      // 4. Apply current control values and validation styles
-      input.value = control.value;
-      this.applyValidationStyles({ [key]: control.error });
-    });
-
-    // --- 2. Bind Angular-style event bindings ((change)="method()") ---
-    const elements = this.formElement.querySelectorAll("*");
-
-    elements.forEach((el) => {
-      Array.from(el.attributes).forEach((attr) => {
-        const match = attr.name.match(/^\(([^)]+)\)$/); // e.g., (change)
-        if (match) {
-          const eventName = match[1];
-          const expression = attr.value;
-
-          // Handler for the custom event binding
-          const customHandler = (e: Event) =>
-            this.invokeDirectiveMethod(expression, e);
-
-          el.addEventListener(eventName, customHandler);
-
-          // 💡 Store reference for removal
-          this.eventListeners.push({
-            element: el as HTMLElement,
-            event: eventName,
-            handler: customHandler,
-          });
-        }
-      });
-    });
-  }
-
-  // 💡 NEW: Removes all listeners created by bindToDom()
-  /**
-   * 💡 NEW: Removes all listeners created by bindToDom() from the DOM and clears the tracking array.
-   */
-  public unbindAllDomEvents(): void {
-    console.log(
-      `CdDirectiveBinderService: Unbinding ${this.eventListeners.length} listeners.`
-    );
-
-    // Iterate through the stored references and remove the listeners
-    this.eventListeners.forEach(({ element, event, handler }) => {
-      element.removeEventListener(event, handler);
-    });
-
-    // Crucial: Clear the array to prevent memory leaks in the binder itself
-    this.eventListeners = [];
-  }
-
-  /**
-   * Invokes a controller method referenced by directive attributes.
-   */
-  private invokeDirectiveMethod(expression: string, event: Event): void {
-    try {
-      const fnMatch = expression.match(/^([a-zA-Z0-9_]+)\s*\(([^)]*)\)/);
-      if (!fnMatch) return;
-
-      const fnName = fnMatch[1];
-      const hasEventArg = fnMatch[2]?.includes("$event");
-
-      const controller = this.controllerInstance; // 👈 USE STORED INSTANCE
-
-      if (controller && typeof controller[fnName] === "function") {
-        // 🛑 CRITICAL FIX: Use .call() or .apply() to set the 'this' context!
-        controller[fnName].call(controller, hasEventArg ? event : undefined);
-      } else {
-        console.warn(`[UUD] Method not found: ${fnName}`);
-      }
-    } catch (err) {
-      console.error(
-        `[UUD] Error invoking directive method: ${expression}`,
-        err
-      );
-    }
-  }
-
-  /**
-   * Detects which controller is currently active based on a naming convention.
-   * (You can refine this logic later for module contexts.)
-   */
-  validateAll(): void {
-    const result = this.form.validateAll();
-    this.applyValidationStyles(result);
-  }
-
-  applyValidationStyles(result: Record<string, string | null>): void {
-    for (const [key, error] of Object.entries(result)) {
-      const input = this.formElement.querySelector(
-        `[name="${key}"]`
-      ) as HTMLInputElement;
-      const errorDiv = this.formElement.querySelector(
-        `[data-error-for="${key}"]`
-      ) as HTMLElement;
-
-      if (!input) continue;
-
-      input.classList.remove("cd-valid", "cd-invalid");
-      if (error) {
-        input.classList.add("cd-invalid");
-        if (errorDiv) errorDiv.textContent = error;
-      } else {
-        input.classList.add("cd-valid");
-        if (errorDiv) errorDiv.textContent = "";
-      }
-    }
-  }
-}
-```
-
-////////////////////////////////////////////
-I currently have global.d.ts.
-Is it where we can integrate CD_ACTIVE_UISYSTEM?
-// src/global.d.ts
-
-```ts
-export {};
-
-declare global {
-  interface CdShellNotify {
-    success(msg: string): void;
-    error(msg: string): void;
-    info?(msg: string): void;
-    warn?(msg: string): void;
-  }
-
-  interface CdShellProgress {
-    start(label?: string): void;
-    done(): void;
-    set?(percent: number): void;
-  }
-
-  interface Window {
-    cdShell?: {
-      logger?: {
-        debug?: (...args: any[]) => void;
-        warn?: (...args: any[]) => void;
-        error?: (...args: any[]) => void;
-      };
-      lifecycle?: {
-        onViewLoaded?: (item?: any, cdToken?: string) => void;
-      };
-      notify?: CdShellNotify;
-      progress?: CdShellProgress;
-    };
-    CD_ACTIVE_UISYSTEM?: string;
-  }
-}
-```
-
-////////////////////////////////////////
-
-////////////////////////////////////////
-
-From corpdesk design, I am suggeting the the content of /src/ui-system-detector.ts can be organised like this:
-
-1. The following can go to src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts
-
-```ts
-export type UiSystemId =
-  | "bootstrap-538"
-  | "bootstrap-502"
-  | "tailwind"
-  | "material-mui"
-  | "custom";
-
-export interface UiSystemDescriptor {
-  id: UiSystemId;
-  version?: string;
-  theme?: "light" | "dark";
-  manifestUrl?: string; // where descriptor.json was loaded from
-  cssLoaded?: boolean; // internal use
-}
-
-const DEFAULT_SYSTEM: UiSystemDescriptor = {
-  id: "bootstrap-538",
-  version: "5.3.8",
-  theme: "light",
-};
-```
-
-2. Your proposed function detectUiSystem() can be integrated into UiSystemLoaderService shared below as part of existing reusable material.
-
-3. Optional: See the section REFINING ADAPTOR MACHANISM FOR SCALABILITY
-
-EXISTING MATERIAL THAT CAN BE INTEGRATED
-
-// Current state of src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts
-
-```ts
-import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
-import { Bootstrap502Adapter } from "../services/bootstrap-502-adaptor.service";
-import { MaterialAdapter } from "../services/material-adaptor.service";
-import { PlainAdapter } from "../services/plain-adaptor.service";
-import { Bootstrap538Adapter } from "../services/ui-system-adapters";
-
-export interface IUiSystemAdapter {
-  activate(descriptor: UiSystemDescriptor): Promise<void>;
-  deactivate(): Promise<void>;
-  applyTheme(themeId: string): Promise<void>;
-}
-
-export const SYSTEM_ADAPTERS: Record<string, IUiSystemAdapter> = {
-  "bootstrap-502": new Bootstrap502Adapter(),
-  "bootstrap-538": new Bootstrap538Adapter(),
-  "material-design": new MaterialAdapter(),
-  plain: new PlainAdapter(),
-};
-```
-
-// src/CdShell/sys/cd-guig/services/ui-system-loader.service.ts
-
-```ts
-import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
-import { UiConfig } from "../../moduleman/models/config.model";
-import { SysCacheService } from "../../moduleman/services/sys-cache.service";
-import { diag_css } from "../../utils/diagnosis";
-import {
-  IUiSystemAdapter,
-  SYSTEM_ADAPTERS,
-} from "../models/ui-system-adaptor.model";
-import { STATIC_UI_SYSTEM_REGISTRY } from "../models/ui-system-schema.model";
-import { PlainAdapter } from "./plain-adaptor.service";
-import { UiSystemAdapterFactory } from "./ui-system-adapters";
-
-/**
- * @class UiSystemLoaderService
- * @description
- * Centralized runtime manager for UI systems (Material, Bootstrap, etc.)
- * Handles discovery, loading, caching, activation, and theme switching.
- *
- * Expected directory structure:
- * public/assets/ui-systems/
- * ├── material/
- * │   ├── descriptor.json
- * │   ├── css/
- * │   ├── js/
- * │   └── templates/
- * ├── bootstrap/
- * │   ├── descriptor.json
- * │   └── ...
- *
- * Each `descriptor.json` must comply with `UiSystemDescriptor` format.
- */
-
-export class UiSystemLoaderService {
-  private static instance: UiSystemLoaderService | null = null;
-  private activeSystem: UiSystemDescriptor | null = null;
-  private sysCache!: SysCacheService;
-
-  constructor(sysCache: SysCacheService) {
-    this.sysCache = sysCache;
-  }
-
-  public static getInstance(sysCache?: SysCacheService): UiSystemLoaderService {
-    if (!UiSystemLoaderService.instance) {
-      if (!sysCache)
-        throw new Error(
-          "UiSystemLoaderService.getInstance requires SysCacheService on first call."
-        );
-      UiSystemLoaderService.instance = new UiSystemLoaderService(sysCache);
-    }
-    return UiSystemLoaderService.instance;
-  }
-
-  async fetchAvailableSystems(
-    uiConfig: UiConfig
-  ): Promise<UiSystemDescriptor[]> {
-    // Example static registry read — adapt to your existing STATIC_UI_SYSTEM_REGISTRY
-    console.log(
-      "[UiSystemLoaderService.fetchAvailableSystems] uiConfig:",
-      uiConfig
-    );
-    // Use existing STATIC_UI_SYSTEM_REGISTRY if available
-    const registry =
-      typeof STATIC_UI_SYSTEM_REGISTRY !== "undefined" &&
-      STATIC_UI_SYSTEM_REGISTRY
-        ? STATIC_UI_SYSTEM_REGISTRY
-        : [
-            {
-              id: "bootstrap-502",
-              name: "Bootstrap 5",
-              cssUrl: "/assets/ui-systems/bootstrap-502/bootstrap.min.css",
-              jsUrl: "/assets/ui-systems/bootstrap-502/bootstrap.min.js",
-              themesAvailable: [{ id: "dark" }],
-              themeActive: null,
-            },
-          ];
-    // ensure basePath if provided by uiConfig
-    return registry.map((d: any) => ({
-      ...d,
-      basePath: `${uiConfig.uiSystemBasePath || "/public/assets/ui-systems/"}${d.id}/`,
-    }));
-  }
-
-  list(): UiSystemDescriptor[] {
-    return this.sysCache.get("uiSystems") || [];
-  }
-
-  getSystemById(id: string): UiSystemDescriptor | undefined {
-    const available = this.sysCache.get("uiSystems") || [];
-    return available.find((s: any) => s.id === id);
-  }
-
-  public async activate(id: string): Promise<void> {
-    diag_css("[UiSystemLoaderService.activate] START", { id });
-    const descriptorFromCache = this.getSystemById(id);
-    console.log(
-      "[UiSystemLoaderService.activate] descriptorFromCache:",
-      descriptorFromCache
-    );
-
-    // If not in cache, we still accept descriptor from fetchAvailableSystems fallback
-    const descriptor = descriptorFromCache || {
-      id,
-      cssUrl: `/assets/ui-systems/${id}/${id}.min.css`,
-      jsUrl: `/assets/ui-systems/${id}/${id}.min.js`,
-    };
-
-    console.log(
-      "[UiSystemLoaderService.activate] Using descriptor:",
-      descriptor
-    );
-
-    this.activeSystem = descriptor as UiSystemDescriptor;
-
-    // remove old assets belonging to any ui-system
-    document
-      .querySelectorAll("link[data-cd-uisystem], script[data-cd-uisystem]")
-      .forEach((el) => el.remove());
-    diag_css("[UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS", {});
-
-    // resolve fallback paths already present on descriptor
-    const cssPath =
-      (descriptor as any).cssUrl || `/assets/ui-systems/${id}/${id}.min.css`;
-    const jsPath =
-      (descriptor as any).jsUrl || `/assets/ui-systems/${id}/${id}.min.js`;
-
-    diag_css("[UiSystemLoaderService.activate] RESOLVED PATHS", {
-      cssPath,
-      jsPath,
-    });
-
-    try {
-      await this.loadCSS(cssPath, id);
-      diag_css("[UiSystemLoaderService.activate] CSS LOADED", { cssPath });
-    } catch (err) {
-      diag_css("[UiSystemLoaderService.activate] CSS LOAD FAILED", {
-        cssPath,
-        err,
-      });
-    }
-
-    // load script but don't necessarily block entire bootstrap if JS fails
-    try {
-      await this.loadScript(jsPath, id);
-      diag_css("[UiSystemLoaderService.activate] SCRIPT LOADED", { jsPath });
-    } catch (err) {
-      console.warn("[UiSystemLoaderService.activate] script load failed", err);
-      diag_css("[UiSystemLoaderService.activate] SCRIPT LOAD FAILED", {
-        jsPath,
-        err,
-      });
-    }
-
-    diag_css("[UiSystemLoaderService.activate] COMPLETE", { activeSystem: id });
-  }
-
-  /**
-   * applyTheme(systemId, themeId)
-   * - find adapter for systemId, fetch theme descriptor via SysCacheService / UiThemeLoaderService
-   * - call adapter.applyTheme(themeDescriptor)
-   */
-  public async applyTheme(systemId: string, themeId: string): Promise<void> {
-    diag_css("[UiSystemLoaderService.applyTheme] start", { systemId, themeId });
-    const adapter = UiSystemAdapterFactory.getAdapter(systemId);
-    console.log(
-      "[UiSystemLoaderService.applyTheme] adapter received:",
-      adapter
-    );
-    if (!adapter) {
-      console.warn(
-        "[UiSystemLoaderService.applyTheme] no adapter for",
-        systemId
-      );
-      return;
-    }
-
-    // get theme descriptor from cache
-    const descriptors = this.sysCache.get("themeDescriptors") || [];
-    console.log(
-      "[UiSystemLoaderService][applyTheme] descriptors:",
-      descriptors
-    );
-    const themeDescriptor = descriptors.find((d: any) => d.id === themeId);
-    console.log(
-      "[UiSystemLoaderService][applyTheme] descriptors:",
-      themeDescriptor
-    );
-
-    // supply descriptor if found, else just themeId
-    await adapter.applyTheme(themeDescriptor || themeId);
-    diag_css("[UiSystemLoaderService.applyTheme] done", { systemId, themeId });
-  }
-
-  public async loadCSS(path: string, id: string): Promise<string> {
-    diag_css("[UiSystemLoaderService.loadCSS] REQUEST", { path, id });
-
-    return new Promise((resolve, reject) => {
-      try {
-        const head = document.head || document.getElementsByTagName("head")[0];
-        if (!head) return reject(new Error("document.head missing"));
-
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = path;
-        link.setAttribute("data-cd-uisystem", id);
-        link.setAttribute("data-cd-origin", "ui-system");
-
-        link.onload = () => {
-          const resolved = (link as HTMLLinkElement).href;
-          diag_css("[UiSystemLoaderService.loadCSS] LOADED", {
-            path,
-            id,
-            resolved,
-            order: Array.from(head.querySelectorAll("link")).map(
-              (l) => (l as HTMLLinkElement).href
-            ),
-          });
-          resolve(resolved);
-        };
-
-        link.onerror = (ev) => {
-          diag_css("[UiSystemLoaderService.loadCSS] ERROR", { path, id, ev });
-          reject(new Error(`Failed to load CSS: ${path}`));
-        };
-
-        head.insertAdjacentElement("beforeend", link);
-      } catch (err) {
-        diag_css("[UiSystemLoaderService.loadCSS] EXCEPTION", {
-          path,
-          id,
-          err,
-        });
-        reject(err);
-      }
-    });
-  }
-
-  public async loadScript(path: string, id: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        const script = document.createElement("script");
-        script.src = path;
-        script.async = true;
-        script.setAttribute("data-cd-uisystem", id);
-        script.setAttribute("data-cd-origin", "ui-system");
-        script.onload = () => resolve();
-        script.onerror = (ev) => reject(ev);
-
-        const body = document.body || document.getElementsByTagName("body")[0];
-        if (!body) return reject(new Error("document.body missing"));
-        body.appendChild(script);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-
-  getActive(): UiSystemDescriptor | null {
-    console.log(`[UiSystemLoaderService][getActive] start.`);
-    return this.activeSystem;
-  }
-}
-```
-
-REFINING ADAPTOR MACHANISM FOR SCALABILITY
-Take a look at the corpdesk-rfc-0001.
-Given the effort to architect a scalable adapters for ui-systems and that currently, we are using a place holder: src/CdShell/sys/cd-guig/services/ui-system-adapters.ts, we need to develop an 'app' module which can interact with 'sys' adapter to server the system wide adapter service.
-While we are using this a place holder, considering that the adaptor is at system level, it should not be that adptable options are hard coded in the system. Or rather, specific ui-systems should be pluggable from 'outside' the system.
-Now the system is built in terms of sys and app modules.
-And each module is orgnaized into controllers, models and services.
-This simplistic architectured should be maintained.
-So I would like you to give me proposal for mutilating the current src/CdShell/sys/cd-guig/services/ui-system-adapters.ts into a core that remains in the 'sys', then a module(ui-adaptor-port) is introduced that goes to 'app' directory which contains specific adaptors that are called by the sys adaptor.
-In fact, sys/core adaptor should not know what is available. It should auto discover from the ui-adaptor-port module.
+The system is currently able to run on bootstrap and switch between default and dark theme.
+Setting for it to run on bootsrap is a matter of configuration or switching at the admin interface.
+At the moment we are just focusing on configuration for booting stage.
+We need to try and change all configuration to switch from bootstrap-538 to material-design.
+Below are the configuration point.
+Configurations for available ui-systems is done via automatic discovery via ui-adaptor-port module which hosts available adaptors
+public/shell.config.json
+UiSystemLoading
+ThemeLoading
+
+References:
+
+- Documentation for SysCacheService
+- Documentation on how adaptors are auto discovered and save in the SysCacheService
+  - ui-adaptor-port
+  - core adaptor
+  - Settings at the cd-shell-config
+  - loading and application of cd-shell-config
+- reference for core adaptor
+- available adaptors
+  - tree
+  - ui-adaptor-port
+- codes for bridge.css, descriptor.json, adaptor for both bootstrap and mateirial-design
+
+Hey Chase, included here are the key specification files for bootstrap. Generate an equivalent of the each of the files for Bulma.
 
 ```sh
-emp-12@emp-12 ~/cd-shell (main)> tree src/CdShell/sys/cd-guig/
-src/CdShell/sys/cd-guig/
-├── controllers
-│   ├── cd-form.control.ts
-│   ├── cd-form-group.control.ts
-│   └── cd-validators.controller.ts
-├── models
-│   ├── ui-directive.model.ts
-│   ├── ui-system-adaptor.model.ts
-│   ├── ui-system-introspector.model.ts
-│   ├── ui-system-schema.model.ts
-│   └── ui-translator.model.ts
-├── services
-│   ├── bootstrap-502-adaptor.service.ts
-│   ├── cd-directive-binder.service.ts
-│   ├── forms.service.ts
-│   ├── material-adaptor.service.ts
-│   ├── plain-adaptor.service.ts
-│   ├── ui-auto-descriptor.service.ts
-│   ├── ui-directove-mapper.service.ts
-│   ├── ui-dom-factory.service.ts
-│   ├── ui-generic-renderer.service.ts
-│   ├── ui-render-engine.service.ts
-│   ├── ui-system-adapters.ts
-│   ├── ui-system-adaptor.service.ts
-│   ├── ui-system-loader.service.ts
-│   ├── ui-system-registry.service.ts
-│   ├── ui-theme-loader.service.ts
-│   ├── ui-translator-registry.service.ts
-│   └── ui-uud.service.ts
-└── view
-    └── index.js
-```
+emp-12@emp-12 ~/cd-shell (main)> tree public/assets/ui-systems/
+public/assets/ui-systems/
+├── bootstrap-502
+│   ├── bootstrap.min.css
+│   ├── bootstrap.min.js
+│   └── descriptor.json
+├── bootstrap-538
+│   ├── bootstrap.bundle.min.js
+│   ├── bootstrap.min.css
+│   ├── bridge.css
+│   └── descriptor.json
+└── material-design
+    ├── descriptor.json
+    ├── material-components-web.min.css
+    └── material-components-web.min.js
 
-// src/CdShell/sys/cd-guig/services/ui-system-adapters.ts
-
-```ts
-import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
-import { IUiSystemAdapter } from "../models/ui-system-adaptor.model";
-
-/**
- * Bootstrap502Adapter: sets data-bs-theme on <html> for Bootstrap v5.0.2
- */
-export class Bootstrap502Adapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap502Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap502Adapter] applyTheme error", err);
-    }
-  }
-}
-
-/**
- * Bootstrap538Adapter — supports Bootstrap 5.3.8 with official dark-mode variables
- * Dark mode works natively using the <html data-bs-theme="dark">
- */
-export class Bootstrap538Adapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    // No-op: CSS/JS already injected by UiSystemLoaderService
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    console.log("[Bootstrap538Adapter][applyTheme] start");
-    console.log(
-      "[Bootstrap538Adapter][applyTheme] themeDescriptorOrId:",
-      themeDescriptorOrId
-    );
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      // Bootstrap 5.3.x controls dark mode via:
-      // <html data-bs-theme="dark">
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap538Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap538Adapter] applyTheme error", err);
-    }
-  }
-}
-
-/**
- * MaterialAdapter — applies Material Design theme logic
- */
-export class MaterialAdapter implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-md-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    if (!themeDescriptorOrId) return;
-
-    const mode =
-      typeof themeDescriptorOrId === "string"
-        ? themeDescriptorOrId
-        : themeDescriptorOrId.mode;
-
-    if (mode === "dark") {
-      document.documentElement.classList.add("md-dark");
-      document.documentElement.classList.remove("md-light");
-    } else {
-      document.documentElement.classList.remove("md-dark");
-      document.documentElement.classList.add("md-light");
-    }
-
-    console.log("[MaterialAdapter] applyTheme:", mode);
-  }
-}
-
-/**
- * Factory for UI system adapters
- */
-export class UiSystemAdapterFactory {
-  public static getAdapter(systemId: string): IUiSystemAdapter | null {
-    console.group("[UiSystemAdapterFactory] Adapter Lookup");
-    console.log("Requested systemId:", JSON.stringify(systemId));
-
-    let adapter: IUiSystemAdapter | null = null;
-
-    switch (systemId) {
-      case "bootstrap-502":
-        adapter = new Bootstrap502Adapter();
-        break;
-
-      case "bootstrap-538":
-        adapter = new Bootstrap538Adapter();
-        break;
-
-      case "material":
-      case "material-design":
-        adapter = new MaterialAdapter();
-        break;
-
-      default:
-        console.warn(
-          "[UiSystemAdapterFactory] ❌ Unknown systemId — returning null"
-        );
-        console.groupEnd();
-        return null;
-    }
-
-    console.log("Resolved adapter instance:", adapter?.constructor.name);
-    console.groupEnd();
-    return adapter;
-  }
-}
-```
-
-///////////////////////////////////////////////
-
-In your proposed method detectFromRuntime(), you are making reference window.CdShellActiveUiSystem.
-Should we include window.CdShellActiveUiSystem in the global.d.ts?
-If so suggest the new contensts for global.d.ts
-
-```ts
-private detectFromRuntime(): string | null {
-    return window.CdShellActiveUiSystem || window.CD_ACTIVE_UISYSTEM || null;
-  }
-```
-
-// src/global.d.ts
-
-```ts
-export {};
-
-declare global {
-  interface CdShellNotify {
-    success(msg: string): void;
-    error(msg: string): void;
-    info?(msg: string): void;
-    warn?(msg: string): void;
-  }
-
-  interface CdShellProgress {
-    start(label?: string): void;
-    done(): void;
-    set?(percent: number): void;
-  }
-
-  interface Window {
-    CD_ACTIVE_UISYSTEM?: string; // <-- ADD THIS LINE
-
-    cdShell?: {
-      logger?: {
-        debug?: (...args: any[]) => void;
-        warn?: (...args: any[]) => void;
-        error?: (...args: any[]) => void;
-      };
-      lifecycle?: {
-        onViewLoaded?: (item?: any, cdToken?: string) => void;
-      };
-      notify?: CdShellNotify;
-      progress?: CdShellProgress;
-    };
-  }
-}
-```
-
-//////////////////////////////////////////////
-You have suggested for a line in UiSystemLoader.activate():
-const descriptorFromCache = this.getSystemById(id);
-to be replaced with:
-if (!id) {
-const auto = this.detectUiSystem();
-id = auto.id;
-}
-It has not been mentioned what happens to the variable descriptorFromCache which is fundamental in the method.
-
-```ts
-public async activate(id: string): Promise<void> {
-    diag_css("[UiSystemLoaderService.activate] START", { id });
-    const descriptorFromCache = this.getSystemById(id);
-    console.log(
-      "[UiSystemLoaderService.activate] descriptorFromCache:",
-      descriptorFromCache
-    );
-
-    // If not in cache, we still accept descriptor from fetchAvailableSystems fallback
-    const descriptor = descriptorFromCache || {
-      id,
-      cssUrl: `/assets/ui-systems/${id}/${id}.min.css`,
-      jsUrl: `/assets/ui-systems/${id}/${id}.min.js`,
-    };
-
-    console.log(
-      "[UiSystemLoaderService.activate] Using descriptor:",
-      descriptor
-    );
-
-    this.activeSystem = descriptor as UiSystemDescriptor;
-
-    // remove old assets belonging to any ui-system
-    document
-      .querySelectorAll("link[data-cd-uisystem], script[data-cd-uisystem]")
-      .forEach((el) => el.remove());
-    diag_css("[UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS", {});
-
-    // resolve fallback paths already present on descriptor
-    const cssPath =
-      (descriptor as any).cssUrl || `/assets/ui-systems/${id}/${id}.min.css`;
-    const jsPath =
-      (descriptor as any).jsUrl || `/assets/ui-systems/${id}/${id}.min.js`;
-
-    diag_css("[UiSystemLoaderService.activate] RESOLVED PATHS", {
-      cssPath,
-      jsPath,
-    });
-
-    try {
-      await this.loadCSS(cssPath, id);
-      diag_css("[UiSystemLoaderService.activate] CSS LOADED", { cssPath });
-    } catch (err) {
-      diag_css("[UiSystemLoaderService.activate] CSS LOAD FAILED", {
-        cssPath,
-        err,
-      });
-    }
-
-    // load script but don't necessarily block entire bootstrap if JS fails
-    try {
-      await this.loadScript(jsPath, id);
-      diag_css("[UiSystemLoaderService.activate] SCRIPT LOADED", { jsPath });
-    } catch (err) {
-      console.warn("[UiSystemLoaderService.activate] script load failed", err);
-      diag_css("[UiSystemLoaderService.activate] SCRIPT LOAD FAILED", {
-        jsPath,
-        err,
-      });
-    }
-
-    diag_css("[UiSystemLoaderService.activate] COMPLETE", { activeSystem: id });
-  }
-```
-
-/////////////////////////////////////////////////
-
-When set to 'default', the visuals are as expected.
-But when set to 'dark', everything seem fine but the text on the texbox lable and typed text on the textbox is dark on dark background.
-Otherwise the button seem like a bootstrap button with white text.
-I have shared the logs and browser inspector for elements for button, label and textbox
-
-```log
-[UiSystemAdapterRegistry] register: bootstrap-502
-Object {  }
-index-XvUemhhx.js:48:10750
-[UiSystemAdapterRegistry] register: bootstrap-538
-Object {  }
-index-XvUemhhx.js:48:10750
-[UiSystemAdapterRegistry] register: material-design
-Object {  }
-index-XvUemhhx.js:48:10750
-[UiSystemAdapterRegistry] register: plain
-Object {  }
-index-XvUemhhx.js:48:10750
-start 1 index-XvUemhhx.js:48:28634
-[SHELL] [DEBUG] [Main] init(): starting index-XvUemhhx.js:48:1132
-[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-XvUemhhx.js:48:1132
-[ModuleService][constructor]: starting index-XvUemhhx.js:48:3580
-[ModuleService] Running under Vite (browser). index-XvUemhhx.js:48:3653
-[SHELL] [DEBUG] starting bootstrapShell() index-XvUemhhx.js:48:1132
-[SHELL] [DEBUG] [Main] init(): completed index-XvUemhhx.js:48:1132
-[SysCacheService] 01: Starting Eager Load (Singleton) index-XvUemhhx.js:48:9102
-[ConfigService] loaded config:
-Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…} }
-index-XvUemhhx.js:48:21077
-[UiSystemLoaderService.fetchAvailableSystems] uiConfig:
-Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/public/assets/ui-systems/" }
-index-XvUemhhx.js:48:15927
-[SysCacheService] uiSystemsData:
-Array(3) [ {…}, {…}, {…} ]
-index-XvUemhhx.js:48:9317
-[UiThemeLoaderService][fetchAvailableThemes] start
-Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/public/assets/ui-systems/" }
-index-XvUemhhx.js:48:22074
-[SysCacheService] uiThemesData:
-Object { themes: (2) […], variants: (3) […], descriptors: (2) […], uiConfig: {…} }
-index-XvUemhhx.js:48:9425
-[SysCacheService] Normalized Systems:
-Array(3) [ {…}, {…}, {…} ]
-index-XvUemhhx.js:48:9650
-[SysCacheService] Eager Load complete. Systems: 3, Themes: 2 index-XvUemhhx.js:48:10009
-[Main][run] uiConfig:
-Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/public/assets/ui-systems/" }
-index-XvUemhhx.js:48:25427
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start
-Object { systemId: "bootstrap-538", themeId: "dark" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.activate] START
-Object { id: "bootstrap-538" }
-index-XvUemhhx.js:48:10613
-[UiSystemLoaderService.activate] descriptorFromCache:
-Object { id: "bootstrap-538", name: "Bootstrap 5.3.8", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", displayName: "Bootstrap 5.3.8", themesAvailable: (1) […], themeActive: {…} }
-index-XvUemhhx.js:48:16714
-[UiSystemLoaderService.activate] Using descriptor:
-Object { id: "bootstrap-538", name: "Bootstrap 5.3.8", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", displayName: "Bootstrap 5.3.8", themesAvailable: (1) […], themeActive: {…} }
-index-XvUemhhx.js:48:16893
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
-Object {  }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
-Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css", adapterJsPath: "/assets/ui-systems/bootstrap-538/bootstrap-538.bridge.adapter.js" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
-Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
-Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538", resolved: "https://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css", order: (2) […] }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED
-Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
-Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
-Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge", resolved: "https://localhost:5173/assets/ui-systems/bootstrap-538/bridge.css", order: (3) […] }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
-Object { bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED
-Object { jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" }
-index-XvUemhhx.js:48:10613
-Loading failed for the <script> with source “https://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap-538.bridge.adapter.js”. localhost:5173:1:1
-[UiSystemLoaderService.activate] Bridge adapter JS not found for bootstrap-538 (optional) index-XvUemhhx.js:48:18304
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER JS LOAD FAILED
-Object { adapterJsPath: "/assets/ui-systems/bootstrap-538/bootstrap-538.bridge.adapter.js", err: error }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
-Object { activeSystem: "bootstrap-538" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
-Object { systemId: "bootstrap-538" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
-Object { path: "/themes/common/base.css", id: "shell-base" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
-Object { path: "/themes/common/base.css", id: "shell-base", resolved: "https://localhost:5173/themes/common/base.css", order: (4) […] }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
-Object { path: "/assets/css/index.css", id: "shell-index" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
-Object { path: "/assets/css/index.css", id: "shell-index", resolved: "https://localhost:5173/assets/css/index.css", order: (5) […] }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded
-Object {  }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
-Object { themeId: "dark" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded
-Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected
-Object { themeId: "dark" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] start
-Object { systemId: "bootstrap-538", themeId: "dark" }
-index-XvUemhhx.js:48:10613
-[UiSystemLoaderService.applyTheme] adapter received:
-Object {  }
-index-XvUemhhx.js:48:18662
-[UiSystemLoaderService][applyTheme] descriptors:
-Array [ {…}, {…} ]
-index-XvUemhhx.js:48:18861
-[UiSystemLoaderService][applyTheme] descriptors:
-Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-XvUemhhx.js:48:18955
-[Bootstrap538Adapter][applyTheme] start index-XvUemhhx.js:48:11961
-[Bootstrap538Adapter][applyTheme] themeDescriptorOrId:
-Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
-index-XvUemhhx.js:48:12016
-[Bootstrap538Adapter] applied bs-theme: dark index-XvUemhhx.js:48:12302
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] done
-Object { systemId: "bootstrap-538", themeId: "dark" }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete
-Object {  }
-index-XvUemhhx.js:48:10613
-[CSS-DIAG] [MAIN.applyStartupUiSettings] done
-Object {  }
-index-XvUemhhx.js:48:10613
-ThemeService::loadThemeConfig(default) index-XvUemhhx.js:48:1597
-[ModuleService][constructor]: starting index-XvUemhhx.js:48:3580
-[ModuleService] Running under Vite (browser). index-XvUemhhx.js:48:3653
-[Preload] Loading dev-sync index-XvUemhhx.js:48:5824
-ModuleService::loadModule()/01: index-XvUemhhx.js:48:6458
-[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-XvUemhhx.js:48:6622
-[ModuleService] 1 index-XvUemhhx.js:48:6682
-[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-XvUemhhx.js:48:6959
-[ModuleService][loadModule] moduleInfo:
-Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
-index-XvUemhhx.js:48:7118
-[ModuleService][loadModule] moduleInfo.controllers:
-Array [ {…} ]
-index-XvUemhhx.js:48:7177
-[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-XvUemhhx.js:48:7329
-[ModuleService] Loaded 'dev-sync' (Vite mode) at 22/11/2025, 03:35:50 index-XvUemhhx.js:48:7417
-[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-XvUemhhx.js:48:6120
-[Preload] Completed IdeAgentService index-XvUemhhx.js:48:6219
-[Preload] Loading dev-sync index-XvUemhhx.js:48:5824
-ModuleService::loadModule()/01: index-XvUemhhx.js:48:6458
-[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-XvUemhhx.js:48:6622
-[ModuleService] 1 index-XvUemhhx.js:48:6682
-[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-XvUemhhx.js:48:6959
-[ModuleService][loadModule] moduleInfo:
-Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
-index-XvUemhhx.js:48:7118
-[ModuleService][loadModule] moduleInfo.controllers:
-Array [ {…} ]
-index-XvUemhhx.js:48:7177
-[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-XvUemhhx.js:48:7329
-[ModuleService] Loaded 'dev-sync' (Vite mode) at 22/11/2025, 03:35:50 index-XvUemhhx.js:48:7417
-[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-XvUemhhx.js:48:6120
-[Preload] Completed IdeAgentClientService index-XvUemhhx.js:48:6219
-ModuleService::loadModule()/01: index-XvUemhhx.js:48:6458
-[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-XvUemhhx.js:48:6622
-[ModuleService] 1 index-XvUemhhx.js:48:6682
-[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-XvUemhhx.js:48:6959
-[ModuleService][loadModule] moduleInfo:
-Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
-index-XvUemhhx.js:48:7118
-[ModuleService][loadModule] moduleInfo.controllers:
-Array [ {…}, {…} ]
-index-XvUemhhx.js:48:7177
-[ModuleService] Loaded 'cd-user' (Vite mode) at 22/11/2025, 03:35:50 index-XvUemhhx.js:48:7417
-ModuleService::loadModule()/01: index-XvUemhhx.js:48:6458
-[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-XvUemhhx.js:48:6622
-[ModuleService] 1 index-XvUemhhx.js:48:6682
-[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-XvUemhhx.js:48:6959
-[ModuleService][loadModule] moduleInfo:
-Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
-index-XvUemhhx.js:48:7118
-[ModuleService][loadModule] moduleInfo.controllers:
-Array [ {…} ]
-index-XvUemhhx.js:48:7177
-[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-XvUemhhx.js:48:7329
-[ModuleService] Loaded 'cd-admin' (Vite mode) at 22/11/2025, 03:35:50 index-XvUemhhx.js:48:7417
-[ControllerService][findControllerInfoByRoute] controllerName: sign-in index-XvUemhhx.js:48:8419
-[ControllerService][findControllerInfoByRoute] mod: tractated index-XvUemhhx.js:48:8499
-[ControllerService][findControllerInfoByRoute] controllerName: sign-up index-XvUemhhx.js:48:8419
-[ControllerService][findControllerInfoByRoute] mod: trancated index-XvUemhhx.js:48:8499
-Starting renderMenuWithSystem() index-XvUemhhx.js:31:3291
-renderMenuWithSystem()/01 index-XvUemhhx.js:31:3340
-MenuService::renderPlainMenu()/menu:
-        trancated
-      index-XvUemhhx.js:31:3952
-renderMenuWithSystem()/adapter: {"instance":null} index-XvUemhhx.js:31:3562
-renderMenuWithSystem()/03 index-XvUemhhx.js:31:3750
-renderMenuWithSystem()/04 index-XvUemhhx.js:31:3837
-MenuService::loadResource()/start... index-XvUemhhx.js:31:5799
-[MenuService][loadResource] options:
-Object { item: {…} }
-index-XvUemhhx.js:31:5851
-[ControllerCacheService][getInstance] start... index-XvUemhhx.js:22:6771
-MenuService::loadResource()/02: Retrieving controller via cache service index-XvUemhhx.js:31:6317
-[ControllerCacheService][getOrInitializeController] start... index-XvUemhhx.js:22:6919
-[ControllerCacheService] Creating new instance for: sys/cd-user/sign-in index-XvUemhhx.js:22:7103
-CdFormGroup::_constructor()/01 cd-directive-binder.service-DGbLY5eG.js:1:46
-CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5eG.js:1:1416
-[ControllerCacheService] Cached instance for sys/cd-user/sign-in index-XvUemhhx.js:22:7762
-[MenuService] Waiting for controller services to initialize... attempt 1 index-XvUemhhx.js:31:6640
-trancated
-[MenuService] Waiting for controller services to initialize... attempt 10 index-XvUemhhx.js:31:6640
-MenuService::loadResource()/03: Injecting template into DOM index-XvUemhhx.js:31:6783
-MenuService::loadResource()/04: Executing __activate() index-XvUemhhx.js:31:7038
-[ctlSignIn][__activate] 01 index-BTrBEFaa.js:28:584
-[CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
-[Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
-MenuService::loadResource()/end index-XvUemhhx.js:31:7283
-[SHELL] [DEBUG] bootstrapShell(): run() complete index-XvUemhhx.js:48:1132
-Source map error: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
-Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
-_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1069:22
-SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
-_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
-
-Resource URL: https://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css
-Source Map URL: bootstrap.min.css.map
-```
-
-// form button
-
-```css
-element {
-}
-[type="button"]:not(:disabled),
-[type="reset"]:not(:disabled),
-[type="submit"]:not(:disabled),
-button:not(:disabled) {
-  cursor: pointer;
-}
-[type="button"],
-[type="reset"],
-[type="submit"],
-button {
-  -webkit-appearance: button;
-}
-button,
-button[cdButton],
-button.cd-button,
-.cd-button {
-  display: inline-block;
-  font-weight: 400;
-  color: var(--bs-btn-color, #fff);
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  border: 1px solid var(--bs-btn-border-color, transparent);
-  padding: var(--bs-btn-padding-y, 0.375rem) var(--bs-btn-padding-x, 0.75rem);
-  font-size: var(--bs-btn-font-size, var(--bs-body-font-size, 1rem));
-  line-height: var(--bs-btn-line-height, 1.2);
-  border-radius: var(--bs-btn-border-radius, 0.375rem);
-  transition:
-    color 0.15s ease-in-out,
-    background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  background-color: var(--bs-btn-bg, var(--bs-primary, #0d6efd));
-  color: var(--bs-btn-color, #fff);
-  cursor: pointer;
-}
-button,
-select {
-  text-transform: none;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-button {
-  border-radius: 0;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-```
-
-// form label
-
-```css
-element {
-}
-.cd-form-field > label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--bs-body-color);
-}
-label {
-  display: inline-block;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-#cd-main-content,
-#cd-layout,
-body,
-html {
-  font-family: var(--cd-bridge-body-font-family);
-  font-size: var(--cd-bridge-body-font-size);
-  color: var(--bs-body-color, inherit);
-}
-```
-
-// textbox
-
-```css
-element {
-}
-:root[data-bs-theme="dark"] input[cdFormControl],
-:root[data-bs-theme="dark"] textarea[cdFormControl],
-:root[data-bs-theme="dark"] select[cdFormControl] {
-  color: var(--bs-body-color);
-  background-color: var(--bs-form-control-bg);
-  border-color: var(--bs-border-color);
-}
-.cd-form-field input.cd-valid {
-  border-color: var(--cd-color-valid);
-  box-shadow: 0 0 4px var(--cd-color-valid);
-}
-input.cd-valid,
-input.cd-valid[cdFormControl],
-textarea.cd-valid,
-select.cd-valid {
-  border-color: var(--bs-success, #198754) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-success-rgb, 25, 135, 84), 0.15);
-}
-.cd-form-field input {
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-border-radius);
-  padding: 0.6rem;
-  transition:
-    border-color var(--cd-transition),
-    box-shadow var(--cd-transition);
-}
-input[cdFormControl],
-textarea[cdFormControl],
-select[cdFormControl],
-.cd-input,
-.cd-form-field input,
-.cd-form-field textarea,
-.cd-form-field select {
-  display: block;
-  width: 100%;
-  padding: var(--bs-form-control-padding-y, 0.375rem)
-    var(--bs-form-control-padding-x, 0.75rem);
-  font-size: var(--bs-body-font-size, 1rem);
-  line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
-  background-color: var(--bs-form-control-bg, #fff);
-  background-clip: padding-box;
-  border: 1px solid var(--bs-border-color, #ced4da);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border-radius: var(--cd-bridge-border-radius);
-  transition:
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  box-sizing: border-box;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-#cd-main-content,
-#cd-layout,
-body,
-html {
-  font-family: var(--cd-bridge-body-font-family);
-  font-size: var(--cd-bridge-body-font-size);
-  color: var(--bs-body-color, inherit);
-}
-```
-
-//////////////////////////////////////////////////
-Now the text contrast for default and dark mode are as per expected.
-The only peculiar observation is that the button, even in default mode is not blue.
-I have shared the browser display of css for both default and dark modes.
-Default mode:
-Button
-
-```css
-element {
-}
-[type="button"]:not(:disabled),
-[type="reset"]:not(:disabled),
-[type="submit"]:not(:disabled),
-button:not(:disabled) {
-  cursor: pointer;
-}
-[type="button"],
-[type="reset"],
-[type="submit"],
-button {
-  -webkit-appearance: button;
-}
-button,
-select {
-  text-transform: none;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-button {
-  border-radius: 0;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-```
-
-Dark mode
-
-```css
-element {
-}
-[type="button"]:not(:disabled),
-[type="reset"]:not(:disabled),
-[type="submit"]:not(:disabled),
-button:not(:disabled) {
-  cursor: pointer;
-}
-[type="button"],
-[type="reset"],
-[type="submit"],
-button {
-  -webkit-appearance: button;
-}
-button,
-select {
-  text-transform: none;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-button {
-  border-radius: 0;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-```
-
-//////////////////////////////////////
-
-Question: Which default style should CD buttons adopt under Bootstrap?
-Answer: Use whatever developer sets in CD Form JSON metadata (public/assets/ui-systems/<ui-system>/descriptor.json)
-The interface is UiSystemDescriptor.
-You can determine if there is a slot for it, if now we can update UiSystemDescriptor to accomodate this assignment.
-Note the all such data should first be read by SystemCache then becomes available for application runtime.
-
-```ts
-export interface UiSystemDescriptor {
-  id: string; // e.g. 'bootstrap', 'material', 'tailwind'
-  name?: string;
-  version?: string;
-  cssUrl?: string | null;
-  jsUrl?: string | null;
-  tokenMap?: Record<string, string>; // global tokens (colors, spacing names)
-  conceptMappings?: Record<string, UiSystemMapping>;
-  renderRules?: Record<
-    string,
-    (domNode: UiDomDescriptor, props: any) => string
-  >; // optional
-  metadata?: Record<string, any>; // licensing, provider, aiHints
-  // Add missing properties to match the second declaration
-  description?: string;
-  components?: UiComponentDescriptor[];
-  containers?: UiContainerDescriptor[];
-  // theme?: UiThemeDescriptor;
-  /** * An array listing all available theme options for this UI system.
-   * Used to populate the Admin Settings dropdown.
-   */
-  themesAvailable?: UiThemeDescriptor[]; // NEW PROPERTY (Array of choices)
-
-  /** * The currently active theme descriptor for this UI System.
-   * Represents the theme that is *currently loaded* at runtime.
-   */
-  themeActive?: UiThemeDescriptor; // NEW PROPERTY (The current selection)
-  scripts?: string[];
-  stylesheets?: string[];
-  author?: string;
-  license?: string;
-  repository?: string;
-  extensions?: Record<string, any>;
-}
-```
-
-// current setting
-
-```json
-{
-  "id": "bootstrap-538",
-  "name": "Bootstrap 5",
-  "version": "5.3.8",
-  "description": "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.",
-  "author": "Bootstrap Authors",
-  "license": "MIT",
-  "assetPath": "/assets/ui-systems/bootstrap-538",
-  "cssUrl": "bootstrap.min.css",
-  "jsUrl": "bootstrap.bundle.min.js",
-  "stylesheets": ["bootstrap.min.css"],
-  "scripts": ["bootstrap.bundle.min.js"],
-  "conceptMappings": {
-    "button": {
-      "class": "btn btn-primary"
-    },
-    "card": {
-      "class": "card"
-    },
-    "input": {
-      "class": "form-control"
-    },
-    "formGroup": {
-      "class": "mb-3"
-    }
-  },
-  "directiveMap": {
-    "cd-tooltip": "data-bs-toggle=\"tooltip\""
-  },
-  "themesAvailable": [
-    {
-      "id": "default",
-      "name": "Default",
-      "displayName": "Default Theme",
-      "css": "/themes/default/theme.css",
-      "mode": "light"
-    },
-    {
-      "id": "dark",
-      "name": "Dark Mode",
-      "displayName": "Dark Theme",
-      "css": "/themes/dark/theme.css",
-      "mode": "dark"
-    }
-  ],
-  "themeActive": null,
-  "metadata": {
-    "supportsDarkMode": true,
-    "supportsBootstrapThemeSwitch": true
-  },
-  "extensions": {
-    "adapter": "Bootstrap5Adapter",
-    "versionTag": "bootstrap-538"
-  }
-}
-```
-
-//////////////////////////////////////
-Go ahead. Below are some references in their current state
-
-```ts
-export class SysCacheService {
-  private static instance: SysCacheService;
-  private cache = new Map<string, any>();
-  private _uiSystemLoader!: UiSystemLoaderService;
-  private _uiThemeLoader!: UiThemeLoaderService;
-
-  constructor(private configService: ConfigService) {}
-
-  public static getInstance(configService?: ConfigService): SysCacheService {
-    if (!SysCacheService.instance) {
-      if (!configService) {
-        throw new Error(
-          "SysCacheService must be initialized with ConfigService on first instantiation."
-        );
-      }
-      SysCacheService.instance = new SysCacheService(configService);
-    }
-    return SysCacheService.instance;
-  }
-
-  public setLoaders(
-    systemLoader: UiSystemLoaderService,
-    themeLoader: UiThemeLoaderService
-  ): void {
-    this._uiSystemLoader = systemLoader;
-    this._uiThemeLoader = themeLoader;
-  }
-
-  /**
-   * Eagerly loads:
-   * - uiConfig
-   * - uiSystems (normalized)
-   * - themes (light weight list)
-   * - formVariants
-   * - themeDescriptors (full theme.json objects)
-   */
-  public async loadAndCacheAll(): Promise<void> {
-    if (!this._uiSystemLoader || !this._uiThemeLoader) {
-      throw new Error("SysCacheService: loaders must be set before load.");
-    }
-    if (this.cache.size > 0) return; // already loaded
-
-    console.log("[SysCacheService] 01: Starting Eager Load (Singleton)");
-
-    const shellConfig = await this.configService.loadConfig();
-    const uiConfig = shellConfig.uiConfig;
-    this.cache.set("uiConfig", uiConfig);
-
-    // fetch systems (normalized)
-    const uiSystemsData =
-      await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
-    console.log("[SysCacheService] uiSystemsData:", uiSystemsData);
-
-    // fetch themes (this method will return a { themes, variants, descriptors } shape)
-    const uiThemesData =
-      await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
-    console.log("[SysCacheService] uiThemesData:", uiThemesData);
-
-    // Normalize systems to minimal descriptor for client usage
-    const normalizedSystems = uiSystemsData.map((sys: any) => ({
-      id: sys.id,
-      name: sys.name,
-      cssUrl: sys.cssUrl,
-      jsUrl: sys.jsUrl,
-      displayName: sys.displayName || sys.name,
-      themesAvailable: sys.themesAvailable || [],
-      themeActive: sys.themeActive || null,
-    }));
-
-    console.log("[SysCacheService] Normalized Systems:", normalizedSystems);
-
-    // uiThemesData SHOULD provide:
-    // { themes: [{id,name}], variants: [{id,name}], descriptors: [full theme.json objects] }
-    const themes = (uiThemesData.themes || []).map((t: any) => ({
-      id: t.id,
-      name: t.name,
-    }));
-    const variants = (uiThemesData.variants || []).map((v: any) => ({
-      id: v.id,
-      name: v.name,
-    }));
-    const descriptors = uiThemesData.descriptors || [];
-
-    this.cache.set("uiSystems", normalizedSystems);
-    this.cache.set("themes", themes);
-    this.cache.set("formVariants", variants);
-    this.cache.set("themeDescriptors", descriptors);
-    this.cache.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig);
-
-    console.log(
-      `[SysCacheService] Eager Load complete. Systems: ${normalizedSystems.length}, Themes: ${themes.length}`
-    );
-  }
-
-  public getUiSystems(): any[] {
-    return this.cache.get("uiSystems") || [];
-  }
-
-  public getThemes(): any[] {
-    return this.cache.get("themes") || [];
-  }
-
-  public getFormVariants(): any[] {
-    return this.cache.get("formVariants") || [];
-  }
-
-  public getThemeDescriptors(): any[] {
-    return this.cache.get("themeDescriptors") || [];
-  }
-
-  public getConfig(): any {
-    return this.cache.get("uiConfigNormalized") || {};
-  }
-
-  public get(key: string): any {
-    return this.cache.get(key);
-  }
-
-  public get uiSystemLoader(): UiSystemLoaderService {
-    return this._uiSystemLoader;
-  }
-
-  public get uiThemeLoader(): UiThemeLoaderService {
-    return this._uiThemeLoader;
-  }
-
-  public async ensureReady(): Promise<void> {
-    if (this.cache.size === 0) await this.loadAndCacheAll();
-  }
-}
-```
-
-```ts
-export class UiSystemLoaderService {
-  public async activate(id: string): Promise<void> {
-    diag_css("[UiSystemLoaderService.activate] START", { id });
-
-    // ---------------------------------------------------------
-    // 1. Auto-detect UI-System if not explicitly provided
-    // ---------------------------------------------------------
-    if (!id) {
-      const auto = this.detectUiSystem?.();
-      if (auto?.id) {
-        id = auto.id;
-        console.log(
-          "[UiSystemLoaderService.activate] Auto-detected UI-System:",
-          id
-        );
-      }
-    }
-
-    // ---------------------------------------------------------
-    // 2. Resolve descriptor (cache → fallback descriptor)
-    // ---------------------------------------------------------
-    const descriptorFromCache = this.getSystemById(id);
-    console.log(
-      "[UiSystemLoaderService.activate] descriptorFromCache:",
-      descriptorFromCache
-    );
-
-    const descriptor: UiSystemDescriptor = descriptorFromCache || {
-      id,
-      cssUrl: `/assets/ui-systems/${id}/${id}.min.css`,
-      jsUrl: `/assets/ui-systems/${id}/${id}.min.js`,
-    };
-
-    console.log(
-      "[UiSystemLoaderService.activate] Using descriptor:",
-      descriptor
-    );
-    this.activeSystem = descriptor;
-
-    // ---------------------------------------------------------
-    // 3. Remove old CSS / JS belonging to UI-Systems
-    // ---------------------------------------------------------
-    document
-      .querySelectorAll("link[data-cd-uisystem], script[data-cd-uisystem]")
-      .forEach((el) => el.remove());
-
-    diag_css("[UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS", {});
-
-    // ---------------------------------------------------------
-    // 4. Resolve paths
-    // ---------------------------------------------------------
-    const cssPath =
-      (descriptor as any).cssUrl || `/assets/ui-systems/${id}/${id}.min.css`;
-
-    const jsPath =
-      (descriptor as any).jsUrl || `/assets/ui-systems/${id}/${id}.min.js`;
-
-    const bridgeCssPath = `/assets/ui-systems/${id}/bridge.css`;
-    const adapterJsPath = `/assets/ui-systems/${id}/${id}.bridge.adapter.js`;
-
-    diag_css("[UiSystemLoaderService.activate] RESOLVED PATHS", {
-      cssPath,
-      jsPath,
-      bridgeCssPath,
-      adapterJsPath,
-    });
-
-    // ---------------------------------------------------------
-    // 5. Load main CSS (required)
-    // ---------------------------------------------------------
-    try {
-      await this.loadCSS(cssPath, id);
-      diag_css("[UiSystemLoaderService.activate] CSS LOADED", { cssPath });
-    } catch (err) {
-      diag_css("[UiSystemLoaderService.activate] CSS LOAD FAILED", {
-        cssPath,
-        err,
-      });
-    }
-
-    // ---------------------------------------------------------
-    // 6. Load bridge.css (optional, non-blocking)
-    // ---------------------------------------------------------
-    try {
-      await this.loadCSS(bridgeCssPath, `${id}-bridge`);
-      diag_css("[UiSystemLoaderService.activate] BRIDGE CSS LOADED", {
-        bridgeCssPath,
-      });
-    } catch (err) {
-      console.warn(
-        `[UiSystemLoaderService.activate] bridge.css not found for ${id} (optional)`
-      );
-      diag_css("[UiSystemLoaderService.activate] BRIDGE CSS LOAD FAILED", {
-        bridgeCssPath,
-        err,
-      });
-    }
-
-    // ---------------------------------------------------------
-    // 7. Load system JS (optional)
-    // ---------------------------------------------------------
-    try {
-      await this.loadScript(jsPath, id);
-      diag_css("[UiSystemLoaderService.activate] SCRIPT LOADED", { jsPath });
-    } catch (err) {
-      console.warn("[UiSystemLoaderService.activate] script load failed", err);
-      diag_css("[UiSystemLoaderService.activate] SCRIPT LOAD FAILED", {
-        jsPath,
-        err,
-      });
-    }
-
-    // ---------------------------------------------------------
-    // 8. Load adapter JS (optional)
-    // ---------------------------------------------------------
-    try {
-      await this.loadScript(adapterJsPath, `${id}-bridge-adapter`);
-      diag_css("[UiSystemLoaderService.activate] BRIDGE ADAPTER LOADED", {
-        adapterJsPath,
-      });
-    } catch (err) {
-      console.warn(
-        `[UiSystemLoaderService.activate] Bridge adapter JS not found for ${id} (optional)`
-      );
-      diag_css("[UiSystemLoaderService.activate] ADAPTER JS LOAD FAILED", {
-        adapterJsPath,
-        err,
-      });
-    }
-
-    // ---------------------------------------------------------
-    // 9. Done
-    // ---------------------------------------------------------
-    diag_css("[UiSystemLoaderService.activate] COMPLETE", {
-      activeSystem: id,
-    });
-  }
-}
-```
-
-global.d.ts
-
-```ts
-export {};
-
-declare global {
-  interface CdShellNotify {
-    success(msg: string): void;
-    error(msg: string): void;
-    info?(msg: string): void;
-    warn?(msg: string): void;
-  }
-
-  interface CdShellProgress {
-    start(label?: string): void;
-    done(): void;
-    set?(percent: number): void;
-  }
-
-  interface Window {
-    /**
-     * Runtime-injected UI system identifiers
-     */
-    CD_ACTIVE_UISYSTEM?: string; // 👈 supports legacy/global constant
-    CdShellActiveUiSystem?: string; // 👈 supports camelCase variant
-
-    /**
-     * Existing cdShell API surface
-     */
-    cdShell?: {
-      logger?: {
-        debug?: (...args: any[]) => void;
-        warn?: (...args: any[]) => void;
-        error?: (...args: any[]) => void;
-      };
-      lifecycle?: {
-        onViewLoaded?: (item?: any, cdToken?: string) => void;
-      };
-      notify?: CdShellNotify;
-      progress?: CdShellProgress;
-    };
-  }
-}
-```
-
-///////////////////////////////
-
-Sorry, I forgot to update you.
-Based on your proposal for the adaptors in ui-adaptor-port, I modified structures to fit corpdesk conventions.
-You proposal was to have them just fill up the ui-adaptor-port directory.
-The corpdesk-rfc-0001 requires the directory have only 3 directories: controllers, models and services.
-So I put them in services directory.
-The rfc also requres them to be either a controller, model or service and whichever the case, the name ends with the category name.
-So I have them as below and the class name also follow suit.
-
-```sh
-emp-12@emp-12 ~/cd-shell (main)> tree src/CdShell/app/ui-adaptor-port/
-src/CdShell/app/ui-adaptor-port/
-├── controllers
-├── models
-├── services
-│   ├── bootstrap-502-adapter.service.ts
-│   ├── bootstrap-538-adapter.service.ts
-│   ├── material-design-adapter.service.ts
-│   └── plain-adapter.service.ts
-└── view
-    └── index.js
-```
-
-Example:
-
-```ts
-import {
-  IUiSystemAdapter,
-  UiSystemDescriptor,
-} from "../../../sys/cd-guig/models/ui-system-adaptor.model";
-import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
-
-/**
- * Bootstrap538Adapter — supports Bootstrap 5.3.8 with official dark-mode variables
- * Dark mode works natively using the <html data-bs-theme="dark">
- */
-export class Bootstrap538AdapterService implements IUiSystemAdapter {
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    // No-op: CSS/JS already injected by UiSystemLoaderService
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.id =`,
-      descriptor?.id
-    );
-    console.log(
-      `[${this.constructor.name}] activate() descriptor.version =`,
-      descriptor?.version
-    );
-    return;
-  }
-
-  async deactivate(): Promise<void> {
-    document.documentElement.removeAttribute("data-bs-theme");
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    console.log("[Bootstrap538Adapter][applyTheme] start");
-    console.log(
-      "[Bootstrap538Adapter][applyTheme] themeDescriptorOrId:",
-      themeDescriptorOrId
-    );
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      // Bootstrap 5.3.x controls dark mode via:
-      // <html data-bs-theme="dark">
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-
-      console.log("[Bootstrap538Adapter] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap538Adapter] applyTheme error", err);
-    }
-  }
-}
-
-// Plugin self-registers
-UiSystemAdapterRegistry.register(
-  "bootstrap-538",
-  new Bootstrap538AdapterService()
-);
-```
-
-//////////////////////////////////////
-
-There is a line in UiSystemLoaderService.activate(),
-It reads:
-const adapter = UiSystemAdapterRegistry.get
-? UiSystemAdapterRegistry.get(id)
-: UiSystemAdapterRegistry.getAdapter?.(id);
-
-Below is the implementation of UiSystemAdapterRegistry.
-We do not have getAdapter()?
-What fix do you suggest?
-
-```ts
-export class UiSystemAdapterRegistry {
-  private static registry = new Map<string, IUiSystemAdapter>();
-
-  static register(id: string, adapter: IUiSystemAdapter) {
-    console.log("[UiSystemAdapterRegistry] register:", id, adapter);
-    this.registry.set(id, adapter);
-  }
-
-  static get(id: string): IUiSystemAdapter | null {
-    return this.registry.get(id) || null;
-  }
-
-  static list(): string[] {
-    return Array.from(this.registry.keys());
-  }
-}
-```
-
-/////////////////////////////////////////////////////
-
-You have suggested use of UiConceptMapping in Bootstrap538AdapterService file.
-Can you give your assumed definition of the same so I can include it in the file where it is expected.
-
-////////////////////////////////
-
-Use the definition below to create a simple example that can serve as default theme.
-
-```ts
-export interface UiThemeDescriptor {
-  /** * Primary identifier used for selection (e.g., 'dark', 'light', 'bootstrap-compact').
-   * This is used as the <option value> in the dropdown.
-   */
-  id: string;
-
-  /** * Human-readable name used for display (e.g., 'Dark Mode', 'Classic').
-   * This is used as the visible text in the dropdown.
-   */
-  name: string;
-
-  /** * Flag indicating if this is the default theme for its parent UI System. */
-  isDefault?: boolean; // NEW PROPERTY
-
-  /** * Array of paths to CSS files specific to this theme (relative to the public/assets/ path).
-   * This is the asset the UiThemeLoaderService will inject into the <head>.
-   */
-  stylesheets?: string[];
-
-  /** * Array of paths to JS files specific to this theme (e.g., initialization scripts).
-   */
-  scripts?: string[];
-
-  /** * Key-value pairs for CSS custom properties that should be set globally
-   * (e.g., {'--primary-color': '#007bff'}).
-   */
-  variables?: Record<string, string>;
-
-  /** * Metadata defining the visual and behavioral aspects of the theme.
-   * Consolidates color, typography, spacing, etc., into an optional structure.
-   */
-  metadata?: {
-    colorScheme?: Record<string, string>;
-    typography?: Record<string, string>;
-    spacing?: Record<string, string>;
-    animations?: Record<string, string>;
-    // Any other high-level theme configurations
-  };
-
-  // --- Integration Metadata (optional) ---
-  author?: string;
-  license?: string;
-  repository?: string;
-
-  /** * Custom system extensions for AI, telemetry, etc.
-   */
-  extensions?: Record<string, any>;
-}
-```
-
-///////////////////////////////////////////
-
-I am thinking we can refactor public/shell.config.json to have a place for defaultTheme.
-This config would be available in SysCacheService and would be usable as fallback when default is required.
-The current definition is shown below.
-
-// proposed new setting:
-
-```json
-{
-  "appName": "Corpdesk PWA",
-  "fallbackTitle": "Corpdesk PWA",
-  "appVersion": "1.0.0",
-  "appDescription": "Corpdesk PWA",
-  "themeConfig": {
-    "currentThemePath": "/themes/default/theme.json",
-    "accessibleThemes": ["default", "dark", "contrast"]
-  },
-  "defaultModulePath": "sys/cd-user",
-  "logLevel": "debug",
-  "uiConfig": {
-    "defaultUiSystemId": "bootstrap-538",
-    "defaultThemeId": "dark",
-    "defaultFormVariant": "standard",
-    "uiSystemBasePath": "/public/assets/ui-systems/"
-  },
-  "defaultTheme": {
-    "id": "default",
-    "name": "Default Theme",
-    "isDefault": true,
-
-    "stylesheets": ["/themes/default/theme.css"],
-
-    "scripts": [],
-
-    "variables": {
-      "--primary-color": "#0d6efd",
-      "--secondary-color": "#6c757d",
-      "--success-color": "#198754",
-      "--danger-color": "#dc3545",
-      "--warning-color": "#ffc107",
-      "--info-color": "#0dcaf0",
-      "--light-color": "#f8f9fa",
-      "--dark-color": "#212529",
-
-      "--body-bg": "#ffffff",
-      "--body-color": "#212529",
-      "--border-color": "rgba(0,0,0,.125)",
-      "--input-bg": "#ffffff",
-      "--input-color": "#212529"
-    },
-
-    "metadata": {
-      "colorScheme": {
-        "background": "#ffffff",
-        "surface": "#f8f9fa",
-        "textPrimary": "#212529",
-        "textSecondary": "#6c757d",
-        "border": "rgba(0,0,0,.125)"
-      },
-      "typography": {
-        "fontFamily": "system-ui, -apple-system, Segoe UI, Roboto",
-        "fontSizeBase": "1rem",
-        "headingWeight": "600",
-        "bodyWeight": "400"
-      },
-      "spacing": {
-        "padding": "1rem",
-        "margin": "1rem",
-        "radius": "0.375rem"
-      },
-      "animations": {
-        "fadeDuration": "150ms",
-        "transitionFast": "100ms",
-        "transitionSlow": "300ms"
-      }
-    },
-
-    "author": "Corpdesk",
-    "license": "MIT",
-    "repository": "https://corpdesk.io/ui/bootstrap-538",
-
-    "extensions": {
-      "aiHints": {
-        "defaultButtonVariant": "primary",
-        "defaultInputVariant": "standard",
-        "preferredSpacingScale": "bootstrap"
-      }
-    }
-  }
-}
-```
-
-////////////////////////////////////
-Now that we have all the coding setup and before we start debugging, we need some documentation that can be used as a guide:
-The documentation should be structured in form of an rfc:
-
-Meta data:
-Title: Corpdesk RFC-0005: Runtime Caching and UI System Integration
-Update Date: 22 Nov 2025
-Author: Oremo Ojwang for EMP Services Ltd
-
-The document should have the following sections among others to be determined by yourself.
-Feel free to refine the wordings and any other appropriate adjustment.
-
-- Motivation/Rationale
-- Design (with diagrams)
-- Implementation (with diagrams)
-  - at least one of the diagrams should be a sequence diagrame of the launch process.
-
-Key components to highlight:
-
-- generic html intepretable by any ui-system and theme
-- SysCacheService
-- ui-systems
-- themes
-- ui-bridge
-- ui-adaptor-port/adaptors
-- sys/adaptor
-- configurations and hot-switching of ui-systems and themes
-
-/////////////////////////////////////////
-
-There is an important part that I need to come out clearly in the rfc document with an example:
-
-1. Example of scripted button
-   eg:
-   <button cdButton>Sign In</button>
-2. Result of html in browser when ui-system is set to bootstrap-538 after it is processed through bridge and adaptor
-   eg:
-   <button class="btn btn-primary">Sign In</button>
-
-//////////////////////////////////////////
-Below is the implementation for Bootstrap538AdapterService.
-We need to be able to tell from logs whether it is processing the flow as expected.
-Use diagnostic utility and console.log to assist in observability.
-
-// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
-
-```ts
-import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
-import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
-import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
-import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
-
-type Mapping = UiConceptMapping | undefined;
-
-export class Bootstrap538AdapterService implements IUiSystemAdapter {
-  private descriptor: UiSystemDescriptor | null = null;
-  private observer: MutationObserver | null = null;
-  private appliedSet = new WeakSet<HTMLElement>();
-
-  constructor() {
-    // nothing heavy in constructor — lifecycle managed by activate/deactivate
-  }
-
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    console.log(
-      `[Bootstrap538AdapterService] activate() descriptor:`,
-      descriptor?.id
-    );
-    this.descriptor = descriptor || null;
-
-    // initial mapping pass
-    this.mapAll();
-
-    // Setup MutationObserver to catch dynamically injected templates (controllers)
-    this.observeMutations();
-  }
-
-  async deactivate(): Promise<void> {
-    console.log("[Bootstrap538AdapterService] deactivate()");
-    // Remove attribute set by applyTheme
-    try {
-      document.documentElement.removeAttribute("data-bs-theme");
-    } catch (err) {
-      /* ignore */
-    }
-
-    // disconnect observer
-    if (this.observer) {
-      try {
-        this.observer.disconnect();
-      } catch (err) {
-        /* ignore */
-      }
-      this.observer = null;
-    }
-
-    // clear descriptor
-    this.descriptor = null;
-    // WeakSet will GC naturally; reinitialize for safety
-    this.appliedSet = new WeakSet<HTMLElement>();
-  }
-
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    console.log(
-      "[Bootstrap538AdapterService][applyTheme] start",
-      themeDescriptorOrId
-    );
-    try {
-      if (!themeDescriptorOrId) return;
-
-      let mode: string | undefined;
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
-      );
-      console.log("[Bootstrap538AdapterService] applied bs-theme:", mode);
-    } catch (err) {
-      console.warn("[Bootstrap538AdapterService] applyTheme error", err);
-    }
-  }
-
-  // ---------- Mapping helpers ----------
-  private getMapping(concept: string): Mapping {
-    return (
-      (this.descriptor &&
-        this.descriptor.conceptMappings &&
-        (this.descriptor.conceptMappings as any)[concept]) ||
-      undefined
-    );
-  }
-
-  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
-    if (!mapping || !el) return;
-    // Idempotent: skip if already applied (we track by marking element in WeakSet)
-    if (this.appliedSet.has(el)) {
-      // still allow attribute updates if needed but avoid re-adding classes
-      if (mapping.attrs) {
-        Object.entries(mapping.attrs).forEach(([k, v]) =>
-          el.setAttribute(k, v)
-        );
-      }
-      return;
-    }
-
-    if (mapping.class) {
-      mapping.class.split(/\s+/).forEach((c) => {
-        if (c) el.classList.add(c);
-      });
-    }
-    if (mapping.attrs) {
-      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
-    }
-
-    // mark as applied
-    this.appliedSet.add(el);
-  }
-
-  // Only explicit selectors (Option A)
-  private mapButtons() {
-    const mapping = this.getMapping("button");
-    if (!mapping) return;
-    const selector = "button[cdButton], button.cd-button";
-    document
-      .querySelectorAll<HTMLElement>(selector)
-      .forEach((btn) => this.applyMappingToElement(btn, mapping));
-  }
-
-  private mapInputs() {
-    const mapping = this.getMapping("input");
-    if (!mapping) return;
-    const selector =
-      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]";
-    document
-      .querySelectorAll<HTMLElement>(selector)
-      .forEach((el) => this.applyMappingToElement(el, mapping));
-  }
-
-  private mapFormGroups() {
-    const mapping = this.getMapping("formGroup");
-    if (!mapping) return;
-    const selector = ".cd-form-field";
-    document
-      .querySelectorAll<HTMLElement>(selector)
-      .forEach((el) => this.applyMappingToElement(el, mapping));
-  }
-
-  private mapOtherConcepts() {
-    // map any explicit top-level keys in conceptMappings but only for nodes explicitly marked
-    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
-    Object.keys(cm).forEach((concept) => {
-      if (["button", "input", "formGroup"].includes(concept)) return; // handled above
-      const mapping = (cm as any)[concept] as UiConceptMapping;
-      if (!mapping) return;
-
-      // Expect explicit markers: data-cd-<concept> or .cd-<concept>
-      const selector = `[data-cd-${concept}], .cd-${concept}`;
-      document
-        .querySelectorAll<HTMLElement>(selector)
-        .forEach((el) => this.applyMappingToElement(el, mapping));
-    });
-  }
-
-  // runs the full explicit mapping pass
-  private mapAll() {
-    try {
-      this.mapButtons();
-      this.mapInputs();
-      this.mapFormGroups();
-      this.mapOtherConcepts();
-    } catch (err) {
-      console.warn("[Bootstrap538AdapterService] mapAll error", err);
-    }
-  }
-
-  private observeMutations() {
-    if (this.observer) return; // already observing
-
-    this.observer = new MutationObserver((mutations) => {
-      // we'll do a short, batched mapping on next idle
-      if (typeof (window as any).requestIdleCallback === "function") {
-        (window as any).requestIdleCallback(() => this.mapAll());
-      } else {
-        setTimeout(() => this.mapAll(), 16);
-      }
-    });
-
-    // observe body for subtree changes
-    try {
-      this.observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: false,
-      });
-    } catch (err) {
-      console.warn(
-        "[Bootstrap538AdapterService] observer failed to attach",
-        err
-      );
-      this.observer = null;
-    }
-  }
-}
-
-// Self-register with your registry (ensure registry exposes register)
-UiSystemAdapterRegistry.register(
-  "bootstrap-538",
-  new Bootstrap538AdapterService()
-);
-```
-
-// src/CdShell/sys/utils/diagnosis.ts
-
-```ts
-export function diag_css(message: string, data: any = {}) {
-  console.log(
-    `%c[CSS-DIAG] ${message}`,
-    "background:#222;color:#0f0;padding:2px 4px;border-radius:3px",
-    data
-  );
-}
-
-export function diag_sidebar() {
-  const sb = document.getElementById("cd-sidebar");
-  if (!sb) return;
-
-  const style = window.getComputedStyle(sb);
-
-  console.warn(
-    "%c[SIDEBAR-DIAG] Sidebar State:",
-    "background:#440;color:#fff;padding:3px"
-  );
-
-  console.log("display:", style.display);
-  console.log("position:", style.position);
-  console.log("width:", style.width);
-  console.log("flex-direction:", style.flexDirection);
-  console.log("css file winning:", sb);
-}
-```
-
-//////////////////////////////////////////
-There seem to be some anomaly given the visuals, browser inspector and the logs.
-Below is a focus on the button behaviour and some logs.
-Detail log is attached.
-The button, in dark mode is showing black and gray in default mode.
-B
-Source:
-<button cdButton>Sign In</button>
-
-Browser inspector:
-<button cdbutton="">Sign In</button>
-
-section of the logs
-
-```ts
-[Bootstrap538Adapter] getMapping('button') = undefined index-BFPrm1r-.js:48:14022
-[Bootstrap538Adapter] getMapping('input') = undefined index-BFPrm1r-.js:48:14022
-[Bootstrap538Adapter] getMapping('formGroup') = undefined index-BFPrm1r-.js:48:14022
-[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts()
-
-```
-
-//////////////////////////////////////////
-Below is the content of what is returned from UiSystemLoaderService.getFullDescriptor()
-We may need to check how SysCacheService was meant to populate the conceptMappings.
-From my diagnosis, SysCacheService.loadAndCacheAll() is calling UiSystemLoader.fetchAvailableSystems().
-I expected ... to read from public/assets/ui-systems/bootstrap-538/descriptor.json for the details where conceptMappings is available.
-This does not seem to be happening.
-I have shared the related references below.
-
-Current return from UiSystemLoaderService.getFullDescriptor().
-
-```log
-[UiSystemLoaderService.activate] descriptorFromCache:
-Object { id: "bootstrap-538", name: "Bootstrap 5.3.8", version: "5.3.8", description: undefined, cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: undefined, stylesheets: (1) […], scripts: (1) […], themesAvailable: (1) […], … }
-​
-assetPath: undefined
-​
-author: undefined
-​
-components: Array []
-​
-conceptMappings: Object {  }
-​
-containers: Array []
-​
-cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css"
-​
-description: undefined
-​
-directiveMap: Object {  }
-​
-displayName: "Bootstrap 5.3.8"
-​
-extensions: Object {  }
-​
-id: "bootstrap-538"
-​
-jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js"
-​
-license: undefined
-​
-metadata: Object {  }
-​
-name: "Bootstrap 5.3.8"
-​
-renderRules: Object {  }
-​
-repository: undefined
-​
-scripts: Array [ "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" ]
-​
-stylesheets: Array [ "/assets/ui-systems/bootstrap-538/bootstrap.min.css" ]
-​
-themeActive: "default"
-​
-themesAvailable: Array [ {…} ]
-​
-tokenMap: Object {  }
-​
-version: "5.3.8"
-​
-<prototype>: Object { … }
-```
-
-// SysCacheService.loadAndCacheAll()
-
-```ts
-public async loadAndCacheAll(): Promise<void> {
-    if (!this._uiSystemLoader || !this._uiThemeLoader) {
-      throw new Error("SysCacheService: loaders must be set before load.");
-    }
-    if (this.cache.size > 0) return; // already loaded
-
-    console.log("[SysCacheService] 01: Starting Eager Load");
-
-    const shellConfig = await this.configService.loadConfig();
-    const uiConfig = shellConfig.uiConfig;
-    this.cache.set("uiConfig", uiConfig);
-
-    // ---------------------------------------------
-    // Fetch available systems (raw descriptors)
-    // ---------------------------------------------
-    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
-      uiConfig
-    );
-
-    console.log("[SysCacheService] uiSystemsData:", uiSystemsData);
-
-    // ---------------------------------------------
-    // Normalize full descriptors
-    // ---------------------------------------------
-    const fullDescriptors = uiSystemsData.map((sys: any) => {
-      return {
-        id: sys.id,
-        name: sys.name,
-        version: sys.version,
-        description: sys.description,
-
-        // Assets
-        cssUrl: sys.cssUrl,
-        jsUrl: sys.jsUrl,
-        assetPath: sys.assetPath,
-        stylesheets: sys.stylesheets || [],
-        scripts: sys.scripts || [],
-
-        // Themes
-        themesAvailable: sys.themesAvailable || [],
-        themeActive: sys.themeActive || null,
-
-        // Concept Mapping & directives
-        conceptMappings: sys.conceptMappings || {},
-        directiveMap: sys.directiveMap || {},
-
-        // Rendering metadata
-        tokenMap: sys.tokenMap || {},
-        containers: sys.containers || [],
-        components: sys.components || [],
-        renderRules: sys.renderRules || {},
-
-        // Metadata
-        metadata: sys.metadata || {},
-        extensions: sys.extensions || {},
-        author: sys.author,
-        license: sys.license,
-        repository: sys.repository,
-
-        displayName: sys.displayName || sys.name,
-      };
-    });
-
-    // ---------------------------------------------
-    // Simple list for UI (id + name only)
-    // ---------------------------------------------
-    const simpleSystems = fullDescriptors.map((sys) => ({
-      id: sys.id,
-      name: sys.name,
-      displayName: sys.displayName,
-      themesAvailable: sys.themesAvailable,
-    }));
-
-    console.log("[SysCacheService] Normalized Systems:", simpleSystems);
-
-    // ---------------------------------------------
-    // Load theme lists & full theme.json descriptors
-    // ---------------------------------------------
-    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(
-      uiConfig
-    );
-
-    const themes = (uiThemesData.themes || []).map((t: any) => ({
-      id: t.id,
-      name: t.name,
-    }));
-
-    const variants = (uiThemesData.variants || []).map((v: any) => ({
-      id: v.id,
-      name: v.name,
-    }));
-
-    const descriptors = uiThemesData.descriptors || [];
-
-    // ---------------------------------------------
-    // Store everything
-    // ---------------------------------------------
-    this.cache.set("uiSystems", simpleSystems);
-    this.cache.set("uiSystemDescriptors", fullDescriptors);
-    this.cache.set("themes", themes);
-    this.cache.set("formVariants", variants);
-    this.cache.set("themeDescriptors", descriptors);
-    this.cache.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig);
-
-    console.log(
-      `[SysCacheService] Load complete. Systems: ${simpleSystems.length}, Themes: ${themes.length}`
-    );
-  }
-```
-
-UiSystemLoader.fetchAvailableSystems()
-
-```ts
-async fetchAvailableSystems(
-    uiConfig: UiConfig
-  ): Promise<UiSystemDescriptor[]> {
-    // Example static registry read — adapt to your existing STATIC_UI_SYSTEM_REGISTRY
-    console.log(
-      "[UiSystemLoaderService.fetchAvailableSystems] uiConfig:",
-      uiConfig
-    );
-    // Use existing STATIC_UI_SYSTEM_REGISTRY if available
-    const registry =
-      typeof STATIC_UI_SYSTEM_REGISTRY !== "undefined" &&
-      STATIC_UI_SYSTEM_REGISTRY
-        ? STATIC_UI_SYSTEM_REGISTRY
-        : [
-            {
-              id: "bootstrap-502",
-              name: "Bootstrap 5",
-              cssUrl: "/assets/ui-systems/bootstrap-502/bootstrap.min.css",
-              jsUrl: "/assets/ui-systems/bootstrap-502/bootstrap.min.js",
-              themesAvailable: [{ id: "dark" }],
-              themeActive: null,
-            },
-          ];
-    // ensure basePath if provided by uiConfig
-    return registry.map((d: any) => ({
-      ...d,
-      basePath: `${uiConfig.uiSystemBasePath || "/public/assets/ui-systems/"}${d.id}/`,
-    }));
-  }
-```
-
-// public/assets/ui-systems/bootstrap-538/descriptor.json
-
-```json
-{
-  "id": "bootstrap-538",
-  "name": "Bootstrap 5",
-  "version": "5.3.8",
-  "description": "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.",
-  "author": "Bootstrap Authors",
-  "license": "MIT",
-  "assetPath": "/assets/ui-systems/bootstrap-538",
-  "cssUrl": "bootstrap.min.css",
-  "jsUrl": "bootstrap.bundle.min.js",
-  "stylesheets": ["bootstrap.min.css"],
-  "scripts": ["bootstrap.bundle.min.js"],
-  "conceptMappings": {
-    "button": {
-      "class": "btn btn-primary"
-    },
-    "card": {
-      "class": "card"
-    },
-    "input": {
-      "class": "form-control"
-    },
-    "formGroup": {
-      "class": "mb-3"
-    }
-  },
-  "directiveMap": {
-    "cd-tooltip": "data-bs-toggle=\"tooltip\""
-  },
-  "themesAvailable": [
-    {
-      "id": "default",
-      "name": "Default",
-      "displayName": "Default Theme",
-      "css": "/themes/default/theme.css",
-      "mode": "light"
-    },
-    {
-      "id": "dark",
-      "name": "Dark Mode",
-      "displayName": "Dark Theme",
-      "css": "/themes/dark/theme.css",
-      "mode": "dark"
-    }
-  ],
-  "themeActive": null,
-  "metadata": {
-    "supportsDarkMode": true,
-    "supportsBootstrapThemeSwitch": true
-  },
-  "extensions": {
-    "adapter": "Bootstrap5Adapter",
-    "versionTag": "bootstrap-538"
-  }
-}
-```
-
-///////////////////////////////////////////
-
-In the proposal you have given, you use:
-const systems = uiConfig.uiSystems || [];
-to get available systems.
-But this source does not have the property uiSystems.
-uiConfig data is fetched from public/shell.config.json.
-I have shared the initial lines for the launch logs.
-Notice that the systems are self registering.
-We need to device how this can provide the data for 'systems' that you intended to refer.
-
-// public/shell.config.json
-
-```json
-{
-  "appName": "Corpdesk PWA",
-  "fallbackTitle": "Corpdesk PWA",
-  "appVersion": "1.0.0",
-  "appDescription": "Corpdesk PWA",
-  "themeConfig": {
-    "currentThemePath": "/themes/default/theme.json",
-    "accessibleThemes": ["default", "dark", "contrast"]
-  },
-  "defaultModulePath": "sys/cd-user",
-  "logLevel": "debug",
-  "uiConfig": {
-    "defaultUiSystemId": "bootstrap-538",
-    "defaultThemeId": "dark",
-    "defaultFormVariant": "standard",
-    "uiSystemBasePath": "/public/assets/ui-systems/"
-  }
-}
-```
-
-```log
-[UiSystemAdapterRegistry] register: bootstrap-502
-Object {  }
-index-lxpZK6ES.js:48:11295
-[Bootstrap538AdapterService] constructor() index-lxpZK6ES.js:48:12412
-[UiSystemAdapterRegistry] register: bootstrap-538
-Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [] }
-index-lxpZK6ES.js:48:11295
-[UiSystemAdapterRegistry] register: material-design
-Object {  }
-index-lxpZK6ES.js:48:11295
-[UiSystemAdapterRegistry] register: plain
-Object {  }
-index-lxpZK6ES.js:48:11295
-[Bootstrap538AdapterService] constructor() index-lxpZK6ES.js:48:12412
-start 1 index-lxpZK6ES.js:48:32874
-[SHELL] [DEBUG] [Main] init(): starting index-lxpZK6ES.js:48:1132
-[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-lxpZK6ES.js:48:1132
-[ModuleService][constructor]: starting index-lxpZK6ES.js:48:3580
-[ModuleService] Running under Vite (browser). index-lxpZK6ES.js:48:3653
-[SHELL] [DEBUG] starting bootstrapShell() index-lxpZK6ES.js:48:1132
-[SHELL] [DEBUG] [Main] init(): completed index-lxpZK6ES.js:48:1132
-[SysCacheService] 01: Starting Eager Load
-```
-
-////////////////////////////////////////
-The button is now generating the righ html
-I need us to focus on the menu for a moment.
-The contrast for text against the background is too low.
-See attached screenshot.
-Below is what is picked from the brwser
-
-```css
-element {
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: var(--menu-text-color, #333);
-  font-weight: 500;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-a {
-  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-  text-decoration: underline;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-[role="button"] {
-  cursor: pointer;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
-  color: var(--cd-color-text);
-}
-html,
-body {
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-}
-body {
-  font-family: var(--bs-body-font-family);
-  font-size: var(--bs-body-font-size);
-  font-weight: var(--bs-body-font-weight);
-  line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
-  text-align: var(--bs-body-text-align);
-  -webkit-text-size-adjust: 100%;
-}
-```
-
-/////////////////////////////////////////
-
-Below are the relevant scripts in their current state.
-Generate for me the amended version in full.
-// public/assets/ui-systems/bootstrap-538/bridge.css
-
-```css
-/* ============================================================
-   CORPDESK BRIDGE FOR BOOTSTRAP 5.3.x
-   ------------------------------------------------------------
-   Purpose:
-   - Provide consistent Corpdesk UX variables
-   - Mirror Bootstrap light/dark variables
-   - Avoid overriding Bootstrap defaults
-   - Fix dark-mode text visibility issues
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   1. ROOT: Bootstrap variable passthrough into Corpdesk vars
-   ------------------------------------------------------------ */
-:root {
-  /* Base font + radii for Corpdesk layout */
-  --cd-bridge-body-font-family: var(
-    --bs-body-font-family,
-    system-ui,
-    sans-serif
-  );
-  --cd-bridge-body-font-size: var(--bs-body-font-size, 1rem);
-  --cd-bridge-border-radius: var(--bs-border-radius, 0.375rem);
-
-  /* Form border color (mapped below per theme) */
-  --cd-color-border: var(--bs-border-color, #ced4da);
-
-  /* Input text color (mapped below per theme) */
-  --cd-input-text-color: var(--bs-body-color, #212529);
-}
-
-/* ------------------------------------------------------------
-   2. LIGHT MODE (Bootstrap default)
-   ------------------------------------------------------------ */
-:root[data-bs-theme="light"] {
-  /* Bootstrap light mode variables */
-  --cd-color-border: var(--bs-border-color, #ced4da);
-  --cd-input-text-color: var(--bs-body-color, #212529);
-}
-
-/* ------------------------------------------------------------
-   3. DARK MODE (Bootstrap 5.3.x)
-   ------------------------------------------------------------
-   FIXES:
-   - Dark-on-dark labels
-   - Invisible input text
-   - Invisible borders
-   ------------------------------------------------------------ */
-:root[data-bs-theme="dark"] {
-  /* Ensure readable text */
-  --cd-input-text-color: var(--bs-body-color, #f8f9fa);
-
-  /* Ensure borders are visible */
-  --cd-color-border: var(--bs-border-color, #495057);
-
-  /* Preserve Bootstrap dark form background */
-  --bs-form-control-bg: var(--bs-gray-900, #2b3035);
-}
-
-/* ------------------------------------------------------------
-   4. LABELS
-   ------------------------------------------------------------ */
-.cd-form-field > label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--cd-input-text-color);
-}
-
-/* ------------------------------------------------------------
-   5. INPUTS (Corpdesk form fields)
-   ------------------------------------------------------------ */
-.cd-form-field input,
-.cd-form-field textarea,
-.cd-form-field select {
-  width: 100%;
-  padding: var(--bs-form-control-padding-y, 0.375rem)
-    var(--bs-form-control-padding-x, 0.75rem);
-  font-size: var(--bs-body-font-size, 1rem);
-  font-family: var(--cd-bridge-body-font-family);
-  color: var(--cd-input-text-color);
-  background-color: var(--bs-form-control-bg, #fff);
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-bridge-border-radius);
-  transition:
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  box-sizing: border-box;
-}
-
-/* ------------------------------------------------------------
-   6. VALID STATE (Green glow)
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-valid,
-.cd-form-field select.cd-valid,
-.cd-form-field textarea.cd-valid {
-  border-color: var(--bs-success, #198754) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-success-rgb, 25, 135, 84), 0.15);
-}
-
-/* ------------------------------------------------------------
-   7. INVALID STATE (Red glow)
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-invalid,
-.cd-form-field select.cd-invalid,
-.cd-form-field textarea.cd-invalid {
-  border-color: var(--bs-danger, #dc3545) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb, 220, 53, 69), 0.15);
-}
-
-/* ------------------------------------------------------------
-   8. BUTTONS (inherit Bootstrap)
-   ------------------------------------------------------------ */
-button[cdButton],
-.cd-button {
-  font-family: var(--cd-bridge-body-font-family);
-  border-radius: var(--cd-bridge-border-radius);
-}
-```
-
-// public/themes/dark/theme.css
-
-```css
-/* ============================================================
-   DARK THEME VARIABLES (Scoped to Bootstrap Dark Mode Flag)
-   ============================================================ */
-
-/* This selector ensures these variables ONLY override the light defaults 
-   when the Bootstrap adapter sets <html data-bs-theme="dark">. 
-   This is the final fix for the variable conflict. */
-html[data-bs-theme="dark"] {
-  --cd-color-bg: #121212;
-  --cd-color-surface: #1e1e1e;
-  --cd-color-text: #e6e6e6;
-
-  --cd-color-primary: #0d6efd;
-
-  --cd-color-hint: #aaaaaa;
-  --cd-color-valid: #2ecc71;
-  --cd-color-invalid: #e74c3c;
-
-  --cd-color-border: #333333;
-  --cd-color-hover: #2a2a2a;
-}
-```
-
-// public/themes/default/theme.css
-
-```css
-:root {
-  --cd-color-bg: #ffffff;
-  --cd-color-surface: #f8f8f8;
-  --cd-color-text: #000000;
-
-  --cd-color-primary: #007bff;
-  --cd-color-hint: #666;
-  --cd-color-valid: #28a745;
-  --cd-color-invalid: #dc3545;
-
-  --cd-color-border: #cccccc;
-  --cd-color-hover: #f0f0f0;
-}
-```
-
-////////////////////////////////////////////////////
-We now have a good contrast of text against background.
-But there is one of the states for the top most menu item.
-It could be on-select: The background becomes white with whitish text in the foreground.
-First this background needs to be toned a little because the contrast is now very harsh for 'dark' mode.
-The text colour should also be dark enough to contrast well with the adjusted background.
-I have also shared the screenshot.
-
-```css
-element {
-}
-#cd-sidebar a {
-  color: var(--cd-menu-text);
-}
-.metismenu li.mm-active > a {
-  background-color: var(--menu-active-bg, #e6e6e6);
-  color: var(--menu-active-color, #000);
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: var(--menu-text-color, #333);
-  font-weight: 500;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-a {
-  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-  text-decoration: underline;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-[role="button"] {
-  cursor: pointer;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
-  color: var(--cd-color-text);
-}
-#cd-sidebar {
-  color: var(--cd-menu-text);
-}
-html,
-body {
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-}
-body {
-  font-family: var(--bs-body-font-family);
-  font-size: var(--bs-body-font-size);
-  font-weight: var(--bs-body-font-weight);
-  line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
-  text-align: var(--bs-body-text-align);
-  -webkit-text-size-adjust: 100%;
-}
-```
-
-//////////////////////////////////////////
-
-Check the screen shot attached.
-When colapsed, there is an extra arrow '>' in front of the menu lablel. But there is also a correct one at the extreme right.
-Can you detect how it comes to be and how to eliminate it.
-I have attched corpdesk-rfc-0005 for reference on how the whole dyanmic UI system is working for reference.
-
-// public/themes/common/menu-neutral.css
-
-```css
-cd-menu-root,
-.cd-submenu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cd-menu-item {
-  margin: 0;
-  padding: 0;
-  /* 💡 NEW FIX: Ensure LI elements have no marker */
-  list-style: none;
-}
-
-.cd-menu-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  padding: 8px 12px;
-}
-
-.cd-menu-label {
-  margin-left: 8px;
-}
-
-/* Neutralize unstyled FA pseudo-content before the font loads */
-.fa::before {
-  content: "" !important;
-}
-```
-
-// public/assets/ui-systems/bootstrap-538/bridge.css
-
-```css
-/* ============================================================
-   CORPDESK BRIDGE FOR BOOTSTRAP 5.3.x
-   ------------------------------------------------------------
-   Purpose:
-   - Provide consistent Corpdesk UX variables
-   - Mirror Bootstrap light/dark variables
-   - Avoid overriding Bootstrap defaults
-   - Fix dark-mode text visibility issues
-   - Normalize sidebar/menu appearance
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   1. ROOT: Base variables (light-mode defaults)
-   ------------------------------------------------------------ */
-:root {
-  /* Typography */
-  --cd-bridge-body-font-family: var(
-    --bs-body-font-family,
-    system-ui,
-    sans-serif
-  );
-  --cd-bridge-body-font-size: var(--bs-body-font-size, 1rem);
-  --cd-bridge-border-radius: var(--bs-border-radius, 0.375rem);
-
-  /* Form colors */
-  --cd-color-border: var(--bs-border-color, #ced4da);
-  --cd-input-text-color: var(--bs-body-color, #212529);
-
-  /* Sidebar defaults (light) */
-  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
-  --cd-menu-text: var(--bs-body-color, #212529);
-
-  /* Active menu state (light) */
-  --cd-menu-active-bg: #e6e6e6;
-  --cd-menu-active-text: #000;
-
-  /* Hover */
-  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
-}
-
-/* ------------------------------------------------------------
-   2. LIGHT MODE
-   ------------------------------------------------------------ */
-:root[data-bs-theme="light"] {
-  --cd-color-border: var(--bs-border-color, #ced4da);
-  --cd-input-text-color: var(--bs-body-color, #212529);
-
-  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
-  --cd-menu-text: var(--bs-body-color, #212529);
-
-  /* Slight contrast boost for light active state */
-  --cd-menu-active-bg: #e2e2e2;
-  --cd-menu-active-text: #000;
-
-  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
-}
-
-/* ------------------------------------------------------------
-   3. DARK MODE (Bootstrap 5.3.x)
-   ------------------------------------------------------------ */
-:root[data-bs-theme="dark"] {
-  /* Input + labels */
-  --cd-input-text-color: var(--bs-body-color, #e6e6e6);
-  --cd-color-border: var(--bs-border-color, #495057);
-
-  /* Sidebar dark surface */
-  --cd-menu-bg: #1e1e1e;
-  --cd-menu-text: #dcdcdc;
-
-  /* Active (selected) menu */
-  --cd-menu-active-bg: #2f3640; /* dark grey-blue neutral */
-  --cd-menu-active-text: #ffffff;
-
-  /* Hover */
-  --cd-menu-hover-bg: rgba(255, 255, 255, 0.07);
-
-  /* Form background */
-  --bs-form-control-bg: var(--bs-gray-900, #2b3035);
-}
-
-/* ------------------------------------------------------------
-   4. LABELS
-   ------------------------------------------------------------ */
-.cd-form-field > label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--cd-input-text-color);
-}
-
-/* ------------------------------------------------------------
-   5. INPUTS
-   ------------------------------------------------------------ */
-.cd-form-field input,
-.cd-form-field textarea,
-.cd-form-field select {
-  width: 100%;
-  padding: var(--bs-form-control-padding-y, 0.375rem)
-    var(--bs-form-control-padding-x, 0.75rem);
-  font-size: var(--bs-body-font-size, 1rem);
-  font-family: var(--cd-bridge-body-font-family);
-  color: var(--cd-input-text-color);
-  background-color: var(--bs-form-control-bg, #fff);
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-bridge-border-radius);
-  transition:
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  box-sizing: border-box;
-}
-
-/* ------------------------------------------------------------
-   6. VALID STATE
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-valid,
-.cd-form-field select.cd-valid,
-.cd-form-field textarea.cd-valid {
-  border-color: var(--bs-success, #198754) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-success-rgb, 25, 135, 84), 0.15);
-}
-
-/* ------------------------------------------------------------
-   7. INVALID STATE
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-invalid,
-.cd-form-field select.cd-invalid,
-.cd-form-field textarea.cd-invalid {
-  border-color: var(--bs-danger, #dc3545) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb, 220, 53, 69), 0.15);
-}
-
-/* ------------------------------------------------------------
-   8. BUTTONS (inherit Bootstrap)
-   ------------------------------------------------------------ */
-button[cdButton],
-.cd-button {
-  font-family: var(--cd-bridge-body-font-family);
-  border-radius: var(--cd-bridge-border-radius);
-}
-
-/* ------------------------------------------------------------
-   9. SIDEBAR + MENU
-   ------------------------------------------------------------ */
-#cd-sidebar {
-  background-color: var(--cd-menu-bg);
-  color: var(--cd-menu-text);
-}
-
-#cd-sidebar a {
-  color: var(--cd-menu-text);
-  text-decoration: none;
-  display: block;
-  padding: 10px 15px;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-/* Hover state */
-#cd-sidebar a:hover {
-  background-color: var(--cd-menu-hover-bg);
-  color: var(--cd-menu-active-text);
-}
-
-/* Active menu item */
-.metismenu li.mm-active > a,
-.metismenu li.mm-active > a:hover,
-.metismenu li.mm-active > a:focus {
-  background-color: var(--cd-menu-active-bg) !important;
-  color: var(--cd-menu-active-text) !important;
-}
-```
-
-```sh
-emp-12@emp-12 ~/cd-shell (main)> tree public/assets/
-public/assets/
-├── css
-│   ├── font-awesome-6.5.0
-│   │   └── all.min.css
-│   └── index.css
-├── fonts
-├── images
-└── ui-systems
-    ├── bootstrap-502
-    │   ├── bootstrap.min.css
-    │   ├── bootstrap.min.js
-    │   └── descriptor.json
-    ├── bootstrap-538
-    │   ├── bootstrap.bundle.min.js
-    │   ├── bootstrap.min.css
-    │   ├── bridge.css
-    │   └── descriptor.json
-    └── material-design
-        ├── descriptor.json
-        ├── material-components-web.min.css
-        └── material-components-web.min.js
-```
-
-////////////////////////////////////////////
-I have been restricted to send any more images until after 9hrs.
-So I will limit my communication to text.
-Below are some reference in their current state.
-
-Browser inspector/styles
-
-```css
-element {
-}
-#cd-sidebar a {
-  color: var(--cd-menu-text);
-  text-decoration: none;
-  display: block;
-  padding: 10px 15px;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: var(--menu-text-color, #333);
-  font-weight: 500;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-a {
-  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-  text-decoration: underline;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-[role="button"] {
-  cursor: pointer;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
-  color: var(--cd-color-text);
-}
-#cd-sidebar {
-  color: var(--cd-menu-text);
-}
-html,
-body {
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-}
-body {
-  font-family: var(--bs-body-font-family);
-  font-size: var(--bs-body-font-size);
-  font-weight: var(--bs-body-font-weight);
-  line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
-  text-align: var(--bs-body-text-align);
-  -webkit-text-size-adjust: 100%;
-}
-```
-
-Html at the browser for the menu
-
-```html
-<aside id="cd-sidebar">
-  <ul class="metismenu" id="menu">
-    <li
-      id="menu-item-menu-item-cd-user"
-      class=""
-      data-id="menu-item-cd-user"
-      data-type="route"
-      data-route="sys/cd-user"
-      tabindex="0"
-      role="button"
-    >
-      <a
-        href="#"
-        class="cd-menu-link has-arrow"
-        data-id="menu-item-cd-user"
-        aria-expanded="false"
-        ><span class="cd-menu-label">cd-user</span
-        ><i class="menu-arrow fa-solid fa-chevron-right"></i
-      ></a>
-      <ul class="mm-collapse">
-        <li
-          id="menu-item-menu-item-cd-user-sign-in"
-          class=""
-          data-id="menu-item-cd-user-sign-in"
-          data-type="route"
-          data-route="sys/cd-user/sign-in"
-          tabindex="0"
-          role="button"
-        >
-          <a
-            href="/sys/cd-user/sign-in"
-            class="cd-menu-link"
-            data-id="menu-item-cd-user-sign-in"
-            ><span class="cd-menu-label">sign-in</span></a
-          >
-        </li>
-
-        <li
-          id="menu-item-menu-item-cd-user-sign-up"
-          class=""
-          data-id="menu-item-cd-user-sign-up"
-          data-type="route"
-          data-route="sys/cd-user/sign-up"
-          tabindex="0"
-          role="button"
-        >
-          <a
-            href="/sys/cd-user/sign-up"
-            class="cd-menu-link"
-            data-id="menu-item-cd-user-sign-up"
-            ><span class="cd-menu-label">sign-up</span></a
-          >
-        </li>
-      </ul>
-    </li>
-
-    <li
-      id="menu-item-menu-item-cd-admin"
-      class=""
-      data-id="menu-item-cd-admin"
-      data-type="route"
-      data-route="sys/cd-admin"
-      tabindex="0"
-      role="button"
-    >
-      <a
-        href="#"
-        class="cd-menu-link has-arrow"
-        data-id="menu-item-cd-admin"
-        aria-expanded="false"
-        ><span class="cd-menu-label">cd-admin</span
-        ><i class="menu-arrow fa-solid fa-chevron-right"></i
-      ></a>
-      <ul class="mm-collapse">
-        <li
-          id="menu-item-menu-item-cd-admin-settings"
-          class=""
-          data-id="menu-item-cd-admin-settings"
-          data-type="route"
-          data-route="sys/cd-admin/settings"
-          tabindex="0"
-          role="button"
-        >
-          <a
-            href="/sys/cd-admin/settings"
-            class="cd-menu-link"
-            data-id="menu-item-cd-admin-settings"
-            ><span class="cd-menu-label">settings</span></a
-          >
-        </li>
-      </ul>
-    </li>
-  </ul>
-</aside>
-```
-
-MenuService.renderMenuHtml()
-
-```ts
-export class MenuService {
-  renderMenuHtml(menu: MenuItem[]): string {
-    return menu
-      .map((item, index) => {
-        const hasChildren = item.children && item.children.length > 0;
-        const encodedIcon = item.icon ? btoa(JSON.stringify(item.icon)) : "";
-        const itemType = item.itemType || "route";
-        const route = item.route || "";
-        const itemId =
-          item.menuId ||
-          `auto-${index}-${Math.random().toString(36).slice(2, 8)}`;
-
-        // 🔁 Ensure stable id for later lookup
-        item.menuId = itemId;
-
-        return `
-        <li
-          id="menu-item-${itemId}"
-          class="cd-menu-item"
-          data-id="${itemId}"
-          data-type="${itemType}"
-          data-route="${route}"
-          ${encodedIcon ? `data-icon="${encodedIcon}"` : ""}
-          tabindex="0"
-          role="button"
-        >
-          <a href="#" class="cd-menu-link" data-id="${itemId}">
-            <span class="cd-menu-label">${item.label}</span>
-            ${
-              hasChildren
-                ? `<span class="cd-menu-toggle-icon fa fa-chevron-right"></span>`
-                : ""
-            }
-          </a>
-          ${
-            hasChildren
-              ? `<ul class="cd-submenu">${this.renderMenuHtml(item.children!)}</ul>`
-              : ""
-          }
-        </li>
-      `;
-      })
-      .join("");
-  }
-}
-```
-
-// public/themes/common/menu-neutral.css
-
-```css
-cd-menu-root,
-.cd-submenu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cd-menu-item {
-  margin: 0;
-  padding: 0;
-  /* 💡 NEW FIX: Ensure LI elements have no marker */
-  list-style: none;
-}
-
-.cd-menu-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  padding: 8px 12px;
-}
-
-.cd-menu-label {
-  margin-left: 8px;
-}
-
-/* Neutralize unstyled FA pseudo-content before the font loads */
-.fa::before {
-  content: "" !important;
-}
-```
-
-// public/assets/ui-systems/bootstrap-538/bridge.css
-
-```css
-/* ============================================================
-   CORPDESK BRIDGE FOR BOOTSTRAP 5.3.x
-   ------------------------------------------------------------
-   Purpose:
-   - Provide consistent Corpdesk UX variables
-   - Mirror Bootstrap light/dark variables
-   - Avoid overriding Bootstrap defaults
-   - Fix dark-mode text visibility issues
-   - Normalize sidebar/menu appearance
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   1. ROOT: Base variables (light-mode defaults)
-   ------------------------------------------------------------ */
-:root {
-  /* Typography */
-  --cd-bridge-body-font-family: var(
-    --bs-body-font-family,
-    system-ui,
-    sans-serif
-  );
-  --cd-bridge-body-font-size: var(--bs-body-font-size, 1rem);
-  --cd-bridge-border-radius: var(--bs-border-radius, 0.375rem);
-
-  /* Form colors */
-  --cd-color-border: var(--bs-border-color, #ced4da);
-  --cd-input-text-color: var(--bs-body-color, #212529);
-
-  /* Sidebar defaults (light) */
-  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
-  --cd-menu-text: var(--bs-body-color, #212529);
-
-  /* Active menu state (light) */
-  --cd-menu-active-bg: #e6e6e6;
-  --cd-menu-active-text: #000;
-
-  /* Hover */
-  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
-}
-
-/* ------------------------------------------------------------
-   2. LIGHT MODE
-   ------------------------------------------------------------ */
-:root[data-bs-theme="light"] {
-  --cd-color-border: var(--bs-border-color, #ced4da);
-  --cd-input-text-color: var(--bs-body-color, #212529);
-
-  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
-  --cd-menu-text: var(--bs-body-color, #212529);
-
-  /* Slight contrast boost for light active state */
-  --cd-menu-active-bg: #e2e2e2;
-  --cd-menu-active-text: #000;
-
-  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
-}
-
-/* ------------------------------------------------------------
-   3. DARK MODE (Bootstrap 5.3.x)
-   ------------------------------------------------------------ */
-:root[data-bs-theme="dark"] {
-  /* Input + labels */
-  --cd-input-text-color: var(--bs-body-color, #e6e6e6);
-  --cd-color-border: var(--bs-border-color, #495057);
-
-  /* Sidebar dark surface */
-  --cd-menu-bg: #1e1e1e;
-  --cd-menu-text: #dcdcdc;
-
-  /* Active (selected) menu */
-  --cd-menu-active-bg: #2f3640; /* dark grey-blue neutral */
-  --cd-menu-active-text: #ffffff;
-
-  /* Hover */
-  --cd-menu-hover-bg: rgba(255, 255, 255, 0.07);
-
-  /* Form background */
-  --bs-form-control-bg: var(--bs-gray-900, #2b3035);
-}
-
-/* ------------------------------------------------------------
-   4. LABELS
-   ------------------------------------------------------------ */
-.cd-form-field > label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--cd-input-text-color);
-}
-
-/* ------------------------------------------------------------
-   5. INPUTS
-   ------------------------------------------------------------ */
-.cd-form-field input,
-.cd-form-field textarea,
-.cd-form-field select {
-  width: 100%;
-  padding: var(--bs-form-control-padding-y, 0.375rem)
-    var(--bs-form-control-padding-x, 0.75rem);
-  font-size: var(--bs-body-font-size, 1rem);
-  font-family: var(--cd-bridge-body-font-family);
-  color: var(--cd-input-text-color);
-  background-color: var(--bs-form-control-bg, #fff);
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-bridge-border-radius);
-  transition:
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  box-sizing: border-box;
-}
-
-/* ------------------------------------------------------------
-   6. VALID STATE
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-valid,
-.cd-form-field select.cd-valid,
-.cd-form-field textarea.cd-valid {
-  border-color: var(--bs-success, #198754) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-success-rgb, 25, 135, 84), 0.15);
-}
-
-/* ------------------------------------------------------------
-   7. INVALID STATE
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-invalid,
-.cd-form-field select.cd-invalid,
-.cd-form-field textarea.cd-invalid {
-  border-color: var(--bs-danger, #dc3545) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb, 220, 53, 69), 0.15);
-}
-
-/* ------------------------------------------------------------
-   8. BUTTONS (inherit Bootstrap)
-   ------------------------------------------------------------ */
-button[cdButton],
-.cd-button {
-  font-family: var(--cd-bridge-body-font-family);
-  border-radius: var(--cd-bridge-border-radius);
-}
-
-/* ------------------------------------------------------------
-   9. SIDEBAR + MENU
-   ------------------------------------------------------------ */
-#cd-sidebar {
-  background-color: var(--cd-menu-bg);
-  color: var(--cd-menu-text);
-}
-
-#cd-sidebar a {
-  color: var(--cd-menu-text);
-  text-decoration: none;
-  display: block;
-  padding: 10px 15px;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-/* Hover state */
-#cd-sidebar a:hover {
-  background-color: var(--cd-menu-hover-bg);
-  color: var(--cd-menu-active-text);
-}
-
-/* Active menu item */
-.metismenu li.mm-active > a,
-.metismenu li.mm-active > a:hover,
-.metismenu li.mm-active > a:focus {
-  background-color: var(--cd-menu-active-bg) !important;
-  color: var(--cd-menu-active-text) !important;
-}
-```
-
-/////////////////////////////////////////////
-
-Below are the result of running the script in the console:
-It actually pointed out to the actual culprits.
-Can you use the information to specify how the next task is run?
-
-```log
-[PSEUDO-DETECT] Pseudo elements found debugger eval code:17:11
-before "" debugger eval code:20:13
-<i class="menu-arrow fa-solid fa-chevron-right">
-debugger eval code:21:13
-outerHTML snippet: <i class="menu-arrow fa-solid fa-chevron-right"></i> debugger eval code:22:13
-before "" debugger eval code:20:13
-<i class="menu-arrow fa-solid fa-chevron-right">
-debugger eval code:21:13
-outerHTML snippet: <i class="menu-arrow fa-solid fa-chevron-right"></i> debugger eval code:22:13
-Array [ {…}, {…} ]
-​
-0: Object { type: "before", content: '"\uf054"', outer: '<i class="menu-arrow fa-solid fa-chevron-right"></i>', … }
-​
-1: Object { type: "before", content: '"\uf054"', outer: '<i class="menu-arrow fa-solid fa-chevron-right"></i>', … }
-​
-length: 2
-```
-
-/////////////////////////////////////////////
-I have highlighted a menu item in the browser and shared the html and css from the inspector.
-You should be able to detects the low contrast. From there you can try and
-
-```html
-<li
-  id="menu-item-menu-item-cd-user"
-  class=""
-  data-id="menu-item-cd-user"
-  data-type="route"
-  data-route="sys/cd-user"
-  tabindex="0"
-  role="button"
->
-  <a
-    href="#"
-    class="cd-menu-link has-arrow mm-collapsed"
-    data-id="menu-item-cd-user"
-    aria-expanded="false"
-    ><span class="cd-menu-label">cd-user</span
-    ><i class="menu-arrow fa-solid fa-chevron-right"></i
-  ></a>
-  <ul class="mm-collapse" style="">
-    <li
-      id="menu-item-menu-item-cd-user-sign-in"
-      class=""
-      data-id="menu-item-cd-user-sign-in"
-      data-type="route"
-      data-route="sys/cd-user/sign-in"
-      tabindex="0"
-      role="button"
-    >
-      <a
-        href="/sys/cd-user/sign-in"
-        class="cd-menu-link"
-        data-id="menu-item-cd-user-sign-in"
-        ><span class="cd-menu-label">sign-in</span></a
-      >
-    </li>
-
-    <li
-      id="menu-item-menu-item-cd-user-sign-up"
-      class=""
-      data-id="menu-item-cd-user-sign-up"
-      data-type="route"
-      data-route="sys/cd-user/sign-up"
-      tabindex="0"
-      role="button"
-    >
-      <a
-        href="/sys/cd-user/sign-up"
-        class="cd-menu-link"
-        data-id="menu-item-cd-user-sign-up"
-        ><span class="cd-menu-label">sign-up</span></a
-      >
-    </li>
-  </ul>
-</li>
-```
-
-// css for menu item
-
-```css
-element {
-}
-.metismenu li {
-  position: relative;
-}
-[role="button"] {
-  cursor: pointer;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
-  color: var(--cd-color-text);
-}
-#cd-sidebar {
-  color: var(--cd-menu-text);
-}
-html,
-body {
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-}
-body {
-  font-family: var(--bs-body-font-family);
-  font-size: var(--bs-body-font-size);
-  font-weight: var(--bs-body-font-weight);
-  line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
-  text-align: var(--bs-body-text-align);
-  -webkit-text-size-adjust: 100%;
-}
-element {
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-  --cd-background-color: white;
-  --cd-text-color: black;
-  --cd-primary-color: #007bff;
-  --theme-color: #007bff;
-}
-```
-
-// css for the label(span) that contains the text.
-
-```css
-lement {
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-.metismenu a {
-  color: var(--menu-text-color, #333);
-  font-weight: 500;
-}
-.cd-menu-link {
-  color: inherit;
-}
-a {
-  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-}
-[role="button"] {
-  cursor: pointer;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
-  color: var(--cd-color-text);
-}
-#cd-sidebar {
-  color: var(--cd-menu-text);
-}
-```
-
-// bridge.css
-
-```css
-/* ============================================================
-   CORPDESK BRIDGE FOR BOOTSTRAP 5.3.x
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   1. ROOT VARIABLES (Light Mode Defaults)
-   ------------------------------------------------------------ */
-:root {
-  --cd-bridge-body-font-family: var(
-    --bs-body-font-family,
-    system-ui,
-    sans-serif
-  );
-  --cd-bridge-body-font-size: var(--bs-body-font-size, 1rem);
-  --cd-bridge-border-radius: var(--bs-border-radius, 0.375rem);
-
-  --cd-color-border: var(--bs-border-color, #ced4da);
-  --cd-input-text-color: var(--bs-body-color, #212529);
-
-  /* Sidebar defaults (light mode) */
-  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
-  --cd-menu-text: var(--bs-body-color, #212529);
-
-  /* Active (selected) row – light */
-  --cd-menu-active-bg: #e6e6e6;
-  --cd-menu-active-text: #000;
-
-  /* Hover (light) */
-  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
-}
-
-/* ------------------------------------------------------------
-   2. LIGHT MODE
-   ------------------------------------------------------------ */
-:root[data-bs-theme="light"] {
-  --cd-menu-bg: var(--bs-light-bg-subtle, #f8f9fa);
-  --cd-menu-text: var(--bs-body-color, #212529);
-
-  --cd-menu-active-bg: #e2e2e2;
-  --cd-menu-active-text: #000;
-
-  --cd-menu-hover-bg: rgba(0, 0, 0, 0.05);
-}
-
-/* ------------------------------------------------------------
-   3. DARK MODE  (Option A – Neutral Grey)
-   ------------------------------------------------------------ */
-:root[data-bs-theme="dark"] {
-  --cd-input-text-color: var(--bs-body-color, #e6e6e6);
-  --cd-color-border: var(--bs-border-color, #495057);
-
-  /* Sidebar surface + text */
-  --cd-menu-bg: #1e1e1e;
-  --cd-menu-text: #dcdcdc;
-
-  /* Active row — neutral dark */
-  --cd-menu-active-bg: #2f3640;
-  --cd-menu-active-text: #ffffff;
-
-  /* Hover (dark) */
-  --cd-menu-hover-bg: rgba(255, 255, 255, 0.07);
-
-  /* Bootstrap form background */
-  --bs-form-control-bg: var(--bs-gray-900, #2b3035);
-}
-
-/* ------------------------------------------------------------
-   4. FORM LABELS
-   ------------------------------------------------------------ */
-.cd-form-field > label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--cd-input-text-color);
-}
-
-/* ------------------------------------------------------------
-   5. INPUTS
-   ------------------------------------------------------------ */
-.cd-form-field input,
-.cd-form-field textarea,
-.cd-form-field select {
-  width: 100%;
-  padding: var(--bs-form-control-padding-y, 0.375rem)
-    var(--bs-form-control-padding-x, 0.75rem);
-  font-size: var(--bs-body-font-size, 1rem);
-  font-family: var(--cd-bridge-body-font-family);
-  color: var(--cd-input-text-color);
-  background-color: var(--bs-form-control-bg, #fff);
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-bridge-border-radius);
-  transition:
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  box-sizing: border-box;
-}
-
-/* ------------------------------------------------------------
-   6. VALID / INVALID STATES
-   ------------------------------------------------------------ */
-.cd-form-field input.cd-valid,
-.cd-form-field select.cd-valid,
-.cd-form-field textarea.cd-valid {
-  border-color: var(--bs-success, #198754) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-success-rgb, 25, 135, 84), 0.15);
-}
-
-.cd-form-field input.cd-invalid,
-.cd-form-field select.cd-invalid,
-.cd-form-field textarea.cd-invalid {
-  border-color: var(--bs-danger, #dc3545) !important;
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb, 220, 53, 69), 0.15);
-}
-
-/* ------------------------------------------------------------
-   7. BUTTONS
-   ------------------------------------------------------------ */
-button[cdButton],
-.cd-button {
-  font-family: var(--cd-bridge-body-font-family);
-  border-radius: var(--cd-bridge-border-radius);
-}
-
-/* ------------------------------------------------------------
-   8. SIDEBAR / MENU BASE
-   ------------------------------------------------------------ */
-#cd-sidebar {
-  background-color: var(--cd-menu-bg);
-  color: var(--cd-menu-text);
-}
-
-/* Each clickable row — full width */
-.cd-menu-entry {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-/* Main label side */
-.cd-menu-link {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Right-side arrow */
-.cd-menu-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 8px;
-  padding-right: 8px;
-  font-size: 0.8rem;
-}
-
-/* Hover */
-.cd-menu-entry:hover {
-  background-color: var(--cd-menu-hover-bg);
-  color: var(--cd-menu-active-text);
-}
-
-/* Active row */
-.metismenu li.mm-active > .cd-menu-entry,
-.metismenu li.mm-active > .cd-menu-entry:hover {
-  background-color: var(--cd-menu-active-bg) !important;
-  color: var(--cd-menu-active-text) !important;
-}
-
-/* IMPORTANT: Hide only MetisMenu's auto-generated pseudo arrow */
-.metismenu .has-arrow::before {
-  display: none !important;
-  content: none !important;
-}
-```
-
-////////////////////////////////////////
-Take into account this css file too
-// public/themes/common/menu-neutral.css
-
-```css
-cd-menu-root,
-.cd-submenu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cd-menu-item {
-  margin: 0;
-  padding: 0;
-  /* 💡 NEW FIX: Ensure LI elements have no marker */
-  list-style: none;
-}
-
-.cd-menu-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  padding: 8px 12px;
-}
-
-.cd-menu-label {
-  margin-left: 8px;
-}
-
-/* Neutralize unstyled FA pseudo-content before the font loads */
-.fa::before {
-  content: "" !important;
-}
-```
-
-//////////////////////////
-
-Great. That worked. Now the next emerging issue is on-hover and on-select has a white background with whitish text.
-Below are the html and css from the inspector when the effect is active.
-
-```html
-<a
-  href="#"
-  class="cd-menu-link has-arrow"
-  data-id="menu-item-cd-user"
-  aria-expanded="true"
-  ><span class="cd-menu-label">cd-user</span
-  ><i class="menu-arrow fa-solid fa-chevron-right"></i
-></a>
-```
-
-```css
-element {
-}
-#cd-sidebar a.cd-menu-link {
-  color: var(--cd-menu-text) !important;
-}
-.metismenu li.mm-active > a {
-  background-color: var(--menu-active-bg, #e6e6e6);
-  color: var(--menu-active-color, #000);
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu .has-arrow {
-  position: relative;
-}
-.metismenu a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: var(--menu-text-color, #333);
-  font-weight: 500;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-.cd-menu-link {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-}
-a {
-  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-  text-decoration: underline;
-}
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-[role="button"] {
-  cursor: pointer;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
-  color: var(--cd-color-text);
-}
-#cd-sidebar {
-  color: var(--cd-menu-text);
-}
-html,
-body {
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-}
-body {
-  font-family: var(--bs-body-font-family);
-  font-size: var(--bs-body-font-size);
-  font-weight: var(--bs-body-font-weight);
-  line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
-  text-align: var(--bs-body-text-align);
-  -webkit-text-size-adjust: 100%;
-}
-```
-
-///////////////////////////////////////////////
-
-That worked very well.
-We now move to header:
-This being a PWA, we introduced some burger early in development.
-The burger was supposed to be used when the size of the screen is approaching mobile phone.
-The menu is meant to hide for a mobile size screen but can be displayed by clicking the burger icon.
-At the moment it is visible throughout and does not respond to click.
-We need to invistigate and correct the behaviour.
-The codes that were to control it are found in the Main.run() in the section "STEP 8: Setup burger menu"
-Let me know if you need more files to assist in the investigation.
-
-Html from inspector
-
-```html
-<header id="cd-header">
-  <button id="cd-burger">☰</button>
-  <img id="cd-logo" alt="Logo" src="/themes/default/logo.png" />
-  <span id="cd-app-name">Corpdesk Shell</span>
-</header>
-```
-
-```ts
-export class Main {
-  async run() {
-    this.logger.setLevel("debug");
-    this.logger.debug("starting bootstrapShell()");
-
-    // ----------------------------
-    // STEP 0: Load shell config
-    // ----------------------------
-    const shellConfig: ShellConfig = await this.loadShellConfig();
-    if (shellConfig.logLevel) this.logger.setLevel(shellConfig.logLevel);
-
-    // ----------------------------
-    // STEP 1: Core service instantiation
-    // ----------------------------
-
-    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
-    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
-
-    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
-
-    // ----------------------------
-    // STEP 2: Load all cached metadata (uiConfig, uiSystems, themes)
-    // ----------------------------
-    await this.svSysCache.loadAndCacheAll();
-
-    const uiConfig = this.svSysCache.get("uiConfig") as UiConfig;
-    console.log("[Main][run] uiConfig:", uiConfig);
-
-    // ----------------------------
-    // STEP 3: Apply UI-system + Theme pipeline
-    // ----------------------------
-    await this.applyStartupUiSettings();
-
-    // ----------------------------
-    // STEP 3B: Shell layout CSS (base.css + index.css)
-    // NOTE: Must load AFTER ui-system but BEFORE modules + menu
-    // ----------------------------
-    // try {
-    //   await this.svUiSystemLoader.loadCSS(
-    //     "/themes/common/base.css",
-    //     "shell-base"
-    //   );
-    //   await this.svUiSystemLoader.loadCSS(
-    //     "/assets/css/index.css",
-    //     "shell-index"
-    //   );
-    // } catch (err) {
-    //   console.warn("[Main] failed to load shell CSS", err);
-    // }
-
-    // ----------------------------
-    // STEP 4: Theme config (logo + title)
-    // ----------------------------
-    const themeConfig = await this.svTheme.loadThemeConfig();
-
-    document.title =
-      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
-
-    const logoEl = document.getElementById(
-      "cd-logo"
-    ) as HTMLImageElement | null;
-    if (logoEl && themeConfig.logo) {
-      logoEl.src = themeConfig.logo;
-    }
-
-    if (themeConfig.colors?.primary) {
-      document.documentElement.style.setProperty(
-        "--theme-color",
-        themeConfig.colors.primary
-      );
-    }
-
-    // ----------------------------
-    // STEP 5: Prepare menu using your existing logic
-    // ----------------------------
-    const allowedModules: ICdModule[] = await this.svModule.getAllowedModules();
-    const defaultModule = allowedModules.find((m) => m.isDefault);
-    const defaultControllerName = defaultModule?.controllers.find(
-      (c) => c.default
-    )?.name;
-
-    const rawMenu: MenuItem[] = allowedModules.flatMap((mod) => {
-      const recursive = (items: MenuItem[]): MenuItem[] => {
-        return items.map((item) => {
-          if (item.itemType === "route" && item.route) {
-            const cinfo = this.svController.findControllerInfoByRoute(
-              mod,
-              item.route
-            );
-            if (cinfo) {
-              (item as any).controller = cinfo.instance;
-              (item as any).template =
-                typeof cinfo.template === "function"
-                  ? cinfo.template
-                  : () => cinfo.template;
-
-              (item as any).moduleId = mod.moduleId;
-
-              if (mod.isDefault && cinfo.name === defaultControllerName)
-                (item as any).moduleDefault = true;
-            }
-          }
-          if (item.children) item.children = recursive(item.children);
-          return item;
-        });
-      };
-      return recursive(mod.menu || []);
-    });
-
-    const preparedMenu = this.svMenu.prepareMenu(rawMenu);
-
-    // ----------------------------
-    // STEP 6: Render sidebar with the active UI-system adapter
-    // ----------------------------
-    try {
-      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
-      const theme = (await resTheme.json()) as ITheme;
-
-      this.svMenu.renderMenuWithSystem(preparedMenu, theme);
-
-      const sidebarEl = document.getElementById("cd-sidebar");
-
-      if (
-        sidebarEl &&
-        (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")
-      ) {
-        this.svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
-      }
-    } catch (err) {
-      console.error("[Main] Failed rendering menu", err);
-    }
-
-    // ----------------------------
-    // STEP 7: Auto-load default controller
-    // ----------------------------
-    try {
-      const defaultModuleMenu = preparedMenu.find(
-        (m) => m.label === defaultModule?.moduleId
-      );
-
-      const defaultMenuItem = defaultModuleMenu?.children?.find(
-        (it) => it.moduleDefault
-      );
-
-      if (defaultMenuItem) {
-        await this.svMenu.loadResource({ item: defaultMenuItem });
-      }
-    } catch (err) {
-      console.warn("[Main] auto-load default view failed", err);
-    }
-
-    // ----------------------------
-    // STEP 8: Setup burger menu (unchanged)
-    // ----------------------------
-    const burger = document.getElementById("cd-burger");
-    const sidebar = document.getElementById("cd-sidebar");
-    const overlay = document.getElementById("cd-overlay");
-
-    if (burger && sidebar && overlay) {
-      burger.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("hidden");
-      });
-      overlay.addEventListener("click", () => {
-        sidebar.classList.remove("open");
-        overlay.classList.add("hidden");
-      });
-    }
-
-    this.logger.debug("bootstrapShell(): run() complete");
-  }
-}
-```
-
-// index.html source
-
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Corpdesk Shell</title>
-
-    <!-- Vendor-only static dependencies -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-
-    <!-- 🧩 All system and theme CSS are dynamically injected by UiSystemLoaderService & UiThemeLoaderService -->
-  </head>
-
-  <body>
-    <header id="cd-header">
-      <button id="cd-burger">&#9776;</button>
-      <img id="cd-logo" alt="Logo" />
-      <span id="cd-app-name">Corpdesk Shell</span>
-    </header>
-
-    <div id="cd-layout">
-      <div id="cd-overlay" class="hidden"></div>
-      <aside id="cd-sidebar"></aside>
-      <main id="cd-main-content"></main>
-    </div>
-
-    <script type="module" src="/src/app.ts"></script>
-  </body>
-</html>
-```
-
-//////////////////////////////////////////
-
-Console test results:
-
-```log
-document.querySelector("#cd-sidebar").classList.add("open");
-undefined
-getComputedStyle(document.querySelector("#cd-sidebar")).left
-getComputedStyle(document.querySelector("#cd-sidebar")).transform
-"none"
-```
-
-css Reference files:
-
-// public/themes/common/base.css
-
-```css
-/* ============================================================
-   CORPDESK BASE THEME TOKENS
-   These are intentionally minimal so UI systems remain in control.
-   Themes override only these variables.
-   ============================================================ */
-
-:root {
-  --cd-color-bg: #ffffff;
-  --cd-color-surface: #f5f5f5;
-  --cd-color-text: #000000;
-  --cd-color-primary: #0055ff;
-
-  --cd-color-valid: #2ecc71;
-  --cd-color-invalid: #e74c3c;
-  --cd-color-hint: #999;
-
-  --cd-color-border: #cccccc;
-  --cd-color-hover: rgba(0, 0, 0, 0.05);
-
-  --cd-border-radius: 4px;
-  --cd-transition: 0.2s ease;
-
-  --cd-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --cd-font-size: 14px;
-
-  /* Shell layout metrics */
-  --cd-header-height: 60px;
-  --cd-sidebar-width: 260px;
-}
-
-/* ============================================================
-   GLOBAL DEFAULTS (Safe — does not break Bootstrap)
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: var(--cd-font-family);
-  font-size: var(--cd-font-size);
-  /* Global colors controlled by Bootstrap theme */
-}
-
-/* ============================================================
-   SHELL LAYOUT (Isolated from UI systems)
-   ============================================================ */
-
-/* HEADER (fixed-height bar) */
-#cd-header {
-  height: var(--cd-header-height);
-  background: var(--cd-color-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-}
-
-/* LAYOUT WRAPPER */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - var(--cd-header-height));
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-}
-
-/* SIDEBAR */
-#cd-sidebar {
-  width: var(--cd-sidebar-width);
-  flex-shrink: 0;
-  background: var(--cd-color-surface);
-  border-right: 1px solid var(--cd-color-border);
-  overflow-y: auto;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-}
-
-/* OVERLAY (mobile) */
-#cd-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: none;
-}
-
-#cd-overlay.visible {
-  display: block;
-}
-
-/* MAIN CONTENT */
-#cd-main-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  /* background controlled by Bootstrap or global theme variables */
-  min-width: 0; /* Fixes flex children overflow */
-}
-
-/* ============================================================
-   FORM ELEMENTS (Non-destructive, Bootstrap-safe)
-   ============================================================ */
-
-.cd-form-field {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  /* Background/color controlled by Bootstrap theme */
-}
-
-.cd-form-field input {
-  /* Background/color controlled by Bootstrap theme */
-  border: 1px solid var(--cd-color-border);
-  border-radius: var(--cd-border-radius);
-  padding: 0.6rem;
-  transition:
-    border-color var(--cd-transition),
-    box-shadow var(--cd-transition);
-}
-
-/* Validation */
-.cd-form-field input.cd-valid {
-  border-color: var(--cd-color-valid);
-  box-shadow: 0 0 4px var(--cd-color-valid);
-}
-
-.cd-form-field input.cd-invalid {
-  border-color: var(--cd-color-invalid);
-  box-shadow: 0 0 4px var(--cd-color-invalid);
-}
-
-/* Feedback */
-.error-message,
-.cd-hint {
-  font-size: 0.85rem;
-  margin-top: 4px;
-  color: var(--cd-color-hint);
-}
-
-.cd-form-field input.cd-invalid + .error-message,
-.cd-form-field input.cd-invalid + .cd-hint {
-  color: var(--cd-color-invalid);
-}
-
-/* Focus */
-.cd-form-field input:focus {
-  border-color: var(--cd-color-primary);
-  box-shadow: 0 0 5px var(--cd-color-primary);
-  outline: none;
-}
-```
-
-// public/assets/css/index.css
-
-```css
-:root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-}
-
-/* Global reset (safe) */
-html,
-body {
-  /* Global theme controlled by Bootstrap */
-}
-
-/* ---------------------------------------
-   HEADER (cosmetic overrides only)
----------------------------------------- */
-#cd-header {
-  /* Removed !important */
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  background-color: var(--cd-primary-color);
-  color: #ffffff;
-}
-
-/* LOGO */
-#cd-logo {
-  height: 40px;
-  margin-right: 12px;
-  display: block;
-}
-
-/* ---------------------------------------
-   Ensure sidebar honors theme vars
----------------------------------------- */
-#cd-sidebar {
-  /* Removed !important */
-  background-color: var(--cd-color-surface);
-  color: var(--cd-color-text);
-}
-
-/* Sidebar menu items */
-.cd-menu-item {
-  /* Removed !important */
-  background-color: var(--cd-color-surface);
-  color: var(--cd-color-text);
-}
-
-.cd-menu-item:hover {
-  /* Removed !important */
-  background-color: var(--cd-color-hover);
-}
-
-/* OPTIONAL: arbitrary utility classes */
-.cd-flex {
-  display: flex;
-}
-
-.cd-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 ```
 
 // public/assets/ui-systems/bootstrap-538/bridge.css
@@ -6960,971 +249,4075 @@ button[cdButton],
 }
 ```
 
-/////////////////////////////////////////////////
+// public/assets/ui-systems/bootstrap-538/descriptor.json
 
-index.css is where we have @media (max-width: 768px).
-Your recomendation is suggesting we modify this to @media (max-width: 900px) before we update the content inside?
-
-// index.css
-
-```css
-:root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-  --cd-background-color: #ffffff;
-  --cd-text-color: #000000;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--cd-background-color);
-  color: var(--cd-text-color);
-}
-
-#cd-header {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: var(--cd-primary-color);
-}
-
-#cd-logo {
-  height: 40px;
-  margin-right: 10px;
-}
-
-/***************************************************/
-/* Layout container below header */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - 60px); /* adjust if your header is taller */
-}
-
-/* Sidebar styles */
-/* #cd-sidebar {
-  width: 250px;
-  background-color: var(--cd-secondary-color);
-  overflow-y: auto;
-  padding: 10px;
-} */
-
-/* Content area styles */
-#cd-main-content {
-  flex: 1;
-  padding: 20px;
-  background-color: var(--cd-background-color);
-  overflow-y: auto;
-}
-
-/* Optional: fix the header height */
-#cd-header {
-  height: 60px;
-}
-
-/************************************************/
-/* Hide burger by default (visible on small screens) */
-#cd-burger {
-  display: none;
-  font-size: 24px;
-  margin-right: 15px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-/* Sidebar base styles */
-#cd-sidebar {
-  width: 250px;
-  background-color: var(--cd-secondary-color);
-  overflow-y: auto;
-  padding: 10px;
-  transition: transform 0.3s ease;
-}
-
-/* Hide sidebar by default on mobile */
-@media (max-width: 768px) {
-  #cd-burger {
-    display: block;
-  }
-
-  #cd-layout {
-    position: relative;
-  }
-
-  #cd-sidebar {
-    position: fixed;
-    top: 60px; /* below header */
-    left: 0;
-    height: calc(100vh - 60px);
-    transform: translateX(-100%);
-    z-index: 1000;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  }
-
-  #cd-sidebar.open {
-    transform: translateX(0);
-  }
-
-  #cd-overlay {
-    display: block;
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 60px);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 999;
-  }
-
-  #cd-overlay.hidden {
-    display: none;
+```json
+{
+  "id": "bootstrap-538",
+  "name": "Bootstrap 5",
+  "version": "5.3.8",
+  "description": "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.",
+  "author": "Bootstrap Authors",
+  "license": "MIT",
+  "assetPath": "/assets/ui-systems/bootstrap-538",
+  "cssUrl": "bootstrap.min.css",
+  "jsUrl": "bootstrap.bundle.min.js",
+  "stylesheets": ["bootstrap.min.css"],
+  "scripts": ["bootstrap.bundle.min.js"],
+  "conceptMappings": {
+    "button": {
+      "class": "btn btn-primary"
+    },
+    "card": {
+      "class": "card"
+    },
+    "input": {
+      "class": "form-control"
+    },
+    "formGroup": {
+      "class": "mb-3"
+    }
+  },
+  "directiveMap": {
+    "cd-tooltip": "data-bs-toggle=\"tooltip\""
+  },
+  "themesAvailable": [
+    {
+      "id": "default",
+      "name": "Default",
+      "displayName": "Default Theme",
+      "css": "/themes/default/theme.css",
+      "mode": "light"
+    },
+    {
+      "id": "dark",
+      "name": "Dark Mode",
+      "displayName": "Dark Theme",
+      "css": "/themes/dark/theme.css",
+      "mode": "dark"
+    }
+  ],
+  "themeActive": null,
+  "metadata": {
+    "supportsDarkMode": true,
+    "supportsBootstrapThemeSwitch": true
+  },
+  "extensions": {
+    "adapter": "Bootstrap5Adapter",
+    "versionTag": "bootstrap-538"
   }
 }
 ```
 
-/////////////////////////////////////////////////////////
-
-The burger is still showing the burger in desktop mode.
-When adjusted to mobile size, it is not switching/responsive to mobile mode.
-What could we be missing?
-How is 'open' class supposed to be applied to the html?
-
-html from the browser
-
-```html
-<header id="cd-header">
-  <button id="cd-burger">☰</button>
-  <img id="cd-logo" alt="Logo" src="/themes/default/logo.png" />
-  <span id="cd-app-name">Corpdesk Shell</span>
-</header>
-```
-
-```css
-:root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
-
-  --cd-background-color: #ffffff;
-  --cd-text-color: #000000;
-}
-
-/* ---------------------------------------------
-   GLOBAL
----------------------------------------------- */
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--cd-background-color);
-  color: var(--cd-text-color);
-}
-
-/* ---------------------------------------------
-   HEADER
----------------------------------------------- */
-#cd-header {
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  height: 60px;
-  background-color: var(--cd-primary-color);
-  color: #ffffff;
-}
-
-#cd-logo {
-  height: 40px;
-  margin-right: 10px;
-}
-
-/* ---------------------------------------------
-   MAIN LAYOUT WRAPPER
----------------------------------------------- */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - 60px); /* below header */
-}
-
-/* ---------------------------------------------
-   CONTENT AREA
----------------------------------------------- */
-#cd-main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* ---------------------------------------------
-   SIDEBAR (desktop mode)
----------------------------------------------- */
-#cd-sidebar {
-  width: var(--cd-sidebar-width, 250px);
-  background-color: var(--cd-secondary-color);
-  overflow-y: auto;
-  padding: 10px;
-  transition: left 0.3s ease;
-  position: relative; /* desktop default */
-}
-
-/* ---------------------------------------------
-   BURGER BUTTON (hidden by default)
----------------------------------------------- */
-#cd-burger {
-  display: none;
-  font-size: 24px;
-  margin-right: 15px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-/* ---------------------------------------------
-   RESPONSIVE: MOBILE & TABLET VIEW
-   Activate burger mode at <= 900px
----------------------------------------------- */
-@media (max-width: 900px) {
-  /* Show burger */
-  #cd-burger {
-    display: block;
-  }
-
-  /* Hide logo next to burger */
-  #cd-logo {
-    display: none;
-  }
-
-  /* Make layout relative so sidebar can overlay */
-  #cd-layout {
-    position: relative;
-  }
-
-  /* Sidebar becomes sliding drawer */
-  #cd-sidebar {
-    position: fixed;
-    top: 60px;
-    left: calc(-1 * var(--cd-sidebar-width, 250px));
-    height: calc(100vh - 60px);
-    z-index: 1000;
-    background-color: var(--cd-secondary-color);
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Sidebar open state (triggered by Main.ts) */
-  #cd-sidebar.open {
-    left: 0;
-  }
-
-  /* Overlay */
-  #cd-overlay {
-    display: block;
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 60px);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 999;
-  }
-
-  /* Hidden overlay when sidebar closed */
-  #cd-overlay.hidden {
-    display: none;
-  }
-}
-```
-
-///////////////////////////////////////////////////////////
-
-I have implemented the changes but there is no change yet.  
-I propose you revise the Main.run() you had done to include debug infromation.
-
-Note that apart from the console.log, we can use diagnosis.ts to reuse the available facilities or create any needful facility.
-We need to debug the codes we have and tell exactly why they are not doing what is exapected.
-
-// src/CdShell/sys/utils/diagnosis.ts
+// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
 
 ```ts
-export function diag_css(message: string, data: any = {}) {
-  console.log(
-    `%c[CSS-DIAG] ${message}`,
-    "background:#222;color:#0f0;padding:2px 4px;border-radius:3px",
-    data
-  );
+// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
+import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
+import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
+import { diag_css } from "../../../sys/utils/diagnosis";
+
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  constructor() {
+    console.log("%c[Bootstrap538AdapterService] constructor()", "color:#6cf");
+  }
+
+  // ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[Bootstrap538Adapter] activate() START", { id: descriptor?.id });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // DEACTIVATION
+  // ---------------------------------------------------------------------------
+  async deactivate(): Promise<void> {
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THEME APPLICATION
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[Bootstrap538Adapter] applyTheme()", { themeDescriptorOrId });
+
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[Bootstrap538Adapter] applyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+
+      if (typeof themeDescriptorOrId === "string") {
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      } else if (typeof themeDescriptorOrId === "object") {
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[Bootstrap538Adapter] applied Bootstrap theme", { mode });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    console.log(
+      "[Bootstrap538Adapter] getMapping() this.descriptor:",
+      this.descriptor
+    );
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Already mapped but update attributes if any
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapButtons()", { count: nodes.length });
+
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    const selector =
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapInputs()", { count: nodes.length });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapFormGroups()", { count: nodes.length });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — START",
+      "background:#444;color:#aaf;padding:2px"
+    );
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] mapAll error", err);
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — END",
+      "background:#444;color:#aaf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
 }
 
-export function diag_sidebar() {
-  const sb = document.getElementById("cd-sidebar");
-  if (!sb) return;
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
 
-  const style = window.getComputedStyle(sb);
+/////////////////////////////////////////////////////
 
-  console.warn(
-    "%c[SIDEBAR-DIAG] Sidebar State:",
-    "background:#440;color:#fff;padding:3px"
-  );
+Below is the public folder structure.
+Given that you have the full procedure for seting up the tailwind. Is it possible to generate a tailwind-setup directory in cd-shell/sdk directory.
+inside the cd-shell/sdk/ directory we then have setup.sh and uninstall.sh.
+The shell scripts should be able to idempontently install and uninstall tailwind.
+Let me know if there is any further information that would be required.
 
-  console.log("display:", style.display);
-  console.log("position:", style.position);
-  console.log("width:", style.width);
-  console.log("flex-direction:", style.flexDirection);
-  console.log("css file winning:", sb);
+```sh
+emp-12@emp-12 ~/cd-shell (main)> tree public
+public
+├── assets
+│   ├── css
+│   │   ├── font-awesome-6.5.0
+│   │   │   └── all.min.css
+│   │   └── index.css
+│   ├── fonts
+│   ├── images
+│   └── ui-systems
+│       ├── bootstrap-502
+│       │   ├── bootstrap.min.css
+│       │   ├── bootstrap.min.js
+│       │   └── descriptor.json
+│       ├── bootstrap-538
+│       │   ├── bootstrap.bundle.min.js
+│       │   ├── bootstrap.min.css
+│       │   ├── bridge.css
+│       │   └── descriptor.json
+│       └── material-design
+│           ├── bridge.css
+│           ├── descriptor.json
+│           ├── material-components-web.min.css
+│           └── material-components-web.min.js
+├── shell.config.json
+└── themes
+    ├── common
+    │   ├── base.css
+    │   ├── forms
+    │   │   ├── cd-forms.css
+    │   │   └── variants
+    │   │       ├── cd-form-compact.css
+    │   │       ├── cd-form-floating.css
+    │   │       └── cd-form-standard.css
+    │   ├── layout.json
+    │   └── menu-neutral.css
+    ├── dark
+    │   ├── menu-systems
+    │   │   └── metismenu.css
+    │   ├── theme.css
+    │   └── theme.json
+    └── default
+        ├── logo.png
+        ├── menu-systems
+        │   └── metismenu.css
+        ├── theme.css
+        └── theme.json
+```
+
+```json
+{
+  "name": "cd-shell",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf dist dist-ts",
+    "prebuild": "node scripts/prebuild-stubs.js",
+    "compile-ts": "tsc --project tsconfig.json",
+    "dev": "vite --debug",
+    "build": "npm run clean && npm run prebuild && npm run compile-ts && vite build && npm run post-build",
+    "post-build": "node scripts/post-build.js || bash scripts/post-build.sh",
+    "preview": "vite preview --config src/vite.config.ts",
+    "rebuild": "npm run clean && npm run build",
+    "analyze": "vite build --mode analyze"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.18.10",
+    "@types/node-cleanup": "^2.1.5",
+    "@types/update-notifier": "^6.0.8",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typeorm": "0.3",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19"
+  },
+  "dependencies": {
+    "@jest/globals": "^29.7.0",
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/core": "^10.4.15",
+    "@nestjs/testing": "^10.4.15",
+    "@octokit/plugin-rest-endpoint-methods": "^16.0.0",
+    "@octokit/rest": "^22.0.0",
+    "@swc/core": "^1.10.7",
+    "@types/minimist": "^1.2.5",
+    "@types/sqlite3": "^5.1.0",
+    "ast-types": "^0.14.2",
+    "axios": "^1.7.9",
+    "bcrypt": "^5.1.1",
+    "chalk": "^5.4.0",
+    "chokidar": "^4.0.3",
+    "class-validator": "^0.14.1",
+    "cloudmailin": "^0.1.0",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
+    "device-detector-js": "^3.0.3",
+    "execa": "^9.6.0",
+    "html-to-text": "^9.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "logger": "^0.0.1",
+    "metismenujs": "^1.4.0",
+    "minimist": "^1.2.8",
+    "moment": "^2.30.1",
+    "node-cleanup": "^2.1.2",
+    "node-ssh": "^13.2.0",
+    "node-ts-cache-storage-memory": "^4.4.0",
+    "nodemailer": "^6.10.0",
+    "ora": "^8.2.0",
+    "puppeteer": "^24.4.0",
+    "pusher": "^5.2.0",
+    "recast": "^0.23.11",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "simple-git": "^3.28.0",
+    "socket.io-client": "^4.8.1",
+    "sqlite3": "^5.1.7",
+    "update-notifier": "^5.1.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
+    "uuid": "^11.1.0",
+    "zx": "^7.2.3"
+  }
 }
 ```
 
-////////////////////////////////////////////
+// scripts/post-build.sh
 
-For some reason, I did not apply the recommended index.css fully.  
-I have done so and the page is now responsive as required.
-When running in default theme, everything seem ok.
-But it has also broken the dark mode.
-From my analysis, the net effect is that the dark mode is now using the background for default in the main section, #cd-main-content(white) and menu section #cd-sidebar (light gray)
+```sh
+#!/bin/bash
+set -e
 
-index.css
+echo "[post-build] Starting controller → view sync for sys and app..."
+
+SRC_DIR="dist-ts/CdShell"
+DEST_DIR="src/CdShell"
+
+check_and_copy() {
+  local domain=$1
+  local src_path="$SRC_DIR/$domain"
+  local dest_path="$DEST_DIR/$domain"
+
+  if [ ! -d "$src_path" ]; then
+    echo "[warn] Directory not found: $src_path — skipping..."
+    echo "[hint] Try running: npm run compile-ts"
+    return
+  fi
+
+  find "$src_path" -type f -name "*.controller.js" | while read -r controller; do
+    rel_path="${controller#$src_path/}"
+    view_path="$dest_path/${rel_path/controllers/view}"
+
+    mkdir -p "$(dirname "$view_path")"
+    cp "$controller" "$view_path"
+    echo "[post-build] Synced: $rel_path → view/"
+  done
+}
+
+check_and_copy "sys"
+check_and_copy "app"
+
+echo "[post-build] Controller → view sync complete."
+echo "[post-build] Invoking Node view index generator..."
+
+# Run the Node-based auto-index generator
+node scripts/post-build.js
+
+echo "[post-build] All steps complete."
+```
+
+// scripts/post-build.js
+
+```js
+/**
+ * post-build.js
+ * --------------------------
+ * Generates runtime "view" controllers and module wrappers
+ * after TypeScript compilation (dist-ts).
+ *
+ * - Converts each `*.controller.js` class file into a runtime object
+ *   in the corresponding `view` directory.
+ * - Each runtime object follows this shape:
+ *      export const ctlName = {
+ *         __template() { ... },
+ *         __setup() { ... },
+ *         ...
+ *      };
+ *
+ * Usage:
+ *    npm run post-build              → normal
+ *    VERBOSE=true npm run post-build → with detailed logs
+ */
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { promisify } from "util";
+
+// Promisified fs utilities
+const writeFile = promisify(fs.writeFile);
+const open = promisify(fs.open);
+const fsync = promisify(fs.fsync);
+const close = promisify(fs.close);
+
+// Verbose mode toggle
+const VERBOSE = process.env.VERBOSE === "true";
+const vLog = (...args) => VERBOSE && console.log("[VERBOSE]", ...args);
+
+// Path setup
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const PROJECT_ROOT = path.resolve(__dirname, "..");
+const BASE_DIR = path.resolve(__dirname, "../dist-ts/CdShell");
+const SYS_DIR = path.join(BASE_DIR, "sys");
+const APP_DIR = path.join(BASE_DIR, "app");
+
+/* -------------------------------------------------------------------------- */
+/* Helper: Controller name derivation                                         */
+/* -------------------------------------------------------------------------- */
+function deriveControllerNames(filename) {
+  const namePart = filename.replace(".controller.js", "");
+  const pascalName = namePart
+    .split("-")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join("");
+
+  return {
+    runtimeName: "ctl" + pascalName,
+    className: pascalName + "Controller",
+    filename,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Core: Generate a runtime controller stub                                   */
+/* -------------------------------------------------------------------------- */
+async function generateRuntimeControllerStub(
+  sourcePath,
+  targetViewDir,
+  modulePath
+) {
+  const filename = path.basename(sourcePath);
+  const names = deriveControllerNames(filename);
+  const targetPath = path.join(targetViewDir, filename);
+  const relativeDistPath = path
+    .relative(targetViewDir, sourcePath)
+    .replace(/\\/g, "/");
+
+  vLog("Generating runtime stub for:", names.runtimeName);
+
+  if (!fs.existsSync(sourcePath)) {
+    console.warn(`[WARN] Controller source missing: ${sourcePath}`);
+    return;
+  }
+
+  // 🔹 Generate a *runtime object* — not a class instance.
+  const content = `// Generated by post-build.js - Runtime Controller Stub
+import { ${names.className} } from '${relativeDistPath}';
+
+const _controller = new ${names.className}();
+
+export const ${names.runtimeName} = {
+  __template: () => _controller.template?.(),
+  __setup: () => _controller.setup?.(),
+  __processFormData: () => _controller.processFormData?.(),
+  ...Object.keys(_controller)
+    .filter(k => !["template", "setup", "processFormData"].includes(k))
+    .reduce((acc, k) => ({ ...acc, [k]: _controller[k] }), {})
+};
+`;
+
+  // await writeFile(targetPath, content, "utf8");
+
+  // const fd = await open(targetPath, "r+");
+  // await fsync(fd);
+  // await close(fd);
+  // fs.utimesSync(targetPath, new Date(), new Date());
+  // await new Promise((r) => setTimeout(r, 30));
+
+  vLog(`Runtime controller written → ${targetPath}`);
+  return names;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Core: Generate module-level view index                                     */
+/* -------------------------------------------------------------------------- */
+async function syncModuleView(modulePath, controllerFiles) {
+  if (!controllerFiles || controllerFiles.length === 0) return;
+
+  const targetModuleBaseDir = path.resolve(
+    PROJECT_ROOT,
+    `src/CdShell/${modulePath}`
+  );
+  const targetViewDir = path.join(targetModuleBaseDir, "view");
+
+  if (!fs.existsSync(targetViewDir)) {
+    fs.mkdirSync(targetViewDir, { recursive: true });
+    vLog(`Created view directory: ${targetViewDir}`);
+  }
+
+  const imports = [];
+  const runtimeControllers = [];
+
+  for (const sourcePath of controllerFiles) {
+    const names = await generateRuntimeControllerStub(
+      sourcePath,
+      targetViewDir,
+      modulePath
+    );
+    if (!names) continue;
+    runtimeControllers.push(names);
+    imports.push(`import { ${names.runtimeName} } from "./${names.filename}";`);
+  }
+
+  const targetIndexFile = path.join(targetViewDir, "index.js");
+  const [ctx, moduleId = "unknown"] = modulePath.split("/");
+
+  const primaryController =
+    runtimeControllers.find((c) => c.runtimeName === "ctlSignIn") ||
+    runtimeControllers[0];
+
+  if (!primaryController) {
+    console.warn(
+      `[WARN] No primary controller for module ${modulePath}. Skipping index.js.`
+    );
+    return;
+  }
+
+  const templateContent = `${primaryController.runtimeName}.__template()`;
+
+  const indexContent = `// Generated by post-build.js - Module Index
+${imports.join("\n")}
+
+export const ${moduleId.replace("-", "")}Module = {
+  ctx: "${ctx}",
+  moduleId: "${moduleId}",
+  moduleName: "Auto-Generated Module",
+  moduleGuid: "auto-guid",
+  controller: ${primaryController.runtimeName},
+  template: ${templateContent},
+  menu: []
+};
+
+export const module = ${moduleId.replace("-", "")}Module;
+`;
+
+  // await writeFile(targetIndexFile, indexContent, "utf8");
+
+  // const fd = await open(targetIndexFile, "r+");
+  // await fsync(fd);
+  // await close(fd);
+  // fs.utimesSync(targetIndexFile, new Date(), new Date());
+  // await new Promise((r) => setTimeout(r, 30));
+
+  console.log(
+    `[OK] Generated module wrapper: ${path.relative(PROJECT_ROOT, targetIndexFile)}`
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Helpers: Directory traversal & logging                                     */
+/* -------------------------------------------------------------------------- */
+function findControllers(baseDir) {
+  const results = [];
+  function walk(dir) {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir)) {
+      const fullPath = path.join(dir, entry);
+      const stat = fs.statSync(fullPath);
+      if (stat.isDirectory()) walk(fullPath);
+      else if (entry.endsWith(".controller.js")) {
+        vLog("Found controller:", fullPath);
+        results.push(fullPath);
+      }
+    }
+  }
+  walk(baseDir);
+  return results;
+}
+
+function logControllers(type, list) {
+  console.log(`[${type}] Found ${list.length} controllers`);
+  if (VERBOSE)
+    list.forEach((c) => console.log(" -", path.relative(BASE_DIR, c)));
+}
+
+const timestamp = () => new Date().toLocaleString();
+
+/* -------------------------------------------------------------------------- */
+/* Main Execution                                                             */
+/* -------------------------------------------------------------------------- */
+(async function run() {
+  const sysControllers = findControllers(SYS_DIR);
+  const appControllers = findControllers(APP_DIR);
+
+  logControllers("sys", sysControllers);
+  logControllers("app", appControllers);
+
+  const modulesToSync = {};
+
+  [...sysControllers, ...appControllers].forEach((fullPath) => {
+    const relativePath = path.relative(BASE_DIR, fullPath).replace(/\\/g, "/");
+    const match = relativePath.match(/^(.*?\/.*?)\/controllers\//);
+    if (match) {
+      const modulePath = match[1];
+      modulesToSync[modulePath] ||= [];
+      modulesToSync[modulePath].push(fullPath);
+    }
+  });
+
+  vLog("Modules to sync:", Object.keys(modulesToSync));
+
+  for (const modulePath of Object.keys(modulesToSync)) {
+    vLog(`Processing module: ${modulePath}`);
+    await syncModuleView(modulePath, modulesToSync[modulePath]);
+  }
+
+  console.log("[post-build] Controller → view sync complete.");
+  console.log("--------------------------------------------------");
+  console.log(`[post-build] Build completed successfully.`);
+  console.log(timestamp());
+  console.log("--------------------------------------------------");
+})();
+```
+
+/////////////////////////////////////////////////////////////
+Below are all the associated file that will need refactoring.
+The html to be rendered is processed by sign-in.controller.js as shown below.
+// /src/CdShell/sys/cd-user/view/sign-in.controller.js
+
+```js
+import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
+import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
+import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
+import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
+
+export const ctlSignIn = {
+  form: null,
+  binder: null,
+
+  /**
+   * Initializes the controller — constructs the form and binder.
+   */
+  __init() {
+    this.form = new CdFormGroup({
+      userName: new CdFormControl("", [
+        CdValidators.required("Username is required"),
+      ]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "Password must be at least 4 characters"),
+      ]),
+    });
+
+    // Initialize binder — form selector must match template form ID
+    this.binder = new CdDirectiveBinderService(this.form, "#signInForm", this);
+  },
+
+  /**
+   * HTML template for the view.
+   */
+  __template() {
+    return `
+      <form id="signInForm" class="cd-form">
+        <div class="cd-form-field">
+          <label for="userName">Username</label>
+          <input
+            id="userName"
+            name="userName"
+            cdFormControl
+            placeholder="Enter username"
+          />
+          <div class="error-message" data-error-for="userName"></div>
+        </div>
+
+        <div class="cd-form-field">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            cdFormControl
+            placeholder="Enter password"
+          />
+          <div class="error-message" data-error-for="password"></div>
+        </div>
+
+        <button cdButton>Sign In</button>
+      </form>
+    `;
+  },
+
+  /**
+   * Runs after template is rendered to DOM.
+   */
+  __setup() {
+    // Initialize form and binder if not already
+    if (!this.form) this.__init();
+
+    const form = document.querySelector("#signInForm");
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        this.auth();
+      });
+    }
+  },
+
+  /**
+   * Authentication handler.
+   */
+  async auth() {
+    const validationResult = this.form.validateAll();
+    this.binder.applyValidationStyles(validationResult);
+
+    if (!this.form.valid) {
+      alert("Please correct the highlighted errors.");
+      return;
+    }
+
+    const user = this.form.value;
+    console.log("Authenticating:", user);
+    alert(`Welcome, ${user.userName}!`);
+  },
+
+  // 💡 NEW: Deactivation Hook - Runs when user clicks *away*
+  __deactivate() {
+    console.log("[ctlSignIn][__deactivate] 01");
+    // Stop any active animations, remove DOM-dependent listeners, etc.
+    // The binder must provide a way to remove all listeners.
+    if (this.binder?.unbindAllDomEvents) {
+      this.binder.unbindAllDomEvents();
+    }
+  },
+
+  // 💡 NEW: Activation Hook - Runs when view is *injected*
+  async __activate() {
+    console.log("[ctlSignIn][__activate] 01");
+    // Re-establish DOM bindings and apply current form state
+    if (this.binder?.bindToDom) {
+      // This method must find the newly injected DOM (#settingsForm)
+      // and re-attach all form control listeners (input, change, blur)
+      await this.binder.bindToDom();
+    }
+    // Optional: Restore scroll position, run focus logic, etc.
+  },
+};
+```
+
+// public/assets/ui-systems/material-design/bridge.css
 
 ```css
+/* ============================================================
+   CORPDESK BRIDGE FOR MATERIAL COMPONENTS WEB (MDC)
+   Purpose:
+   - Provide Corpdesk UX tokens compatible with MDC
+   - Ensure readable text in dark/light themes
+   - Normalize sidebar/menu appearance
+   ============================================================ */
+
+/* 1. Root tokens (light defaults) */
 :root {
-  --cd-primary-color: #1976d2;
-  --cd-secondary-color: #eeeeee;
-  --cd-accent-color: #ff4081;
+  --cd-bridge-body-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+  --cd-bridge-body-font-size: 1rem;
+  --cd-bridge-border-radius: 4px;
 
-  --cd-background-color: #ffffff;
-  --cd-text-color: #000000;
+  /* generic colors */
+  --cd-color-border: #d1d5db;
+  --cd-input-text-color: #212529;
+
+  /* sidebar defaults (light) */
+  --cd-menu-bg: #ffffff;
+  --cd-menu-text: #222222;
+
+  --cd-menu-active-bg: #f1f3f5;
+  --cd-menu-active-text: #0b0b0b;
+  --cd-menu-hover-bg: rgba(0, 0, 0, 0.04);
 }
 
-/* ---------------------------------------------
-   GLOBAL
----------------------------------------------- */
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--cd-background-color);
-  color: var(--cd-text-color);
+/* 2. Light theme explicit (if theme system sets it) */
+html[data-md-theme="light"] {
+  --cd-menu-bg: #ffffff;
+  --cd-menu-text: #222222;
+  --cd-menu-active-bg: #f1f3f5;
+  --cd-menu-active-text: #0b0b0b;
+  --cd-input-text-color: #212529;
 }
 
-/* ---------------------------------------------
-   HEADER
----------------------------------------------- */
-#cd-header {
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  height: 60px;
-  background-color: var(--cd-primary-color);
-  color: #ffffff;
+/* 3. Dark theme (scoped to md theme flag) */
+html[data-md-theme="dark"] {
+  --cd-menu-bg: #121212;
+  --cd-menu-text: #e6e6e6;
+
+  --cd-menu-active-bg: #1f2a2f; /* subdued dark blue/grey */
+  --cd-menu-active-text: #ffffff;
+  --cd-menu-hover-bg: rgba(255, 255, 255, 0.06);
+
+  --cd-input-text-color: #e6e6e6;
+  --cd-color-border: #333842;
 }
 
-#cd-logo {
-  height: 40px;
-  margin-right: 10px;
+/* 4. Form labels */
+.cd-form-field > label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cd-input-text-color);
 }
 
-/* ---------------------------------------------
-   MAIN LAYOUT WRAPPER
----------------------------------------------- */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - 60px); /* below header */
+/* 5. Inputs */
+.cd-form-field input,
+.cd-form-field textarea,
+.cd-form-field select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--cd-bridge-body-font-size);
+  font-family: var(--cd-bridge-body-font-family);
+  color: var(--cd-input-text-color);
+  background-color: transparent;
+  border: 1px solid var(--cd-color-border);
+  border-radius: var(--cd-bridge-border-radius);
+  box-sizing: border-box;
 }
 
-/* ---------------------------------------------
-   CONTENT AREA
----------------------------------------------- */
-#cd-main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* ---------------------------------------------
-   SIDEBAR (desktop mode)
----------------------------------------------- */
-#cd-sidebar {
-  width: var(--cd-sidebar-width, 250px);
-  background-color: var(--cd-secondary-color);
-  overflow-y: auto;
-  padding: 10px;
-  transition: left 0.3s ease;
-  position: relative; /* desktop default */
-}
-
-/* ---------------------------------------------
-   BURGER BUTTON (hidden by default)
----------------------------------------------- */
-#cd-burger {
-  display: none;
-  font-size: 24px;
-  margin-right: 15px;
-  background: none;
-  border: none;
-  color: white;
+/* 6. Buttons (generic) */
+button[cdButton],
+.cd-button {
+  font-family: var(--cd-bridge-body-font-family);
+  border-radius: var(--cd-bridge-border-radius);
   cursor: pointer;
 }
 
-/* ---------------------------------------------
-   RESPONSIVE: MOBILE & TABLET VIEW
-   Activate burger mode at <= 900px
----------------------------------------------- */
-@media (max-width: 900px) {
-  /* Show burger */
-  #cd-burger {
-    display: block;
-  }
+/* 7. Sidebar / Menu */
+#cd-sidebar {
+  background-color: var(--cd-menu-bg);
+  color: var(--cd-menu-text);
+}
 
-  /* Hide logo next to burger */
-  #cd-logo {
-    display: none;
-  }
+/* menu link baseline (neutral) */
+#cd-sidebar a.cd-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--cd-menu-text);
+  font-weight: 500;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
 
-  /* Make layout relative so sidebar can overlay */
-  #cd-layout {
-    position: relative;
-  }
+/* hover */
+#cd-sidebar a.cd-menu-link:hover {
+  background-color: var(--cd-menu-hover-bg);
+  color: var(--cd-menu-active-text);
+}
 
-  /* Sidebar becomes sliding drawer */
-  #cd-sidebar {
-    position: fixed;
-    top: 60px;
-    left: calc(-1 * var(--cd-sidebar-width, 250px));
-    height: calc(100vh - 60px);
-    z-index: 1000;
-    background-color: var(--cd-secondary-color);
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  }
+/* active row */
+#cd-sidebar .metismenu li.mm-active > a,
+#cd-sidebar .metismenu li.mm-active > a:hover {
+  background-color: var(--cd-menu-active-bg) !important;
+  color: var(--cd-menu-active-text) !important;
+}
 
-  /* Sidebar open state (triggered by Main.ts) */
-  #cd-sidebar.open {
-    left: 0;
-  }
+/* neutralize MetisMenu pseudo arrow if present */
+.metismenu .has-arrow::before {
+  display: none !important;
+  content: none !important;
+}
 
-  /* Overlay */
-  #cd-overlay {
-    display: block;
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 60px);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 999;
-  }
+/* small helper for sidebar arrow area */
+.cd-menu-arrow {
+  margin-left: auto;
+  padding-left: 8px;
+  padding-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
 
-  /* Hidden overlay when sidebar closed */
-  #cd-overlay.hidden {
-    display: none;
+/* accessibility: remove undesired default focus outlines (bridge-controlled) */
+#cd-sidebar li:focus,
+#cd-sidebar li:focus-within,
+#cd-sidebar a:focus,
+#cd-sidebar a:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: inherit !important;
+}
+```
+
+```json
+{
+  "id": "material-design",
+  "name": "Material Components Web",
+  "version": "1.0.0",
+  "description": "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.",
+  "author": "Material Authors",
+  "license": "Apache-2.0",
+  "assetPath": "/assets/ui-systems/material-design",
+  "cssUrl": "material-components-web.min.css",
+  "jsUrl": "material-components-web.min.js",
+  "stylesheets": ["material-components-web.min.css"],
+  "scripts": ["material-components-web.min.js"],
+  "conceptMappings": {
+    "button": {
+      "class": "mdc-button mdc-button--raised"
+    },
+    "card": {
+      "class": "mdc-card"
+    },
+    "input": {
+      "class": "mdc-text-field__input",
+      "attrs": {}
+    },
+    "formGroup": {
+      "class": "mdc-form-field"
+    }
+  },
+  "directiveMap": {
+    "cd-tooltip": "data-md-tooltip=\"true\""
+  },
+  "themesAvailable": [
+    {
+      "id": "default",
+      "name": "Default",
+      "displayName": "Default Theme",
+      "css": "/themes/default/theme.css",
+      "mode": "light"
+    },
+    {
+      "id": "dark",
+      "name": "Dark Mode",
+      "displayName": "Dark Theme",
+      "css": "/themes/dark/theme.css",
+      "mode": "dark"
+    }
+  ],
+  "themeActive": null,
+  "metadata": {
+    "supportsDarkMode": true,
+    "recommendedIconLib": "material-icons"
+  },
+  "extensions": {
+    "adapter": "MaterialDesignAdapter",
+    "versionTag": "material-design"
   }
 }
+```
+
+// src/CdShell/app/ui-adaptor-port/services/material-design-adapter.service.ts
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/material-design-adapter.service.ts
+import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
+import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
+import { diag_css } from "../../../sys/utils/diagnosis";
+
+type Mapping = UiConceptMapping | undefined;
+
+export class MaterialDesignAdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  constructor() {
+    console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+  }
+
+  // ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[MaterialDesignAdapter] activate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "[MaterialDesignAdapter] descriptor.conceptMappings missing!"
+      );
+    } else {
+      console.log(
+        "%c[MaterialDesignAdapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // initial pass
+    diag_css("[MaterialDesignAdapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // attach observer
+    this.observeMutations();
+
+    diag_css("[MaterialDesignAdapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // DEACTIVATION
+  // ---------------------------------------------------------------------------
+  async deactivate(): Promise<void> {
+    diag_css("[MaterialDesignAdapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-md-theme");
+      console.log("[MaterialDesignAdapter] removed data-md-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[MaterialDesignAdapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[MaterialDesignAdapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THEME APPLICATION
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[MaterialDesignAdapter] applyTheme()", { themeDescriptorOrId });
+
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[MaterialDesignAdapter] applyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+      if (typeof themeDescriptorOrId === "string") {
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      } else if (typeof themeDescriptorOrId === "object") {
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-md-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[MaterialDesignAdapter] applied Material theme", { mode });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[MaterialDesignAdapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // already mapped: update attrs if provided
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[MaterialDesignAdapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    // keep track so we don't reapply repeatedly
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[MaterialDesignAdapter] mapButtons()", { count: nodes.length });
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    // map text-like inputs
+    const selector =
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl], input, textarea, select";
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>(selector)
+    ).filter((n) => {
+      // prefer mapping only for form controls flagged with cdFormControl or inside .cd-form-field
+      return (
+        n.hasAttribute("cdFormControl") || n.closest(".cd-form-field") !== null
+      );
+    });
+
+    diag_css("[MaterialDesignAdapter] mapInputs()", { count: nodes.length });
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapFormGroups()", {
+      count: nodes.length,
+    });
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+    diag_css("[MaterialDesignAdapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — START",
+      "background:#223;color:#9cf;padding:2px"
+    );
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] mapAll error", err);
+    }
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — END",
+      "background:#223;color:#9cf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[MaterialDesignAdapter] Mutation detected → scheduling mapAll()",
+        "color:#ffb;"
+      );
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register with the adapter registry
+UiSystemAdapterRegistry.register(
+  "material-design",
+  new MaterialDesignAdapterService()
+);
 ```
 
 //////////////////////////////////////////////
-Below is the html and css from the browser inspector when a menu item is selected and in focus.
+There seem to be an issue: [MaterialDesignAdapter] MDCTextField init failed: TypeError: can't access property "addEventListener", n.input is null.
+
+html extract from browser
+
 ```html
-<li
-  id="menu-item-menu-item-cd-user"
-  class=""
-  data-id="menu-item-cd-user"
-  data-type="route"
-  data-route="sys/cd-user"
-  tabindex="0"
-  role="button"
->
-  <a
-    href="#"
-    class="cd-menu-link has-arrow mm-collapsed"
-    data-id="menu-item-cd-user"
-    aria-expanded="false"
-    ><span class="cd-menu-label">cd-user</span
-    ><i class="menu-arrow fa-solid fa-chevron-right"></i
-  ></a>
-  <ul class="mm-collapse" style="">
-    <li
-      id="menu-item-menu-item-cd-user-sign-in"
-      class=""
-      data-id="menu-item-cd-user-sign-in"
-      data-type="route"
-      data-route="sys/cd-user/sign-in"
-      tabindex="0"
-      role="button"
-    >
-      <a
-        href="/sys/cd-user/sign-in"
-        class="cd-menu-link"
-        data-id="menu-item-cd-user-sign-in"
-        ><span class="cd-menu-label">sign-in</span></a
-      >
-    </li>
-  </ul>
-</li>
+<main id="cd-main-content">
+  <form id="signInForm" class="cd-form">
+    <div class="cd-form-field mdc-form-field" data-md-transformed="1">
+      <div class="mdc-text-field cd-md-text-field mdc-text-field--filled">
+        <input
+          id="userName"
+          name="userName"
+          cdformcontrol=""
+          placeholder=""
+          class="cd-valid"
+        /><label class="mdc-floating-label" for="userName">Username</label>
+        <div class="mdc-line-ripple"></div>
+      </div>
+      <div class="error-message" data-error-for="userName"></div>
+    </div>
+
+    <div class="cd-form-field mdc-form-field" data-md-transformed="1">
+      <div class="mdc-text-field cd-md-text-field mdc-text-field--filled">
+        <input
+          id="password"
+          name="password"
+          type="password"
+          cdformcontrol=""
+          placeholder=""
+          class="cd-valid"
+        /><label class="mdc-floating-label" for="password">Password</label>
+        <div class="mdc-line-ripple"></div>
+      </div>
+      <div class="error-message" data-error-for="password"></div>
+    </div>
+
+    <button cdbutton="" class="mdc-button mdc-button--raised">Sign In</button>
+  </form>
+</main>
 ```
+
+launch logs
+
+```log
+[MaterialDesignAdapter] mapAll() — START index-CvuyS6s1.js:48:22081
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
+Object { count: 0 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] getMapping('input') =
+Object { class: "mdc-text-field__input", attrs: {} }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
+Object { candidates: 0 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] getMapping('formGroup') =
+Object { class: "mdc-form-field" }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 0 }
+index-CvuyS6s1.js:48:11158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] mapAll() — END index-CvuyS6s1.js:48:22328
+[MenuService] Waiting for controller services to initialize... attempt 10 index-CvuyS6s1.js:31:6640
+MenuService::loadResource()/03: Injecting template into DOM index-CvuyS6s1.js:31:6783
+MenuService::loadResource()/04: Executing __activate() index-CvuyS6s1.js:31:7038
+[ctlSignIn][__activate] 01 index-BEx0eJtE.js:28:584
+[CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
+[Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
+[MaterialDesignAdapter] Mutation detected → scheduling mapAll() index-CvuyS6s1.js:48:22555
+MenuService::loadResource()/end index-CvuyS6s1.js:31:7283
+[CSS-DIAG] Default controller loaded
+Object {  }
+index-CvuyS6s1.js:48:11158
+[SHELL] [DEBUG] bootstrapShell(): run() complete index-CvuyS6s1.js:48:1132
+[CSS-DIAG] Main.run() complete
+Object {  }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] mapAll() — START index-CvuyS6s1.js:48:22081
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
+Object { count: 1 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] Applying mapping to element:
+Object { tag: "BUTTON", mapping: {…} }
+index-CvuyS6s1.js:48:18850
+[MaterialDesignAdapter] getMapping('input') =
+Object { class: "mdc-text-field__input", attrs: {} }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
+Object { candidates: 2 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] MDCTextField init failed: TypeError: can't access property "addEventListener", n.input is null
+    registerInteractionHandler https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    registerRootHandlers https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    init https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    y https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    t https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    createRipple https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    initialize https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    C https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    initMdcTextField https://localhost:5173/assets/index-CvuyS6s1.js:48
+    mapInputs https://localhost:5173/assets/index-CvuyS6s1.js:48
+    mapInputs https://localhost:5173/assets/index-CvuyS6s1.js:48
+    mapAll https://localhost:5173/assets/index-CvuyS6s1.js:48
+    observer https://localhost:5173/assets/index-CvuyS6s1.js:48
+index-CvuyS6s1.js:48:21358
+[MaterialDesignAdapter] MDCTextField init failed: TypeError: can't access property "addEventListener", n.input is null
+    registerInteractionHandler https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    registerRootHandlers https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    init https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    y https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    t https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    createRipple https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    initialize https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    C https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    initMdcTextField https://localhost:5173/assets/index-CvuyS6s1.js:48
+    mapInputs https://localhost:5173/assets/index-CvuyS6s1.js:48
+    mapInputs https://localhost:5173/assets/index-CvuyS6s1.js:48
+    mapAll https://localhost:5173/assets/index-CvuyS6s1.js:48
+    observer https://localhost:5173/assets/index-CvuyS6s1.js:48
+index-CvuyS6s1.js:48:21358
+[MaterialDesignAdapter] getMapping('formGroup') =
+Object { class: "mdc-form-field" }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 2 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] Applying mapping to element:
+Object { tag: "DIV", mapping: {…} }
+index-CvuyS6s1.js:48:18850
+[MaterialDesignAdapter] Applying mapping to element:
+Object { tag: "DIV", mapping: {…} }
+index-CvuyS6s1.js:48:18850
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] mapAll() — END index-CvuyS6s1.js:48:22328
+[MaterialDesignAdapter] Mutation detected → scheduling mapAll() index-CvuyS6s1.js:48:22555
+[MaterialDesignAdapter] mapAll() — START index-CvuyS6s1.js:48:22081
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
+Object { count: 1 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] getMapping('input') =
+Object { class: "mdc-text-field__input", attrs: {} }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
+Object { candidates: 2 }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] getMapping('formGroup') =
+Object { class: "mdc-form-field" }
+index-CvuyS6s1.js:48:18633
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 2 }
+index-CvuyS6s1.js:48:11158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-CvuyS6s1.js:48:11158
+[MaterialDesignAdapter] mapAll() — END
+```
+
+/////////////////////////////////////
+Same symptoms still prevail.
+Perhaps you can focus on implementing debuging logs that can narrow down of the actuall issue.
+Below is the status of the MaterialDesignAdapterService.
+I made some correction of the codes you proposed based on typescript issues. You can also veryfy that by correcting, I did not intoduce any anomaly.
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/material-design-adapter.service.ts
+import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
+import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
+import { diag_css } from "../../../sys/utils/diagnosis";
+
+type Mapping = UiConceptMapping | undefined;
+
+export class MaterialDesignAdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  /**
+   * MDC initialization must not run multiple times during rapid DOM mutations, so we use this flag as a debounce guard.
+   */
+  private mdcInitQueued: boolean = false;
+
+  constructor() {
+    console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+  }
+
+  // ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[MaterialDesignAdapter] activate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "[MaterialDesignAdapter] descriptor.conceptMappings missing!"
+      );
+    } else {
+      console.log(
+        "%c[MaterialDesignAdapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // initial pass
+    diag_css("[MaterialDesignAdapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // attach observer
+    this.observeMutations();
+
+    diag_css("[MaterialDesignAdapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // DEACTIVATION
+  // ---------------------------------------------------------------------------
+  async deactivate(): Promise<void> {
+    diag_css("[MaterialDesignAdapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-md-theme");
+      console.log("[MaterialDesignAdapter] removed data-md-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[MaterialDesignAdapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[MaterialDesignAdapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THEME APPLICATION
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[MaterialDesignAdapter] applyTheme()", { themeDescriptorOrId });
+
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[MaterialDesignAdapter] applyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+      if (typeof themeDescriptorOrId === "string") {
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      } else if (typeof themeDescriptorOrId === "object") {
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-md-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[MaterialDesignAdapter] applied Material theme", { mode });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[MaterialDesignAdapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // already mapped: update attrs if provided
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[MaterialDesignAdapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    // keep track so we don't reapply repeatedly
+    this.appliedSet.add(el);
+  }
+
+  /**
+   * Dom Construction for MDC form fields
+   * Accepts either an input/textarea/select element or a wrapper (.cd-form-field) HTMLElement.
+   * @param target input element or wrapper element
+   * @returns
+   */
+  private prepareMdcDom(
+    target:
+      | HTMLElement
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement
+  ) {
+    if (!target) return;
+
+    // Resolve the actual form control element (input/textarea/select)
+    let inputEl:
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement
+      | null = null;
+
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target instanceof HTMLSelectElement
+    ) {
+      inputEl = target;
+    } else if (target instanceof HTMLElement) {
+      inputEl = target.querySelector<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >("input, textarea, select");
+    }
+
+    if (!inputEl) return;
+
+    const wrapperEl = inputEl.closest(".cd-form-field");
+    if (
+      !wrapperEl ||
+      !(wrapperEl instanceof HTMLElement) ||
+      wrapperEl.dataset.mdTransformed === "1"
+    )
+      return;
+
+    const wrapper = wrapperEl;
+
+    wrapper.dataset.mdTransformed = "1";
+
+    // Build MDC DOM
+    const mdc = document.createElement("div");
+    mdc.className = "mdc-text-field mdc-text-field--filled cd-md-text-field";
+
+    const ripple = document.createElement("span");
+    ripple.className = "mdc-text-field__ripple";
+
+    const label = document.createElement("label");
+    label.className = "mdc-floating-label";
+    label.htmlFor = (inputEl as HTMLElement).id;
+    label.textContent = wrapper.querySelector("label")?.textContent ?? "";
+
+    const lineRipple = document.createElement("span");
+    lineRipple.className = "mdc-line-ripple";
+
+    inputEl.classList.add("mdc-text-field__input");
+
+    mdc.append(ripple, inputEl, label, lineRipple);
+    wrapper.querySelector("label")?.remove();
+    wrapper.prepend(mdc);
+  }
+
+  private scheduleMdcInit() {
+    if (this.mdcInitQueued) return;
+    this.mdcInitQueued = true;
+
+    setTimeout(() => {
+      this.mdcInitQueued = false;
+      this.initAllMdcTextFields();
+    }, 20);
+  }
+
+  private initAllMdcTextFields() {
+    const { MDCTextField } = (window as any).mdc || {};
+    if (!MDCTextField) return;
+
+    document.querySelectorAll(".cd-md-text-field").forEach((el) => {
+      if ((el as HTMLElement).dataset.mdInitialized === "1") return;
+
+      try {
+        new MDCTextField(el);
+        (el as HTMLElement).dataset.mdInitialized = "1";
+      } catch (err) {
+        console.warn("[MaterialDesignAdapter] MDCTextField init failed:", err);
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[MaterialDesignAdapter] mapButtons()", { count: nodes.length });
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    // select potential form-control containers
+    const formFieldNodes = Array.from(
+      document.querySelectorAll<HTMLElement>(".cd-form-field")
+    );
+
+    diag_css("[MaterialDesignAdapter] mapInputs()", {
+      candidates: formFieldNodes.length,
+    });
+
+    formFieldNodes.forEach((field) => {
+      try {
+        const input = field.querySelector<
+          HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >("input, textarea, select");
+        const label = field.querySelector<HTMLLabelElement>("label");
+
+        if (!input) return; // nothing to do
+
+        // skip if already transformed
+        if (field.dataset.mdTransformed === "1") return;
+
+        // Create MDC text-field wrapper
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("mdc-text-field", "cd-md-text-field");
+        // Use filled style for material look (changeable)
+        wrapper.classList.add("mdc-text-field--filled");
+
+        // Move the input into wrapper (preserve attributes)
+        // clone input to avoid losing event listeners (rare), but keep original reference usable
+        const inputClone = input.cloneNode(true) as HTMLElement;
+        // remove placeholder (we'll use label); keep placeholder as fallback attribute
+        const placeholder = (input as HTMLInputElement).placeholder || "";
+        if (inputClone instanceof HTMLInputElement) inputClone.placeholder = "";
+
+        // Build floating label
+        const floatingLabel = document.createElement("label");
+        floatingLabel.classList.add("mdc-floating-label");
+        // label text: prefer existing label text; fallback to placeholder or name
+        const labelText =
+          (label && label.textContent && label.textContent.trim()) ||
+          placeholder ||
+          (input as HTMLInputElement).name ||
+          "";
+        floatingLabel.textContent = labelText;
+
+        // Build line ripple (visual bottom bar) — used by filled style
+        const lineRipple = document.createElement("div");
+        lineRipple.classList.add("mdc-line-ripple");
+
+        // Transfer id/for semantics: ensure input has id; if original label existed, remove it after keeping text
+        let inputId = (input as HTMLElement).id;
+        if (!inputId) {
+          inputId = `cd-md-input-${Math.random().toString(36).slice(2, 8)}`;
+          (inputClone as HTMLElement).id = inputId;
+        }
+        floatingLabel.setAttribute("for", inputId);
+
+        // Move inputClone inside wrapper
+        wrapper.appendChild(inputClone);
+        wrapper.appendChild(floatingLabel);
+        wrapper.appendChild(lineRipple);
+
+        // Replace original input + label in DOM:
+        // if label exists, remove it (we've captured the text)
+        if (label) label.remove();
+
+        // replace input element in the field with wrapper
+        input.replaceWith(wrapper);
+
+        // Mark transformed
+        field.dataset.mdTransformed = "1";
+
+        // Copy any attributes from original input node to clone that matter for binding
+        // (id already handled). For safety, copy name, type, value, required, disabled, aria-*
+        const orig = input as HTMLElement;
+        const clone = inputClone as HTMLElement;
+        [
+          "name",
+          "type",
+          "value",
+          "required",
+          "disabled",
+          "aria-label",
+          "aria-describedby",
+        ].forEach((attr) => {
+          const v = (orig as any).getAttribute?.(attr);
+          if (v !== null && v !== undefined) clone.setAttribute?.(attr, v);
+        });
+
+        // Now initialize MDC TextField if available (UMD global `mdc`)
+        this.initMdcTextField(wrapper as HTMLElement);
+
+        // Fallback handlers: focus/blur toggles for the label animation if MDC not present
+        if (!(window as any).mdc || !(window as any).mdc.textField) {
+          const inputElement = wrapper.querySelector<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+          >("input, textarea, select");
+          if (inputElement) {
+            // initial state: if input has value, add 'mdc-text-field--focused' to keep label floated
+            if (
+              (inputElement as HTMLInputElement).value &&
+              (inputElement as HTMLInputElement).value.length > 0
+            ) {
+              wrapper.classList.add("mdc-text-field--focused");
+            }
+            inputElement.addEventListener("focus", () =>
+              wrapper.classList.add("mdc-text-field--focused")
+            );
+            inputElement.addEventListener("blur", () => {
+              if (
+                !(inputElement as HTMLInputElement).value ||
+                (inputElement as HTMLInputElement).value.length === 0
+              ) {
+                wrapper.classList.remove("mdc-text-field--focused");
+              }
+            });
+          }
+        }
+
+        // apply mapping attributes if mapping provides them (like aria attrs)
+        if (mapping.attrs) {
+          Object.entries(mapping.attrs).forEach(([k, v]) =>
+            wrapper.setAttribute(k, v as string)
+          );
+        }
+
+        // Remember so applyMappingToElement doesn't later add bootstrap classes
+        this.appliedSet.add(wrapper as unknown as HTMLElement);
+      } catch (err) {
+        console.warn("[MaterialDesignAdapter] mapInputs: transform error", err);
+      }
+    });
+  }
+
+  /**
+   * initMdcTextField(wrapper)
+   * - If MDC Web is available (UMD global `mdc`), instantiate MDCTextField for the wrapper.
+   * - If already instantiated, skip.
+   */
+  private initMdcTextField(wrapper: HTMLElement) {
+    try {
+      const mdcGlobal = (window as any).mdc;
+      if (
+        mdcGlobal &&
+        mdcGlobal.textField &&
+        typeof mdcGlobal.textField.MDCTextField === "function"
+      ) {
+        // Avoid double-instantiation
+        if (!(wrapper as any).__mdc_textfield_inst) {
+          try {
+            const tf = new mdcGlobal.textField.MDCTextField(wrapper);
+            (wrapper as any).__mdc_textfield_inst = tf;
+          } catch (e) {
+            // fallback: mark it and go with CSS-based behavior
+            (wrapper as any).__mdc_textfield_inst = null;
+            console.warn(
+              "[MaterialDesignAdapter] MDCTextField init failed:",
+              e
+            );
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] initMdcTextField error", err);
+    }
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapFormGroups()", {
+      count: nodes.length,
+    });
+    // nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    nodes.forEach((el) => {
+      this.applyMappingToElement(el, mapping);
+      this.prepareMdcDom(el); // NEW — build MDC wrapper
+    });
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+    diag_css("[MaterialDesignAdapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+      // nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+      nodes.forEach((el) => {
+        this.applyMappingToElement(el, mapping);
+        this.prepareMdcDom(el); // NEW — build MDC wrapper
+      });
+    });
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — START",
+      "background:#223;color:#9cf;padding:2px"
+    );
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] mapAll error", err);
+    }
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — END",
+      "background:#223;color:#9cf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[MaterialDesignAdapter] Mutation detected → scheduling mapAll()",
+        "color:#ffb;"
+      );
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register with the adapter registry
+UiSystemAdapterRegistry.register(
+  "material-design",
+  new MaterialDesignAdapterService()
+);
+```
+
+//////////////////////////////////////////////
+Resulting logs:
+
+```log
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+​
+class: "mdc-button mdc-button--raised"
+​
+<prototype>: Object { … }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 0 }
+index-DInrB58P.js:48:11158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] mapAll() — END index-DInrB58P.js:48:26184
+[MenuService] Waiting for controller services to initialize... attempt 7 index-DInrB58P.js:31:6640
+[MenuService] Waiting for controller services to initialize... attempt 8 index-DInrB58P.js:31:6640
+[MenuService] Waiting for controller services to initialize... attempt 9 index-DInrB58P.js:31:6640
+[MaterialDesignAdapter] mapAll() — START index-DInrB58P.js:48:25914
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
+Object { count: 0 }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] getMapping('input') =
+Object { class: "mdc-text-field__input", attrs: {} }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
+Object { candidates: 0 }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] getMapping('formGroup') =
+Object { class: "mdc-form-field" }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 0 }
+index-DInrB58P.js:48:11158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] mapAll() — END index-DInrB58P.js:48:26184
+[MenuService] Waiting for controller services to initialize... attempt 10 index-DInrB58P.js:31:6640
+MenuService::loadResource()/03: Injecting template into DOM index-DInrB58P.js:31:6783
+MenuService::loadResource()/04: Executing __activate() index-DInrB58P.js:31:7038
+[ctlSignIn][__activate] 01 index-BEx0eJtE.js:28:584
+[CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
+[Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
+[MaterialDesignAdapter] Mutation detected → scheduling mapAll() index-DInrB58P.js:48:26411
+MenuService::loadResource()/end index-DInrB58P.js:31:7283
+[CSS-DIAG] Default controller loaded
+Object {  }
+index-DInrB58P.js:48:11158
+[SHELL] [DEBUG] bootstrapShell(): run() complete index-DInrB58P.js:48:1132
+[CSS-DIAG] Main.run() complete
+Object {  }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] mapAll() — START index-DInrB58P.js:48:25914
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
+Object { count: 1 }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] Applying mapping to element:
+Object { tag: "BUTTON", mapping: {…} }
+index-DInrB58P.js:48:18872
+[MaterialDesignAdapter] getMapping('input') =
+Object { class: "mdc-text-field__input", attrs: {} }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
+Object { candidates: 2 }
+index-DInrB58P.js:48:11158
+[MD][mapInputs] FIELD #0 index-DInrB58P.js:48:21750
+[MD][mapInputs] Input found:
+Object { tag: "INPUT", id: "userName", name: "userName", placeholder: "Enter username" }
+index-DInrB58P.js:48:22084
+[MD][mapInputs] Attempt MDC init on wrapper:
+<div class="mdc-text-field cd-md-tex… mdc-text-field--filled">
+index-DInrB58P.js:48:23069
+[MD][mapInputs] MDCTextField init error TypeError: can't access property "addEventListener", n.input is null
+    registerInteractionHandler https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    registerRootHandlers https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    init https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    y https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    t https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    createRipple https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    initialize https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    C https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    mapInputs https://localhost:5173/assets/index-DInrB58P.js:48
+    mapInputs https://localhost:5173/assets/index-DInrB58P.js:48
+    mapAll https://localhost:5173/assets/index-DInrB58P.js:48
+    observer https://localhost:5173/assets/index-DInrB58P.js:48
+
+Object { wrapper: div.mdc-text-field.cd-md-text-field.mdc-text-field--filled
+ }
+index-DInrB58P.js:48:23393
+[MD][mapInputs] Field transformation COMPLETE index-DInrB58P.js:48:24046
+[MD][mapInputs] FIELD #1 index-DInrB58P.js:48:21750
+[MD][mapInputs] Input found:
+Object { tag: "INPUT", id: "password", name: "password", placeholder: "Enter password" }
+index-DInrB58P.js:48:22084
+[MD][mapInputs] Attempt MDC init on wrapper:
+<div class="mdc-text-field cd-md-tex… mdc-text-field--filled">
+index-DInrB58P.js:48:23069
+[MD][mapInputs] MDCTextField init error TypeError: can't access property "addEventListener", n.input is null
+    registerInteractionHandler https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    registerRootHandlers https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    init https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    y https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    t https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    createRipple https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    initialize https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    a https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    C https://localhost:5173/assets/ui-systems/material-design/material-components-web.min.js:1
+    mapInputs https://localhost:5173/assets/index-DInrB58P.js:48
+    mapInputs https://localhost:5173/assets/index-DInrB58P.js:48
+    mapAll https://localhost:5173/assets/index-DInrB58P.js:48
+    observer https://localhost:5173/assets/index-DInrB58P.js:48
+
+Object { wrapper: div.mdc-text-field.cd-md-text-field.mdc-text-field--filled
+ }
+index-DInrB58P.js:48:23393
+[MD][mapInputs] Field transformation COMPLETE index-DInrB58P.js:48:24046
+[MaterialDesignAdapter] getMapping('formGroup') =
+Object { class: "mdc-form-field" }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 2 }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] Applying mapping to element:
+Object { tag: "DIV", mapping: {…} }
+index-DInrB58P.js:48:18872
+[prepareMdcDom] SKIP: already transformed
+Object { field: div.cd-form-field.mdc-form-field
+ }
+index-DInrB58P.js:48:19419
+[MaterialDesignAdapter] Applying mapping to element:
+Object { tag: "DIV", mapping: {…} }
+index-DInrB58P.js:48:18872
+[prepareMdcDom] SKIP: already transformed
+Object { field: div.cd-form-field.mdc-form-field
+ }
+index-DInrB58P.js:48:19419
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] mapAll() — END index-DInrB58P.js:48:26184
+[MaterialDesignAdapter] Mutation detected → scheduling mapAll() index-DInrB58P.js:48:26411
+[MaterialDesignAdapter] mapAll() — START index-DInrB58P.js:48:25914
+[MaterialDesignAdapter] getMapping('button') =
+Object { class: "mdc-button mdc-button--raised" }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
+Object { count: 1 }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] getMapping('input') =
+Object { class: "mdc-text-field__input", attrs: {} }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
+Object { candidates: 2 }
+index-DInrB58P.js:48:11158
+[MD][mapInputs] FIELD #0 index-DInrB58P.js:48:21750
+[MD][mapInputs] Already transformed — skip index-DInrB58P.js:48:22019
+[MD][mapInputs] FIELD #1 index-DInrB58P.js:48:21750
+[MD][mapInputs] Already transformed — skip index-DInrB58P.js:48:22019
+[MaterialDesignAdapter] getMapping('formGroup') =
+Object { class: "mdc-form-field" }
+index-DInrB58P.js:48:18655
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
+Object { count: 2 }
+index-DInrB58P.js:48:11158
+[prepareMdcDom] SKIP: already transformed
+Object { field: div.cd-form-field.mdc-form-field
+ }
+index-DInrB58P.js:48:19419
+[prepareMdcDom] SKIP: already transformed
+Object { field: div.cd-form-field.mdc-form-field
+ }
+index-DInrB58P.js:48:19419
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
+Object { concepts: (1) […] }
+index-DInrB58P.js:48:11158
+[MaterialDesignAdapter] mapAll() — END
+```
+
+/////////////////////////////////////////////////////
+We have been able to clear the error.
+Now the page is loading ok. But the effect is such that the label just disapears when the input is in focus.
+Another unexpected effect, is that we have a standard boarder showing for the input. The boarder is highlighted with green and changes to blue when in focus.
+What I have noted from material demos ( I prefer the standard, filled), i that the actual input boarder seem invisible.
+If we were to make ours invisible, we may be a step closer because we already have the light gray background and the underline.
+Another area of improvement is, for the standard, the underline for the rectangular background is bluish. When the input recieve focus, the placeholder, which is at around size 8 and coloured gray, animates to smaller size(around 5) above the invisible input boarders but within the gray background. This label then changes to bluish colour for the underline.
+The references below seem to be complete with the animation. Is it something we can adopt.
+I hope you are able to get the links and assess whether we can use what they already have. If not we can still continue refining out custom one.
+
+Below are some references.
+Reference: https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield
+Example from:
+https://material-components.github.io/material-components-web-catalog/#/component/text-field
+
+Example script html
+
+```html
+<div class="mdc-text-field">
+  <input class="mdc-text-field__input" id="text-field-hero-input" />
+  <div class="mdc-line-ripple"></div>
+  <label for="text-field-hero-input" class="mdc-floating-label">Name</label>
+</div>
+```
+
+Browser html
+
+```html
+<div class="text-field-container">
+  <div
+    class="mdc-text-field text-field mdc-ripple-upgraded"
+    style="--mdc-ripple-fg-size: 144px; --mdc-ripple-fg-scale: 1.7808802000832624; --mdc-ripple-fg-translate-start: 62px, -43.80000305175781px; --mdc-ripple-fg-translate-end: 48px, -44px;"
+  >
+    <input
+      type="text"
+      id="text-field-filled"
+      class="mdc-text-field__input"
+      aria-describedby="text-field-filled-helper-text"
+    /><label class="mdc-floating-label" for="text-field-filled">Standard</label>
+    <div
+      class="mdc-line-ripple"
+      style="transform-origin: 134px center 0px;"
+    ></div>
+  </div>
+  <div class="mdc-text-field-helper-line">
+    <p
+      class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg"
+      id="text-field-filled-helper-text"
+    >
+      Helper Text
+    </p>
+  </div>
+</div>
+```
+
+///////////////////////////////////////////////////
+
+What we are generating in our browser
+
+```html
+<div class="cd-form-field mdc-form-field" data-md-transformed="1">
+  <div class="error-message" data-error-for="userName"></div>
+  <div
+    class="mdc-text-field mdc-text-field--filled cd-md-text-field mdc-ripple-upgraded"
+    style="--mdc-ripple-fg-size: 959px; --mdc-ripple-fg-scale: 1.6788115874649367; --mdc-ripple-fg-translate-start: -334.5px, -451.5px; --mdc-ripple-fg-translate-end: 320px, -451.5px;"
+  >
+    <span class="mdc-text-field__ripple"></span
+    ><input
+      id="userName"
+      name="userName"
+      cdformcontrol=""
+      placeholder=""
+      class="mdc-text-field__input cd-valid"
+    /><label class="mdc-floating-label" for="userName">Username</label
+    ><span
+      class="mdc-line-ripple"
+      style="transform-origin: 129px center 0px;"
+    ></span>
+  </div>
+</div>
+```
+
+////////////////////////////////////////
+
+Full package.json.script
+
+```json
+"scripts": {
+    "clean": "rm -rf dist dist-ts",
+    "prebuild": "node scripts/prebuild-stubs.js",
+    "compile-ts": "tsc --project tsconfig.json",
+    "dev": "vite --debug",
+    "build": "npm run clean && npm run prebuild && npm run compile-ts && vite build && npm run post-build",
+    "post-build": "node scripts/post-build.js || bash scripts/post-build.sh",
+    "preview": "vite preview --config src/vite.config.ts",
+    "rebuild": "npm run clean && npm run build",
+    "analyze": "vite build --mode analyze",
+    "build-mdc": "sass public/assets/ui-systems/material-design/material.scss public/assets/ui-systems/material-design/material.min.css --no-source-map --style=compressed"
+  },
+```
+
+///////////////////////////////////////////////
+I am running into an issue as show below.
+I have also shared some information that can be helpful in diagnosis.
+
+```log
+emp-12@emp-12 ~/cd-shell (main) [65]> npm run build-mdc
+
+> cd-shell@1.0.0 build-mdc
+> sass public/assets/ui-systems/material-design/material.scss public/assets/ui-systems/material-design/material.min.css --no-source-map --style=compressed
+
+Error: Can't find stylesheet to import.
+  ╷
+1 │ @use "@material/floating-label/mdc-floating-label";
+  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+  public/assets/ui-systems/material-design/material.scss 1:1  root stylesheet
+```
+
+```sh
+emp-12@emp-12 ~/cd-shell (main) [65]> tree public
+public
+├── assets
+│   ├── css
+│   │   ├── font-awesome-6.5.0
+│   │   │   └── all.min.css
+│   │   └── index.css
+│   ├── fonts
+│   ├── images
+│   └── ui-systems
+│       ├── bootstrap-502
+│       │   ├── bootstrap.min.css
+│       │   ├── bootstrap.min.js
+│       │   └── descriptor.json
+│       ├── bootstrap-538
+│       │   ├── bootstrap.bundle.min.js
+│       │   ├── bootstrap.min.css
+│       │   ├── bridge.css
+│       │   └── descriptor.json
+│       ├── bulma
+│       │   ├── bridge.css
+│       │   ├── bulma.min.css
+│       │   └── descriptor.json
+│       ├── flowbite
+│       │   ├── bridge.css
+│       │   ├── descriptor.json
+│       │   └── flowbite-adapter.service.ts
+│       ├── foundation
+│       │   ├── bridge.css
+│       │   ├── descriptor.json
+│       │   └── foundation-adapter.service.ts
+│       ├── material-design
+│       │   ├── bridge.css
+│       │   ├── descriptor.json
+│       │   ├── material-components-web.min.css
+│       │   ├── material-components-web.min.js
+│       │   ├── material.min.css
+│       │   └── material.scss
+│       └── primer
+│           ├── bridge.css
+│           ├── descriptor.json
+│           └── primer-adapter.service.ts
+├── shell.config.json
+└── themes
+    ├── common
+    │   ├── base.css
+    │   ├── forms
+    │   │   ├── cd-forms.css
+    │   │   └── variants
+    │   │       ├── cd-form-compact.css
+    │   │       ├── cd-form-floating.css
+    │   │       └── cd-form-standard.css
+    │   ├── layout.json
+    │   └── menu-neutral.css
+    ├── dark
+    │   ├── menu-systems
+    │   │   └── metismenu.css
+    │   ├── theme.css
+    │   └── theme.json
+    └── default
+        ├── logo.png
+        ├── menu-systems
+        │   └── metismenu.css
+        ├── theme.css
+        └── theme.json
+```
+
+```sh
+emp-12@emp-12 ~/cd-shell (main)> cat public/assets/ui-systems/material-design/material.scss
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/textfield";
+
+@include textfield.core-styles;
+```
+
+/////////////////////////////////////////////
+Below shows that node_modules/@material/floating-label/ exists.
+
+```sh
+emp-12@emp-12 ~/cd-shell (main)> tree node_modules/@material/floating-label/
+node_modules/@material/floating-label/
+├── adapter.d.ts
+├── adapter.js
+├── adapter.js.map
+├── component.d.ts
+├── component.js
+├── component.js.map
+├── constants.d.ts
+├── constants.js
+├── constants.js.map
+├── dist
+│   ├── mdc.floating-label.css
+│   ├── mdc.floating-label.css.map
+│   ├── mdc.floatingLabel.js
+│   ├── mdc.floatingLabel.js.map
+│   ├── mdc.floating-label.min.css
+│   ├── mdc.floating-label.min.css.map
+│   └── mdc.floatingLabel.min.js
+├── foundation.d.ts
+├── foundation.js
+├── foundation.js.map
+├── index.d.ts
+├── index.js
+├── index.js.map
+├── _index.scss
+├── LICENSE
+├── mdc-floating-label.import.scss
+├── mdc-floating-label.scss
+├── _mixins.import.scss
+├── _mixins.scss
+├── package.json
+├── README.md
+├── _variables.import.scss
+└── _variables.scss
+```
+
+///////////////////////////////////////////////
+Below is the settings for package.json scripts property.
+Assist me to modify so that when we run npm run build, it also executes the npm run build-mdc
+
+```json
+"scripts": {
+    "clean": "rm -rf dist dist-ts",
+    "prebuild": "node scripts/prebuild-stubs.js",
+    "compile-ts": "tsc --project tsconfig.json",
+    "dev": "vite --debug",
+    "build": "npm run clean && npm run prebuild && npm run compile-ts && vite build && npm run post-build",
+    "post-build": "node scripts/post-build.js || bash scripts/post-build.sh",
+    "preview": "vite preview --config src/vite.config.ts",
+    "rebuild": "npm run clean && npm run build",
+    "analyze": "vite build --mode analyze",
+    "build-mdc": "sass --load-path=node_modules public/assets/ui-systems/material-design/material.scss public/assets/ui-systems/material-design/material.min.css --no-source-map --style=compressed"
+  },
+```
+
+//////////////////////////////////////////////////
+
+The proposal for mapInputs(), has an error in the value for wrapper:
+Error: An expression of type 'void' cannot be tested for truthiness.
+I have shared the whole MaterialDesignAdapterService for your reference.
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/material-design-adapter.service.ts
+import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
+import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
+import { diag_css } from "../../../sys/utils/diagnosis";
+
+type Mapping = UiConceptMapping | undefined;
+
+export class MaterialDesignAdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  /**
+   * MDC initialization must not run multiple times during rapid DOM mutations, so we use this flag as a debounce guard.
+   */
+  private mdcInitQueued: boolean = false;
+
+  constructor() {
+    console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+  }
+
+  // ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[MaterialDesignAdapter] activate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "[MaterialDesignAdapter] descriptor.conceptMappings missing!"
+      );
+    } else {
+      console.log(
+        "%c[MaterialDesignAdapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // initial pass
+    diag_css("[MaterialDesignAdapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // attach observer
+    this.observeMutations();
+
+    diag_css("[MaterialDesignAdapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // DEACTIVATION
+  // ---------------------------------------------------------------------------
+  async deactivate(): Promise<void> {
+    diag_css("[MaterialDesignAdapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-md-theme");
+      console.log("[MaterialDesignAdapter] removed data-md-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[MaterialDesignAdapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[MaterialDesignAdapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THEME APPLICATION
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[MaterialDesignAdapter] applyTheme()", { themeDescriptorOrId });
+
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[MaterialDesignAdapter] applyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+      if (typeof themeDescriptorOrId === "string") {
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      } else if (typeof themeDescriptorOrId === "object") {
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-md-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[MaterialDesignAdapter] applied Material theme", { mode });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[MaterialDesignAdapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // already mapped: update attrs if provided
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[MaterialDesignAdapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    // keep track so we don't reapply repeatedly
+    this.appliedSet.add(el);
+  }
+
+  /**
+   * Full prepareMdcDom(target)
+   * - Consolidated helper to transform a .cd-form-field or a direct input element
+   * - Ensures correct DOM shape required by MDCTextField
+   * - Performs robust checks and logs internal state for debugging
+   */
+  private prepareMdcDom(field: HTMLElement) {
+    console.log("[prepareMdcDom] START", { field });
+
+    if (!field) return;
+
+    // Already transformed?
+    if (field.dataset.mdTransformed === "1") {
+      console.log("[prepareMdcDom] SKIP: already transformed", { field });
+      return;
+    }
+
+    // Locate input + label
+    const input = field.querySelector<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >("input, textarea, select");
+    const labelEl = field.querySelector<HTMLLabelElement>("label");
+
+    if (!input) {
+      console.warn("[prepareMdcDom] No input found inside field", field);
+      return;
+    }
+
+    // Capture label text before removing
+    const labelText =
+      labelEl?.textContent?.trim() ||
+      input.getAttribute("placeholder") ||
+      input.name ||
+      "Label";
+
+    // Remove browser placeholder for MDC styling (only for inputs/textarea)
+    if ("placeholder" in input) {
+      (input as HTMLInputElement | HTMLTextAreaElement).placeholder = "";
+    }
+
+    // Generate unique id if missing
+    if (!input.id) {
+      input.id = `mdc-input-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    // CREATE MDC STRUCTURE
+    const wrapper = document.createElement("div");
+    wrapper.className =
+      "mdc-text-field mdc-text-field--filled cd-md-text-field";
+
+    // ripple
+    const ripple = document.createElement("span");
+    ripple.className = "mdc-text-field__ripple";
+
+    // label
+    const floatingLabel = document.createElement("label");
+    floatingLabel.className = "mdc-floating-label";
+    floatingLabel.setAttribute("for", input.id);
+    floatingLabel.textContent = labelText;
+
+    // line ripple
+    const lineRipple = document.createElement("span");
+    lineRipple.className = "mdc-line-ripple";
+
+    // Reparent input
+    input.classList.add("mdc-text-field__input");
+
+    // Build DOM
+    wrapper.appendChild(ripple);
+    wrapper.appendChild(input);
+    wrapper.appendChild(floatingLabel);
+    wrapper.appendChild(lineRipple);
+
+    // Replace original
+    labelEl?.remove();
+    field.appendChild(wrapper);
+
+    // Mark transformed
+    field.dataset.mdTransformed = "1";
+
+    console.log("[prepareMdcDom] COMPLETE", { wrapper });
+
+    // Initialize MDC
+    this.initMdcTextField(wrapper);
+  }
+
+  /**
+   * attachCssFallback(wrapper)
+   * - Adds simple focus/blur behavior that emulates MDC floating label when MDC is not available or fails.
+   */
+  private attachCssFallback(wrapper: HTMLElement) {
+    try {
+      const inputElement = wrapper.querySelector<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >("input, textarea, select");
+      if (!inputElement) {
+        console.warn("[attachCssFallback] no input to attach handlers to", {
+          wrapper,
+        });
+        return;
+      }
+
+      // If value present, keep label floated
+      if (
+        (inputElement as HTMLInputElement).value &&
+        (inputElement as HTMLInputElement).value.length > 0
+      ) {
+        wrapper.classList.add("mdc-text-field--focused");
+      }
+
+      // Avoid multiple handler attachments
+      if (!(inputElement as any).__cd_md_handlers_attached) {
+        inputElement.addEventListener("focus", () =>
+          wrapper.classList.add("mdc-text-field--focused")
+        );
+        inputElement.addEventListener("blur", () => {
+          if (
+            !(inputElement as HTMLInputElement).value ||
+            (inputElement as HTMLInputElement).value.length === 0
+          ) {
+            wrapper.classList.remove("mdc-text-field--focused");
+          }
+        });
+        (inputElement as any).__cd_md_handlers_attached = true;
+      }
+    } catch (err) {
+      console.warn("[attachCssFallback] error", err);
+    }
+  }
+
+  private scheduleMdcInit() {
+    if (this.mdcInitQueued) return;
+    this.mdcInitQueued = true;
+
+    setTimeout(() => {
+      this.mdcInitQueued = false;
+      this.initAllMdcTextFields();
+    }, 20);
+  }
+
+  private initAllMdcTextFields() {
+    const { MDCTextField } = (window as any).mdc || {};
+    if (!MDCTextField) return;
+
+    document.querySelectorAll(".cd-md-text-field").forEach((el) => {
+      if ((el as HTMLElement).dataset.mdInitialized === "1") return;
+
+      try {
+        new MDCTextField(el);
+        (el as HTMLElement).dataset.mdInitialized = "1";
+      } catch (err) {
+        console.warn("[MaterialDesignAdapter] MDCTextField init failed:", err);
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[MaterialDesignAdapter] mapButtons()", { count: nodes.length });
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  /**
+   * mapInputs()
+   * Transforms each `.cd-form-field` into an MDC floating-label text field.
+   * Includes extensive diagnostics to catch MDCTextField initialization problems.
+   */
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    // Find all form fields
+    const formFieldNodes = Array.from(
+      document.querySelectorAll<HTMLElement>(".cd-form-field")
+    );
+
+    diag_css("[MaterialDesignAdapter] mapInputs()", {
+      candidates: formFieldNodes.length,
+    });
+
+    formFieldNodes.forEach((field, idx) => {
+      try {
+        console.debug(`[MD][mapInputs] FIELD #${idx}`, { field });
+
+        // Find the input inside this field
+        const input = field.querySelector<
+          HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >("input, textarea, select");
+
+        if (!input) {
+          console.debug("[MD][mapInputs] No input found in field — skipping", {
+            field,
+          });
+          return;
+        }
+
+        console.debug("[MD][mapInputs] Input detected:", {
+          tag: input.tagName,
+          id: input.id || null,
+          name: input.getAttribute("name"),
+          placeholder: input.getAttribute("placeholder"),
+        });
+
+        // If field already transformed, skip
+        if (field.dataset.mdTransformed === "1") {
+          console.debug("[MD][mapInputs] Already transformed — skip");
+          return;
+        }
+
+        // Run DOM transformation (creates MDC wrapper + clones input)
+        const wrapper = this.prepareMdcDom(field);
+
+        if (!wrapper) {
+          console.warn(
+            "[MD][mapInputs] prepareMdcDom() did not produce wrapper. Skip."
+          );
+          return;
+        }
+
+        console.debug("[MD][mapInputs] Wrapper created:", wrapper);
+
+        // Apply mapping attrs to wrapper (if any)
+        if (mapping.attrs) {
+          Object.entries(mapping.attrs).forEach(([k, v]) =>
+            wrapper.setAttribute(k, v as string)
+          );
+        }
+
+        // Final MDC initialization
+        try {
+          this.initMdcTextField(wrapper);
+          console.debug("[MD][mapInputs] MDC initialization success", {
+            wrapper,
+          });
+        } catch (err) {
+          console.warn("[MD][mapInputs] MDC init failed", err, { wrapper });
+        }
+
+        console.debug("[MD][mapInputs] COMPLETE", { field });
+      } catch (err) {
+        console.warn("[MaterialDesignAdapter] mapInputs: transform error", err);
+      }
+    });
+  }
+
+  /**
+   * initMdcTextField(wrapper)
+   * - If MDC Web is available (UMD global `mdc`), instantiate MDCTextField for the wrapper.
+   * - If already instantiated, skip.
+   */
+  private initMdcTextField(wrapper: HTMLElement) {
+    console.log("[MDC][initMdcTextField] ENTER", {
+      wrapper,
+      html: wrapper.outerHTML,
+    });
+
+    try {
+      const mdcGlobal = (window as any).mdc;
+
+      console.log("[MDC][initMdcTextField] mdcGlobal =", mdcGlobal);
+
+      if (!mdcGlobal || !mdcGlobal.textField) {
+        console.warn("[MDC][initMdcTextField] mdcGlobal.textField is missing");
+        return;
+      }
+
+      console.log("[MDC][initMdcTextField] wrapper children:", {
+        children: Array.from(wrapper.children).map((c) => ({
+          tag: c.tagName,
+          className: c.className,
+        })),
+      });
+
+      const inputInside = wrapper.querySelector("input.mdc-text-field__input");
+      console.log("[MDC][initMdcTextField] Detected input:", inputInside);
+
+      if (!inputInside) {
+        console.error(
+          "[MDC][initMdcTextField] ERROR: MDC cannot find <input> inside wrapper!"
+        );
+      }
+
+      if (!(wrapper as any).__mdc_textfield_inst) {
+        console.log("[MDC][initMdcTextField] Constructing MDCTextField...");
+        try {
+          const tf = new mdcGlobal.textField.MDCTextField(wrapper);
+          (wrapper as any).__mdc_textfield_inst = tf;
+          console.log("[MDC][initMdcTextField] SUCCESS", tf);
+        } catch (e) {
+          console.error(
+            "[MDC][initMdcTextField] MDCTextField construction failed:",
+            e
+          );
+          (wrapper as any).__mdc_textfield_inst = null;
+        }
+      } else {
+        console.log("[MDC][initMdcTextField] Skip: Already initialized");
+      }
+    } catch (err) {
+      console.error("[MDC][initMdcTextField] FATAL ERROR", err);
+    }
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapFormGroups()", {
+      count: nodes.length,
+    });
+    // nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    nodes.forEach((el) => {
+      this.applyMappingToElement(el, mapping);
+      this.prepareMdcDom(el); // NEW — build MDC wrapper
+    });
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+    diag_css("[MaterialDesignAdapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+      // nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+      nodes.forEach((el) => {
+        this.applyMappingToElement(el, mapping);
+        this.prepareMdcDom(el); // NEW — build MDC wrapper
+      });
+    });
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — START",
+      "background:#223;color:#9cf;padding:2px"
+    );
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapOtherConcepts();
+      this.scheduleMdcInit();
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] mapAll error", err);
+    }
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — END",
+      "background:#223;color:#9cf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[MaterialDesignAdapter] Mutation detected → scheduling mapAll()",
+        "color:#ffb;"
+      );
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register with the adapter registry
+UiSystemAdapterRegistry.register(
+  "material-design",
+  new MaterialDesignAdapterService()
+);
+```
+
+////////////////////////////////////////////////////
+
+We expected this format:
+
+```html
+<label class="mdc-text-field mdc-text-field--filled">
+  <span class="mdc-text-field__ripple"></span>
+  <span class="mdc-floating-label">Label text</span>
+  <input class="mdc-text-field__input" type="text" />
+  <span class="mdc-line-ripple"></span>
+</label>
+```
+
+But we are getting:
+
+```html
+<div class="cd-form-field mdc-form-field" data-md-transformed="1">
+  <label
+    class="mdc-text-field mdc-text-field--filled cd-md-text-field mdc-ripple-upgraded"
+    style="--mdc-ripple-fg-size: 959px; --mdc-ripple-fg-scale: 1.6788115874649367; --mdc-ripple-fg-translate-start: -343.5px, -453.5px; --mdc-ripple-fg-translate-end: 320px, -451.5px;"
+    ><span class="mdc-text-field__ripple"></span
+    ><input
+      id="userName"
+      name="userName"
+      cdformcontrol=""
+      placeholder=""
+      class="mdc-text-field__input cd-valid" /><span
+      class="mdc-floating-label"
+      for="userName"
+      >Username</span
+    ><span
+      class="mdc-line-ripple"
+      style="transform-origin: 131px center 0px;"
+    ></span
+  ></label>
+</div>
+```
+
+I have also tried to inject what we are expecting. The format is very close but would still need some work. But the animation is still not working.
+
+////////////////////////////////////////
+
+I have also tried the script with <label> wrapped in the <div>:
+The result is the same. So we can still keep the <div>
+
+```html
+<div class="cd-form-field mdc-form-field" data-md-transformed="1">
+  <label class="mdc-text-field mdc-text-field--filled">
+    <span class="mdc-text-field__ripple"></span>
+    <span class="mdc-floating-label">Label text</span>
+    <input class="mdc-text-field__input" type="text" />
+    <span class="mdc-line-ripple"></span>
+  </label>
+</div>
+```
+
+////////////////////////////////////////////
+Case 1: Visual description of resulting html:
+- The gray background for the material text-field stretches accross the whole div
+- The underline for the background is centered by shorter than the background by about 50%
+- The material place holder seem positioned well but does not react to on-focus
+- When one types new characters, the floating label/placehoder is super imposed on top
+
+Resulting html
+```html
+<label
+  class="mdc-text-field mdc-text-field--filled cd-md-text-field"
+  data-md-transformed="1"
+  ><span class="mdc-text-field__ripple"></span
+  ><span class="mdc-floating-label" for="userName">Username</span
+  ><input
+    id="userName"
+    name="userName"
+    cdformcontrol=""
+    placeholder=""
+    class="mdc-text-field__input cd-valid" /><span
+    class="mdc-line-ripple"
+  ></span
+></label>
+```
+
+Case 2: Replace the resulting script for the <label> with the one below.
+Visual description:
+- The visual is closest to expectation
+- The gray background is shrinks to specific width (about 20% of width of the content area)
+- The gray background underline seem aligned properly. Unlike case 1.
+- But just like the Case 1, the placeholder/floating lable, it does not react to on-focus
+- also when typing the place holder is super imposed on the typed text
+```html
+<label class="mdc-text-field mdc-text-field--filled">
+  <span class="mdc-text-field__ripple"></span>
+  <span class="mdc-floating-label">Label text</span>
+  <input class="mdc-text-field__input" type="text" />
+  <span class="mdc-line-ripple"></span>
+</label>
+```
+//////////////////////////////////////////////////////
+Below your recommendation for target script.
+I have tested it against the current css settings.
+The background still get extended to 100%.
+Only when you remove the class cd-md-text-field, then it adjusts to expected html.
+I think this calls for something to be done on the bridge.css tame this behaviour.
+```html
+<label class="mdc-text-field mdc-text-field--filled cd-md-text-field">
+  <span class="mdc-text-field__ripple"></span>
+  <span class="mdc-floating-label" id="label-XXXX">Username</span>
+  <input class="mdc-text-field__input" aria-labelledby="label-XXXX" id="userName">
+  <span class="mdc-line-ripple"></span>
+</label>
+```
+
+//////////////////////////////////////////
+
+Before the correction is made the only issues are:
+- no padding
+- vertical spacing
+
+After correction:
+- padding is corrected
+- vertical spacing is ok
+But on input-focus:
+- the floating label dissapears
+- the bottom line moves up to the level where text is being typed. Net effect is user typing with the line superimposed and obstructing.
+
+/////////////////////////////////
+
+Results:
+- Before on-focus, all the settings look ok
+- on-focus, everything is ok except the padding.
+
+In the demo for mdc, the padding is available.
+There must be some rule in our setting that overrides the padding for mdc.
+
+While on-focus, I copied the css setting that is displayed on the inspactor/syles.
+I hope it may reveal some clue.
 
 ```css
 element {
 }
-#cd-sidebar a.cd-menu-link {
-  color: var(--cd-menu-text) !important;
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: rgba(0, 0, 0, 0.87);
 }
-.metismenu .has-arrow {
-  position: relative;
+.cd-md-text-field .mdc-text-field__input {
+  color: var(--cd-input-text-color);
 }
-.metismenu .has-arrow {
-  position: relative;
+.mdc-text-field .mdc-text-field__input {
+  caret-color: #6200ee;
+  caret-color: var(--mdc-theme-primary, #6200ee);
 }
-.metismenu a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: var(--menu-text-color, #333);
-  font-weight: 500;
-  transition: background-color 0.2s ease, color 0.2s ease;
+.mdc-text-field__input {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  font-family: var(--mdc-typography-subtitle1-font-family,var(--mdc-typography-font-family, Roboto, sans-serif) );
+  font-size: 1rem;
+  font-size: var(--mdc-typography-subtitle1-font-size, 1rem);
+  font-weight: 400;
+  font-weight: var(--mdc-typography-subtitle1-font-weight, 400);
+  letter-spacing: 0.009375em;
+  letter-spacing: var(--mdc-typography-subtitle1-letter-spacing, 0.009375em);
+  text-decoration: inherit;
+  -webkit-text-decoration: var(--mdc-typography-subtitle1-text-decoration, inherit);
+  text-decoration: var(--mdc-typography-subtitle1-text-decoration, inherit);
+  text-transform: inherit;
+  text-transform: var(--mdc-typography-subtitle1-text-transform, inherit);
+  height: 28px;
+  transition: opacity 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  min-width: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0;
 }
-.cd-menu-link {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
 }
-a {
-  color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
-  text-decoration: underline;
+element {
+  --mdc-ripple-fg-size: 959px;
+  --mdc-ripple-fg-scale: 1.6788115874649367;
+  --mdc-ripple-fg-translate-start: -466.5px, -445.5px;
+  --mdc-ripple-fg-translate-end: 320px, -451.5px;
 }
-*, ::after, ::before {
-  box-sizing: border-box;
+.mdc-text-field--filled {
+  --mdc-ripple-fg-size: 0;
+  --mdc-ripple-left: 0;
+  --mdc-ripple-top: 0;
+  --mdc-ripple-fg-scale: 1;
+  --mdc-ripple-fg-translate-end: 0;
+  --mdc-ripple-fg-translate-start: 0;
 }
-[role="button"] {
-  cursor: pointer;
-}
-.metismenu {
-  list-style: none;
-}
-#cd-sidebar {
+#cd-main-content {
   color: var(--cd-color-text);
 }
-#cd-sidebar {
-  color: var(--cd-menu-text);
+body {
+  color: var(--cd-color-text);
+}
+html, body {
+  font-family: var(--cd-font-family);
+  font-size: var(--cd-font-size);
 }
 ```
 
-//////////////////////////////////////////////////
-The rogue on-blur is now gone.
-Now in a previous post you had this:
+/////////////////////////////////////
+Below is the bridge.css in the state where everything works except the padding is overrdded to 0.
+Do apply the correction and provide a full one with the correction implemented.
+bridge.css
+```css
+/* ============================================================
+   CORPDESK BRIDGE FOR MATERIAL COMPONENTS WEB (MDC)
+   Purpose:
+   - Provide Corpdesk theme tokens for MDC
+   - Preserve MDC native filled-text-field behaviour
+   - Only override colors, fonts, and spacing outside MDC layout
+   ============================================================ */
 
-If you want, I can also:
-- introduce a smooth sliding animation for the burger
-- add a modern “X” animation when sidebar is open
-- give you unified spacing between header/logo/burger
+/* ------------------------------------------------------------
+   Root tokens
+------------------------------------------------------------ */
+:root {
+  --cd-bridge-body-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+  --cd-bridge-body-font-size: 1rem;
 
-Let me know how we can work on this.
+  --cd-primary-color: #1976d2;
+  --cd-primary-color-contrast: #fff;
 
-////////////////////////////////////////
-I will go with option A:
-Option A — “Generate the full combined final version”.
-I have shared the current relevant codes.
-If you need any particular one let me know.
+  --cd-input-text-color: #212121;
+  --cd-input-placeholder: rgba(0,0,0,0.54);
 
-index.html
+  --cd-color-invalid: #e53935;
+
+  /* MDC default filled surface */
+  --cd-input-bg: #f4f6f8;
+}
+
+html[data-md-theme="dark"] {
+  --cd-input-bg: #1b1f23;
+  --cd-input-text-color: #e6e6e6;
+  --cd-input-placeholder: rgba(255,255,255,0.6);
+  --cd-primary-color: #90caf9;
+}
+
+/* ------------------------------------------------------------
+   Typography
+------------------------------------------------------------ */
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
+}
+
+/* ------------------------------------------------------------
+   MDC TEXT FIELD BRIDGE — SAFE OVERRIDES ONLY
+   We DO NOT override:
+   - MDC padding
+   - floating label transforms (JS-driven)
+   - line ripple mechanics
+   - measurements, height, or box model
+------------------------------------------------------------ */
+
+/* 1) Wrapper must not interfere with MDC geometry */
+.cd-md-text-field {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  background: none !important;
+
+  /* Vertical spacing between form fields */
+  margin-bottom: 18px !important;
+}
+
+/* 2) Apply filled background ONLY on the filled variant */
+.cd-md-text-field.mdc-text-field--filled {
+  background-color: var(--cd-input-bg) !important;
+  border-radius: 4px;
+}
+
+/* 3) Input color only */
+.cd-md-text-field .mdc-text-field__input {
+  color: var(--cd-input-text-color);
+}
+.cd-md-text-field .mdc-text-field__input::placeholder {
+  color: var(--cd-input-placeholder);
+}
+
+/* 4) Label color only (movement handled by MDC JS) */
+.cd-md-text-field .mdc-floating-label {
+  color: var(--cd-input-placeholder);
+}
+.cd-md-text-field.mdc-text-field--focused .mdc-floating-label {
+  color: var(--cd-primary-color);
+}
+
+/* 5) Line ripple color only */
+.cd-md-text-field .mdc-line-ripple {
+  background-color: transparent;
+}
+.cd-md-text-field.mdc-text-field--focused .mdc-line-ripple {
+  background-color: var(--cd-primary-color);
+}
+
+/* 6) Invalid state colors only */
+.cd-md-text-field.mdc-text-field--invalid .mdc-floating-label {
+  color: var(--cd-color-invalid);
+}
+.cd-md-text-field.mdc-text-field--invalid .mdc-line-ripple {
+  background-color: var(--cd-color-invalid);
+}
+
+/* ------------------------------------------------------------
+   FORM SPACING + BUTTONS
+------------------------------------------------------------ */
+button[cdButton],
+.cd-button {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+form .cd-md-text-field:last-child {
+  margin-bottom: 24px !important;
+}
+
+/* END bridge.css */
+
+```
+
+/////////////////////////////////////////////////////////
+Even by removing the 0 padding, the changes was not reflecting.
+So what I have done is is to add:
+padding-left: 15px;
+padding-right: 15px;
+After this, everything seem ok.
+So the current setting for the bridge.css looks like below.
+Let me know from your view if this strategy is sound or we may still need a better one.
+
+
+bridge.css
+```css
+/* ============================================================
+   CORPDESK BRIDGE FOR MATERIAL COMPONENTS WEB (MDC)
+   Purpose:
+   - Provide Corpdesk theme tokens for MDC
+   - Preserve MDC native filled-text-field behaviour
+   - Only override colors, fonts, and spacing outside MDC layout
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Root tokens
+------------------------------------------------------------ */
+:root {
+  --cd-bridge-body-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+  --cd-bridge-body-font-size: 1rem;
+
+  --cd-primary-color: #1976d2;
+  --cd-primary-color-contrast: #fff;
+
+  --cd-input-text-color: #212121;
+  --cd-input-placeholder: rgba(0,0,0,0.54);
+
+  --cd-color-invalid: #e53935;
+
+  /* MDC default filled surface */
+  --cd-input-bg: #f4f6f8;
+}
+
+html[data-md-theme="dark"] {
+  --cd-input-bg: #1b1f23;
+  --cd-input-text-color: #e6e6e6;
+  --cd-input-placeholder: rgba(255,255,255,0.6);
+  --cd-primary-color: #90caf9;
+}
+
+/* ------------------------------------------------------------
+   Typography
+------------------------------------------------------------ */
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
+}
+
+/* ------------------------------------------------------------
+   MDC TEXT FIELD BRIDGE — SAFE OVERRIDES ONLY
+   We DO NOT override:
+   - MDC padding
+   - floating label transforms (JS-driven)
+   - line ripple mechanics
+   - measurements, height, or box model
+------------------------------------------------------------ */
+
+/* 1) Wrapper must not interfere with MDC geometry */
+.cd-md-text-field {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  background: none !important;
+
+  /* Vertical spacing between form fields */
+  margin-bottom: 18px !important;
+}
+
+/* 2) Apply filled background ONLY on the filled variant */
+.cd-md-text-field.mdc-text-field--filled {
+  background-color: var(--cd-input-bg) !important;
+  border-radius: 4px;
+}
+
+/* 3) Input color and padding */
+.cd-md-text-field .mdc-text-field__input {
+  color: var(--cd-input-text-color);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.cd-md-text-field .mdc-text-field__input::placeholder {
+  color: var(--cd-input-placeholder);
+}
+
+/* 4) Label color only (movement handled by MDC JS) */
+.cd-md-text-field .mdc-floating-label {
+  color: var(--cd-input-placeholder);
+}
+.cd-md-text-field.mdc-text-field--focused .mdc-floating-label {
+  color: var(--cd-primary-color);
+}
+
+/* 5) Line ripple color only */
+.cd-md-text-field .mdc-line-ripple {
+  background-color: transparent;
+}
+.cd-md-text-field.mdc-text-field--focused .mdc-line-ripple {
+  background-color: var(--cd-primary-color);
+}
+
+/* 6) Invalid state colors only */
+.cd-md-text-field.mdc-text-field--invalid .mdc-floating-label {
+  color: var(--cd-color-invalid);
+}
+.cd-md-text-field.mdc-text-field--invalid .mdc-line-ripple {
+  background-color: var(--cd-color-invalid);
+}
+
+/* ------------------------------------------------------------
+   FORM SPACING + BUTTONS
+------------------------------------------------------------ */
+button[cdButton],
+.cd-button {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+form .cd-md-text-field:last-child {
+  margin-bottom: 24px !important;
+}
+
+/* END bridge.css */
+
+```
+
+/////////////////////////////////////////
+
+The current work flow is that the developer codes with established html convention then it is up to the admin/user to set what ui-system and theme are applied.
+In the ui-systems, there are options for say input designs.
+For example in material-desin, 
+- the input can be filled or outlined, shapped outline and others.
+- for any of the above, you can have an icon, or no icon and the icon can be on the left or extreme right.
+We may need some configuration interface for each ui-system selected to allow admin/user to make detail settings.
+Within this, there would also be default settings.
+This process need to be easy, intuitive and at its best with gui/cli access via an api that can also be accessed by ai agent.
+What is your take on this subject from theoretical and practical point of view.
+The subject should be in the context of futuristing work flow of a modern developer, admin and end-user experience.
+
+
+///////////////////////////////////////////
+All this time I was working on the 'default' theme. 
+Everything is ok.
+But when I switched to 'dark', via the shellconfig.json, I realised there is some work to do.
+The whole page seem to be in default theme but only the text boxes have a dark background.
+I believe during adjustments for floating lable, we could have affected the dark theme settings in the bridge.css.
+
+html from the browser
 ```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Corpdesk Shell</title>
-
-    <!-- Vendor-only static dependencies -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-
-    <!-- 🧩 All system and theme CSS are dynamically injected by UiSystemLoaderService & UiThemeLoaderService -->
-  </head>
-
-  <body>
+<body>
     <header id="cd-header">
-      <button id="cd-burger">&#9776;</button>
-      <img id="cd-logo" alt="Logo" />
+      <button id="cd-burger" aria-label="Menu toggle">
+        <span class="bar top"></span>
+        <span class="bar middle"></span>
+        <span class="bar bottom"></span>
+      </button>
+
+      <img id="cd-logo" alt="Logo" src="/themes/default/logo.png">
       <span id="cd-app-name">Corpdesk Shell</span>
     </header>
 
     <div id="cd-layout">
       <div id="cd-overlay" class="hidden"></div>
-      <aside id="cd-sidebar"></aside>
-      <main id="cd-main-content"></main>
+      <aside id="cd-sidebar"><ul class="metismenu" id="menu">
+        <li id="menu-item-menu-item-cd-user" class="" data-id="menu-item-cd-user" data-type="route" data-route="sys/cd-user" tabindex="0" role="button">
+          <a href="#" class="cd-menu-link has-arrow" data-id="menu-item-cd-user" aria-expanded="false"><span class="cd-menu-label">cd-user</span><i class="menu-arrow fa-solid fa-chevron-right"></i></a>
+          <ul class="mm-collapse">
+        <li id="menu-item-menu-item-cd-user-sign-in" class="" data-id="menu-item-cd-user-sign-in" data-type="route" data-route="sys/cd-user/sign-in" tabindex="0" role="button">
+          <a href="/sys/cd-user/sign-in" class="cd-menu-link" data-id="menu-item-cd-user-sign-in"><span class="cd-menu-label">sign-in</span></a>
+          
+        </li>
+      
+        <li id="menu-item-menu-item-cd-user-sign-up" class="" data-id="menu-item-cd-user-sign-up" data-type="route" data-route="sys/cd-user/sign-up" tabindex="0" role="button">
+          <a href="/sys/cd-user/sign-up" class="cd-menu-link" data-id="menu-item-cd-user-sign-up"><span class="cd-menu-label">sign-up</span></a>
+          
+        </li>
+      </ul>
+        </li>
+      
+        <li id="menu-item-menu-item-cd-admin" class="" data-id="menu-item-cd-admin" data-type="route" data-route="sys/cd-admin" tabindex="0" role="button">
+          <a href="#" class="cd-menu-link has-arrow" data-id="menu-item-cd-admin" aria-expanded="false"><span class="cd-menu-label">cd-admin</span><i class="menu-arrow fa-solid fa-chevron-right"></i></a>
+          <ul class="mm-collapse">
+        <li id="menu-item-menu-item-cd-admin-settings" class="" data-id="menu-item-cd-admin-settings" data-type="route" data-route="sys/cd-admin/settings" tabindex="0" role="button">
+          <a href="/sys/cd-admin/settings" class="cd-menu-link" data-id="menu-item-cd-admin-settings"><span class="cd-menu-label">settings</span></a>
+          
+        </li>
+      </ul>
+        </li>
+      </ul></aside>
+      <main id="cd-main-content">
+      <form id="signInForm" class="cd-form">
+        <label class="mdc-text-field mdc-text-field--filled cd-md-text-field mdc-ripple-upgraded mdc-text-field--label-floating" data-md-transformed="1" style="--mdc-ripple-fg-size: 959px; --mdc-ripple-fg-scale: 1.6788115874649367; --mdc-ripple-fg-translate-start: -410.5px, -452.5px; --mdc-ripple-fg-translate-end: 320px, -451.5px;"><span class="mdc-text-field__ripple"></span><span class="mdc-floating-label mdc-floating-label--float-above" for="userName">Username</span><input id="userName" name="userName" cdformcontrol="" placeholder="" class="mdc-text-field__input cd-valid"><span class="mdc-line-ripple" style="transform-origin: 69px center 0px;"></span></label>
+
+        <label class="mdc-text-field mdc-text-field--filled cd-md-text-field mdc-ripple-upgraded" data-md-transformed="1"><span class="mdc-text-field__ripple"></span><span class="mdc-floating-label" for="password">Password</span><input id="password" name="password" type="password" cdformcontrol="" placeholder="" class="cd-valid mdc-text-field__input"><span class="mdc-line-ripple"></span></label>
+
+        <button cdbutton="" class="mdc-button mdc-button--raised">Sign In</button>
+      </form>
+    </main>
     </div>
 
-    <script type="module" src="/src/app.ts"></script>
-  </body>
-</html>
+  
 
+<script src="/assets/ui-systems/material-design/material-components-web.min.js" async="" data-cd-uisystem="material-design" data-cd-origin="ui-system"></script></body>
 ```
-index.css
+Section of css from browser inspect/styles
 ```css
-/* ---------------------------------------------
-   GLOBAL RESET (NO COLOR OVERRIDES)
----------------------------------------------- */
+element {
+}
 body {
   margin: 0;
   padding: 0;
   background-color: var(--cd-color-bg);
   color: var(--cd-color-text);
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--cd-font-family);
+  font-size: var(--cd-font-size);
+}
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
+}
+element {
+  --cd-secondary-color: #eeeeee;
+  --cd-accent-color: #ff4081;
+  --cd-background-color: white;
+  --cd-text-color: black;
+  --cd-primary-color: #007bff;
+}
+html[data-md-theme="dark"] {
+  --cd-input-bg: #1b1f23;
+  --cd-input-text-color: #e6e6e6;
+  --cd-input-placeholder: rgba(255,255,255,0.6);
+  --cd-primary-color: #90caf9;
+}
+:root {
+  --cd-color-bg: #ffffff;
+  --cd-color-surface: #f5f5f5;
+  --cd-color-text: #000000;
+  --cd-color-primary: #0055ff;
+  --cd-color-valid: #2ecc71;
+  --cd-color-invalid: #e74c3c;
+  --cd-color-hint: #999;
+  --cd-color-border: #cccccc;
+  --cd-color-hover: rgba(0, 0, 0, 0.05);
+  --cd-border-radius: 4px;
+  --cd-transition: 0.2s ease;
+  --cd-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --cd-font-size: 14px;
+  --cd-header-height: 60px;
+  --cd-sidebar-width: 260px;
+}
+:root {
+  --cd-bridge-body-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+  --cd-bridge-body-font-size: 1rem;
+  --cd-primary-color: #1976d2;
+  --cd-primary-color-contrast: #fff;
+  --cd-input-text-color: #212121;
+  --cd-input-placeholder: rgba(0,0,0,0.54);
+  --cd-color-invalid: #e53935;
+  --cd-input-bg: #f4f6f8;
+}
+```
 
-/* ---------------------------------------------
-   HEADER
----------------------------------------------- */
-#cd-header {
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  height: 60px;
-  background-color: var(--cd-color-primary, var(--cd-primary-color));
-  color: #ffffff;
+bridge.css
+```css
+/* ============================================================
+   CORPDESK BRIDGE FOR MATERIAL COMPONENTS WEB (MDC)
+   Purpose:
+   - Provide Corpdesk theme tokens for MDC
+   - Preserve MDC native filled-text-field behaviour
+   - Only override colors, fonts, and spacing outside MDC layout
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Root tokens
+------------------------------------------------------------ */
+:root {
+  --cd-bridge-body-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+  --cd-bridge-body-font-size: 1rem;
+
+  --cd-primary-color: #1976d2;
+  --cd-primary-color-contrast: #fff;
+
+  --cd-input-text-color: #212121;
+  --cd-input-placeholder: rgba(0,0,0,0.54);
+
+  --cd-color-invalid: #e53935;
+
+  /* MDC default filled surface */
+  --cd-input-bg: #f4f6f8;
 }
 
-#cd-logo {
-  height: 40px;
-  margin-right: 10px;
+html[data-md-theme="dark"] {
+  --cd-input-bg: #1b1f23;
+  --cd-input-text-color: #e6e6e6;
+  --cd-input-placeholder: rgba(255,255,255,0.6);
+  --cd-primary-color: #90caf9;
 }
 
-/* ---------------------------------------------
-   MAIN LAYOUT WRAPPER
----------------------------------------------- */
-#cd-layout {
-  display: flex;
-  height: calc(100vh - 60px);
+/* ------------------------------------------------------------
+   Typography
+------------------------------------------------------------ */
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
 }
 
-/* ---------------------------------------------
-   CONTENT AREA
----------------------------------------------- */
+/* ------------------------------------------------------------
+   MDC TEXT FIELD BRIDGE — SAFE OVERRIDES ONLY
+   We DO NOT override:
+   - MDC padding
+   - floating label transforms (JS-driven)
+   - line ripple mechanics
+   - measurements, height, or box model
+------------------------------------------------------------ */
+
+/* 1) Wrapper must not interfere with MDC geometry */
+.cd-md-text-field {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  background: none !important;
+
+  /* Vertical spacing between form fields */
+  margin-bottom: 18px !important;
+}
+
+/* 2) Apply filled background ONLY on the filled variant */
+.cd-md-text-field.mdc-text-field--filled {
+  background-color: var(--cd-input-bg) !important;
+  border-radius: 4px;
+}
+
+/* 3) Input color and padding */
+.cd-md-text-field .mdc-text-field__input {
+  color: var(--cd-input-text-color);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.cd-md-text-field .mdc-text-field__input::placeholder {
+  color: var(--cd-input-placeholder);
+}
+
+/* 4) Label color only (movement handled by MDC JS) */
+.cd-md-text-field .mdc-floating-label {
+  color: var(--cd-input-placeholder);
+}
+.cd-md-text-field.mdc-text-field--focused .mdc-floating-label {
+  color: var(--cd-primary-color);
+}
+
+/* 5) Line ripple color only */
+.cd-md-text-field .mdc-line-ripple {
+  background-color: transparent;
+}
+.cd-md-text-field.mdc-text-field--focused .mdc-line-ripple {
+  background-color: var(--cd-primary-color);
+}
+
+/* 6) Invalid state colors only */
+.cd-md-text-field.mdc-text-field--invalid .mdc-floating-label {
+  color: var(--cd-color-invalid);
+}
+.cd-md-text-field.mdc-text-field--invalid .mdc-line-ripple {
+  background-color: var(--cd-color-invalid);
+}
+
+/* ------------------------------------------------------------
+   FORM SPACING + BUTTONS
+------------------------------------------------------------ */
+button[cdButton],
+.cd-button {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+form .cd-md-text-field:last-child {
+  margin-bottom: 24px !important;
+}
+
+/* END bridge.css */
+
+```
+
+///////////////////////////////////
+
+The sidebar is now ok.
+The only item left is the floating label when not in focus.
+Below is the css picked from the browser/inspector/styes for the <lable> when input is not in focus. 
+
+```css
+element {
+  --mdc-ripple-fg-size: 959px;
+  --mdc-ripple-fg-scale: 1.6788115874649367;
+  --mdc-ripple-fg-translate-start: -227.5px, -448.5px;
+  --mdc-ripple-fg-translate-end: 320px, -451.5px;
+}
+.cd-md-text-field.mdc-text-field--filled {
+  background-color: var(--cd-input-bg) !important;
+  border-radius: 4px;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: whitesmoke;
+}
+.cd-md-text-field {
+  position: relative;
+  width: 100%;
+  margin: 0;
+    margin-bottom: 0px;
+  padding: 0;
+  background: none !important;
+    background-color: rgba(0, 0, 0, 0);
+  box-shadow: none;
+  margin-bottom: 18px !important;
+}
+.mdc-text-field--filled {
+  height: 56px;
+}
+.mdc-text-field {
+  border-top-left-radius: 4px;
+  border-top-left-radius: var(--mdc-shape-small, 4px);
+  border-top-right-radius: 4px;
+  border-top-right-radius: var(--mdc-shape-small, 4px);
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  display: inline-flex;
+  align-items: baseline;
+  padding: 0 16px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  will-change: opacity,transform,color;
+}
+.mdc-text-field--filled {
+  --mdc-ripple-fg-size: 0;
+  --mdc-ripple-left: 0;
+  --mdc-ripple-top: 0;
+  --mdc-ripple-fg-scale: 1;
+  --mdc-ripple-fg-translate-end: 0;
+  --mdc-ripple-fg-translate-start: 0;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  will-change: transform,opacity;
+}
 #cd-main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background-color: var(--cd-color-bg);
   color: var(--cd-color-text);
 }
-
-/* ---------------------------------------------
-   SIDEBAR
----------------------------------------------- */
-#cd-sidebar {
-  width: var(--cd-sidebar-width, 250px);
-  background-color: var(--cd-color-surface);
+body {
   color: var(--cd-color-text);
-  overflow-y: auto;
-  padding: 10px;
-  transition: left 0.3s ease;
-  position: relative; /* desktop default */
 }
+html, body {
+  font-family: var(--cd-font-family);
+  font-size: var(--cd-font-size);
+}
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
+  color: var(--cd-color-text);
+}
+element {
+  --cd-secondary-color: #eeeeee;
+  --cd-accent-color: #ff4081;
+  --cd-background-color: white;
+  --cd-text-color: black;
+  --cd-primary-color: #007bff;
+}
+html[data-md-theme="dark"] {
+  --cd-color-bg: #0e0e0f;
+  --cd-color-surface: #1c1c1e;
+  --cd-color-text: #e4e4e4;
+  --cd-menu-bg: #121212;
+  --cd-menu-text: #dcdcdc;
+  --cd-menu-active-bg: #1f1f1f;
+  --cd-menu-active-text: #ffffff;
+  --cd-menu-hover-bg: rgba(255,255,255,0.08);
+  --cd-input-bg: #1b1f23;
+  --cd-input-text-color: #eaeaea;
+  --cd-input-placeholder: rgba(255,255,255,0.6);
+  --cd-primary-color: #90caf9;
+}
+```
 
-/* ---------------------------------------------
-   BURGER BUTTON
----------------------------------------------- */
-#cd-burger {
-  display: none;
-  font-size: 24px;
-  margin-right: 15px;
-  background: none;
+////////////////////////////////////////////////////////
+Great. That worked. Now typed text had not been considered yet.
+Typed text is almost black on black.
+
+Below is the css when typed text is active.
+```css
+element {
+}
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: rgba(0, 0, 0, 0.87);
+}
+.cd-md-text-field .mdc-text-field__input {
+  color: var(--cd-input-text-color);
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+.mdc-text-field .mdc-text-field__input {
+  caret-color: #6200ee;
+  caret-color: var(--mdc-theme-primary, #6200ee);
+}
+.mdc-text-field__input {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  font-family: var(--mdc-typography-subtitle1-font-family,var(--mdc-typography-font-family, Roboto, sans-serif) );
+  font-size: 1rem;
+  font-size: var(--mdc-typography-subtitle1-font-size, 1rem);
+  font-weight: 400;
+  font-weight: var(--mdc-typography-subtitle1-font-weight, 400);
+  letter-spacing: 0.009375em;
+  letter-spacing: var(--mdc-typography-subtitle1-letter-spacing, 0.009375em);
+  text-decoration: inherit;
+  -webkit-text-decoration: var(--mdc-typography-subtitle1-text-decoration, inherit);
+  text-decoration: var(--mdc-typography-subtitle1-text-decoration, inherit);
+  text-transform: inherit;
+  text-transform: var(--mdc-typography-subtitle1-text-transform, inherit);
+  height: 28px;
+  transition: opacity 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  min-width: 0;
   border: none;
-  color: inherit;
-  cursor: pointer;
+  border-radius: 0;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0;
+    padding-right: 0px;
+    padding-left: 0px;
 }
-
-/* ---------------------------------------------
-   RESPONSIVE: MOBILE & TABLET VIEW
----------------------------------------------- */
-@media (max-width: 900px) {
-
-  #cd-burger {
-    display: block;
-  }
-
-  #cd-logo {
-    display: none;
-  }
-
-  #cd-layout {
-    position: relative;
-  }
-
-  #cd-sidebar {
-    position: fixed !important;
-    top: 60px;
-    left: calc(-1 * var(--cd-sidebar-width, 250px));
-    height: calc(100vh - 60px);
-    z-index: 1000;
-    background-color: var(--cd-color-surface);
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  }
-
-  #cd-sidebar.open {
-    left: 0 !important;
-  }
-
-  #cd-overlay {
-    display: block;
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 60px);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 999;
-  }
-
-  #cd-overlay.hidden {
-    display: none;
-  }
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
+  color: var(--cd-color-text);
 }
-
-/* ----------------------------------------------
-   FIX: Remove Bootstrap focus highlight on menu items
------------------------------------------------ */
-#cd-sidebar li:focus,
-#cd-sidebar li:focus-within,
-#cd-sidebar a:focus,
-#cd-sidebar a:focus-within {
-  background-color: inherit !important;
-  outline: none !important;
-  box-shadow: none !important;
+element {
+  --mdc-ripple-fg-size: 959px;
+  --mdc-ripple-fg-scale: 1.6788115874649367;
+  --mdc-ripple-fg-translate-start: -445.5px, -446.5px;
+  --mdc-ripple-fg-translate-end: 320px, -451.5px;
 }
-
-```
-Main.run()
-```ts
-async run() {
-    this.logger.setLevel("debug");
-    this.logger.debug("starting bootstrapShell()");
-
-    diag_css("Main.run() started");
-
-    // ----------------------------
-    // STEP 0: Load shell config
-    // ----------------------------
-    const shellConfig: ShellConfig = await this.loadShellConfig();
-    if (shellConfig.logLevel) this.logger.setLevel(shellConfig.logLevel);
-
-    // ----------------------------
-    // STEP 1: Core service instantiation
-    // ----------------------------
-    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
-    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
-    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
-
-    // ----------------------------
-    // STEP 2: Load all cached metadata
-    // ----------------------------
-    await this.svSysCache.loadAndCacheAll();
-    diag_css("Cache loaded");
-
-    // ----------------------------
-    // STEP 3: Apply UI-system + Theme pipeline
-    // ----------------------------
-    await this.applyStartupUiSettings();
-    diag_css("UI-System + Theme applied");
-
-    // ----------------------------
-    // STEP 4: Theme config (logo + title)
-    // ----------------------------
-    const themeConfig = await this.svTheme.loadThemeConfig();
-    diag_css("ThemeConfig loaded", themeConfig);
-
-    document.title =
-      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
-
-    const logoEl = document.getElementById(
-      "cd-logo"
-    ) as HTMLImageElement | null;
-    if (logoEl && themeConfig.logo) {
-      logoEl.src = themeConfig.logo;
-    }
-
-    // ----------------------------
-    // STEP 5: Prepare menu
-    // ----------------------------
-    const allowedModules: ICdModule[] = await this.svModule.getAllowedModules();
-    const defaultModule = allowedModules.find((m) => m.isDefault);
-    const defaultControllerName = defaultModule?.controllers.find(
-      (c) => c.default
-    )?.name;
-
-    diag_css("Modules Loaded", { allowedModules });
-
-    const rawMenu: MenuItem[] = allowedModules.flatMap((mod) => {
-      const recursive = (items: MenuItem[]): MenuItem[] => {
-        return items.map((item) => {
-          if (item.itemType === "route" && item.route) {
-            const cinfo = this.svController.findControllerInfoByRoute(
-              mod,
-              item.route
-            );
-            if (cinfo) {
-              (item as any).controller = cinfo.instance;
-              (item as any).template =
-                typeof cinfo.template === "function"
-                  ? cinfo.template
-                  : () => cinfo.template;
-
-              (item as any).moduleId = mod.moduleId;
-
-              if (mod.isDefault && cinfo.name === defaultControllerName)
-                (item as any).moduleDefault = true;
-            }
-          }
-          if (item.children) item.children = recursive(item.children);
-          return item;
-        });
-      };
-      return recursive(mod.menu || []);
-    });
-
-    const preparedMenu = this.svMenu.prepareMenu(rawMenu);
-    diag_css("Menu prepared", preparedMenu);
-
-    // ----------------------------
-    // STEP 6: Render sidebar
-    // ----------------------------
-    try {
-      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
-      const theme = (await resTheme.json()) as ITheme;
-      this.svMenu.renderMenuWithSystem(preparedMenu, theme);
-
-      const sidebarEl = document.getElementById("cd-sidebar");
-      if (
-        sidebarEl &&
-        (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")
-      ) {
-        this.svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
-      }
-
-      diag_css("Sidebar rendered");
-      diag_sidebar();
-    } catch (err) {
-      console.error("[Main] Failed rendering menu", err);
-    }
-
-    // ----------------------------
-    // STEP 7: Auto-load default controller
-    // ----------------------------
-    try {
-      const defaultModuleMenu = preparedMenu.find(
-        (m) => m.label === defaultModule?.moduleId
-      );
-
-      const defaultMenuItem = defaultModuleMenu?.children?.find(
-        (it) => it.moduleDefault
-      );
-
-      if (defaultMenuItem) {
-        await this.svMenu.loadResource({ item: defaultMenuItem });
-      }
-
-      diag_css("Default controller loaded");
-    } catch (err) {
-      console.warn("[Main] auto-load default view failed", err);
-    }
-
-    // ----------------------------
-    // STEP 8: DIAGNOSTIC BURGER SYSTEM
-    // ----------------------------
-    const burger = document.getElementById("cd-burger");
-    const sidebar = document.getElementById("cd-sidebar");
-    const overlay = document.getElementById("cd-overlay");
-
-    diag_css("Burger system setup attempt", {
-      burgerFound: !!burger,
-      sidebarFound: !!sidebar,
-      overlayFound: !!overlay,
-    });
-
-    if (!burger || !sidebar || !overlay) {
-      diag_css("❌ Missing one or more required DOM nodes!", {
-        burger,
-        sidebar,
-        overlay,
-      });
-    }
-
-    const mediaCheck = () => window.matchMedia("(max-width: 900px)").matches;
-
-    diag_css("Initial media query evaluation", {
-      mobileMode: mediaCheck(),
-    });
-
-    const applyMobileState = () => {
-      const isMobile = mediaCheck();
-      diag_css("applyMobileState()", { isMobile });
-
-      if (!isMobile) {
-        sidebar.classList.remove("open");
-        overlay.classList.add("hidden");
-        diag_sidebar();
-      }
-    };
-
-    if (burger && sidebar && overlay) {
-      burger.addEventListener("click", () => {
-        diag_css("Burger clicked — toggling sidebar");
-
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("hidden");
-
-        diag_sidebar();
-        diag_css("Overlay state", {
-          classList: overlay.classList.toString(),
-        });
-      });
-
-      overlay.addEventListener("click", () => {
-        diag_css("Overlay clicked — closing sidebar");
-
-        sidebar.classList.remove("open");
-        overlay.classList.add("hidden");
-
-        diag_sidebar();
-      });
-
-      window.addEventListener("resize", () => {
-        diag_css("Window resized");
-        applyMobileState();
-      });
-
-      applyMobileState();
-    }
-
-    this.logger.debug("bootstrapShell(): run() complete");
-    diag_css("Main.run() complete");
-  }
+.mdc-text-field--filled {
+  --mdc-ripple-fg-size: 0;
+  --mdc-ripple-left: 0;
+  --mdc-ripple-top: 0;
+  --mdc-ripple-fg-scale: 1;
+  --mdc-ripple-fg-translate-end: 0;
+  --mdc-ripple-fg-translate-start: 0;
+}
+#cd-main-content {
+  color: var(--cd-color-text);
+}
+body {
+  color: var(--cd-color-text);
+}
 ```
 
-//////////////////////////////////////////
+///////////////////////////////////////////
+Knowing how we had set up bootstrap and how material design had issues with similar process but eventually worked via a different process, assist me  to do a documentation for:
+- ui-systems architecture
+- setting up bootstrap
+- setting up material-design
 
-Assist me to do a professional milestone that I can copy past to git interface for vscode.
+In the documentation, you mention why material design cannot work with the same setting as bootstrap. You can touch on likely pit falls and solutions
 
-Milestone (26 Nov 2025)
-- POC with bootstrap
-- Switch between dark and default mode.
-- stabilize css for: 
-  - themes
-  - menu
-  - header
-  - reponsiveness
+The above should assist future developers and mainteners of cd-shell
 
-Next Milestone:
-- switch ui-system between bootstrap and material-design
-- Switch between dark and default mode.
+
+
+//////////////////////////////////////////////
+I have taken the notes that are sufficient to represent what I needed for now. Moving foward: We are now able to switch between bootstrap and material-design and also change the theme of either from default to dark.
+With the current development, we have achieved a milestone.
+Remember that the current switching of ui-systems and themes is done at the shellconfig.json.
+This affects only the launch of the system.
+The next milestone will be effecting the same switches during runtime via the admin console.
+Below is the document that we did at the previous milestone.
+Take a look at it with the view of devloping:
+1. Git commit message for the milestone that can be copy pasted
+2. Outlining the next milestone. 
+
+
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////
 
@@ -7954,8 +4347,7 @@ Next Milestone:
     - CdDirectiveBinder
     - Model
 
-
-------------------------------------
+---
 
 - test setting of default theme via shell.config.json
 - STATIC_UI_SYSTEM_REGISTRY to merge with shell.config.json so that configs are not hard coded
@@ -8034,15 +4426,17 @@ Classing the codes:
   - Each theme to have set of thematic colours
 
 Milestone (26 Nov 2025)
+
 - POC with bootstrap
 - Switch between dark and default mode.
-- stabilize css for: 
+- stabilize css for:
   - themes
   - menu
   - header
   - reponsiveness
 
 Next Milestone:
+
 - switch ui-system between bootstrap and material-design
 - Switch between dark and default mode.
 
@@ -8077,19 +4471,15 @@ RawUiComponentMeta not yet implemented-
 ## ToDo:
 
 - Assigining thematic colours to sections:
-    - header background
-    - header vector pattern
-    - navigation background
-    - body background
+  - header background
+  - header vector pattern
+  - navigation background
+  - body background
   - Themes to be designed in a way that they can be packaged and commercialized
-
-  
 
 ///////////////////////////////////////
 
 ## In Progress
-
-
 
 ////////////////////////////////////////////////////////////
 

@@ -1,18 +1,60 @@
 {
-    "id": "material",
-    "name": "Material Design (MDC)",
-    "version": "1.0",
-    "assetPath": "/assets/ui-systems/material-design",
-    "conceptMappings": {},
-    "themes": [
-        {
-            "name": "default",
-            "file": "material-components-web.min.css",
-            "default": true
-        }
-    ],
-    "directiveMap": {
-        "cd-tooltip": "data-mdc-tooltip"
+  "id": "material-design",
+  "name": "Material Components Web",
+  "version": "1.0.0",
+  "description": "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.",
+  "author": "Material Authors",
+  "license": "Apache-2.0",
+  "assetPath": "/assets/ui-systems/material-design",
+  "cssUrl": "material-components-web.min.css",
+  "jsUrl": "material-components-web.min.js",
+  "stylesheets": [
+    "material-components-web.min.css"
+  ],
+  "scripts": [
+    "material-components-web.min.js"
+  ],
+  "conceptMappings": {
+    "button": {
+      "class": "mdc-button mdc-button--raised"
     },
-    "translator": "material-translator"
+    "card": {
+      "class": "mdc-card"
+    },
+    "input": {
+      "class": "mdc-text-field__input",
+      "attrs": {}
+    },
+    "formGroup": {
+      "class": "mdc-form-field"
+    }
+  },
+  "directiveMap": {
+    "cd-tooltip": "data-md-tooltip=\"true\""
+  },
+  "themesAvailable": [
+    {
+      "id": "default",
+      "name": "Default",
+      "displayName": "Default Theme",
+      "css": "/themes/default/theme.css",
+      "mode": "light"
+    },
+    {
+      "id": "dark",
+      "name": "Dark Mode",
+      "displayName": "Dark Theme",
+      "css": "/themes/dark/theme.css",
+      "mode": "dark"
+    }
+  ],
+  "themeActive": null,
+  "metadata": {
+    "supportsDarkMode": true,
+    "recommendedIconLib": "material-icons"
+  },
+  "extensions": {
+    "adapter": "MaterialDesignAdapter",
+    "versionTag": "material-design"
+  }
 }

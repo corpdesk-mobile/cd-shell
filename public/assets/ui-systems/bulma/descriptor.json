@@ -1,0 +1,55 @@
+{
+    "id": "bulma",
+    "name": "Bulma",
+    "version": "1.0.0",
+    "description": "Bulma UI System (CSS-only) for Corpdesk.",
+    "author": "Bulma Authors",
+    "license": "MIT",
+    "assetPath": "/assets/ui-systems/bulma",
+    "cssUrl": "bulma.min.css",
+    "jsUrl": null,
+    "stylesheets": [
+        "bulma.min.css",
+        "bridge.css"
+    ],
+    "scripts": [],
+    "conceptMappings": {
+        "button": {
+            "class": "button is-primary"
+        },
+        "card": {
+            "class": "card"
+        },
+        "input": {
+            "class": "input"
+        },
+        "formGroup": {
+            "class": "field"
+        }
+    },
+    "themesAvailable": [
+        {
+            "id": "default",
+            "name": "Default",
+            "mode": "light",
+            "displayName": "Bulma Default Theme",
+            "css": "/themes/default/theme.css"
+        },
+        {
+            "id": "dark",
+            "name": "Dark Mode",
+            "mode": "dark",
+            "displayName": "Bulma Dark Theme",
+            "css": "/themes/dark/theme.css"
+        }
+    ],
+    "themeActive": null,
+    "metadata": {
+        "supportsDarkMode": true,
+        "supportsCssOnlyFramework": true
+    },
+    "extensions": {
+        "adapter": "BulmaAdapterService",
+        "versionTag": "bulma"
+    }
+}

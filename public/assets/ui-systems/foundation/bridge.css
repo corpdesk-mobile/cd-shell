@@ -1,0 +1,140 @@
+/* ============================================================
+   CORPDESK BRIDGE FOR BULMA 1.x
+   Provides theme variables & cd-* concept alignment
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. ROOT VARIABLES (Light Mode Defaults)
+   ------------------------------------------------------------ */
+:root {
+  /* Bulma base variables */
+  --cd-font-family: "Inter", system-ui, sans-serif;
+
+  --cd-color-border: #dbdbdb;
+  --cd-input-text-color: #363636;
+  --cd-menu-bg: #fafafa;
+  --cd-menu-text: #363636;
+
+  --cd-menu-active-bg: #eaeaea;
+  --cd-menu-active-text: #000000;
+
+  --cd-menu-hover-bg: rgba(0,0,0,0.04);
+}
+
+/* ------------------------------------------------------------
+   2. LIGHT MODE
+   ------------------------------------------------------------ */
+:root[data-bulma-theme="light"] {
+  --cd-input-text-color: #363636;
+  --cd-color-border: #dbdbdb;
+
+  --cd-menu-bg: #fafafa;
+  --cd-menu-text: #363636;
+
+  --cd-menu-active-bg: #e8e8e8;
+  --cd-menu-active-text: #000;
+  --cd-menu-hover-bg: rgba(0,0,0,0.04);
+}
+
+/* ------------------------------------------------------------
+   3. DARK MODE
+   ------------------------------------------------------------ */
+:root[data-bulma-theme="dark"] {
+  --cd-input-text-color: #f5f5f5;
+  --cd-color-border: #555;
+
+  --cd-menu-bg: #1d1f21;
+  --cd-menu-text: #ddd;
+
+  --cd-menu-active-bg: #303437;
+  --cd-menu-active-text: #fff;
+
+  --cd-menu-hover-bg: rgba(255,255,255,0.08);
+}
+
+/* ------------------------------------------------------------
+   4. FORM LABELS
+   ------------------------------------------------------------ */
+.cd-form-field > label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cd-input-text-color);
+}
+
+/* ------------------------------------------------------------
+   5. INPUTS
+   ------------------------------------------------------------ */
+.cd-form-field input,
+.cd-form-field textarea,
+.cd-form-field select {
+  width: 100%;
+  font-family: var(--cd-font-family);
+  font-size: 1rem;
+  padding: 0.6em 0.75em;
+
+  border: 1px solid var(--cd-color-border);
+  border-radius: 4px;
+
+  color: var(--cd-input-text-color);
+  background-color: var(--bulma-input-background, #fff);
+
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.cd-form-field input:focus,
+.cd-form-field textarea:focus,
+.cd-form-field select:focus {
+  border-color: #485fc7; /* Bulma primary */
+  box-shadow: 0 0 0 0.125em rgba(72, 95, 199, .25);
+}
+
+/* ------------------------------------------------------------
+   6. VALIDATION STATES
+   ------------------------------------------------------------ */
+.cd-form-field input.cd-valid {
+  border-color: #48c78e !important;
+  box-shadow: 0 0 0 0.125em rgba(72, 199, 142, .25);
+}
+
+.cd-form-field input.cd-invalid {
+  border-color: #f14668 !important;
+  box-shadow: 0 0 0 0.125em rgba(241, 70, 104, .25);
+}
+
+/* ------------------------------------------------------------
+   7. BUTTONS
+   ------------------------------------------------------------ */
+button[cdButton],
+.cd-button {
+  font-family: var(--cd-font-family);
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------
+   8. SIDEBAR / MENU
+   ------------------------------------------------------------ */
+#cd-sidebar {
+  background-color: var(--cd-menu-bg);
+  color: var(--cd-menu-text);
+}
+
+.cd-menu-entry {
+  padding: 10px 15px;
+  display: flex;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.cd-menu-entry:hover {
+  background-color: var(--cd-menu-hover-bg);
+}
+
+.metismenu li.mm-active > .cd-menu-entry {
+  background-color: var(--cd-menu-active-bg) !important;
+  color: var(--cd-menu-active-text) !important;
+}
+
+/* Remove MetisMenu pseudo arrow */
+.metismenu .has-arrow::before {
+  display: none !important;
+}

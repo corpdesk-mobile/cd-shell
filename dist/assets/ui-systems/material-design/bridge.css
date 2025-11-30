@@ -1,0 +1,192 @@
+/* ============================================================
+   CORPDESK BRIDGE FOR MATERIAL COMPONENTS WEB (MDC)
+   Purpose:
+   - Provide Corpdesk theme tokens for MDC
+   - Preserve MDC native filled-text-field behaviour
+   - Fix light & dark mode contrast
+   - Adjust spacing without breaking MDC layout engine
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   ROOT TOKENS — LIGHT DEFAULT
+------------------------------------------------------------ */
+:root {
+  --cd-bridge-body-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+  --cd-bridge-body-font-size: 1rem;
+
+  --cd-color-bg: #ffffff;
+  --cd-color-surface: #f5f5f7;
+  --cd-color-text: #111;
+
+  --cd-primary-color: #1976d2;
+  --cd-primary-color-contrast: #fff;
+
+  --cd-input-text-color: #212121;
+  --cd-input-placeholder: rgba(0,0,0,0.54);
+  --cd-color-invalid: #e53935;
+
+  --cd-input-bg: #f4f6f8; /* MDC filled bg */
+  
+  --cd-menu-bg: #ffffff;
+  --cd-menu-text: #222;
+  --cd-menu-active-bg: #f1f3f5;
+  --cd-menu-active-text: #000;
+  --cd-menu-hover-bg: rgba(0,0,0,0.05);
+}
+
+/* ------------------------------------------------------------
+   DARK MODE OVERRIDES
+   Covers: shell background, text, menu, buttons, MDC components
+------------------------------------------------------------ */
+html[data-md-theme="dark"] {
+  --cd-color-bg: #0e0e0f;
+  --cd-color-surface: #1c1c1e;
+  --cd-color-text: #e4e4e4;
+
+  --cd-menu-bg: #121212;
+  --cd-menu-text: #dcdcdc;
+  --cd-menu-active-bg: #1f1f1f;
+  --cd-menu-active-text: #ffffff;
+  --cd-menu-hover-bg: rgba(255,255,255,0.08);
+
+  /* MDC textfield */
+  --cd-input-bg: #1b1f23;
+  --cd-input-text-color: #eaeaea;
+  --cd-input-placeholder: rgba(255,255,255,0.6);
+
+  /* primary tint for dark mode */
+  --cd-primary-color: #90caf9;
+}
+
+/* ------------------------------------------------------------
+   TYPOGRAPHY
+------------------------------------------------------------ */
+body, input, textarea, select, button {
+  font-family: var(--cd-bridge-body-font-family);
+  font-size: var(--cd-bridge-body-font-size);
+  color: var(--cd-color-text);
+}
+
+/* Page background */
+body {
+  background-color: var(--cd-color-bg);
+}
+
+/* ------------------------------------------------------------
+   SIDEBAR / MENU
+------------------------------------------------------------ */
+#cd-sidebar {
+  background: var(--cd-menu-bg);
+  color: var(--cd-menu-text);
+}
+
+#cd-sidebar a.cd-menu-link {
+  color: var(--cd-menu-text);
+}
+
+#cd-sidebar a.cd-menu-link:hover {
+  background: var(--cd-menu-hover-bg);
+  color: var(--cd-menu-active-text);
+}
+
+#cd-sidebar .mm-active > a {
+  background: var(--cd-menu-active-bg) !important;
+  color: var(--cd-menu-active-text) !important;
+}
+
+/* ------------------------------------------------------------
+   MDC TEXT FIELD BRIDGE (SAFE OVERRIDES ONLY)
+------------------------------------------------------------ */
+
+/* Wrapper keeps MDC geometry intact */
+.cd-md-text-field {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: none !important;
+  box-shadow: none;
+
+  margin-bottom: 18px !important; /* spacing between controls */
+}
+
+/* Filled background visually */
+.cd-md-text-field.mdc-text-field--filled {
+  background-color: var(--cd-input-bg) !important;
+  border-radius: 4px;
+}
+
+/* Input text color + padding FIX (safe) */
+.cd-md-text-field .mdc-text-field__input {
+  color: var(--cd-input-text-color);
+
+  /* These padding values DO NOT break MDC line-ripple */
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+.cd-md-text-field .mdc-text-field__input::placeholder {
+  color: var(--cd-input-placeholder);
+}
+
+/* Floating label colors */
+.cd-md-text-field .mdc-floating-label {
+  color: var(--cd-input-placeholder);
+}
+
+.cd-md-text-field.mdc-text-field--focused .mdc-floating-label {
+  color: var(--cd-primary-color);
+}
+
+/* Line ripple color */
+.cd-md-text-field .mdc-line-ripple {
+  background-color: transparent;
+}
+
+.cd-md-text-field.mdc-text-field--focused .mdc-line-ripple {
+  background-color: var(--cd-primary-color);
+}
+
+/* Invalid state */
+.cd-md-text-field.mdc-text-field--invalid .mdc-floating-label {
+  color: var(--cd-color-invalid);
+}
+
+.cd-md-text-field.mdc-text-field--invalid .mdc-line-ripple {
+  background-color: var(--cd-color-invalid);
+}
+
+/* Force correct text color in both light & dark themes */
+.cd-md-text-field.mdc-text-field--filled .mdc-text-field__input {
+  color: var(--cd-input-text-color) !important;
+}
+
+/* ------------------------------------------------------------
+   BUTTON SPACING
+------------------------------------------------------------ */
+button[cdButton],
+.cd-button {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+form .cd-md-text-field:last-child {
+  margin-bottom: 24px !important;
+}
+
+/* ------------------------------------------------------------
+   FIX: Floating label contrast in dark & light modes
+------------------------------------------------------------ */
+
+/* Non-focused floating label */
+.cd-md-text-field.mdc-text-field--filled .mdc-floating-label {
+  color: var(--cd-input-placeholder) !important;
+}
+
+/* Floating label AFTER it has floated (not focused) */
+.cd-md-text-field.mdc-text-field--filled .mdc-floating-label--float-above {
+  color: var(--cd-input-text-color) !important;
+  opacity: 0.85; /* light contrast boost */
+}
+
+/* END bridge.css */
