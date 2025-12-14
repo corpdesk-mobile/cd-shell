@@ -41,9 +41,12 @@ export class GenericService {
         const result = await b.update(req, req, serviceInput);
         return 'state' in result ? result : CD_FX_FAIL;
     }
-    async updateI(req, res, createIParams) {
-        const b = new BaseService();
-        return b.updateI(req, res, createIParams);
+    // async updateI(req, res, createIParams: CreateIParams<T>): Promise<any> {
+    //   const b = new BaseService<T>();
+    //   return b.updateI(req, res, createIParams);
+    // }
+    async updateI(req, res, serviceInput) {
+        return await this.b.update(req, res, serviceInput);
     }
     async delete(req, res, serviceInput) {
         // const serviceInput = {

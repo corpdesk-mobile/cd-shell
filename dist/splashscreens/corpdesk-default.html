@@ -1,0 +1,133 @@
+
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #splash-container {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Fade-out class applied from hideSplash() */
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+  }
+</style>
+
+
+<div id="splash-container">
+  <!-- Animated SVG -->
+  <svg id="corpdesk-svg" width="200" height="200" viewBox="0 0 41.66 41.65">
+    <defs>
+      <!-- Glow filter -->
+      <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="blur1"/>
+        <feColorMatrix in="blur1" type="matrix"
+            values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    0 0 0 1 0" result="glow"/>
+        <feBlend in="SourceGraphic" in2="glow" mode="screen"/>
+      </filter>
+
+      <!-- Stroke drawing preset -->
+      <style>
+        .outline {
+          stroke-dasharray: 200;
+          stroke-dashoffset: 200;
+        }
+      </style>
+    </defs>
+
+    <!-- THE OUTER CIRCLE (color reveal last) -->
+    <circle id="outerCircle" cx="25.57" cy="24.85" r="20.83" 
+      transform="matrix(0.03, -1, 1, 0.03, -4.65, 45.76)"
+      fill="#f04d23" opacity="0">
+
+      <!-- Reveal animation -->
+      <animate attributeName="opacity" from="0" to="1"
+               begin="3s" dur="0.8s" fill="freeze"/>
+    </circle>
+
+    <!-- THE BLACK SEGMENT -->
+    <path id="segment"
+          d="M25.57,38.5a13.51,13.51,0,0,0,0-27Z"
+          transform="translate(-4.74 -4.02)"
+          fill="#231f20" opacity="0">
+      <animate attributeName="opacity" from="0" to="1"
+               begin="3s" dur="0.8s" fill="freeze"/>
+    </path>
+
+    <!-- OUTLINE -->
+    <path id="outline"
+          d="M34.54,12.72a15,15,0,1,1-18.06.08"
+          transform="translate(-4.74 -4.02)"
+          class="outline"
+          fill="none" stroke="#fff" stroke-width="3.6"
+          filter="url(#soft-glow)">
+
+      <!-- Step 1: Draw outline -->
+      <animate attributeName="stroke-dashoffset"
+               from="200" to="0"
+               dur="1.4s" begin="0.1s" fill="freeze" />
+
+      <!-- Step 2: Glow pulse -->
+      <animate attributeName="opacity"
+               values="1;0.4;1"
+               dur="1.2s"
+               begin="1.5s"
+               repeatCount="2"/>
+
+      <!-- Step 3: Fade outline for final reveal -->
+      <animate attributeName="opacity"
+               from="1" to="0"
+               begin="3s" dur="0.6s" fill="freeze" />
+
+    </path>
+
+    <!-- CLOCK HAND (line) -->
+    <line id="hand"
+          x1="21.15" y1="23" x2="21.15" y2="4.14"
+          stroke="#fff" stroke-width="3.6"
+          stroke-linecap="round"
+          opacity="1">
+
+      <!-- Step 1: Rotate around center -->
+      <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0 21.15 23"
+          to="360 21.15 23"
+          dur="2.6s"
+          begin="0.6s"
+          fill="freeze"/>
+
+      <!-- Step 2: Fade out at reveal -->
+      <animate attributeName="opacity"
+               from="1" to="0"
+               begin="3s" dur="0.5s" fill="freeze"/>
+    </line>
+
+  </svg>
+</div>
+
+<script>
+  setTimeout(() => {
+    const ev = new CustomEvent("CorpdeskSplashDone");
+    window.dispatchEvent(ev);
+  }, 3800);
+</script>
+
+

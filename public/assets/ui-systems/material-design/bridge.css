@@ -4,6 +4,7 @@
    - Provide Corpdesk theme tokens for MDC
    - Preserve MDC native filled-text-field behaviour
    - Fix light & dark mode contrast
+   - Make MDC select controls span 100% width (POC default)
    - Adjust spacing without breaking MDC layout engine
    ============================================================ */
 
@@ -26,7 +27,7 @@
   --cd-color-invalid: #e53935;
 
   --cd-input-bg: #f4f6f8; /* MDC filled bg */
-  
+
   --cd-menu-bg: #ffffff;
   --cd-menu-text: #222;
   --cd-menu-active-bg: #f1f3f5;
@@ -162,16 +163,126 @@ body {
 }
 
 /* ------------------------------------------------------------
+   MDC SELECT (Model-A) — sizing + POC defaults
+   Goal: make selects 100% width like inputs (POC)
+------------------------------------------------------------ */
+
+/* Wrapper used by adapter — ensure full width & block layout */
+.cd-md-select-wrapper,
+.mdc-select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 18px !important; /* match text-fields */
+}
+
+/* Anchor (the visible trigger) must fill available width */
+.mdc-select__anchor {
+  width: 100% !important;     /* IMPORTANT: force full width for POC */
+  min-width: 0;               /* allow shrinking inside flex containers */
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 12px;         /* slightly reduced padding so text lines up with inputs */
+  padding-right: 12px;
+  height: 56px;               /* match filled text-field height */
+  cursor: pointer;
+}
+
+/* Keep ripple inside anchor and allow full-width area for ripple */
+.mdc-select__ripple {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+/* Make selected-text container use remaining space and ellipsis overflow */
+.mdc-select__selected-text-container {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.mdc-select__selected-text {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 28px;
+  padding-left: 4px;
+}
+
+/* Floating label behavior — ensure it doesn't overlap badly with selected text */
+.mdc-select__anchor .mdc-floating-label {
+  margin-left: 0;
+  transform-origin: left center;
+}
+
+/* Dropdown icon on the right (keep it visually aligned) */
+.mdc-select__dropdown-icon {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 12px;
+}
+
+/* Menu surface: make it at least as wide as anchor and prefer 100% on open */
+.mdc-select__menu.mdc-menu-surface,
+.mdc-menu-surface.cd-md-select-menu {
+  min-width: 100% !important; /* ensures menu is not narrower than anchor */
+  box-sizing: border-box;
+  z-index: 1200;
+}
+
+/* Ensure list items wrap behaviour is consistent */
+.mdc-list-item .mdc-list-item__text {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* If a select is inside a grid or inline layout, force the wrapper to stack—safe for POC */
+.cd-form .cd-md-select-wrapper,
+form .cd-md-select-wrapper {
+  display: block;
+  width: 100%;
+}
+
+/* If adapter keeps a fallback button trigger (legacy), make it full width too */
+.cd-md-select-trigger,
+.cd-md-select-display {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding-left: 12px;
+  padding-right: 12px;
+  min-height: 36px;
+}
+
+.mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
+  background-color: #1b1f23;
+}
+
+/* ------------------------------------------------------------
    BUTTON SPACING
 ------------------------------------------------------------ */
 button[cdButton],
 .cd-button {
   margin-top: 12px !important;
   margin-bottom: 12px !important;
+  display: inline-block;
 }
 
-form .cd-md-text-field:last-child {
-  margin-bottom: 24px !important;
+/* If a button appears next to selects inside same form, encourage stacking
+   (POC behaviour: make buttons full width where they are in flow) */
+form .cd-button,
+form button[type="submit"] {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px !important;
 }
 
 /* ------------------------------------------------------------
@@ -179,14 +290,29 @@ form .cd-md-text-field:last-child {
 ------------------------------------------------------------ */
 
 /* Non-focused floating label */
-.cd-md-text-field.mdc-text-field--filled .mdc-floating-label {
+.cd-md-text-field.mdc-text-field--filled .mdc-floating-label,
+.mdc-select__anchor .mdc-floating-label {
   color: var(--cd-input-placeholder) !important;
 }
 
 /* Floating label AFTER it has floated (not focused) */
-.cd-md-text-field.mdc-text-field--filled .mdc-floating-label--float-above {
+.cd-md-text-field.mdc-text-field--filled .mdc-floating-label--float-above,
+.mdc-select__anchor .mdc-floating-label--float-above {
   color: var(--cd-input-text-color) !important;
-  opacity: 0.85; /* light contrast boost */
+  opacity: 0.92; /* light contrast boost */
+}
+
+/* ------------------------------------------------------------
+   Small adjustments to avoid layout jumps
+------------------------------------------------------------ */
+.mdc-line-ripple {
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+/* ensure selects and inputs have consistent left alignment */
+.cd-md-text-field .mdc-text-field__input,
+.mdc-select__selected-text {
+  padding-left: 12px;
 }
 
 /* END bridge.css */

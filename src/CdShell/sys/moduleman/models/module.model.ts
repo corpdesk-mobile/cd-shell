@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { validateOrReject } from 'class-validator';
 import { MenuItem } from "./menu.model";
 import { IControllerInfo } from "./controller.model";
+import { ICdRequest } from "../../base";
 
 @Entity({
   name: 'module',
@@ -86,7 +87,7 @@ export class ModuleModel {
   order?: number;
 }
 
-export const EnvCreate = {
+export const EnvCreate: ICdRequest = {
   ctx: 'Sys',
   m: 'Moduleman',
   c: 'Module',
@@ -110,7 +111,7 @@ export const EnvCreate = {
   args: null,
 };
 
-export const EnvPurge = {
+export const EnvPurge: ICdRequest = {
   ctx: 'Sys',
   m: 'Moduleman',
   c: 'Module',

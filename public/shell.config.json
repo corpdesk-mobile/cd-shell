@@ -3,13 +3,78 @@
   "fallbackTitle": "Corpdesk PWA",
   "appVersion": "1.0.0",
   "appDescription": "Corpdesk PWA",
-  "themeConfig":  {"currentThemePath": "/themes/default/theme.json","accessibleThemes":["default", "dark", "contrast"]},
-   "defaultModulePath": "sys/cd-user",
+
+  "themeConfig": {
+    "currentThemePath": "/themes/default/theme.json",
+    "accessibleThemes": ["default", "dark", "contrast"]
+  },
+
+  "defaultModulePath": "sys/cd-user",
   "logLevel": "debug",
+
   "uiConfig": {
-    "defaultUiSystemId": "material-design", 
-    "defaultThemeId": "default", 
+    "defaultUiSystemId": "material-design",
+    "defaultThemeId": "dark",
     "defaultFormVariant": "standard",
     "uiSystemBasePath": "/assets/ui-systems/"
+  },
+
+  "splash": {
+    "enabled": true,
+    "path": "/splashscreens/corpdesk-default.html",
+    "minDuration": 3400
+  },
+
+  "envConfig": {
+    "appId": "",
+    "production": true,
+    "apiEndpoint": "https://localhost:3001/api",
+    "sioEndpoint": "https://localhost:3002",
+    "wsEndpoint": "wss://localhost:3000",
+    "wsMode": "sio",
+
+    "pushConfig": {
+      "sio": { "enabled": true },
+      "wss": { "enabled": false },
+      "pusher": {
+        "enabled": false,
+        "apiKey": "",
+        "options": {
+          "cluster": "",
+          "forceTLS": true
+        }
+      }
+    },
+
+    "clientAppGuid": "ca0fe39f-92b2-484d-91ef-487d4fc462a2",
+    "clientContext": {
+      "entity": "ASDAP",
+      "clientAppId": 2,
+      "consumerToken": "B0B3DA99-1859-A499-90F6-1E3F69575DCD"
+    },
+
+    "USER_RESOURCES": "https://assets.corpdesk.com/user-resources",
+    "apiHost": "https://localhost",
+    "sioHost": "https://localhost",
+    "shellHost": "https://localhost",
+    "consumer": "ACME_CORP",
+
+    "clientAppId": 2,
+    "SOCKET_IO_PORT": 3002,
+    "defaultauth": "cd-auth",
+    "initialPage": "dashboard",
+    "mfManifestPath": "/assets/mf.manifest.json",
+
+    "apiOptions": {
+      "headers": { "Content-Type": "application/json" }
+    },
+
+    "sioOptions": {
+      "path": "/socket.io",
+      "transports": ["websocket", "polling"],
+      "secure": true
+    },
+
+    "logLevel": "debug"
   }
 }

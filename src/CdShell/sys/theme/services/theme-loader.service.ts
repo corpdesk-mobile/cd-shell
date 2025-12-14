@@ -1,8 +1,9 @@
 // This file is responsible for bootstrapping the shell application
 import { ITheme } from "../models/themes.model";
 import shellConfig from "../../../../../shell.config.json";
-import { ThemeConfig, ThemeShellConfig } from "../../base";
-import { ShellConfig } from "../../moduleman/models/config.model";
+import { IShellConfig } from "../../moduleman/models/config.model";
+// import { ThemeConfig, ThemeShellConfig } from "../../base";
+// import { ShellConfig } from "../../moduleman/models/config.model";
 
 // export class ThempeLoaderService {
 //   async loadTheme(themeId: string = "default") {
@@ -101,7 +102,7 @@ export class ThemeLoaderService {
     const theme = (await res.json()) as ITheme;
 
     // ✅ Fetch shellConfig safely
-    const shellConfig = (window as any).shellConfig as ShellConfig | undefined;
+    const shellConfig = (window as any).shellConfig as IShellConfig | undefined;
     if (!shellConfig) {
       console.warn("ThemeLoaderService: shellConfig not found in window context.");
     } else {

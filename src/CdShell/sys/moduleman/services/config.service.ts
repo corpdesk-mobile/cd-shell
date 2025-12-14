@@ -1,66 +1,12 @@
 // import { ShellConfig } from "../../base";
-import { ShellConfig, UiConfig } from "../models/config.model";
-
-// export class ConfigService {
-//   private config: ShellConfig | null = null;
-//   private readonly CONFIG_PATH = "/shell.config.json";
-//   private static instance: ConfigService | null = null;
-
-//   static getInstance(): ConfigService {
-//     if (!ConfigService.instance) {
-//       ConfigService.instance = new ConfigService();
-//     }
-//     return ConfigService.instance;
-//   }
-
-//   /**
-//    * Loads the configuration file once.
-//    */
-//   async loadConfig(): Promise<UiConfig> {
-//     console.log("[ConfigService][loadConfig] start");
-//     if (this.config) {
-//       return this.config.uiConfig;
-//     }
-//     console.log("[ConfigService][loadConfig] 01");
-//     try {
-//       console.log("[ConfigService][loadConfig] 02");
-//       const response = await fetch(this.CONFIG_PATH);
-//       console.log("[ConfigService][loadConfig] 03");
-//       console.log("[ConfigService][loadConfig] response:", response);
-//       if (!response.ok) {
-//         throw new Error(`Failed to load config from ${this.CONFIG_PATH}`);
-//       }
-//       console.log("[ConfigService][loadConfig] 04");
-//       this.config = (await response.json()) as ShellConfig;
-//       console.log("[ConfigService][loadConfig] config:", this.config);
-//       console.log("[ConfigService][loadConfig] 05");
-//       return this.config.uiConfig;
-//     } catch (error) {
-//       console.error("[ConfigService] Error loading configuration:", error);
-//       // Provide sensible defaults if loading fails
-//       return {
-//         defaultUiSystemId: "bootstrap-502",
-//         defaultThemeId: "default",
-//         defaultFormVariant: "standard",
-//         uiSystemBasePath: "/public/assets/ui-systems/",
-//       };
-//     }
-//   }
-
-//   getUiConfig(): UiConfig {
-//     if (!this.config) {
-//       throw new Error(
-//         "[ConfigService] Configuration not loaded. Call loadConfig() first."
-//       );
-//     }
-//     return this.config.uiConfig;
-//   }
-// }
+import { UserService } from "../../cd-user/services/user.service";
+import { IShellConfig, UiConfig } from "../models/config.model";
+import { ConsumerService } from "./consumer.service";
 
 // ConfigService (singleton)
 export class ConfigService {
   private static instance: ConfigService | null = null;
-  private config: ShellConfig | null = null;
+  private config: IShellConfig | null = null;
   private readonly CONFIG_PATH = "/shell.config.json";
 
   constructor() {}
@@ -72,13 +18,13 @@ export class ConfigService {
     return ConfigService.instance;
   }
 
-  async loadConfig(): Promise<ShellConfig> {
+  async loadConfig(): Promise<IShellConfig> {
     if (this.config) return this.config;
 
     try {
       const res = await fetch(this.CONFIG_PATH);
       if (!res.ok) throw new Error(`Failed to load config ${res.status}`);
-      this.config = (await res.json()) as ShellConfig;
+      this.config = (await res.json()) as IShellConfig;
       console.log("[ConfigService] loaded config:", this.config);
       return this.config;
     } catch (err) {
@@ -101,7 +47,7 @@ export class ConfigService {
           defaultFormVariant: "standard",
           uiSystemBasePath: "/public/assets/ui-systems/",
         },
-      } as ShellConfig;
+      } as IShellConfig;
       return this.config;
     }
   }
@@ -115,4 +61,76 @@ export class ConfigService {
     }
     return this.config.uiConfig;
   }
+
+  // async getEffectiveShellConfig(
+  //   userId?: number,
+  //   tenantId?: number
+  // ): Promise<IShellConfig> {
+  //   const svConsumer = new ConsumerService();
+  //   const svUser = new UserService();
+  //   // 1. Load consumer config (local cache or backend)
+  //   const consumerCfg = await svConsumer.getShellConfig(tenantId);
+  //   // 2. Load user profile
+  //   const userProfile = await svUser.getUserProfile(userId);
+
+  //   // base: shell file defaults
+  //   const appShell = await AppShellConfigService.get(); // reads shellconfig.json or shell cache
+
+  //   // Start with app defaults
+  //   const effective: IShellConfig = deepClone(appShell);
+
+  //   // Apply consumer-level overrides and policies
+  //   if (consumerCfg?.uiConfig) {
+  //     merge(effective.uiConfig, consumerCfg.uiConfig);
+  //     // push policy into effective for use by UI
+  //     effective.uiConfig = {
+  //       ...effective.uiConfig,
+  //       policy: consumerCfg.uiConfig.policy,
+  //     };
+  //   }
+  //   if (consumerCfg?.themeConfig) {
+  //     effective.themeConfig = {
+  //       ...effective.themeConfig,
+  //       ...(consumerCfg.themeConfig || {}),
+  //     };
+  //   }
+
+  //   // Apply user preferences only if allowed
+  //   if (
+  //     userProfile?.shellConfig &&
+  //     effective.themeConfig?.allowUserSelection !== false &&
+  //     !effective.themeConfig?.policy?.locked
+  //   ) {
+  //     // Merge but keep consumer policy constraints
+  //     const userPref = userProfile.shellConfig;
+  //     // enforce allowed lists:
+  //     if (effective.uiConfig?.policy?.allowedUiSystems?.length) {
+  //       if (
+  //         userPref.uiConfig?.defaultUiSystemId &&
+  //         effective.uiConfig.policy.allowedUiSystems.includes(
+  //           userPref.uiConfig.defaultUiSystemId
+  //         )
+  //       ) {
+  //         effective.uiConfig.defaultUiSystemId =
+  //           userPref.uiConfig.defaultUiSystemId;
+  //       }
+  //     } else if (userPref.uiConfig?.defaultUiSystemId) {
+  //       effective.uiConfig.defaultUiSystemId =
+  //         userPref.uiConfig.defaultUiSystemId;
+  //     }
+  //     // same for theme
+  //     if (userPref.themeConfig?.defaultThemeId) {
+  //       // ensure allowed by consumer policy
+  //       const allowed =
+  //         effective.themeConfig?.policy?.allowedThemeIds ??
+  //         effective.themeConfig?.accessibleThemes;
+  //       if (!allowed || allowed.includes(userPref.themeConfig.defaultThemeId)) {
+  //         effective.themeConfig.defaultThemeId =
+  //           userPref.themeConfig.defaultThemeId;
+  //       }
+  //     }
+  //   }
+
+  //   return effective;
+  // }
 }

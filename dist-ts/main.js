@@ -14,9 +14,14 @@ export class Main {
     constructor() {
         // private svThemeLoader!: ThemeLoaderService;
         this.logger = new LoggerService();
+        this.splashAnimDone = false;
+        this.appReady = false;
         // intentionally empty — setup moved to init()
         this.svConfig = new ConfigService();
         this.svSysCache = new SysCacheService(this.svConfig);
+        // window.addEventListener("CorpdeskSplashDone", () => {
+        //   this.hideSplash();
+        // });
     }
     /**
      * Unified initializer: sets up services and shell config.
@@ -48,77 +53,78 @@ export class Main {
         this.logger.debug("[Main] init(): completed");
     }
     async run() {
+        //---------------------------------------
+        // SPLASH: Show immediately
+        //---------------------------------------
+        await this.showSplash(); // your animated SVG starts here
         this.logger.setLevel("debug");
         this.logger.debug("starting bootstrapShell()");
         diag_css("Main.run() started");
-        // ----------------------------
+        //---------------------------------------
         // STEP 0: Load shell config
-        // ----------------------------
+        //---------------------------------------
         const shellConfig = await this.loadShellConfig();
         if (shellConfig.logLevel)
             this.logger.setLevel(shellConfig.logLevel);
-        // ----------------------------
+        //---------------------------------------
         // STEP 1: Core service instantiation
-        // ----------------------------
+        //---------------------------------------
         this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
         this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
         this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
-        // ----------------------------
-        // STEP 2: Load all cached metadata
-        // ----------------------------
+        //---------------------------------------
+        // STEP 2: Load cached metadata
+        //---------------------------------------
         await this.svSysCache.loadAndCacheAll();
         diag_css("Cache loaded");
-        // ----------------------------
-        // STEP 3: Apply UI-system + Theme pipeline
-        // ----------------------------
+        //---------------------------------------
+        // STEP 3: Apply UI-System + Theme pipeline
+        //---------------------------------------
         await this.applyStartupUiSettings();
         diag_css("UI-System + Theme applied");
-        // ----------------------------
+        //---------------------------------------
         // STEP 4: Theme config (logo + title)
-        // ----------------------------
+        //---------------------------------------
         const themeConfig = await this.svTheme.loadThemeConfig();
         diag_css("ThemeConfig loaded", themeConfig);
         document.title =
             shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
         const logoEl = document.getElementById("cd-logo");
-        if (logoEl && themeConfig.logo) {
+        if (logoEl && themeConfig.logo)
             logoEl.src = themeConfig.logo;
-        }
-        // ----------------------------
+        //---------------------------------------
         // STEP 5: Prepare menu
-        // ----------------------------
+        //---------------------------------------
         const allowedModules = await this.svModule.getAllowedModules();
         const defaultModule = allowedModules.find((m) => m.isDefault);
         const defaultControllerName = defaultModule?.controllers.find((c) => c.default)?.name;
         diag_css("Modules Loaded", { allowedModules });
         const rawMenu = allowedModules.flatMap((mod) => {
-            const recursive = (items) => {
-                return items.map((item) => {
-                    if (item.itemType === "route" && item.route) {
-                        const cinfo = this.svController.findControllerInfoByRoute(mod, item.route);
-                        if (cinfo) {
-                            item.controller = cinfo.instance;
-                            item.template =
-                                typeof cinfo.template === "function"
-                                    ? cinfo.template
-                                    : () => cinfo.template;
-                            item.moduleId = mod.moduleId;
-                            if (mod.isDefault && cinfo.name === defaultControllerName)
-                                item.moduleDefault = true;
-                        }
+            const recursive = (items) => items.map((item) => {
+                if (item.itemType === "route" && item.route) {
+                    const cinfo = this.svController.findControllerInfoByRoute(mod, item.route);
+                    if (cinfo) {
+                        item.controller = cinfo.instance;
+                        item.template =
+                            typeof cinfo.template === "function"
+                                ? cinfo.template
+                                : () => cinfo.template;
+                        item.moduleId = mod.moduleId;
+                        if (mod.isDefault && cinfo.name === defaultControllerName)
+                            item.moduleDefault = true;
                     }
-                    if (item.children)
-                        item.children = recursive(item.children);
-                    return item;
-                });
-            };
+                }
+                if (item.children)
+                    item.children = recursive(item.children);
+                return item;
+            });
             return recursive(mod.menu || []);
         });
         const preparedMenu = this.svMenu.prepareMenu(rawMenu);
         diag_css("Menu prepared", preparedMenu);
-        // ----------------------------
-        // STEP 6: Render sidebar
-        // ----------------------------
+        //---------------------------------------
+        // STEP 6: Sidebar render
+        //---------------------------------------
         try {
             const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
             const theme = (await resTheme.json());
@@ -134,9 +140,9 @@ export class Main {
         catch (err) {
             console.error("[Main] Failed rendering menu", err);
         }
-        // ----------------------------
+        //---------------------------------------
         // STEP 7: Auto-load default controller
-        // ----------------------------
+        //---------------------------------------
         try {
             const defaultModuleMenu = preparedMenu.find((m) => m.label === defaultModule?.moduleId);
             const defaultMenuItem = defaultModuleMenu?.children?.find((it) => it.moduleDefault);
@@ -148,9 +154,9 @@ export class Main {
         catch (err) {
             console.warn("[Main] auto-load default view failed", err);
         }
-        // ----------------------------
-        // STEP 8: Burger + Mobile UX
-        // ----------------------------
+        //---------------------------------------
+        // STEP 8: Mobile UX config
+        //---------------------------------------
         const burger = document.getElementById("cd-burger");
         const sidebar = document.getElementById("cd-sidebar");
         const overlay = document.getElementById("cd-overlay");
@@ -176,6 +182,12 @@ export class Main {
             window.addEventListener("resize", applyMobileState);
             applyMobileState();
         }
+        //---------------------------------------
+        // APP READY
+        //---------------------------------------
+        this.logger.debug("[Main] app fully bootstrapped");
+        this.appReady = true;
+        this.tryHideSplash();
         this.logger.debug("bootstrapShell(): run() complete");
         diag_css("Main.run() complete");
     }
@@ -241,5 +253,95 @@ export class Main {
             throw new Error(`Failed to load shell config: ${res.statusText}`);
         }
         return await res.json();
+    }
+    // async showSplash(): Promise<void> {
+    //   return new Promise(async (resolve) => {
+    //     const splash = document.getElementById("cd-splash");
+    //     if (!splash) return resolve();
+    //     const path = "/splashscreens/corpdesk-default.html";
+    //     this.logger.debug("[Splash] loading", path);
+    //     try {
+    //       const html = await fetch(path).then((r) => r.text());
+    //       this.logger.debug("[Splash] injected HTML length", html.length);
+    //       splash.innerHTML = html;
+    //       splash.style.display = "block";
+    //       resolve();
+    //       this.logger.debug(
+    //         "[Splash] container present",
+    //         !!document.querySelector("#splash-container")
+    //       );
+    //     } catch (err) {
+    //       console.error("[Splash] load failed", err);
+    //       resolve();
+    //     }
+    //   });
+    // }
+    async showSplash() {
+        return new Promise(async (resolve) => {
+            const splash = document.getElementById("cd-splash");
+            if (!splash)
+                return resolve();
+            const shellConfig = await this.loadShellConfig();
+            const path = shellConfig.splash?.path;
+            const minDuration = shellConfig.splash?.minDuration ?? 3000;
+            this.logger.debug("[Splash] loading", { path, minDuration });
+            const html = await fetch(path).then((r) => r.text());
+            splash.innerHTML = html;
+            splash.style.display = "block";
+            // Animation latch
+            setTimeout(() => {
+                this.logger.debug("[Splash] animation completed");
+                this.splashAnimDone = true;
+                this.tryHideSplash();
+            }, minDuration);
+            resolve();
+        });
+    }
+    async tryHideSplash() {
+        if (!this.splashAnimDone || !this.appReady) {
+            this.logger.debug("[Splash] waiting", {
+                splashAnimDone: this.splashAnimDone,
+                appReady: this.appReady,
+            });
+            return;
+        }
+        this.logger.debug("[Splash] conditions met → hiding splash");
+        await this.hideSplash();
+    }
+    // async hideSplash(): Promise<void> {
+    //   this.logger.debug("[Splash] hide start");
+    //   return new Promise<void>((resolve) => {
+    //     const splash = document.getElementById("cd-splash");
+    //     const root = document.getElementById("cd-root");
+    //     if (splash) {
+    //       const container = splash.querySelector(
+    //         "#splash-container"
+    //       ) as HTMLElement;
+    //       if (container) container.classList.add("fade-out");
+    //       this.logger.debug("[Splash] root visibility restored");
+    //     }
+    //     setTimeout(() => {
+    //       splash?.remove();
+    //       if (root) root.style.visibility = "visible";
+    //       resolve();
+    //     }, 800);
+    //   });
+    // }
+    async hideSplash() {
+        return new Promise((resolve) => {
+            const splash = document.getElementById("cd-splash");
+            const root = document.getElementById("cd-root");
+            if (!splash)
+                return resolve();
+            const container = splash.querySelector("#splash-container");
+            container?.classList.add("fade-out");
+            setTimeout(() => {
+                splash.remove();
+                if (root)
+                    root.style.visibility = "visible";
+                this.logger.debug("[Splash] removed, app revealed");
+                resolve();
+            }, 800);
+        });
     }
 }

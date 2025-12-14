@@ -1,6 +1,19 @@
+/* Material Design Text Field Styles */
 @use "@material/floating-label/mdc-floating-label";
 @use "@material/line-ripple/mdc-line-ripple";
 @use "@material/notched-outline/mdc-notched-outline";
 @use "@material/textfield";
 
+/* dropdown styles */
+@use "@material/list/mdc-list";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/menu/mdc-menu";
+@use "@material/select/styles";
+
+/* textfield core styles */
 @include textfield.core-styles;
+
+/* dropdown core styles */
+@include menu.core-styles;        // if needed by vX (use appropriate mixin names)
+@include list.core-styles;
+@include menu.core-styles;

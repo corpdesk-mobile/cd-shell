@@ -1,6 +1,3 @@
-// memory-dev-sync-store.ts
-// import { IDevSyncStore } from './dev-sync-store.interface';
-
 import { ICdStore } from "../models/cd-store.model";
 
 export class MemoryStoreService implements ICdStore {

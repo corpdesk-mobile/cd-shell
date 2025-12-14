@@ -12,21 +12,24 @@
   </head>
 
   <body>
-    <header id="cd-header">
-      <button id="cd-burger" aria-label="Menu toggle">
-        <span class="bar top"></span>
-        <span class="bar middle"></span>
-        <span class="bar bottom"></span>
-      </button>
+    <div id="cd-splash"></div>
+    <div id="cd-root" style="visibility: hidden">
+      <header id="cd-header">
+        <button id="cd-burger" aria-label="Menu toggle">
+          <span class="bar top"></span>
+          <span class="bar middle"></span>
+          <span class="bar bottom"></span>
+        </button>
 
-      <img id="cd-logo" alt="Logo" />
-      <span id="cd-app-name">Corpdesk Shell</span>
-    </header>
+        <img id="cd-logo" alt="Logo" />
+        <span id="cd-app-name">Corpdesk Shell</span>
+      </header>
 
-    <div id="cd-layout">
-      <div id="cd-overlay" class="hidden"></div>
-      <aside id="cd-sidebar"></aside>
-      <main id="cd-main-content"></main>
+      <div id="cd-layout">
+        <div id="cd-overlay" class="hidden"></div>
+        <aside id="cd-sidebar"></aside>
+        <main id="cd-main-content"></main>
+      </div>
     </div>
 
     <script type="module" src="/src/app.ts"></script>

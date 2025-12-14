@@ -77,9 +77,12 @@ export class GenericService<T extends ObjectLiteral> {
     return 'state' in result ? result : CD_FX_FAIL;
   }
 
-  async updateI(req, res, createIParams: CreateIParams<T>): Promise<any> {
-    const b = new BaseService<T>();
-    return b.updateI(req, res, createIParams);
+  // async updateI(req, res, createIParams: CreateIParams<T>): Promise<any> {
+  //   const b = new BaseService<T>();
+  //   return b.updateI(req, res, createIParams);
+  // }
+  async updateI(req, res, serviceInput: IServiceInput<any>) {
+    return await this.b.update(req, res, serviceInput);
   }
 
   async delete(

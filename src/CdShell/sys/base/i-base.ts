@@ -297,33 +297,175 @@ export interface ISessResp {
   initTime?: string;
 }
 
+// export interface EnvConfig {
+//   clientAppGuid: string;
+//   appId: string;
+//   production: boolean;
+//   apiEndpoint: string;
+//   sioEndpoint: string;
+//   wsEndpoint: string;
+//   wsMode: string;
+//   pushConfig: any;
+//   consumerToken?: string; // current company consumer. To depricate in favour of clientContext which will include consumerToken, entity:eg company name or project name eg ASDAP, MPEP etc
+//   clientContext: any;
+//   USER_RESOURCES: string;
+//   apiHost: string;
+//   shellHost: string;
+//   sioHost: string;
+//   CD_PORT?: number; // optional setting for apiEndpoint
+//   consumer: string;
+//   clientAppId: number; // this client application identifies itself to the server with this id
+//   SOCKET_IO_PORT: number; // push server port
+//   defaultauth?: string;
+//   mfManifestPath?: string;
+//   apiOptions?: any;
+//   sioOptions?: any;
+//   wsOptions?: any;
+//   initialPage?: string;
+//   firebaseConfig?: any;
+// }
 export interface EnvConfig {
+  /** Unique ID for this client application instance */
   clientAppGuid: string;
+
+  /** Application identifier used by backend */
   appId: string;
+
+  /** Whether this is a production build */
   production: boolean;
+
+  /** REST API endpoint */
   apiEndpoint: string;
+
+  /** Socket.IO endpoint */
   sioEndpoint: string;
+
+  /** WebSocket endpoint */
   wsEndpoint: string;
+
+  /** Mode: 'sio' | 'ws' | 'pusher' */
   wsMode: string;
-  pushConfig: any;
-  consumerToken?: string; // current company consumer. To depricate in favour of clientContext which will include consumerToken, entity:eg company name or project name eg ASDAP, MPEP etc
-  clientContext: any;
+
+  /** Realtime (push) configuration */
+  pushConfig: PushConfig;
+
+  /** Optional token that identifies the tenant/consumer */
+  consumerToken?: string;
+
+  /** Client context: same as Angular version */
+  clientContext?: ClientContext;
+
+  /** Public-facing assets for user-related resources */
   USER_RESOURCES: string;
+
+  /** API base host */
   apiHost: string;
+
+  /** Shell base host */
   shellHost: string;
+
+  /** Socket.IO base host */
   sioHost: string;
-  CD_PORT?: number; // optional setting for apiEndpoint
+
+  /** Port for API when applicable */
+  CD_PORT?: number;
+
+  /** Name/ID representing tenant/consumer */
   consumer: string;
-  clientAppId: number; // this client application identifies itself to the server with this id
-  SOCKET_IO_PORT: number; // push server port
+
+  /** Client application ID (legacy) */
+  clientAppId: number;
+
+  /** Socket.IO port */
+  SOCKET_IO_PORT: number;
+
+  /** Selected auth provider */
   defaultauth?: string;
+
+  /** Path to module federation manifest */
   mfManifestPath?: string;
-  apiOptions?: any;
-  sioOptions?: any;
-  wsOptions?: any;
+
+  /** Additional API options (headers, mode, etc.) */
+  apiOptions?: HttpOptions;
+
+  /** Additional Socket.IO options */
+  sioOptions?: SocketIOOptions;
+
+  /** Additional WS options */
+  wsOptions?: WSOptions;
+
+  /** The initial page after login */
   initialPage?: string;
-  firebaseConfig?: any;
+
+  /** Firebase configuration (optional) */
+  firebaseConfig?: FirebaseConfig;
+
+  /** Logging level */
+  logLevel?: LogLevel;
 }
+
+export interface PushConfig {
+  sio?: { enabled: boolean };
+  wss?: { enabled: boolean };
+  pusher?: {
+    enabled: boolean;
+    apiKey: string;
+    options: {
+      cluster: string;
+      forceTLS: boolean;
+      userAuthentication?: AuthConfig;
+      channelAuthorization?: AuthConfig;
+      authEndpoint?: string;
+    };
+  };
+}
+
+export interface AuthConfig {
+  endpoint: string;
+  transport?: 'ajax' | 'jsonp';
+  params?: Record<string, any>;
+  headers?: Record<string, string>;
+  includeCredentials?: boolean;
+  customHandler?: any;
+}
+
+export interface ClientContext {
+  entity: string;
+  clientAppId: number;
+  consumerToken: string;
+}
+
+export interface HttpOptions {
+  headers?: Record<string, string>;
+  mode?: string;
+  cache?: string;
+  credentials?: string;
+}
+
+export interface SocketIOOptions {
+  path?: string;
+  transports?: string[];
+  secure?: boolean;
+}
+
+export interface WSOptions {
+  protocols?: string[];
+  reconnect?: boolean;
+}
+
+export interface FirebaseConfig {
+  apiKey?: string;
+  authDomain?: string;
+  databaseURL?: string;
+  projectId?: string;
+  storageBucket?: string;
+  messagingSenderId?: string;
+  appId?: string;
+  measurementId?: string;
+}
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+
 
 export const SYS_CTX = "Sys";
 export const DEFAULT_DAT: EnvelopDat = {
@@ -1031,52 +1173,4 @@ export const formatterConfig: FormatterConfigMap = {
   ".yaml": { parser: "yaml" },
 };
 
-// export interface ShellConfig {
-//   appName: string;
-//   fallbackTitle: string;
-//   themeConfig: ThemeConfig;
-//   defaultModulePath: string;
-//   defaultLanguage?: string;
-//   logLevel?: "debug" | "info" | "warn" | "error";
-//   logToFile?: boolean;
-//   logFilePath?: string;
-//   logFileName?: string;
-//   logFileMaxSize?: number;
-//   logFileMaxFiles?: number;
-// }
 
-export interface ThemeConfig {
-  currentThemePath: string;
-  accessibleThemes: string[];
-}
-
-// /** Theme configuration section within the shell config */
-// export interface ThemeShellConfig {
-//   /** Path to the currently active theme JSON */
-//   currentThemePath: string;
-
-//   /** List of theme IDs accessible to the user/system */
-//   accessibleThemes: string[];
-
-//   /** (Optional) Whether user can switch themes manually */
-//   allowUserSelection?: boolean;
-
-//   /** (Optional) Default theme ID if none is set */
-//   defaultThemeId?: string;
-// }
-
-
-
-export interface ThemeShellConfig {
-  currentThemePath: string;
-  accessibleThemes: string[];
-  allowUserSelection?: boolean;
-  defaultThemeId?: string;
-
-  /** Optional mapping for UUD integration */
-  uiSystem?: {
-    base: "bootstrap" | "material" | "antd" | "tailwind" | "corpdesk";
-    overrideCss?: boolean;
-    componentMap?: Record<string, string>;
-  };
-}

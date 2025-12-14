@@ -185,9 +185,9 @@ export class SessionService extends GenericService {
             consumerGuid = this.currentSessData[0].consumerGuid;
         }
         const cuid = this.currentSessData[0].currentUserId;
-        const userData = await svUser.getUserByID(req, res, cuid);
+        const userData = await svUser.getUserByID(cuid);
         this.currentUserData = userData[0];
-        this.currentUserProfile = await svUser.existingUserProfile(req, res, cuid);
+        this.currentUserProfile = await svUser.existingUserProfile(cuid);
         const consumer = await svConsumer.getConsumerI(req, res, {
             where: { consumerGuid: consumerGuid },
         });

@@ -1,5 +1,3 @@
-// memory-dev-sync-store.ts
-// import { IDevSyncStore } from './dev-sync-store.interface';
 export class MemoryStoreService {
     constructor() {
         this.store = new Map();

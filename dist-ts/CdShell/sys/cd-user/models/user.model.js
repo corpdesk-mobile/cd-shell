@@ -240,3 +240,40 @@ export const userProfileDefault = {
         lName: '',
     },
 };
+export const EnvUserLogin = {
+    ctx: 'Sys',
+    m: 'User',
+    c: 'User',
+    a: 'Login',
+    dat: {
+        token: null,
+        f_vals: [
+            {
+                data: {
+                    userName: '',
+                    password: '',
+                    consumerGuid: '',
+                },
+            },
+        ],
+    },
+    args: null,
+};
+export const EnvUserProfile = {
+    ctx: 'Sys',
+    m: 'User',
+    c: 'User',
+    a: 'GetUserProfile',
+    dat: {
+        token: null,
+        f_vals: [
+            {
+                data: {
+                    userId: -1,
+                    consumerGuid: '',
+                },
+            },
+        ],
+    },
+    args: null,
+};

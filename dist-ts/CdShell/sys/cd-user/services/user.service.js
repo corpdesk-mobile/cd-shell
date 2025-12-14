@@ -1,186 +1,115 @@
-// import { SqliteStore } from "../store/SqliteStore";
-// import { UserModel } from "../entities/UserModel";
-import { CD_FX_FAIL, } from '../../base/i-base.js';
-import { DocModel } from '../../moduleman/models/doc.model.js';
-import { UserModel } from '../models/user.model.js';
-import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
-import { GenericService } from '../../base/generic-service.js';
-// import { ProfileServiceHelper } from '../../utils/profile-service-helper.js';
-export class UserService extends GenericService {
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // ADAPTATION FROM GENERIC SERVICE
+// // import { SqliteStore } from "../store/SqliteStore";
+// // import { UserModel } from "../entities/UserModel";
+import { HttpService } from "../../base/http.service";
+import { EnvUserLogin, EnvUserProfile } from "../models/user.model";
+import { SysCacheService } from "../../moduleman/services/sys-cache.service";
+import { LoggerService } from "../../../utils/logger.service";
+import { inspect } from "util";
+import { ConfigService } from "../../moduleman/services/config.service";
+export class UserService {
     constructor() {
-        super();
-        // b = new BaseService<UserModel>();
-        // defaultDs = config.ds.sqlite;
-        // Define validation rules
-        this.cRules = {
-            required: ['userName', 'email', 'password'],
-            noDuplicate: ['userName', 'email'],
-        };
+        this.http = new HttpService();
+        this.logger = new LoggerService();
+        this.cdToken = "";
+        this.svConfig = new ConfigService();
+        this.cache = new SysCacheService(this.svConfig);
     }
-    /**
-     * Validate input before processing create
-     */
-    async validateCreate(pl) {
-        const retState = true;
-        // Ensure required fields exist
-        for (const field of this.cRules.required) {
-            if (!pl[field]) {
-                return {
-                    data: false,
-                    state: false,
-                    message: `Missing required field: ${field}`,
-                };
-            }
+    // ---------------------------------------------
+    // Token handling (mirrors ModuleRegisterService)
+    // ---------------------------------------------
+    setCdToken(token) {
+        this.cdToken = token;
+        EnvUserLogin.dat.token = token;
+        EnvUserProfile.dat.token = token;
+        return this;
+    }
+    // ---------------------------------------------
+    // Login
+    // ---------------------------------------------
+    async login(user) {
+        const consumerGuid = this.cache.getConsumerGuid();
+        if (!consumerGuid) {
+            throw new Error("consumerGuid missing in SysCacheService");
         }
-        // Check for duplicates
-        const query = {
-            where: {
-                userName: pl.userName,
-                email: pl.email,
+        EnvUserLogin.dat.f_vals[0].data = {
+            userName: user.userName,
+            password: user.password,
+            consumerGuid,
+        };
+        this.logger.debug("[UserService] EnvUserLogin", inspect(EnvUserLogin, { depth: 4 }));
+        const fx = await this.http.proc(EnvUserLogin, "cdApiLocal");
+        if (!fx.state || !fx.data) {
+            throw new Error(`Login request failed: ${fx.message}`);
+        }
+        const resp = fx.data;
+        if (resp.app_state?.sess?.cd_token) {
+            this.setCdToken(resp.app_state.sess.cd_token);
+        }
+        return resp;
+    }
+    // ---------------------------------------------
+    // Fetch user profile
+    // ---------------------------------------------
+    async getUserProfile(userId) {
+        const consumerGuid = this.cache.getConsumerGuid();
+        if (!consumerGuid) {
+            throw new Error("consumerGuid missing in SysCacheService");
+        }
+        EnvUserProfile.dat.f_vals[0].data.userId = userId;
+        EnvUserProfile.dat.f_vals[0].data.consumerGuid = consumerGuid;
+        EnvUserProfile.dat.token = this.cdToken;
+        this.logger.debug("[UserService] EnvUserProfile", inspect(EnvUserProfile, { depth: 4 }));
+        const fx = await this.http.proc(EnvUserProfile, "cdApiLocal");
+        if (!fx.state || !fx.data) {
+            throw new Error(`Profile request failed: ${fx.message}`);
+        }
+        return fx.data;
+    }
+    async getUserByID(userId) {
+        const consumerGuid = this.cache.getConsumerGuid();
+        if (!consumerGuid) {
+            throw new Error("consumerGuid missing in SysCacheService");
+        }
+        const req = {
+            ctx: "Sys",
+            m: "User",
+            c: "User",
+            a: "GetByID",
+            dat: {
+                f_vals: [
+                    {
+                        data: {
+                            userId,
+                            consumerGuid,
+                        },
+                    },
+                ],
+                token: this.cdToken,
             },
+            args: null,
         };
-        const serviceInput = {
-            serviceModel: UserModel,
-            docName: 'Validate Duplicate User',
-            dSource: 1,
-            cmd: { query },
-        };
-        const existingRecords = await this.b.read(null, null, serviceInput);
-        if ('state' in existingRecords && 'data' in existingRecords) {
-            if (!existingRecords.state || !existingRecords.data) {
-                return { data: false, state: false, message: 'Validation failed' };
-            }
-            if (existingRecords.data.length > 0) {
-                return { data: true, state: true, message: 'Validation passed' };
-            }
-            else {
-                return { data: false, state: false, message: 'Validation failed' };
-            }
+        this.logger.debug("[UserService] getUserByID request", inspect(req, { depth: 4 }));
+        const fx = await this.http.proc(req, "cdApiLocal");
+        if (!fx.state || !fx.data) {
+            throw new Error(`GetByID request failed: ${fx.message}`);
         }
-        return { data: false, state: false, message: 'Validation failed' };
+        return fx.data;
     }
-    /**
-     * Fetch newly created record by guid
-     */
-    async afterCreate(pl) {
-        const query = {
-            where: { userGuid: pl.userGuid },
-        };
-        const serviceInput = {
-            serviceModel: UserModel,
-            docName: 'Fetch Created User',
-            dSource: 1,
-            cmd: { query },
-        };
-        const retResult = await this.b.read(null, null, serviceInput);
-        if ('state' in retResult) {
-            return retResult;
-        }
-        else {
-            return CD_FX_FAIL;
-        }
-    }
-    async getUser(q) {
-        // Validate query input
-        if (!q || !q.where || Object.keys(q.where).length === 0) {
-            return {
-                data: null,
-                state: false,
-                message: 'Invalid query: "where" condition is required',
-            };
-        }
-        const serviceInput = {
-            serviceModel: UserModel,
-            docName: 'UserService::getUser',
-            cmd: {
-                action: 'find',
-                query: q,
-            },
-            dSource: 1,
-        };
+    async existingUserProfile(userId) {
         try {
-            const retResult = await this.b.read(null, null, serviceInput);
-            if ('state' in retResult) {
-                return retResult;
+            const resp = await this.getUserProfile(userId);
+            if (resp.app_state.success &&
+                resp.data &&
+                Array.isArray(resp.data) &&
+                resp.data.length > 0) {
+                const profile = resp.data[0];
+                return profile !== null && profile !== undefined;
             }
-            else {
-                return CD_FX_FAIL;
-            }
-        }
-        catch (e) {
-            CdLog.error(`UserService.getUser() - Error: ${e.message}`);
-            return {
-                data: null,
-                state: false,
-                message: `Error retrieving User: ${e.message}`,
-            };
-        }
-    }
-    beforeUpdate(q) {
-        if (q.update.CoopEnabled === '') {
-            q.update.CoopEnabled = null;
-        }
-        return q;
-    }
-    async getUserByID(req, res, uid) {
-        const serviceInput = {
-            serviceInstance: this,
-            serviceModel: UserModel,
-            docModel: DocModel,
-            docName: 'UserService::getUserByID',
-            cmd: {
-                action: 'find',
-                query: { where: { userId: uid } },
-            },
-            dSource: 1,
-        };
-        return await this.b.read(req, res, serviceInput);
-    }
-    async existingUserProfile(req, res, cuid) {
-        const si = {
-            serviceInstance: this,
-            serviceModel: UserModel,
-            docName: 'UserService::existingUserProfile',
-            cmd: {
-                query: { where: { userId: cuid } },
-            },
-            mapping: { profileField: 'userProfile' },
-        };
-        return ``;
-    }
-    async modifyProfile(existingData, profileConfig) {
-        return await {};
-    }
-    // Helper method to validate profile data
-    async validateProfileData(req, res, profileData) {
-        CdLog.debug('UserService::validateProfileData()/profileData:', profileData);
-        // const profileData: IUserProfile = updateData.update.userProfile
-        // CdLog.debug("UserService::validateProfileData()/profileData:", profileData)
-        // Check if profileData is null or undefined
-        if (!profileData) {
-            CdLog.debug('UserService::validateProfileData()/01');
             return false;
         }
-        // Validate that the required fields of IUserProfile exist
-        if (!profileData.fieldPermissions || !profileData.userData) {
-            CdLog.debug('UserService::validateProfileData()/02');
+        catch (error) {
+            this.logger.error(`[UserService] existingUserProfile error: ${error.message}`);
             return false;
         }
-        // Example validation for bio length
-        if (profileData.bio && profileData.bio.length > 500) {
-            CdLog.debug('UserService::validateProfileData()/03');
-            const e = 'Bio data is too long';
-            this.b.err.push(e);
-            const i = {
-                messages: this.b.err,
-                code: 'UserService:validateProfileData',
-                app_msg: '',
-            };
-            await this.b.serviceErr(req, res, e, i.code);
-            return false; // Bio is too long
-        }
-        return true;
     }
 }

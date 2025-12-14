@@ -1,41 +1,89 @@
-// import { ICdStore } from "../../base";
 import { MemoryStoreService } from "./memory-store.service";
 import { FileStoreService } from "./file-store.service";
 import { RedisStoreService } from "./redis-store.service";
-import { isBrowser, isNode, isPWA } from "../../../../environment";
-// import { isNode, isBrowser, isPWA } from "../../../environment/utils";
+import { IndexedDbStoreService } from "./indexeddb-store.service";
+import { SQLiteStoreService } from "./sqlite-store.service";
+import { PlatformDetectorService } from "../../cd-platform/services/platform-detector.service";
+// import { PlatformDetectorService } from "../../cd-platform/platform-detector.service";
 export class CdStoreFactoryService {
-    static create(type = "memory", options) {
+    /**
+     * Create store based on explicit type request.
+     */
+    static create(type, options) {
         switch (type) {
             case "file":
                 if (!FileStoreService.isAvailable()) {
-                    console.warn("FileStore is not available in this environment. Falling back to MemoryStore.");
+                    console.warn("[CdStoreFactory] FileStore unavailable → fallback");
                     return new MemoryStoreService();
                 }
                 return new FileStoreService(options?.storagePath);
             case "redis":
                 if (!RedisStoreService.isAvailable()) {
-                    console.warn("RedisStore is not available in this environment. Falling back to MemoryStore.");
+                    console.warn("[CdStoreFactory] RedisStore unavailable → fallback");
                     return new MemoryStoreService();
                 }
                 return new RedisStoreService();
+            case "indexeddb":
+                if (!IndexedDbStoreService.isAvailable()) {
+                    console.warn("[CdStoreFactory] IndexedDB unavailable → fallback");
+                    return new MemoryStoreService();
+                }
+                return new IndexedDbStoreService();
+            case "sqlite":
+                if (!SQLiteStoreService.isAvailable()) {
+                    console.warn("[CdStoreFactory] SQLiteStore unavailable → fallback");
+                    return new MemoryStoreService();
+                }
+                return new SQLiteStoreService(options);
             case "memory":
             default:
                 return new MemoryStoreService();
         }
     }
+    /**
+     * Auto–select best storage strategy based on detected platform.
+     * Prioritized order:
+     *
+     *   Capacitor-native → SQLite
+     *   Browser/PWA → IndexedDB
+     *   Node.js backend → FileStore
+     *   CLI / Fallback → MemoryStore
+     */
     static createEnvironmentAwareStore(options) {
-        if (isNode()) {
-            // In Node.js, prefer file storage
-            return this.create("file", options);
+        const platform = PlatformDetectorService.detectPlatform();
+        console.log("[CdStoreFactory] environment detected:", platform);
+        if (platform.isCapacitorNative) {
+            // Best persistent choice for mobile/desktop via Capacitor.
+            if (SQLiteStoreService.isAvailable()) {
+                return new SQLiteStoreService(options);
+            }
         }
-        else if (isPWA() || isBrowser()) {
-            // In PWA/Browser, use memory storage or consider IndexedDB for persistence
-            return this.create("memory", options);
+        if (platform.isBrowser || platform.isPWA) {
+            // Browser-based persistence.
+            if (IndexedDbStoreService.isAvailable()) {
+                return new IndexedDbStoreService();
+            }
         }
-        else {
-            // Fallback
-            return this.create("memory", options);
+        if (platform.isNode) {
+            // Server-type environment: use file or Redis
+            if (FileStoreService.isAvailable()) {
+                return new FileStoreService(options?.storagePath);
+            }
+            if (RedisStoreService.isAvailable()) {
+                return new RedisStoreService();
+            }
         }
+        // fallback
+        return new MemoryStoreService();
+    }
+    /**
+     * Factory for sync-enabled store.
+     * (This will integrate with SyncManager later.)
+     */
+    static createSyncedStore(options) {
+        const store = this.createEnvironmentAwareStore(options);
+        // Later: wrap with SyncManager
+        // return SyncManager.wrap(store);
+        return store;
     }
 }

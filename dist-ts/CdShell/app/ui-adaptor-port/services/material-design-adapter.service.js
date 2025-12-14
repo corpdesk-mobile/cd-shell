@@ -1,10 +1,5 @@
 import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 import { diag_css } from "../../../sys/utils/diagnosis";
-/**
- * MaterialDesignAdapterService (UMD mode)
- * - Uses window.mdc (UMD) instead of ES imports
- * - Robust DOM transformation and MDC initialization
- */
 export class MaterialDesignAdapterService {
     constructor() {
         this.descriptor = null;
@@ -18,7 +13,9 @@ export class MaterialDesignAdapterService {
     // Activation / Deactivation
     // ---------------------------------------------------------------------------
     async activate(descriptor) {
-        diag_css("[MaterialDesignAdapter] activate() START", { id: descriptor?.id });
+        diag_css("[MaterialDesignAdapter] activate() START", {
+            id: descriptor?.id,
+        });
         this.descriptor = descriptor || null;
         if (!descriptor?.conceptMappings) {
             console.warn("[MaterialDesignAdapter] descriptor.conceptMappings missing!");
@@ -30,7 +27,9 @@ export class MaterialDesignAdapterService {
         this.mapAll();
         // observe DOM for new fields
         this.observeMutations();
-        diag_css("[MaterialDesignAdapter] activate() COMPLETE", { active: descriptor?.id });
+        diag_css("[MaterialDesignAdapter] activate() COMPLETE", {
+            active: descriptor?.id,
+        });
     }
     async deactivate() {
         diag_css("[MaterialDesignAdapter] deactivate() START");
@@ -49,10 +48,12 @@ export class MaterialDesignAdapterService {
         this.appliedSet = new WeakSet();
         // destroy MDC instances if any (best-effort)
         try {
-            this.mdcInstances.forEach((inst) => { try {
-                inst.destroy?.();
-            }
-            catch { } });
+            this.mdcInstances.forEach((inst) => {
+                try {
+                    inst.destroy?.();
+                }
+                catch { }
+            });
             this.mdcInstances.clear();
         }
         catch { }
@@ -72,7 +73,9 @@ export class MaterialDesignAdapterService {
             if (typeof themeDescriptorOrId === "string")
                 mode = themeDescriptorOrId === "dark" ? "dark" : "light";
             else if (typeof themeDescriptorOrId === "object")
-                mode = themeDescriptorOrId.mode || (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+                mode =
+                    themeDescriptorOrId.mode ||
+                        (themeDescriptorOrId.id === "dark" ? "dark" : "light");
             document.documentElement.setAttribute("data-md-theme", mode === "dark" ? "dark" : "light");
             diag_css("[MaterialDesignAdapter] applied Material theme", { mode });
         }
@@ -101,91 +104,200 @@ export class MaterialDesignAdapterService {
         }
         console.log("%c[MaterialDesignAdapter] Applying mapping to element:", "color:#7ff;", { tag: el.tagName, mapping });
         if (mapping.class)
-            mapping.class.split(/\s+/).forEach(c => c && el.classList.add(c));
+            mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
         if (mapping.attrs)
             Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
         this.appliedSet.add(el);
     }
-    // ---------------------------------------------------------------------------
-    // DOM transform: create a *real* MDC filled text-field per MDC docs
-    // Returns the new wrapper <label.mdc-text-field ...> or null on failure.
-    // IMPORTANT: we replace the original .cd-form-field element entirely.
-    // ---------------------------------------------------------------------------
     prepareMdcDom(field) {
         if (!field)
             return null;
         if (field.dataset.mdTransformed === "1") {
-            // If previously transformed but wrapper was left in place, return it
-            const existing = field.querySelector(".mdc-text-field, .cd-md-text-field");
+            const existing = field.querySelector(".mdc-text-field, .cd-md-select-wrapper, .cd-md-text-field, .mdc-select");
             return existing || null;
         }
-        // find native control and label
+        // find control and label
         const control = field.querySelector("input, textarea, select");
         const labelEl = field.querySelector("label");
         if (!control) {
             console.warn("[prepareMdcDom] no input/textarea/select inside field — skipping", { field });
             return null;
         }
-        // label text / fallback
-        const labelText = (labelEl?.textContent?.trim() || control.getAttribute("placeholder") || control.name || "").trim();
-        // remove placeholder (we'll use floating label)
+        const labelText = (labelEl?.textContent?.trim() ||
+            control.getAttribute("placeholder") ||
+            control.name ||
+            "").trim();
+        // remove placeholder (floating label used instead)
         try {
             if ("placeholder" in control)
                 control.placeholder = "";
         }
         catch { }
-        // ensure id
+        // ensure id on native control
         if (!control.id)
             control.id = `mdc-${Math.random().toString(36).slice(2, 8)}`;
-        // Create a <label> wrapper (MDC examples show label as wrapper element)
-        const wrapper = document.createElement("label");
-        wrapper.className = "mdc-text-field mdc-text-field--filled cd-md-text-field";
-        // ripple span (MDC uses span.mdc-text-field__ripple)
-        const ripple = document.createElement("span");
-        ripple.className = "mdc-text-field__ripple";
-        // floating label element (MDC uses span.mdc-floating-label)
-        const floatingLabel = document.createElement("span");
-        floatingLabel.className = "mdc-floating-label";
-        // MDC examples sometimes use <label> for semantics but span is okay; we set aria via input
-        floatingLabel.setAttribute("for", control.id);
-        floatingLabel.textContent = labelText || "";
-        // Ensure input has MDC input class
-        control.classList.add("mdc-text-field__input");
-        // line ripple
-        const lineRipple = document.createElement("span");
-        lineRipple.className = "mdc-line-ripple";
-        // Build wrapper children in order recommended by MDC (ripple, label, input, line-ripple)
-        // NOTE: MDC is tolerant with ordering but this matches examples.
-        wrapper.appendChild(ripple);
-        wrapper.appendChild(floatingLabel);
-        wrapper.appendChild(control);
-        wrapper.appendChild(lineRipple);
-        // Replace the entire field with wrapper (important: field may be <div>. We replace it.)
-        try {
-            field.replaceWith(wrapper);
-            // Mark transformed on the wrapper
-            wrapper.dataset.mdTransformed = "1";
+        const tag = (control.tagName || "").toUpperCase();
+        // --------------- INPUT / TEXTAREA ----------------
+        if (tag === "INPUT" || tag === "TEXTAREA") {
+            const wrapper = document.createElement("label");
+            wrapper.className =
+                "mdc-text-field mdc-text-field--filled cd-md-text-field";
+            const ripple = document.createElement("span");
+            ripple.className = "mdc-text-field__ripple";
+            const floatingLabel = document.createElement("span");
+            floatingLabel.className = "mdc-floating-label";
+            floatingLabel.setAttribute("for", control.id);
+            floatingLabel.textContent = labelText || "";
+            control.classList.add("mdc-text-field__input");
+            const lineRipple = document.createElement("span");
+            lineRipple.className = "mdc-line-ripple";
+            wrapper.appendChild(ripple);
+            wrapper.appendChild(floatingLabel);
+            wrapper.appendChild(control);
+            wrapper.appendChild(lineRipple);
+            try {
+                field.replaceWith(wrapper);
+                wrapper.dataset.mdTransformed = "1";
+            }
+            catch (err) {
+                console.warn("[prepareMdcDom] replaceWith failed (input)", err, {
+                    field,
+                    wrapper,
+                });
+                return null;
+            }
+            return wrapper;
         }
-        catch (err) {
-            console.warn("[prepareMdcDom] replaceWith failed", err, { field, wrapper });
+        // --------------- SELECT (Model-A: MDC Select structure) ----------------
+        else if (tag === "SELECT") {
+            const nativeSelect = control;
+            // --- NEW: remove default placeholder option ("") to avoid double text conflict ---
+            let placeholderText = "";
+            if (nativeSelect.options.length > 0 &&
+                nativeSelect.options[0].value === "") {
+                placeholderText = nativeSelect.options[0].text || "";
+                nativeSelect.remove(0);
+            }
+            // Build root wrapper with MDC-select class
+            const wrapper = document.createElement("div");
+            wrapper.className = "mdc-select mdc-select--filled cd-md-select-wrapper";
+            wrapper.setAttribute("role", "listbox");
+            // Hide native select
+            nativeSelect.style.display = "none";
+            nativeSelect.classList.remove("mdc-text-field__input");
+            wrapper.appendChild(nativeSelect);
+            // Anchor (trigger)
+            const anchor = document.createElement("div");
+            anchor.className = "mdc-select__anchor";
+            anchor.setAttribute("role", "button");
+            anchor.setAttribute("aria-haspopup", "listbox");
+            anchor.setAttribute("aria-expanded", "false");
+            anchor.setAttribute("aria-labelledby", `${control.id}-label ${control.id}-selected-text`);
+            anchor.tabIndex = 0;
+            // ripple
+            const ripple = document.createElement("span");
+            ripple.className = "mdc-select__ripple";
+            anchor.appendChild(ripple);
+            // floating label (acts as the true placeholder)
+            const floatingLabel = document.createElement("span");
+            floatingLabel.className = "mdc-floating-label";
+            floatingLabel.id = `${control.id}-label`;
+            floatingLabel.textContent = labelText || placeholderText;
+            anchor.appendChild(floatingLabel);
+            // selected text (EMPTY because user has not selected anything yet)
+            const selectedContainer = document.createElement("span");
+            selectedContainer.className = "mdc-select__selected-text-container";
+            const selectedText = document.createElement("span");
+            selectedText.className = "mdc-select__selected-text";
+            selectedText.id = `${control.id}-selected-text`;
+            selectedText.textContent = ""; // <-- NEW: always empty initially
+            selectedContainer.appendChild(selectedText);
+            anchor.appendChild(selectedContainer);
+            // dropdown icon
+            const dropdownIcon = document.createElement("span");
+            dropdownIcon.className = "mdc-select__dropdown-icon";
+            dropdownIcon.innerHTML = `
+      <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5" focusable="false">
+        <polygon class="mdc-select__dropdown-icon-inactive" stroke="none" fill-rule="evenodd" points="7 10 12 15 17 10"></polygon>
+        <polygon class="mdc-select__dropdown-icon-active" stroke="none" fill-rule="evenodd" points="7 15 12 10 17 15"></polygon>
+      </svg>`;
+            anchor.appendChild(dropdownIcon);
+            // line ripple
+            const lineRipple = document.createElement("span");
+            lineRipple.className = "mdc-line-ripple";
+            anchor.appendChild(lineRipple);
+            wrapper.appendChild(anchor);
+            // menu surface
+            const menu = document.createElement("div");
+            menu.className =
+                "mdc-select__menu mdc-menu mdc-menu-surface cd-md-select-menu";
+            menu.setAttribute("role", "presentation");
+            menu.setAttribute("aria-hidden", "true");
+            const list = document.createElement("ul");
+            list.className = "mdc-list";
+            list.setAttribute("role", "listbox");
+            list.setAttribute("tabindex", "-1");
+            // Populate options AFTER removing placeholder
+            Array.from(nativeSelect.options).forEach((opt, idx) => {
+                const li = document.createElement("li");
+                li.className = "mdc-list-item";
+                li.setAttribute("role", "option");
+                li.setAttribute("data-value", opt.value);
+                li.setAttribute("data-index", String(idx));
+                li.tabIndex = -1;
+                const rippleSpan = document.createElement("span");
+                rippleSpan.className = "mdc-list-item__ripple";
+                const textSpan = document.createElement("span");
+                textSpan.className = "mdc-list-item__text";
+                textSpan.textContent = opt.text;
+                li.appendChild(rippleSpan);
+                li.appendChild(textSpan);
+                list.appendChild(li);
+            });
+            menu.appendChild(list);
+            wrapper.appendChild(menu);
+            try {
+                field.replaceWith(wrapper);
+                wrapper.dataset.mdTransformed = "1";
+            }
+            catch (err) {
+                console.warn("[prepareMdcDom] replaceWith failed (select)", err, {
+                    field,
+                    wrapper,
+                });
+                return null;
+            }
+            // store references
+            wrapper.__cd_native_select = nativeSelect;
+            wrapper.__cd_anchor = anchor;
+            wrapper.__cd_selected_text = selectedText;
+            wrapper.__cd_menu_el = menu;
+            return wrapper;
+        }
+        else {
+            console.warn("[prepareMdcDom] unknown control tag — skipping", {
+                tag,
+                field,
+            });
             return null;
         }
-        return wrapper;
     }
-    // CSS fallback handlers for focus/blur if MDC not available
+    // CSS fallback handlers for focus/blur if MDC not available (text fields)
     attachCssFallback(wrapper) {
         try {
             const inputEl = wrapper.querySelector("input, textarea, select");
             if (!inputEl)
                 return;
-            // If a value is present keep label floated
-            if (inputEl.value && inputEl.value.length > 0) {
+            // If a native value exists keep label floated
+            if (inputEl.value &&
+                inputEl.value.length > 0) {
                 wrapper.classList.add("mdc-text-field--focused");
             }
             if (!inputEl.__cd_md_handlers_attached) {
                 inputEl.addEventListener("focus", () => wrapper.classList.add("mdc-text-field--focused"));
                 inputEl.addEventListener("blur", () => {
-                    if (!inputEl.value || inputEl.value.length === 0) {
+                    if (!inputEl.value ||
+                        inputEl.value.length === 0) {
                         wrapper.classList.remove("mdc-text-field--focused");
                     }
                 });
@@ -198,34 +310,47 @@ export class MaterialDesignAdapterService {
     }
     // ---------------------------------------------------------------------------
     // MDC initialization (UMD)
-    // - Uses window.mdc.* families (textField, floatingLabel, lineRipple)
-    // - Accepts a wrapper element (label.mdc-text-field)
+    // - Uses window.mdc.* families (textField, menu)
     // ---------------------------------------------------------------------------
     initMdcTextField(wrapper) {
         if (!wrapper)
             return;
         try {
             const mdcGlobal = window.mdc;
-            if (!mdcGlobal || !mdcGlobal.textField || !mdcGlobal.textField.MDCTextField) {
-                // MDC not loaded; attach CSS fallback and return
+            // ensure it's a text-field wrapper (label.mdc-text-field)
+            if (!wrapper.classList.contains("mdc-text-field"))
+                return;
+            // avoid double-init
+            if (wrapper.__cd_mdc_initialized)
+                return;
+            if (!mdcGlobal ||
+                !mdcGlobal.textField ||
+                !mdcGlobal.textField.MDCTextField) {
+                // MDC textfield not present — attach css fallback handlers
                 this.attachCssFallback(wrapper);
                 return;
             }
-            // Avoid double-init
-            if (wrapper.__cd_mdc_initialized) {
+            // Guard: ensure control has .value & validity (MDCTextField expects native input)
+            const native = wrapper.querySelector(".mdc-text-field__input");
+            if (!native) {
+                this.attachCssFallback(wrapper);
                 return;
             }
-            // Try to construct MDCTextField
+            // Some MDC versions access native.validity — ensure element supports it
+            const isStandardInput = typeof native.validity !== "undefined";
+            if (!isStandardInput) {
+                // don't attempt MDCTextField init if native doesn't support validity
+                this.attachCssFallback(wrapper);
+                return;
+            }
             try {
                 const inst = new mdcGlobal.textField.MDCTextField(wrapper);
-                // Keep a reference for cleanup
                 this.mdcInstances.add(inst);
                 wrapper.__cd_mdc_initialized = true;
-                // MDC will manage the floating label animation — no further action required.
-                // However ensure line ripple exists and is correctly recognized:
-                // Some MDC versions expect mdc.textField.MDCTextField to wire everything automatically.
-                // If MDC instance has logic to register ripple etc. it's already done.
-                console.debug("[MaterialDesignAdapter] MDCTextField constructed", { wrapper, inst });
+                console.debug("[MaterialDesignAdapter] MDCTextField constructed", {
+                    wrapper,
+                    inst,
+                });
             }
             catch (err) {
                 console.warn("[MaterialDesignAdapter] MDCTextField construction failed — falling back to CSS handlers", err);
@@ -235,23 +360,172 @@ export class MaterialDesignAdapterService {
         }
         catch (err) {
             console.error("[MaterialDesignAdapter] initMdcTextField fatal", err);
-            // safe fallback
             this.attachCssFallback(wrapper);
         }
     }
-    // queue small debounce for batch-initialization
+    initMdcSelect(wrapper) {
+        if (!wrapper)
+            return;
+        try {
+            if (wrapper.__cd_select_initialized)
+                return;
+            const mdcGlobal = window.mdc;
+            const nativeSelect = wrapper
+                .__cd_native_select;
+            const anchor = wrapper.__cd_anchor;
+            const selectedText = wrapper.__cd_selected_text;
+            const menuEl = wrapper.__cd_menu_el;
+            if (!nativeSelect || !anchor || !menuEl) {
+                this.initMdcSelectFallback(wrapper);
+                wrapper.__cd_select_initialized = true;
+                return;
+            }
+            // Clean initial selected text (no default pre-selected UI text)
+            selectedText.textContent = "";
+            // preferred MDCSelect
+            if (mdcGlobal && mdcGlobal.select && mdcGlobal.select.MDCSelect) {
+                try {
+                    const selectInst = new mdcGlobal.select.MDCSelect(wrapper);
+                    this.mdcInstances.add(selectInst);
+                    wrapper.__cd_mdc_select_inst = selectInst;
+                    // ensure no default is selected
+                    if (selectInst.selectedIndex === 0 &&
+                        nativeSelect.selectedIndex > -1) {
+                        selectInst.selectedIndex = -1;
+                    }
+                    selectInst.listen("MDCSelect:change", () => {
+                        try {
+                            const idx = selectInst.selectedIndex;
+                            nativeSelect.selectedIndex = idx;
+                            const ev = new Event("change", { bubbles: true });
+                            nativeSelect.dispatchEvent(ev);
+                            selectedText.textContent =
+                                selectInst.selectedText ||
+                                    nativeSelect.options[idx]?.text ||
+                                    "";
+                        }
+                        catch (err) {
+                            console.warn("[MaterialDesignAdapter] MDCSelect change error", err);
+                        }
+                    });
+                    nativeSelect.addEventListener("change", () => {
+                        const idx = nativeSelect.selectedIndex;
+                        selectedText.textContent = nativeSelect.options[idx]?.text || "";
+                    });
+                    wrapper.__cd_select_initialized = true;
+                    return;
+                }
+                catch (err) {
+                    console.warn("[MaterialDesignAdapter] MDCSelect init failed", err);
+                }
+            }
+            // fallback: MDCMenu
+            if (mdcGlobal && mdcGlobal.menu && mdcGlobal.menu.MDCMenu) {
+                try {
+                    const menuInst = new mdcGlobal.menu.MDCMenu(menuEl);
+                    menuEl.__cd_mdc_menu_inst = menuInst;
+                    this.mdcInstances.add(menuInst);
+                    anchor.addEventListener("click", () => {
+                        menuInst.open = !menuInst.open;
+                    });
+                    menuEl.querySelectorAll(".mdc-list-item").forEach((li) => {
+                        li.addEventListener("click", () => {
+                            const idx = Number(li.getAttribute("data-index"));
+                            nativeSelect.selectedIndex = idx;
+                            const ev = new Event("change", { bubbles: true });
+                            nativeSelect.dispatchEvent(ev);
+                            selectedText.textContent = nativeSelect.options[idx]?.text || "";
+                            menuInst.open = false;
+                        });
+                    });
+                    wrapper.__cd_select_initialized = true;
+                    return;
+                }
+                catch (err) {
+                    console.warn("[MaterialDesignAdapter] MDCMenu fallback failed", err);
+                }
+            }
+            // last fallback
+            this.initMdcSelectFallback(wrapper);
+            wrapper.__cd_select_initialized = true;
+        }
+        catch (err) {
+            console.warn("[MaterialDesignAdapter] initMdcSelect fatal", err);
+            this.initMdcSelectFallback(wrapper);
+            wrapper.__cd_select_initialized = true;
+        }
+    }
+    // Plain JS fallback for select/menu behaviour (when MDC not loaded)
+    initMdcSelectFallback(wrapper) {
+        try {
+            if (wrapper.__cd_select_fallback_attached)
+                return;
+            const menuEl = wrapper.__cd_menu_el;
+            const trigger = wrapper.__cd_trigger;
+            const nativeSelect = wrapper
+                .__cd_native_select;
+            const triggerLabel = wrapper.__cd_trigger_label;
+            if (!menuEl || !trigger || !nativeSelect)
+                return;
+            let open = false;
+            const openMenu = () => {
+                menuEl.style.display = "block";
+                trigger.setAttribute("aria-expanded", "true");
+                open = true;
+            };
+            const closeMenu = () => {
+                menuEl.style.display = "none";
+                trigger.setAttribute("aria-expanded", "false");
+                open = false;
+            };
+            menuEl.style.display = "none";
+            // toggle
+            trigger.addEventListener("click", (ev) => {
+                ev.stopPropagation();
+                if (open)
+                    closeMenu();
+                else
+                    openMenu();
+            });
+            // click outside closes
+            document.addEventListener("click", (ev) => {
+                if (!wrapper.contains(ev.target))
+                    closeMenu();
+            });
+            // sync native select -> trigger label
+            nativeSelect.addEventListener("change", () => {
+                const selOpt = nativeSelect.options[nativeSelect.selectedIndex];
+                triggerLabel.textContent = selOpt ? selOpt.text : "";
+            });
+            wrapper.__cd_select_fallback_attached = true;
+            console.debug("[MaterialDesignAdapter] JS fallback select/menu attached");
+        }
+        catch (err) {
+            console.warn("[MaterialDesignAdapter] initMdcSelectFallback error", err);
+        }
+    }
     scheduleMdcInit() {
         if (this.mdcInitQueued)
             return;
         this.mdcInitQueued = true;
         setTimeout(() => {
             this.mdcInitQueued = false;
-            // find all wrappers that are not initialized and call init
-            document.querySelectorAll(".cd-md-text-field").forEach((el) => {
-                if (!el.__cd_mdc_initialized)
-                    this.initMdcTextField(el);
+            // initialize all wrappers in page
+            document
+                .querySelectorAll(".cd-md-text-field, .cd-md-select-wrapper, .mdc-select")
+                .forEach((el) => {
+                // text fields
+                if (el.classList.contains("mdc-text-field")) {
+                    if (!el.__cd_mdc_initialized)
+                        this.initMdcTextField(el);
+                }
+                else if (el.classList.contains("cd-md-select-wrapper") ||
+                    el.classList.contains("mdc-select")) {
+                    if (!el.__cd_select_initialized)
+                        this.initMdcSelect(el);
+                }
             });
-        }, 25);
+        }, 40);
     }
     // ---------------------------------------------------------------------------
     // Mapping passes
@@ -268,38 +542,43 @@ export class MaterialDesignAdapterService {
     /**
      * mapInputs()
      * - Finds `.cd-form-field` containers
-     * - Transforms them into MDC wrappers (label.mdc-text-field)
-     * - Initializes MDC (or applies CSS fallback)
-     *
-     * Notes:
-     * - Because prepareMdcDom does a replaceWith(field -> wrapper), we cannot rely on
-     *   `field` being present afterwards; we read the returned wrapper.
+     * - Transforms them into MDC wrappers (label.mdc-text-field) or Model-A select wrappers
+     * - Initializes MDC (or applies CSS/JS fallback)
      */
     mapInputs() {
         const mapping = this.getMapping("input");
         if (!mapping)
             return;
         const formFieldNodes = Array.from(document.querySelectorAll(".cd-form-field"));
-        diag_css("[MaterialDesignAdapter] mapInputs()", { candidates: formFieldNodes.length });
+        diag_css("[MaterialDesignAdapter] mapInputs()", {
+            candidates: formFieldNodes.length,
+        });
         formFieldNodes.forEach((field, idx) => {
             try {
-                console.debug(`[MaterialDesignAdapter] mapInputs: FIELD #${idx}`, { field });
-                // Transform DOM: prepareMdcDom returns the new wrapper element if successful
+                console.debug(`[MaterialDesignAdapter] mapInputs: FIELD #${idx}`, {
+                    field,
+                });
+                // Transform DOM
                 const wrapper = this.prepareMdcDom(field);
                 if (!wrapper) {
                     console.debug("[MaterialDesignAdapter] mapInputs: prepareMdcDom returned null (skipping)");
                     return;
                 }
-                // apply mapping.attrs (if any)
+                // Apply mapping.attrs (if any) — apply to wrapper to allow descriptor overrides
                 if (mapping.attrs)
                     Object.entries(mapping.attrs).forEach(([k, v]) => wrapper.setAttribute(k, v));
-                // Mark as applied for conceptMapping guard
+                // Mark as applied
                 this.appliedSet.add(wrapper);
-                // Initialize MDC (UMD)
-                this.initMdcTextField(wrapper);
+                // Initialize appropriate MDC bits depending on wrapper type
+                if (wrapper.classList.contains("mdc-text-field")) {
+                    this.initMdcTextField(wrapper);
+                }
+                else if (wrapper.classList.contains("cd-md-select-wrapper")) {
+                    this.initMdcSelect(wrapper);
+                }
                 // schedule a global init pass to catch any wrappers that might have been missed
                 this.scheduleMdcInit();
-                console.debug("[MaterialDesignAdapter] mapInputs: transformed wrapper", { wrapper });
+                console.debug("[MaterialDesignAdapter] mapInputs: transformed wrapper ", { wrapper });
             }
             catch (err) {
                 console.warn("[MaterialDesignAdapter] mapInputs error", err);
@@ -312,10 +591,11 @@ export class MaterialDesignAdapterService {
             return;
         const selector = ".cd-form-field";
         const nodes = document.querySelectorAll(selector);
-        diag_css("[MaterialDesignAdapter] mapFormGroups()", { count: nodes.length });
+        diag_css("[MaterialDesignAdapter] mapFormGroups()", {
+            count: nodes.length,
+        });
         nodes.forEach((el) => {
             this.applyMappingToElement(el, mapping);
-            // Also try transform (safe: prepareMdcDom will skip if already transformed)
             try {
                 this.prepareMdcDom(el);
             }
@@ -324,7 +604,7 @@ export class MaterialDesignAdapterService {
     }
     mapOtherConcepts() {
         const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
-        const concepts = Object.keys(cm).filter(c => !["button", "input", "formGroup"].includes(c));
+        const concepts = Object.keys(cm).filter((c) => !["button", "input", "formGroup"].includes(c));
         diag_css("[MaterialDesignAdapter] mapOtherConcepts()", { concepts });
         concepts.forEach((concept) => {
             const mapping = cm[concept];
@@ -371,7 +651,11 @@ export class MaterialDesignAdapterService {
             }
         });
         try {
-            this.observer.observe(document.body, { childList: true, subtree: true, attributes: false });
+            this.observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: false,
+            });
         }
         catch (err) {
             console.warn("[MaterialDesignAdapter] observer failed to attach", err);

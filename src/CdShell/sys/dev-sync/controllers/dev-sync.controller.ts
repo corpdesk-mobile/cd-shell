@@ -53,36 +53,36 @@ export class SignInController extends CdShellController {
     return { username, password };
   }
 
-  async auth(data: {
-    user: UserModel;
-    consumer: ConsumerModel;
-  }): Promise<void> {
-    console.log('starting SignInController:auth()')
-    console.log('SignInController:auth()/data:', data)
-    window.cdShell?.progress?.start("Signing in...");
-    try {
-      const request = this.b.buildBaseRequest(
-        { ctx: "Sys", name: "User" },
-        { name: "User" },
-        "Login",
-        { data: data.user, consumer: data.consumer },
-        null
-      );
+  // async auth(data: {
+  //   user: UserModel;
+  //   consumer: ConsumerModel;
+  // }): Promise<void> {
+  //   console.log('starting SignInController:auth()')
+  //   console.log('SignInController:auth()/data:', data)
+  //   window.cdShell?.progress?.start("Signing in...");
+  //   try {
+  //     const request = this.b.buildBaseRequest(
+  //       { ctx: "Sys", name: "User" },
+  //       { name: "User" },
+  //       "Login",
+  //       { data: data.user, consumer: data.consumer },
+  //       null
+  //     );
 
-      const result = (await this.b.handleRequest(request)) as ICdResponse;
-      if (result.app_state.success) {
-        window.cdShell?.notify?.success("Login successful");
-        window.cdShell?.progress?.done();
-        // Proceed to dashboard or main shell load
-      } else {
-        window.cdShell?.notify?.error(
-          result.app_state.info.app_msg || "Login failed"
-        );
-      }
-    } catch (e: any) {
-      window.cdShell?.notify?.error(e.message || "Unexpected error");
-    } finally {
-      window.cdShell?.progress?.done();
-    }
-  }
+  //     const result = (await this.b.handleRequest(request)) as ICdResponse;
+  //     if (result.app_state.success) {
+  //       window.cdShell?.notify?.success("Login successful");
+  //       window.cdShell?.progress?.done();
+  //       // Proceed to dashboard or main shell load
+  //     } else {
+  //       window.cdShell?.notify?.error(
+  //         result.app_state.info.app_msg || "Login failed"
+  //       );
+  //     }
+  //   } catch (e: any) {
+  //     window.cdShell?.notify?.error(e.message || "Unexpected error");
+  //   } finally {
+  //     window.cdShell?.progress?.done();
+  //   }
+  // }
 }

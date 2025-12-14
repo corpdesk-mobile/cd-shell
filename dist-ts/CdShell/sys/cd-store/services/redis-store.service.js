@@ -1,5 +1,3 @@
-// redis-dev-sync-store.ts
-// import { IDevSyncStore } from './dev-sync-store.interface';
 import { isNode } from "../../../../environment";
 export class RedisStoreService {
     init(redisClient) {

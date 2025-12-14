@@ -1,6 +1,3 @@
-// redis-dev-sync-store.ts
-// import { IDevSyncStore } from './dev-sync-store.interface';
-
 import { isNode } from "../../../../environment";
 import { ICdStore } from "../models/cd-store.model";
 

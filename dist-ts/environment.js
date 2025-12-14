@@ -1,63 +1,61 @@
-// // Environment detection utilities
-// export const isNode = (): boolean => {
-//   return (
-//     typeof process !== "undefined" &&
-//     process.versions != null &&
-//     process.versions.node != null
-//   );
-// };
-// export const isBrowser = (): boolean => {
-//   return typeof window !== "undefined" && typeof document !== "undefined";
-// };
-// export const isPWA = (): boolean => {
-//   return (
-//     isBrowser() &&
-//     ("serviceWorker" in navigator ||
-//       window.matchMedia("(display-mode: standalone)").matches)
-//   );
-// };
-// export const isCLI = (): boolean => {
-//   return isNode() && process.argv[1] !== undefined;
-// };
-// // Runtime environment detection
-// export const getEnvironment = ():
-//   | "node"
-//   | "browser"
-//   | "pwa"
-//   | "cli"
-//   | "unknown" => {
-//   if (isNode()) {
-//     return isCLI() ? "cli" : "node";
-//   }
-//   if (isPWA()) {
-//     return "pwa";
-//   }
-//   if (isBrowser()) {
-//     return "browser";
-//   }
-//   return "unknown";
-// };
+/**
+ * Core low-level environment detection.
+ * This file provides minimal primitives that PlatformDetectorService builds upon.
+ */
+/**
+ * Returns low-level environment without OS/device/capability info.
+ */
 export const getEnvironment = () => {
-    // Check for browser first
+    // Detect Capacitor Native safely
+    if (typeof window !== "undefined") {
+        const cap = window?.Capacitor;
+        if (cap?.isNative === true) {
+            return "capacitor-native";
+        }
+    }
+    // Browser or PWA
     if (typeof window !== "undefined" && typeof document !== "undefined") {
-        // Check for PWA
-        if ("serviceWorker" in navigator ||
-            window.matchMedia("(display-mode: standalone)").matches ||
-            window.location.protocol === "file:") {
+        const isStandalone = window.matchMedia?.("(display-mode: standalone)")?.matches ||
+            navigator?.standalone === true ||
+            window.location.protocol === "file:";
+        if ("serviceWorker" in navigator || isStandalone) {
             return "pwa";
         }
         return "browser";
     }
-    // Check for Node.js
-    if (typeof process !== "undefined" &&
-        process.versions != null &&
-        process.versions.node != null) {
-        return process.argv[1] ? "cli" : "node";
+    // Node.js
+    if (typeof process !== "undefined" && process.versions?.node) {
+        return process.argv?.[1] ? "cli" : "node";
     }
     return "unknown";
 };
-// Convenience helpers
-export const isNode = () => getEnvironment() === "node" || getEnvironment() === "cli";
+// ---------------------------------------------------------
+// Convenience Checks
+// ---------------------------------------------------------
+export const isNode = () => {
+    const env = getEnvironment();
+    return env === "node" || env === "cli";
+};
 export const isBrowser = () => getEnvironment() === "browser";
 export const isPWA = () => getEnvironment() === "pwa";
 export const isCLI = () => getEnvironment() === "cli";
+export const isCapacitorNative = () => {
+    if (typeof window === "undefined")
+        return false;
+    return !!window?.Capacitor?.isNative;
+};
+/**
+ * Unified tag used by diagnostic logging or debugging
+ * without mixing OS/device/capability details.
+ */
+export const getPlatformTag = () => {
+    if (isCapacitorNative()) {
+        try {
+            return window.Capacitor?.getPlatform?.() || "capacitor-native";
+        }
+        catch {
+            return "capacitor-native";
+        }
+    }
+    return getEnvironment(); // node, cli, browser, pwa, unknown
+};
