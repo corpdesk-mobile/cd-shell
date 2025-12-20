@@ -2,6 +2,7 @@
 // import CdCliVaultController from '../../cd-cli/controllers/cd-cli-vault.controller.js';
 // import { VAULT_DIRECTORY } from '../../cd-cli/models/cd-cli-vault.model.js';
 import CdLog from '../../cd-comm/controllers/cd-logger.controller.js';
+// import { DEFAULT_ENVELOPE_LOGIN } from '../models/user.model.js';
 import { SessonController } from './session.controller.js';
 import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);

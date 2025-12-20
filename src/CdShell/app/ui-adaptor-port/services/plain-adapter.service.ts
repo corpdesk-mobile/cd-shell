@@ -43,4 +43,4 @@ export class PlainAdapterService implements IUiSystemAdapter {
 }
 
 // Plugin self-registers
-UiSystemAdapterRegistry.register("plain", new PlainAdapterService());
+// UiSystemAdapterRegistry.register("plain", new PlainAdapterService());

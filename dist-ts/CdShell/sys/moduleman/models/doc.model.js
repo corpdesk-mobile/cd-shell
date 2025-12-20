@@ -7,7 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+import { ManyToOne, JoinColumn, } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
+import { UserModel } from '../../cd-user/models/user.model.js';
 let DocModel = class DocModel {
 };
 __decorate([
@@ -76,6 +78,11 @@ __decorate([
     }),
     __metadata("design:type", Boolean)
 ], DocModel.prototype, "docEnabled", void 0);
+__decorate([
+    ManyToOne((type) => UserModel, (user) => user.docs),
+    JoinColumn({ name: 'doc_from' }),
+    __metadata("design:type", UserModel)
+], DocModel.prototype, "user", void 0);
 DocModel = __decorate([
     Entity({
         name: 'doc',

@@ -1,4 +1,5 @@
 // src/index.ts
+import { ConfigService } from './CdShell/sys/moduleman/services/config.service';
 import { ThemeLoaderService } from './CdShell/sys/theme/services/theme-loader.service';
 import { Main } from './main';
 // import { loadShellConfig } from './config/shell.config.old';
@@ -7,8 +8,9 @@ import { Main } from './main';
 export async function startShell() {
     console.log('🟢 Starting PWA-OS (cd-shell)...');
     const m = new Main();
+    const svConfig = new ConfigService();
     const svThempeLoader = new ThemeLoaderService();
-    const shellConfig = await m.loadShellConfig();
+    const shellConfig = await svConfig.loadConfig();
     console.log('📄 Shell config loaded:', shellConfig);
     await svThempeLoader.loadTheme(shellConfig.themeConfig.currentThemePath);
     console.log('🎨 Theme applied:', shellConfig.themeConfig);

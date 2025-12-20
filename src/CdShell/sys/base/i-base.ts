@@ -1,3 +1,5 @@
+import { LogLevel } from "../../utils/logger.service";
+import { IUserProfile } from "../cd-user/models/user.model";
 import {
   DataSource,
   DeleteResult,
@@ -422,7 +424,7 @@ export interface PushConfig {
 
 export interface AuthConfig {
   endpoint: string;
-  transport?: 'ajax' | 'jsonp';
+  transport?: "ajax" | "jsonp";
   params?: Record<string, any>;
   headers?: Record<string, string>;
   includeCredentials?: boolean;
@@ -463,9 +465,6 @@ export interface FirebaseConfig {
   appId?: string;
   measurementId?: string;
 }
-
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
-
 
 export const SYS_CTX = "Sys";
 export const DEFAULT_DAT: EnvelopDat = {
@@ -1173,4 +1172,155 @@ export const formatterConfig: FormatterConfigMap = {
   ".yaml": { parser: "yaml" },
 };
 
+// -------------------------------------------------------------
+// THEME CONFIG (existing)
+// -------------------------------------------------------------
 
+export interface ThemeConfig {
+  currentThemePath: string;
+  accessibleThemes: string[];
+}
+
+export interface ThemeShellConfig {
+  /** Path to the currently active theme */
+  currentThemePath: string;
+
+  /** List of themes available for selection */
+  accessibleThemes: string[];
+
+  /** If true, the end-user may select themes at runtime */
+  allowUserSelection?: boolean;
+
+  /** Default theme id, e.g. “dark”, “default”, “contrast” */
+  defaultThemeId?: string;
+
+  /**
+   * Optional UI-system mapping for advanced UI-system adaptation pipelines.
+   * Backward compatible.
+   */
+  uiSystem?: {
+    base: "bootstrap" | "material" | "antd" | "tailwind" | "corpdesk";
+    overrideCss?: boolean;
+    componentMap?: Record<string, string>;
+  };
+
+  /**
+   * NEW (Tenant Policy)
+   * Tenant may restrict user theme choices.
+   */
+  lockedThemes?: string[];
+
+  /**
+   * NEW (User Personalization)
+   * If false, user personalization is disabled even if allowUserSelection = true.
+   */
+  personalizationEnabled?: boolean;
+}
+
+// -------------------------------------------------------------
+// UI CONFIG — harmonized with your shellconfig.json
+// -------------------------------------------------------------
+export interface UiShellConfig {
+  /** e.g. "material-design", "bootstrap-538" */
+  defaultUiSystemId: string;
+
+  /** e.g. "dark" */
+  defaultThemeId: string;
+
+  /** e.g. "standard", "filled", "outlined" */
+  defaultFormVariant: string;
+
+  /** Base directory for UI system descriptors */
+  uiSystemBasePath: string;
+
+  /**
+   * NEW: tenant locks — restrict which UI systems users may choose.
+   */
+  lockedUiSystems?: string[];
+
+  /**
+   * NEW: user-level personalization control.
+   */
+  allowUserSelection?: boolean;
+
+  /**
+   * NEW: admin-only overrides
+   */
+  adminOverrideAllowed?: boolean;
+}
+
+// -------------------------------------------------------------
+// FULL SHELL CONFIG — harmonized and non-breaking
+// -------------------------------------------------------------
+export interface IShellConfig {
+  appName: string;
+  fallbackTitle?: string;
+  appVersion?: string;
+  appDescription?: string;
+
+  themeConfig?: ThemeShellConfig;
+
+  /** The default module loaded on startup */
+  defaultModulePath?: string;
+
+  /** debug | info | warn | error */
+  logLevel?: LogLevel;
+
+  /** UI system preferences */
+  uiConfig?: UiShellConfig;
+
+  /**
+   * NEW:
+   * Marks configs originating from system, consumer, or user level.
+   */
+  source?: "system" | "consumer" | "user";
+
+  splash: {
+    enabled: boolean;
+    path: string;
+    minDuration: number;
+  };
+
+  envConfig?: EnvConfig;
+}
+
+export interface IEntityMemberProfile extends IUserProfile {
+  entityGuid: string; // coopGuid, schoolGuid, companyGuid, etc
+  entityType: string; // resolved dynamically by module
+  memberMeta?: any; // module-owned metadata
+  roles?: any[]; // module-defined roles
+  permissions?: any[]; // optional, module-defined
+}
+
+export interface IEntityProfile {
+  entityGuid: string;
+  entityType: string;
+  displayName: string;
+  meta?: any;
+}
+
+export interface ICdMemberProfile {
+  extend(
+    req,
+    res,
+    userProfile: IUserProfile,
+    entityGuid: string
+  ): Promise<IEntityMemberProfile>;
+}
+
+export interface IProfileMutationHandler {
+  supports(path: (string | number | string[])[]): boolean;
+  handle(
+    profile: any,
+    update: {
+      path: any[];
+      value: any;
+      action: string;
+    }
+  ): Promise<any>;
+}
+
+export interface IProfileSyncHandler {
+  canSync(profile: any): boolean;
+  sync(profile: any): any;
+}

@@ -1,7 +1,13 @@
+import { LoggerService } from "../../../utils/logger.service";
+import { IShellConfig } from "../../base";
 import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
 import { UiConfig } from "../../moduleman/models/config.model";
+import { MenuItem } from "../../moduleman/models/menu.model";
+import { ConfigService } from "../../moduleman/services/config.service";
+import { MenuService } from "../../moduleman/services/menu.service";
 import { SysCacheService } from "../../moduleman/services/sys-cache.service";
-import { diag_css } from "../../utils/diagnosis";
+import { ITheme } from "../../theme/models/themes.model";
+import { diag_css, diag_sidebar } from "../../utils/diagnosis";
 import {
   DEFAULT_SYSTEM,
   // DEFAULT_SYSTEM,
@@ -12,6 +18,7 @@ import { STATIC_UI_SYSTEM_REGISTRY } from "../models/ui-system-schema.model";
 import { PlainAdapter } from "./plain-adaptor.service";
 // import { UiSystemAdapterFactory } from "./ui-system-adapters";
 import { UiSystemAdapterRegistry } from "./ui-system-registry.service";
+import { UiThemeLoaderService } from "./ui-theme-loader.service";
 
 /**
  * @class UiSystemLoaderService
@@ -34,9 +41,12 @@ import { UiSystemAdapterRegistry } from "./ui-system-registry.service";
  */
 
 export class UiSystemLoaderService {
+  private logger = new LoggerService();
   private static instance: UiSystemLoaderService | null = null;
   private activeSystem: UiSystemDescriptor | null = null;
   private sysCache!: SysCacheService;
+  splashAnimDone = false;
+  appReady = false;
 
   constructor(sysCache: SysCacheService) {
     this.sysCache = sysCache;
@@ -410,5 +420,223 @@ export class UiSystemLoaderService {
   private getFullDescriptor(id: string): UiSystemDescriptor | undefined {
     const list = this.sysCache.get("uiSystemDescriptors") || [];
     return list.find((d: any) => d.id === id);
+  }
+
+  /**
+   * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
+   */
+  async applyStartupUiSettings(svSysCache: SysCacheService): Promise<void> {
+    // const cfgSvc = ConfigService.getInstance();
+    // ensure sys cache is ready
+    await svSysCache.ensureReady();
+
+    const uiConfig = svSysCache.get("uiConfig") as UiConfig;
+    if (!uiConfig) {
+      console.warn("[Main.applyStartupUiSettings] uiConfig missing");
+      return;
+    }
+
+    const systemId = uiConfig.defaultUiSystemId;
+    const themeId = uiConfig.defaultThemeId;
+
+    diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
+
+    // Use singletons bound to same SysCache instance
+    const uiSystemLoader = UiSystemLoaderService.getInstance(svSysCache);
+    const uiThemeLoader = UiThemeLoaderService.getInstance(svSysCache);
+
+    // 1) Activate UI system (loads CSS + JS)
+    try {
+      await uiSystemLoader.activate(systemId);
+      diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
+        systemId,
+      });
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] activate failed", err);
+      diag_css("[MAIN.applyStartupUiSettings] activate failed", { err });
+    }
+
+    // 2) Load structural shell CSS (base + index) AFTER system to ensure layering
+    try {
+      await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
+      await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
+      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded", {});
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] shell CSS load failed", err);
+    }
+
+    // 3) load theme override CSS
+    try {
+      await uiThemeLoader.loadThemeById(themeId);
+      diag_css("[MAIN.applyStartupUiSettings] theme css injected", { themeId });
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] theme load failed", err);
+    }
+
+    // 4) per-system applyTheme (sets data-bs-theme, md classes, etc.)
+    try {
+      await uiSystemLoader.applyTheme(systemId, themeId);
+      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete", {});
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] applyTheme failed", err);
+    }
+
+    diag_css("[MAIN.applyStartupUiSettings] done", {});
+  }
+
+  async showSplash(svConfig: ConfigService): Promise<void> {
+    return new Promise(async (resolve) => {
+      const splash = document.getElementById("cd-splash");
+      if (!splash) return resolve();
+
+      const shellConfig = await svConfig.loadConfig();
+      const path = shellConfig.splash?.path;
+      const minDuration = shellConfig.splash?.minDuration ?? 3000;
+
+      this.logger.debug("[Splash] loading", { path, minDuration });
+
+      const html = await fetch(path).then((r) => r.text());
+      splash.innerHTML = html;
+      splash.style.display = "block";
+
+      // Animation latch
+      setTimeout(() => {
+        this.logger.debug("[Splash] animation completed");
+        this.splashAnimDone = true;
+        this.tryHideSplash();
+      }, minDuration);
+
+      resolve();
+    });
+  }
+
+  async tryHideSplash() {
+    if (!this.splashAnimDone || !this.appReady) {
+      this.logger.debug("[Splash] waiting", {
+        splashAnimDone: this.splashAnimDone,
+        appReady: this.appReady,
+      });
+      return;
+    }
+
+    this.logger.debug("[Splash] conditions met → hiding splash");
+    await this.hideSplash();
+  }
+
+  async hideSplash(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const splash = document.getElementById("cd-splash");
+      const root = document.getElementById("cd-root");
+
+      if (!splash) return resolve();
+
+      const container = splash.querySelector(
+        "#splash-container"
+      ) as HTMLElement;
+      container?.classList.add("fade-out");
+
+      setTimeout(() => {
+        splash.remove();
+        if (root) root.style.visibility = "visible";
+        this.logger.debug("[Splash] removed, app revealed");
+        resolve();
+      }, 800);
+    });
+  }
+
+  /////////////////////////////////////////
+  // new decomposed methods go here
+  /////////////////////////////////////////
+  /**
+   * STEP 3
+   * Purpose:
+   * Apply UI-System and Theme pipeline.
+   *
+   * IMPORTANT:
+   * - This method is a PURE extraction.
+   * - It must remain behavior-identical to the original inline code.
+   * - Do not add logic here.
+   */
+  async bootstrapUiSystemAndTheme(svSysCache: SysCacheService): Promise<void> {
+    await this.applyStartupUiSettings(svSysCache);
+    diag_css("UI-System + Theme applied");
+  }
+
+  /**
+   * STEP 6
+   * Purpose:
+   * Render sidebar menu.
+   *
+   * CRITICAL:
+   * - Must execute AFTER UI system + theme CSS
+   * - Must execute BEFORE default controller load
+   */
+  async renderSidebar(
+    svMenu: MenuService,
+    preparedMenu: MenuItem[],
+    shellConfig: IShellConfig
+  ): Promise<void> {
+    try {
+      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
+      const theme = (await resTheme.json()) as ITheme;
+
+      svMenu.renderMenuWithSystem(preparedMenu, theme);
+
+      const sidebarEl = document.getElementById("cd-sidebar");
+      if (
+        sidebarEl &&
+        (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")
+      ) {
+        svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
+      }
+
+      diag_css("Sidebar rendered");
+      diag_sidebar();
+    } catch (err) {
+      console.error("[Main] Failed rendering menu", err);
+    }
+  }
+
+  /**
+   * STEP 8
+   * Purpose:
+   * Wire up mobile sidebar UX (burger menu + overlay).
+   *
+   * Characteristics:
+   * - DOM-only
+   * - No async
+   * - Safe to call once
+   */
+  setupMobileUx(): void {
+    const burger = document.getElementById("cd-burger");
+    const sidebar = document.getElementById("cd-sidebar");
+    const overlay = document.getElementById("cd-overlay");
+
+    if (!burger || !sidebar || !overlay) return;
+
+    const isMobile = () => window.matchMedia("(max-width: 900px)").matches;
+
+    const applyMobileState = () => {
+      if (!isMobile()) {
+        sidebar.classList.remove("open");
+        overlay.classList.add("hidden");
+        burger.classList.remove("open");
+      }
+    };
+
+    burger.addEventListener("click", () => {
+      burger.classList.toggle("open");
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("hidden");
+    });
+
+    overlay.addEventListener("click", () => {
+      burger.classList.remove("open");
+      sidebar.classList.remove("open");
+      overlay.classList.add("hidden");
+    });
+
+    window.addEventListener("resize", applyMobileState);
+    applyMobileState();
   }
 }

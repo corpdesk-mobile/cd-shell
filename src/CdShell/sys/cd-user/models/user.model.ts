@@ -1,11 +1,11 @@
+
+
 // import type { ICdRequest } from '../../base/i-base.js';
 // import { DEFAULT_ARGS, DEFAULT_DAT, SYS_CTX } from '../../base/i-base.js';
-// // import { UserController } from '../controllers/user.controller.js';
 // import { BaseService } from '../../base/base.service.js';
 // import { UserController } from '../controllers/user.controller.js';
-// import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
-
-// // export const SESSION_FILE_STORE = 'session.json';
+// // import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
+// import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from "../../../sys/utils/orm-shim";
 
 // export interface IUserModel {
 //   userId?: number;
@@ -45,40 +45,10 @@
 //   args: DEFAULT_ARGS,
 // };
 
-// // user.controller.ts
-// // export const LOGIN_CMD = {
-// //   name: 'login',
-// //   description: 'Log in to the system.',
-// //   options: [
-// //     { flags: '-u, --user <username>', description: 'Username' },
-// //     { flags: '-p, --password <password>', description: 'Password' },
-// //   ],
-// //   action: {
-// //     execute: async (options: any) => {
-// //       const userController = new UserController();
-// //       const { user, password } = options;
-// //       await userController.auth(user, password); // Password is now optional
-// //     },
-// //   },
-// // };
-
-// // export const LOGOUT_CMD = {
-// //   name: 'logout',
-// //   description: 'Log out from the system.',
-// //   action: {
-// //     execute: () => {
-// //       const userController = new UserController();
-// //       userController.logout();
-// //     },
-// //   },
-// // };
-
-// //////////////////////////////////////////////////////
 // @Entity({
 //   name: 'user',
 //   synchronize: false,
 // })
-
 // export class UserModel {
 //   @PrimaryGeneratedColumn({
 //     name: 'user_id',
@@ -110,21 +80,18 @@
 //     unique: true,
 //     nullable: true,
 //   })
-//   @Column()
-//   email?: string;
+//   email?: string; // REMOVED DUPLICATE @Column() decorator
 
 //   @Column({
 //     name: 'company_id',
 //     default: null,
 //   })
-//   // @IsInt()
 //   companyId?: number;
 
 //   @Column({
 //     name: 'doc_id',
 //     default: null,
 //   })
-//   // @IsInt()
 //   docId?: number;
 
 //   @Column({
@@ -143,7 +110,6 @@
 //     name: 'birth_date',
 //     default: null,
 //   })
-//   // @IsDate()
 //   birthDate?: Date;
 
 //   @Column({
@@ -174,14 +140,12 @@
 //     name: 'national_id',
 //     default: null,
 //   })
-//   // @IsInt()
 //   nationalId?: number;
 
 //   @Column({
 //     name: 'passport_id',
 //     default: null,
 //   })
-//   // @IsInt()
 //   passportId?: number;
 
 //   @Column({
@@ -214,29 +178,14 @@
 //     default: null,
 //   })
 //   userProfile?: string;
-
-//   // @OneToMany((type) => DocModel, (doc) => doc.user) // note: we will create user property in the Docs class
-//   // docs?: DocModel[];
-
-//   // HOOKS
-//   // @BeforeInsert()
-//   // @BeforeUpdate()
-//   // async validate?() {
-//   //   await validateOrReject(this);
-//   // }
 // }
 
+// // ... rest of your interfaces and exports remain the same
 // export interface IUserProfileAccess {
 //   userPermissions?: IProfileUserAccess[];
 //   groupPermissions?: IProfileGroupAccess[];
 // }
 
-// /**
-//  * Improved versin should have just one interface and
-//  * instead of userId or groupId, cdObjId is applied.
-//  * This would then allow any object permissions to be set
-//  * Automation and 'role' concept can then be used to manage permission process
-//  */
 // export interface IProfileUserAccess {
 //   userId: number;
 //   hidden: boolean;
@@ -257,15 +206,15 @@
 
 // export interface IUserProfile {
 //   fieldPermissions?: IUserProfileAccess;
-//   avatar?: string; // URL or base64-encoded image
+//   avatar?: string;
 //   userData: UserModel;
 //   areasOfInterest?: string[];
 //   bio?: string;
 //   affiliatedInstitutions?: string[];
-//   following?: string[]; // Limit to X entries (e.g., 1000) to avoid abuse
-//   followers?: string[]; // Limit to X entries (e.g., 1000)
-//   friends?: string[]; // Limit to X entries (e.g., 500)
-//   groups?: string[]; // Limit to X entries (e.g., 100)
+//   following?: string[];
+//   followers?: string[];
+//   friends?: string[];
+//   groups?: string[];
 // }
 
 // export const profileDefaultConfig = [
@@ -293,15 +242,8 @@
 //   },
 // ];
 
-// /**
-//  * the data below can be managed under with 'roles'
-//  * there needs to be a function that set the default 'role' for a user
-//  */
 // export const userProfileDefault: IUserProfile = {
 //   fieldPermissions: {
-//     /**
-//      * specified permission setting for given users to specified fields
-//      */
 //     userPermissions: [
 //       {
 //         userId: 1000,
@@ -314,7 +256,7 @@
 //     ],
 //     groupPermissions: [
 //       {
-//         groupId: 0, // "_public"
+//         groupId: 0,
 //         field: 'userName',
 //         hidden: false,
 //         read: true,
@@ -329,196 +271,249 @@
 //     lName: '',
 //   },
 // };
-// function uuidv4(): any {
-//   throw new Error('Function not implemented.');
-// }
 
-import type { ICdRequest } from '../../base/i-base.js';
-import { DEFAULT_ARGS, DEFAULT_DAT, SYS_CTX } from '../../base/i-base.js';
-import { BaseService } from '../../base/base.service.js';
-import { UserController } from '../controllers/user.controller.js';
-// import { Entity, Column, PrimaryGeneratedColumn } from '../../utils/orm-shim.js';
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, Unique } from "../../../sys/utils/orm-shim";
+// export const EnvUserLogin: ICdRequest = {
+//   ctx: 'Sys',
+//   m: 'User',
+//   c: 'User',
+//   a: 'Login',
+//   dat: {
+//     token: null,
+//     f_vals: [
+//       {
+//         data: {
+//           userName: '',
+//           password: '',
+//           consumerGuid: '',
+//         },
+//       },
+//     ],
+//   },
+//   args: null,
+// };
 
-export interface IUserModel {
-  userId?: number;
-  userGuid?: string;
-  userName: string;
-  password?: string;
-  email?: string;
-  companyId?: number;
-  docId?: number;
-  mobile?: string;
-  gender?: number;
-  birthDate?: string;
-  postalAddr?: string;
-  fName?: string;
-  mName?: string;
-  lName?: string;
-  nationalId?: number;
-  passportId?: number;
-  userEnabled?: boolean | number;
-  zipCode?: string;
-  activationKey?: string;
-  userTypeId?: number;
-  userProfile?: string;
-}
+// export const EnvUserProfile: ICdRequest = {
+//   ctx: 'Sys',
+//   m: 'User',
+//   c: 'User',
+//   a: 'GetUserProfile',
+//   dat: {
+//     token: null,
+//     f_vals: [
+//       {
+//         data: {
+//           userId: -1,
+//           consumerGuid: '',
+//         },
+//       },
+//     ],
+//   },
+//   args: null,
+// };
 
-DEFAULT_DAT.f_vals[0].data = {
-  userName: '',
-  password: '',
-} as IUserModel;
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  // Column,
+  Generated,
+  BeforeInsert,
+  BeforeUpdate,
+  IsNull,
+  Not,
+  UpdateDateColumn,
+  OneToMany,
+  ObjectLiteral,
+} from "typeorm";
+import * as bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
+import {
+  validate,
+  validateOrReject,
+  Contains,
+  IsInt,
+  Length,
+  IsEmail,
+  IsFQDN,
+  IsDate,
+  Min,
+  Max,
+  IsJSON,
+} from "class-validator";
+import { BaseService } from "../../base/base.service";
+import { DocModel } from "../../moduleman/models/doc.model";
+import { env } from "process";
+import config from "../../../../config";
+import { ICdRequest, IShellConfig } from "../../base/i-base";
 
-export const DEFAULT_ENVELOPE_LOGIN: ICdRequest = {
-  ctx: SYS_CTX,
-  m: 'User',
-  c: 'User',
-  a: 'Login',
-  dat: DEFAULT_DAT,
-  args: DEFAULT_ARGS,
-};
-
-@Entity({
-  name: 'user',
-  synchronize: false,
-})
+// @Entity({
+//   name: "user",
+//   synchronize: false,
+// })
+// @CdModel
 export class UserModel {
-  @PrimaryGeneratedColumn({
-    name: 'user_id',
-  })
+  b?: BaseService<UserModel>;
+
+  // @PrimaryGeneratedColumn({
+  //   name: "user_id",
+  // })
   userId?: number;
 
-  @Column({
-    name: 'user_guid',
-    length: 36,
-  })
+  // @Column({
+  //   name: "user_guid",
+  //   length: 36,
+  //   default: uuidv4(),
+  // })
   userGuid?: string;
 
-  @Column('varchar', {
-    name: 'user_name',
-    length: 50,
-    nullable: true,
-  })
-  userName!: string;
+  // @Column("varchar", {
+  //   name: "user_name",
+  //   length: 50,
+  //   nullable: true,
+  // })
+  userName: string;
 
-  @Column('char', {
-    name: 'password',
-    length: 60,
-    default: null,
-  })
+  // @Column("char", {
+  //   name: "password",
+  //   length: 60,
+  //   default: null,
+  // })
   password?: string;
 
-  @Column('varchar', {
-    length: 60,
-    unique: true,
-    nullable: true,
-  })
-  email?: string; // REMOVED DUPLICATE @Column() decorator
+  // @Column("varchar", {
+  //   length: 60,
+  //   unique: true,
+  //   nullable: true,
+  // })
+  // @IsEmail()
+  email?: string;
 
-  @Column({
-    name: 'company_id',
-    default: null,
-  })
+  // @Column({
+  //   name: "company_id",
+  //   default: null,
+  // })
+  // @IsInt()
   companyId?: number;
 
-  @Column({
-    name: 'doc_id',
-    default: null,
-  })
+  // @Column({
+  //   name: "doc_id",
+  //   default: null,
+  // })
+  // @IsInt()
   docId?: number;
 
-  @Column({
-    name: 'mobile',
-    default: null,
-  })
+  // @Column({
+  //   name: "mobile",
+  //   default: null,
+  // })
   mobile?: string;
 
-  @Column({
-    name: 'gender',
-    default: null,
-  })
+  // @Column({
+  //   name: "gender",
+  //   default: null,
+  // })
   gender?: number;
 
-  @Column({
-    name: 'birth_date',
-    default: null,
-  })
+  // @Column({
+  //   name: "birth_date",
+  //   default: null,
+  // })
+  // @IsDate()
   birthDate?: Date;
 
-  @Column({
-    name: 'postal_addr',
-    default: null,
-  })
+  // @Column({
+  //   name: "postal_addr",
+  //   default: null,
+  // })
   postalAddr?: string;
 
-  @Column({
-    name: 'f_name',
-    default: null,
-  })
+  // @Column({
+  //   name: "f_name",
+  //   default: null,
+  // })
   fName?: string;
 
-  @Column({
-    name: 'm_name',
-    default: null,
-  })
+  // @Column({
+  //   name: "m_name",
+  //   default: null,
+  // })
   mName?: string;
 
-  @Column({
-    name: 'l_name',
-    default: null,
-  })
+  // @Column({
+  //   name: "l_name",
+  //   default: null,
+  // })
   lName?: string;
 
-  @Column({
-    name: 'national_id',
-    default: null,
-  })
+  // @Column({
+  //   name: "national_id",
+  //   default: null,
+  // })
+  // @IsInt()
   nationalId?: number;
 
-  @Column({
-    name: 'passport_id',
-    default: null,
-  })
+  // @Column({
+  //   name: "passport_id",
+  //   default: null,
+  // })
+  // @IsInt()
   passportId?: number;
 
-  @Column({
-    name: 'user_enabled',
-    default: null,
-  })
+  // @Column({
+  //   name: "user_enabled",
+  //   default: null,
+  // })
   userEnabled?: boolean;
 
-  @Column('char', {
-    name: 'zip_code',
-    length: 5,
-    default: null,
-  })
+  // @Column("char", {
+  //   name: "zip_code",
+  //   length: 5,
+  //   default: null,
+  // })
   zipCode?: string;
 
-  @Column({
-    name: 'activation_key',
-    length: 36,
-  })
+  // @Column({
+  //   name: "activation_key",
+  //   length: 36,
+  //   default: uuidv4(),
+  // })
   activationKey?: string;
 
-  @Column({
-    name: 'user_type_id',
-    default: null,
-  })
+  // @Column({
+  //   name: "user_type_id",
+  //   default: null,
+  // })
   userTypeId?: number;
 
-  @Column({
-    name: 'user_profile',
-    default: null,
-  })
+  // @Column({
+  //   name: "user_profile",
+  //   default: null,
+  // })
+  // userProfile?: string | ObjectLiteral;
   userProfile?: string;
+
+  // @OneToMany((type) => DocModel, (doc) => doc.user) // note: we will create user property in the Docs class
+  docs?: DocModel[];
+
+  // HOOKS
+  // @BeforeInsert()
+  // @BeforeUpdate()
+  async validate?() {
+    await validateOrReject(this);
+  }
 }
 
-// ... rest of your interfaces and exports remain the same
 export interface IUserProfileAccess {
-  userPermissions?: IProfileUserAccess[];
-  groupPermissions?: IProfileGroupAccess[];
+  userPermissions: IProfileUserAccess[];
+  groupPermissions: IProfileGroupAccess[];
 }
 
+/**
+ * Improved versin should have just one interface and
+ * instead of userId or groupId, cdObjId is applied.
+ * This would then allow any object permissions to be set
+ * Automation and 'role' concept can then be used to manage permission process
+ */
 export interface IProfileUserAccess {
   userId: number;
   hidden: boolean;
@@ -538,24 +533,39 @@ export interface IProfileGroupAccess {
 }
 
 export interface IUserProfile {
-  fieldPermissions?: IUserProfileAccess;
-  avatar?: string;
+  fieldPermissions: IUserProfileAccess;
+  avatar?: object; //
   userData: UserModel;
   areasOfInterest?: string[];
   bio?: string;
   affiliatedInstitutions?: string[];
-  following?: string[];
-  followers?: string[];
-  friends?: string[];
-  groups?: string[];
+  following?: string[]; // Limit to X entries (e.g., 1000) to avoid abuse
+  followers?: string[]; // Limit to X entries (e.g., 1000)
+  friends?: string[]; // Limit to X entries (e.g., 500)
+  groups?: string[]; // Limit to X entries (e.g., 100)
+  shellConfig?: IUserShellConfig;
+}
+
+export interface IUserShellConfig extends IShellConfig {
+  /** Flags that user can personalize or not */
+  personalizationEnabled?: boolean;
+
+  /**
+   * A user may optionally override UI system/theme if allowed by consumer.
+   */
+  userPreferences?: {
+    uiSystemId?: string;
+    themeId?: string;
+    formVariant?: string;
+  };
 }
 
 export const profileDefaultConfig = [
   {
-    path: ['fieldPermissions', 'userPermissions', ['userName']],
+    path: ["fieldPermissions", "userPermissions", ["userName"]],
     value: {
       userId: 1000,
-      field: 'userName',
+      field: "userName",
       hidden: false,
       read: true,
       write: false,
@@ -563,10 +573,10 @@ export const profileDefaultConfig = [
     },
   },
   {
-    path: ['fieldPermissions', 'groupPermissions', ['userName']],
+    path: ["fieldPermissions", "groupPermissions", ["userName"]],
     value: {
       groupId: 0,
-      field: 'userName',
+      field: "userName",
       hidden: false,
       read: true,
       write: false,
@@ -575,12 +585,22 @@ export const profileDefaultConfig = [
   },
 ];
 
+/**
+ * the data below can be managed under with 'roles'
+ * there needs to be a function that set the default 'role' for a user
+ */
 export const userProfileDefault: IUserProfile = {
+  avatar: {
+    url: `https://${config.profiles.cdApiLocal.hostName}/assets/images/users/avatar-anon.jpg`,
+  },
   fieldPermissions: {
+    /**
+     * specified permission setting for given users to specified fields
+     */
     userPermissions: [
       {
         userId: 1000,
-        field: 'userName',
+        field: "userName",
         hidden: false,
         read: true,
         write: false,
@@ -589,8 +609,8 @@ export const userProfileDefault: IUserProfile = {
     ],
     groupPermissions: [
       {
-        groupId: 0,
-        field: 'userName',
+        groupId: 0, // "_public"
+        field: "userName",
         hidden: false,
         read: true,
         write: false,
@@ -599,9 +619,9 @@ export const userProfileDefault: IUserProfile = {
     ],
   },
   userData: {
-    userName: '',
-    fName: '',
-    lName: '',
+    userName: "",
+    fName: "",
+    lName: "",
   },
 };
 
@@ -643,4 +663,3 @@ export const EnvUserProfile: ICdRequest = {
   },
   args: null,
 };
-

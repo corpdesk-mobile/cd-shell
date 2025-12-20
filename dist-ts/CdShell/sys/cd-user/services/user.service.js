@@ -26,25 +26,67 @@ export class UserService {
     // ---------------------------------------------
     // Login
     // ---------------------------------------------
-    async login(user) {
-        const consumerGuid = this.cache.getConsumerGuid();
+    async login(user, consumerGuid) {
         if (!consumerGuid) {
-            throw new Error("consumerGuid missing in SysCacheService");
+            this.logger.warn("[UserService.login] consumerGuid missing");
+            return null;
         }
         EnvUserLogin.dat.f_vals[0].data = {
             userName: user.userName,
             password: user.password,
             consumerGuid,
         };
-        this.logger.debug("[UserService] EnvUserLogin", inspect(EnvUserLogin, { depth: 4 }));
-        const fx = await this.http.proc(EnvUserLogin, "cdApiLocal");
-        if (!fx.state || !fx.data) {
-            throw new Error(`Login request failed: ${fx.message}`);
+        this.logger.debug("[UserService.login] attempting login", {
+            user: user.userName,
+            consumerGuid,
+        });
+        try {
+            const res = await this.http.proc(EnvUserLogin, "cdApiLocal");
+            this.logger.debug("[UserService.login] res:", {
+                res,
+            });
+            if (!res?.state || !res.data) {
+                this.logger.warn("[UserService.login] login failed", {
+                    reason: res?.message,
+                });
+                return null;
+            }
+            const resp = res.data;
+            if (resp.app_state?.sess?.cd_token) {
+                this.setCdToken(resp.app_state.sess.cd_token);
+            }
+            return resp;
         }
-        const resp = fx.data;
-        if (resp.app_state?.sess?.cd_token) {
-            this.setCdToken(resp.app_state.sess.cd_token);
+        catch (err) {
+            this.logger.warn("[UserService.login] network/login error", {
+                message: err?.message,
+            });
+            return null;
         }
+    }
+    // ===================================================================
+    // ANON LOGIN
+    // ===================================================================
+    async loginAnonUser(consumerGuid) {
+        this.logger.debug("[UserService.loginAnonUser] Performing anon login");
+        // const consumerGuid = this.svSysCache.getConsumerGuid();
+        this.logger.debug("[UserService.loginAnonUser] consumerGuid", consumerGuid);
+        if (!consumerGuid) {
+            this.logger.warn("[UserService.loginAnonUser] No consumerGuid → skipping anon login");
+            return;
+        }
+        const anonUser = {
+            userName: "anon",
+            password: "-",
+        };
+        const resp = await this.login(anonUser, consumerGuid);
+        if (!resp) {
+            this.logger.warn("[UserService.loginAnonUser] anon login failed → continuing with static shell config");
+            return;
+        }
+        this.logger.debug("[UserService.loginAnonUser] anon login success");
+        // this.consumerProfile = resp.data.consumer.consumerProfile || null;
+        // this.userProfile = resp.data.userData.userProfile || null;
         return resp;
     }
     // ---------------------------------------------

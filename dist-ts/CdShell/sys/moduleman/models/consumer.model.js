@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 // import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn, } from "../../../sys/utils/orm-shim";
+// import { IShellConfig } from "./config.model";
 let ConsumerModel = class ConsumerModel {
 };
 __decorate([

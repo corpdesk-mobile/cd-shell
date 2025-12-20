@@ -163,10 +163,9 @@ export class HttpService {
     }
     async proc(params, profileName) {
         const app = this.env.app;
-        const name = profileName || "cdApiLocal";
-        const endpoint = app === "cd-cli"
-            ? this.cfg.profiles?.[name]?.endpoint
-            : this.cfg.cdApi?.endpoint;
+        const name = profileName || "cdShell";
+        const endpoint = this.cfg.profiles?.[name]?.endpoint;
+        console.log(`[HttpService] proc() → profile: ${name}, endpoint: ${endpoint}`);
         await this.ensureInstance(name, endpoint);
         const cfg = {
             ...(this.cdApiAxiosConfig || {}),

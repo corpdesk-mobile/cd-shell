@@ -215,32 +215,32 @@ export interface UiShellConfig {
 //   source?: "system" | "consumer" | "user";
 // }
 
-export interface IShellConfig {
-  appName: string;
-  fallbackTitle: string;
-  appVersion: string;
-  appDescription: string;
+// export interface IShellConfig {
+//   appName: string;
+//   fallbackTitle: string;
+//   appVersion: string;
+//   appDescription: string;
 
-  themeConfig: ThemeShellConfig;
+//   themeConfig: ThemeShellConfig;
 
-  /** Module bootstrapping */
-  defaultModulePath: string;
+//   /** Module bootstrapping */
+//   defaultModulePath: string;
 
-  /** debug | info | warn | error */
-  logLevel: "debug" | "info" | "warn" | "error";
+//   /** debug | info | warn | error */
+//   logLevel: "debug" | "info" | "warn" | "error";
 
-  uiConfig: {
-    defaultUiSystemId: string; // e.g., material-design
-    defaultThemeId: string; // e.g., dark
-    defaultFormVariant: string; // e.g., standard | filled | outline
-    uiSystemBasePath: string; // e.g., /assets/ui-systems/
-  };
+//   uiConfig: {
+//     defaultUiSystemId: string; // e.g., material-design
+//     defaultThemeId: string; // e.g., dark
+//     defaultFormVariant: string; // e.g., standard | filled | outline
+//     uiSystemBasePath: string; // e.g., /assets/ui-systems/
+//   };
 
-  splash: {
-    enabled: boolean;
-    path: string;
-    minDuration: number;
-  };
+//   splash: {
+//     enabled: boolean;
+//     path: string;
+//     minDuration: number;
+//   };
 
-  envConfig?: EnvConfig;
-}
+//   envConfig?: EnvConfig;
+// }

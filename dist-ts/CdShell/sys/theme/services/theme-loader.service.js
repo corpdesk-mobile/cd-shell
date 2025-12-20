@@ -1,3 +1,4 @@
+// import { IShellConfig } from "../../moduleman/models/config.model";
 // import { ThemeConfig, ThemeShellConfig } from "../../base";
 // import { ShellConfig } from "../../moduleman/models/config.model";
 // export class ThempeLoaderService {

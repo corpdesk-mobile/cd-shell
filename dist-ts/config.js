@@ -25,7 +25,8 @@ export default {
     profiles: {
         // used only by cd-cli
         cdApiLocal: {
-            endpoint: "https://localhost:3001/api",
+            endpoint: "http://localhost:3001/api",
+            hostName: "localhost",
         },
     },
     cdSession: DEFAULT_SESS,

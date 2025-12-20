@@ -1,12 +1,17 @@
 import { MetisMenuAdapter } from "./metismenu-adaptor.service";
 import { ControllerCacheService } from "./controller-cache.service";
 import { inspect } from "util";
+import { diag_css } from "../../utils/diagnosis";
+import { ModuleService } from "./module.service";
+import { ControllerService } from "./controller.service";
 // import { logger } from "../../../utils/logger";
 export class MenuService {
     constructor() {
         this.currentAdapter = null;
         this._activeController = null; // 💡 NEW: Tracks the current controller instance
         this.activeController = null;
+        this.svModule = new ModuleService();
+        this.svController = new ControllerService();
     }
     renderMenuWithSystem(menu, theme, containerId = "cd-sidebar") {
         console.debug("Starting renderMenuWithSystem()");
@@ -346,5 +351,47 @@ export class MenuService {
             }
             return normalizedItem;
         });
+    }
+    /**
+     * STEP 5
+     * Purpose:
+     * Prepare application menu structure.
+     *
+     * IMPORTANT:
+     * - Pure extraction
+     * - No rendering
+     * - No side effects beyond data preparation
+     */
+    async structMenu() {
+        const allowedModules = await this.svModule.getAllowedModules();
+        const defaultModule = allowedModules.find((m) => m.isDefault);
+        const defaultControllerName = defaultModule?.controllers.find((c) => c.default)?.name;
+        diag_css("Modules Loaded", { allowedModules });
+        const rawMenu = allowedModules.flatMap((mod) => {
+            const recursive = (items) => items.map((item) => {
+                if (item.itemType === "route" && item.route) {
+                    const cinfo = this.svController.findControllerInfoByRoute(mod, item.route);
+                    if (cinfo) {
+                        item.controller = cinfo.instance;
+                        item.template =
+                            typeof cinfo.template === "function"
+                                ? cinfo.template
+                                : () => cinfo.template;
+                        item.moduleId = mod.moduleId;
+                        if (mod.isDefault && cinfo.name === defaultControllerName) {
+                            item.moduleDefault = true;
+                        }
+                    }
+                }
+                if (item.children) {
+                    item.children = recursive(item.children);
+                }
+                return item;
+            });
+            return recursive(mod.menu || []);
+        });
+        const preparedMenu = this.prepareMenu(rawMenu);
+        diag_css("Menu prepared", preparedMenu);
+        return { preparedMenu, defaultModule };
     }
 }

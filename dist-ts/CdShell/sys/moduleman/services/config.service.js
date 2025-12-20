@@ -46,6 +46,141 @@ export class ConfigService {
             return this.config;
         }
     }
+    // ===================================================================
+    // SHELL CONFIG RESOLUTION
+    // ===================================================================
+    async loadShellConfig(consumerProfile, userProfile) {
+        // const baseConfig = await this.loadStaticShellConfig();
+        const baseConfig = await this.loadConfig();
+        // const withConsumer = this.mergeShellConfig(
+        //   baseConfig,
+        //   consumerProfile?.shellConfig
+        // );
+        const withConsumer = this.applyConsumerShellConfig(baseConfig, consumerProfile?.shellConfig);
+        // const finalConfig = this.mergeShellConfigWithPolicy(
+        //   withConsumer,
+        //   userProfile?.shellConfig,
+        //   consumerProfile?.shellConfig
+        // );
+        const finalConfig = this.applyUserShellConfigWithPolicy(withConsumer, userProfile?.shellConfig, consumerProfile?.shellConfig);
+        return finalConfig;
+    }
+    async resolveShellConfig(consumerProfile, userProfile) {
+        const base = await this.loadConfig();
+        // 1. Apply consumer defaults
+        const withConsumer = this.applyConsumerShellConfig(base, consumerProfile?.shellConfig);
+        // 2. Apply user overrides (if allowed)
+        const final = this.applyUserShellConfigWithPolicy(withConsumer, userProfile?.shellConfig, consumerProfile?.shellConfig);
+        return final;
+    }
+    // private mergeShellConfig(
+    //   base: IUserShellConfig,
+    //   override?: Partial<IUserShellConfig>
+    // ): IUserShellConfig {
+    //   if (!override) return base;
+    //   return {
+    //     ...base,
+    //     ...override,
+    //     uiConfig: {
+    //       ...base.uiConfig,
+    //       ...override.uiConfig,
+    //     },
+    //     themeConfig: {
+    //       ...base.themeConfig,
+    //       ...override.themeConfig,
+    //     },
+    //   };
+    // }
+    applyConsumerShellConfig(base, consumerShell) {
+        if (!consumerShell)
+            return base;
+        return {
+            ...base,
+            ...consumerShell,
+            uiConfig: {
+                ...base.uiConfig,
+                ...consumerShell.uiConfig,
+            },
+            themeConfig: {
+                ...base.themeConfig,
+                ...consumerShell.themeConfig,
+            },
+        };
+    }
+    // private mergeShellConfigWithPolicy(
+    //   base: IUserShellConfig,
+    //   userShell?: Partial<IUserShellConfig>,
+    //   consumerShell?: IConsumerShellConfig
+    // ): IUserShellConfig {
+    //   if (!userShell || !consumerShell) return base;
+    //   const lockDown = consumerShell.lockDown || {};
+    //   return {
+    //     ...base,
+    //     uiConfig: {
+    //       ...base.uiConfig,
+    //       // ---------------------------------------
+    //       // UI SYSTEM
+    //       // ---------------------------------------
+    //       defaultUiSystemId: lockDown.uiSystem
+    //         ? base.uiConfig.defaultUiSystemId
+    //         : (userShell.uiConfig?.defaultUiSystemId ??
+    //           base.uiConfig.defaultUiSystemId),
+    //       // ---------------------------------------
+    //       // THEME
+    //       // ---------------------------------------
+    //       defaultThemeId: lockDown.theme
+    //         ? base.uiConfig.defaultThemeId
+    //         : (userShell.uiConfig?.defaultThemeId ??
+    //           base.uiConfig.defaultThemeId),
+    //       // ---------------------------------------
+    //       // FORM VARIANT
+    //       // ---------------------------------------
+    //       defaultFormVariant: lockDown.formVariant
+    //         ? base.uiConfig.defaultFormVariant
+    //         : (userShell.uiConfig?.defaultFormVariant ??
+    //           base.uiConfig.defaultFormVariant),
+    //     },
+    //   };
+    // }
+    applyUserShellConfigWithPolicy(base, userShell, consumerShell) {
+        if (!userShell || !consumerShell)
+            return base;
+        const lockDown = consumerShell.lockDown ?? {};
+        const allowed = consumerShell.allowedOptions ?? {};
+        const resolveValue = (locked, allowedValues, userValue, baseValue) => {
+            // Hard lock → ignore user
+            if (locked)
+                return baseValue;
+            // No user value → keep base
+            if (userValue === undefined)
+                return baseValue;
+            // Allowed list exists → validate
+            if (allowedValues && !allowedValues.includes(userValue)) {
+                console.info("[ConfigService] user value rejected by allowedOptions", userValue);
+                return baseValue;
+            }
+            // Accept user value
+            return userValue;
+        };
+        return {
+            ...base,
+            uiConfig: {
+                ...base.uiConfig,
+                // ----------------------------
+                // UI SYSTEM
+                // ----------------------------
+                defaultUiSystemId: resolveValue(lockDown.uiSystem, allowed.uiSystems, userShell.uiConfig?.defaultUiSystemId, base.uiConfig.defaultUiSystemId),
+                // ----------------------------
+                // THEME
+                // ----------------------------
+                defaultThemeId: resolveValue(lockDown.theme, allowed.themes, userShell.uiConfig?.defaultThemeId, base.uiConfig.defaultThemeId),
+                // ----------------------------
+                // FORM VARIANT
+                // ----------------------------
+                defaultFormVariant: resolveValue(lockDown.formVariant, allowed.formVariants, userShell.uiConfig?.defaultFormVariant, base.uiConfig.defaultFormVariant),
+            },
+        };
+    }
     /**
      * Convenience: returns uiConfig. Ensure loadConfig() called before.
      */

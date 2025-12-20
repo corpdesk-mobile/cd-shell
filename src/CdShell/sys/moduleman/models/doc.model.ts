@@ -65,7 +65,7 @@ export class DocModel {
   })
   docEnabled!: boolean;
 
-  //   @ManyToOne((type) => UserModel, (user) => user.docs)
-  //   @JoinColumn({ name: 'doc_from' })
-  //   user!: UserModel;
+    @ManyToOne((type) => UserModel, (user) => user.docs)
+    @JoinColumn({ name: 'doc_from' })
+    user!: UserModel;
 }

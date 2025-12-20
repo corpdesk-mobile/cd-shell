@@ -1,24 +1,20 @@
 import "reflect-metadata"; // MUST BE FIRST IMPORT
-// import { ShellConfig } from "./CdShell/sys/base/i-base";
 import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
-import { ITheme } from "./CdShell/sys/theme/models/themes.model";
 import { LoggerService } from "./CdShell/utils/logger.service";
 import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
-import { ThemeLoaderService } from "./CdShell/sys/theme/services/theme-loader.service";
 import { ModuleService } from "./CdShell/sys/moduleman/services/module.service";
-import { ICdModule } from "./CdShell/sys/moduleman/models/module.model";
-import { MenuItem } from "./CdShell/sys/moduleman/models/menu.model";
 import { ControllerService } from "./CdShell/sys/moduleman/services/controller.service";
-import { inspect } from "util";
-import {
-  IShellConfig,
-  UiConfig,
-} from "./CdShell/sys/moduleman/models/config.model";
 import { SysCacheService } from "./CdShell/sys/moduleman/services/sys-cache.service";
 import { UiSystemLoaderService } from "./CdShell/sys/cd-guig/services/ui-system-loader.service";
 import { UiThemeLoaderService } from "./CdShell/sys/cd-guig/services/ui-theme-loader.service";
 import { ConfigService } from "./CdShell/sys/moduleman/services/config.service";
-import { diag_css, diag_sidebar } from "./CdShell/sys/utils/diagnosis";
+import { diag_css } from "./CdShell/sys/utils/diagnosis";
+import { IConsumerProfile } from "./CdShell/sys/moduleman/models/consumer.model";
+import {
+  IUserProfile,
+  IUserShellConfig,
+} from "./CdShell/sys/cd-user/models/user.model";
+import { UserService } from "./CdShell/sys/cd-user/services/user.service";
 
 export class Main {
   private svSysCache!: SysCacheService;
@@ -29,20 +25,21 @@ export class Main {
   private svController!: ControllerService;
   private svUiThemeLoader!: UiThemeLoaderService;
   private svTheme!: ThemeService;
-  // private svThemeLoader!: ThemeLoaderService;
   private logger = new LoggerService();
 
-  private splashAnimDone = false;
-  private appReady = false;
+  // private splashAnimDone = false;
+  // private appReady = false;
+
+  private svUser = new UserService();
+  private consumerProfile?: IConsumerProfile;
+  private userProfile?: IUserProfile;
+
+  private resolvedShellConfig?: IUserShellConfig;
 
   constructor() {
     // intentionally empty — setup moved to init()
     this.svConfig = new ConfigService();
     this.svSysCache = new SysCacheService(this.svConfig);
-
-    // window.addEventListener("CorpdeskSplashDone", () => {
-    //   this.hideSplash();
-    // });
   }
 
   /**
@@ -71,10 +68,9 @@ export class Main {
     this.svMenu = new MenuService();
     this.svController = new ControllerService();
     this.svTheme = new ThemeService();
-    // this.svUiThemeLoader = new UiThemeLoaderService(this.svSysCache);
 
     // ✅ Load shell config and apply log level
-    const shellConfig = await this.loadShellConfig();
+    const shellConfig = await this.svConfig.loadConfig();
     if (shellConfig.logLevel) {
       this.logger.setLevel(shellConfig.logLevel);
     }
@@ -86,17 +82,51 @@ export class Main {
     //---------------------------------------
     // SPLASH: Show immediately
     //---------------------------------------
-    await this.showSplash(); // your animated SVG starts here
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig); // your animated SVG starts here
 
     this.logger.setLevel("debug");
     this.logger.debug("starting bootstrapShell()");
     diag_css("Main.run() started");
 
     //---------------------------------------
-    // STEP 0: Load shell config
+    // STEP 0: Load base shell config
     //---------------------------------------
-    const shellConfig: IShellConfig = await this.loadShellConfig();
-    if (shellConfig.logLevel) this.logger.setLevel(shellConfig.logLevel);
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login (ACL context)
+    //---------------------------------------
+    const resp = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+    if (!resp) {
+      this.logger.warn(
+        "[Main] Anonymous login failed → continuing with static shell config"
+      );
+    } else {
+      this.logger.debug("[Main] Anonymous login success");
+      this.consumerProfile = resp.data.consumer.consumerProfile || null;
+      this.userProfile = resp.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 0.6: Resolve ACL-based shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.resolveShellConfig(
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config resolved", this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
 
     //---------------------------------------
     // STEP 1: Core service instantiation
@@ -114,8 +144,7 @@ export class Main {
     //---------------------------------------
     // STEP 3: Apply UI-System + Theme pipeline
     //---------------------------------------
-    await this.applyStartupUiSettings();
-    diag_css("UI-System + Theme applied");
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
 
     //---------------------------------------
     // STEP 4: Theme config (logo + title)
@@ -132,306 +161,32 @@ export class Main {
     //---------------------------------------
     // STEP 5: Prepare menu
     //---------------------------------------
-    const allowedModules: ICdModule[] = await this.svModule.getAllowedModules();
-    const defaultModule = allowedModules.find((m) => m.isDefault);
-    const defaultControllerName = defaultModule?.controllers.find(
-      (c) => c.default
-    )?.name;
-
-    diag_css("Modules Loaded", { allowedModules });
-
-    const rawMenu: MenuItem[] = allowedModules.flatMap((mod) => {
-      const recursive = (items: MenuItem[]): MenuItem[] =>
-        items.map((item) => {
-          if (item.itemType === "route" && item.route) {
-            const cinfo = this.svController.findControllerInfoByRoute(
-              mod,
-              item.route
-            );
-            if (cinfo) {
-              (item as any).controller = cinfo.instance;
-              (item as any).template =
-                typeof cinfo.template === "function"
-                  ? cinfo.template
-                  : () => cinfo.template;
-
-              (item as any).moduleId = mod.moduleId;
-
-              if (mod.isDefault && cinfo.name === defaultControllerName)
-                (item as any).moduleDefault = true;
-            }
-          }
-
-          if (item.children) item.children = recursive(item.children);
-          return item;
-        });
-
-      return recursive(mod.menu || []);
-    });
-
-    const preparedMenu = this.svMenu.prepareMenu(rawMenu);
-    diag_css("Menu prepared", preparedMenu);
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
 
     //---------------------------------------
     // STEP 6: Sidebar render
     //---------------------------------------
-    try {
-      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
-      const theme = (await resTheme.json()) as ITheme;
-      this.svMenu.renderMenuWithSystem(preparedMenu, theme);
-
-      const sidebarEl = document.getElementById("cd-sidebar");
-      if (
-        sidebarEl &&
-        (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")
-      ) {
-        this.svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
-      }
-
-      diag_css("Sidebar rendered");
-      diag_sidebar();
-    } catch (err) {
-      console.error("[Main] Failed rendering menu", err);
-    }
+    await this.svUiSystemLoader.renderSidebar(this.svMenu, preparedMenu, shellConfig);
 
     //---------------------------------------
     // STEP 7: Auto-load default controller
     //---------------------------------------
-    try {
-      const defaultModuleMenu = preparedMenu.find(
-        (m) => m.label === defaultModule?.moduleId
-      );
-      const defaultMenuItem = defaultModuleMenu?.children?.find(
-        (it) => it.moduleDefault
-      );
-
-      if (defaultMenuItem) {
-        await this.svMenu.loadResource({ item: defaultMenuItem });
-      }
-
-      diag_css("Default controller loaded");
-    } catch (err) {
-      console.warn("[Main] auto-load default view failed", err);
-    }
+    await this.svController.loadDefaultController(this.svMenu, preparedMenu, defaultModule);
 
     //---------------------------------------
     // STEP 8: Mobile UX config
     //---------------------------------------
-    const burger = document.getElementById("cd-burger");
-    const sidebar = document.getElementById("cd-sidebar");
-    const overlay = document.getElementById("cd-overlay");
-
-    const isMobile = () => window.matchMedia("(max-width: 900px)").matches;
-
-    const applyMobileState = () => {
-      if (!isMobile()) {
-        sidebar.classList.remove("open");
-        overlay.classList.add("hidden");
-        burger.classList.remove("open");
-      }
-    };
-
-    if (burger && sidebar && overlay) {
-      burger.addEventListener("click", () => {
-        burger.classList.toggle("open");
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("hidden");
-      });
-
-      overlay.addEventListener("click", () => {
-        burger.classList.remove("open");
-        sidebar.classList.remove("open");
-        overlay.classList.add("hidden");
-      });
-
-      window.addEventListener("resize", applyMobileState);
-      applyMobileState();
-    }
+    this.svUiSystemLoader.setupMobileUx();
 
     //---------------------------------------
     // APP READY
     //---------------------------------------
     this.logger.debug("[Main] app fully bootstrapped");
-    this.appReady = true;
-    this.tryHideSplash();
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
 
     this.logger.debug("bootstrapShell(): run() complete");
     diag_css("Main.run() complete");
   }
 
-  /**
-   * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
-   */
-  async applyStartupUiSettings(): Promise<void> {
-    const cfgSvc = ConfigService.getInstance();
-    // ensure sys cache is ready
-    await this.svSysCache.ensureReady();
-
-    const uiConfig = this.svSysCache.get("uiConfig") as UiConfig;
-    if (!uiConfig) {
-      console.warn("[Main.applyStartupUiSettings] uiConfig missing");
-      return;
-    }
-
-    const systemId = uiConfig.defaultUiSystemId;
-    const themeId = uiConfig.defaultThemeId;
-
-    diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
-
-    // Use singletons bound to same SysCache instance
-    const uiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
-    const uiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
-
-    // 1) Activate UI system (loads CSS + JS)
-    try {
-      await uiSystemLoader.activate(systemId);
-      diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
-        systemId,
-      });
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] activate failed", err);
-      diag_css("[MAIN.applyStartupUiSettings] activate failed", { err });
-    }
-
-    // 2) Load structural shell CSS (base + index) AFTER system to ensure layering
-    try {
-      await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
-      await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
-      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded", {});
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] shell CSS load failed", err);
-    }
-
-    // 3) load theme override CSS
-    try {
-      await uiThemeLoader.loadThemeById(themeId);
-      diag_css("[MAIN.applyStartupUiSettings] theme css injected", { themeId });
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] theme load failed", err);
-    }
-
-    // 4) per-system applyTheme (sets data-bs-theme, md classes, etc.)
-    try {
-      await uiSystemLoader.applyTheme(systemId, themeId);
-      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete", {});
-    } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] applyTheme failed", err);
-    }
-
-    diag_css("[MAIN.applyStartupUiSettings] done", {});
-  }
-
-  async loadShellConfig(): Promise<IShellConfig> {
-    const res = await fetch("/shell.config.json");
-    if (!res.ok) {
-      throw new Error(`Failed to load shell config: ${res.statusText}`);
-    }
-    return await res.json();
-  }
-
-  // async showSplash(): Promise<void> {
-  //   return new Promise(async (resolve) => {
-  //     const splash = document.getElementById("cd-splash");
-  //     if (!splash) return resolve();
-
-  //     const path = "/splashscreens/corpdesk-default.html";
-  //     this.logger.debug("[Splash] loading", path);
-
-  //     try {
-  //       const html = await fetch(path).then((r) => r.text());
-  //       this.logger.debug("[Splash] injected HTML length", html.length);
-  //       splash.innerHTML = html;
-  //       splash.style.display = "block";
-  //       resolve();
-  //       this.logger.debug(
-  //         "[Splash] container present",
-  //         !!document.querySelector("#splash-container")
-  //       );
-  //     } catch (err) {
-  //       console.error("[Splash] load failed", err);
-  //       resolve();
-  //     }
-  //   });
-  // }
-  async showSplash(): Promise<void> {
-    return new Promise(async (resolve) => {
-      const splash = document.getElementById("cd-splash");
-      if (!splash) return resolve();
-
-      const shellConfig = await this.loadShellConfig();
-      const path = shellConfig.splash?.path;
-      const minDuration = shellConfig.splash?.minDuration ?? 3000;
-
-      this.logger.debug("[Splash] loading", { path, minDuration });
-
-      const html = await fetch(path).then((r) => r.text());
-      splash.innerHTML = html;
-      splash.style.display = "block";
-
-      // Animation latch
-      setTimeout(() => {
-        this.logger.debug("[Splash] animation completed");
-        this.splashAnimDone = true;
-        this.tryHideSplash();
-      }, minDuration);
-
-      resolve();
-    });
-  }
-
-  private async tryHideSplash() {
-    if (!this.splashAnimDone || !this.appReady) {
-      this.logger.debug("[Splash] waiting", {
-        splashAnimDone: this.splashAnimDone,
-        appReady: this.appReady,
-      });
-      return;
-    }
-
-    this.logger.debug("[Splash] conditions met → hiding splash");
-    await this.hideSplash();
-  }
-
-  // async hideSplash(): Promise<void> {
-  //   this.logger.debug("[Splash] hide start");
-  //   return new Promise<void>((resolve) => {
-  //     const splash = document.getElementById("cd-splash");
-  //     const root = document.getElementById("cd-root");
-
-  //     if (splash) {
-  //       const container = splash.querySelector(
-  //         "#splash-container"
-  //       ) as HTMLElement;
-  //       if (container) container.classList.add("fade-out");
-  //       this.logger.debug("[Splash] root visibility restored");
-  //     }
-
-  //     setTimeout(() => {
-  //       splash?.remove();
-  //       if (root) root.style.visibility = "visible";
-  //       resolve();
-  //     }, 800);
-  //   });
-  // }
-
-  async hideSplash(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      const splash = document.getElementById("cd-splash");
-      const root = document.getElementById("cd-root");
-
-      if (!splash) return resolve();
-
-      const container = splash.querySelector(
-        "#splash-container"
-      ) as HTMLElement;
-      container?.classList.add("fade-out");
-
-      setTimeout(() => {
-        splash.remove();
-        if (root) root.style.visibility = "visible";
-        this.logger.debug("[Splash] removed, app revealed");
-        resolve();
-      }, 800);
-    });
-  }
 }

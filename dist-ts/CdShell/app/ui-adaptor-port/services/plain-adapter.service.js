@@ -1,4 +1,3 @@
-import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 /**
  * MaterialAdapter — applies Material Design theme logic
  */
@@ -29,4 +28,4 @@ export class PlainAdapterService {
     }
 }
 // Plugin self-registers
-UiSystemAdapterRegistry.register("plain", new PlainAdapterService());
+// UiSystemAdapterRegistry.register("plain", new PlainAdapterService());

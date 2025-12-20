@@ -1,7 +1,8 @@
 // This file is responsible for bootstrapping the shell application
 import { ITheme } from "../models/themes.model";
 import shellConfig from "../../../../../shell.config.json";
-import { IShellConfig } from "../../moduleman/models/config.model";
+import { IShellConfig } from "../../base";
+// import { IShellConfig } from "../../moduleman/models/config.model";
 // import { ThemeConfig, ThemeShellConfig } from "../../base";
 // import { ShellConfig } from "../../moduleman/models/config.model";
 
