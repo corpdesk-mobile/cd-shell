@@ -15141,6 +15141,1189 @@ export class Main {
 
 ```
 
+////////////////////////
+
+All consumers who are invoking find() on sysCache.get() are encountering:
+Property 'find' does not exist on type 'unknown'.ts(2339)
+any
+
+Example
+```ts
+getSystemById(id: string): UiSystemDescriptor | undefined {
+    const available = this.sysCache.get("uiSystems") || [];
+    return available.find((s: any) => s.id === id);
+  }
+```
+
+////////////////////////////////////////
+I have shared the set() method before and after recent type correction.
+We may need to adjust the new one to conform to older requirements.
+Otherwise, all the previous consumers are complaining.
+Before
+```ts
+public set<T>(
+    key: CacheKey | string,
+    value: T,
+    source: CacheMeta["source"] = "runtime"
+  ): void {
+    const meta: CacheMeta = {
+      source,
+      version: ++this.versionCounter,
+      timestamp: Date.now(),
+    };
+
+    this.cache.set(key, { value, meta });
+    this.notify(key, value, meta);
+  }
+```
+After
+```ts
+public set<K extends CacheKey>(key: K, value: SysCacheMap[K], ): void {
+    this.cache.set(key, value);
+  }
+```
+
+/////////////////////////////////////////////
+From the recommendations you have made, you can take a look at the current state of the SysCacheService and refactor in a way that it does not breaking changes.
+We need to be able to run the system after the changes without make changes to the consumers then we can recruit subscribers pole pole with increamental process.
+The system should be able to account for subscribers at any time.
+
+```ts
+import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./config.service";
+
+export class SysCacheService {
+  private static instance: SysCacheService;
+  private cache = new Map<string, any>();
+  private _uiSystemLoader!: UiSystemLoaderService;
+  private _uiThemeLoader!: UiThemeLoaderService;
+
+  constructor(private configService: ConfigService) {}
+
+  public static getInstance(configService?: ConfigService): SysCacheService {
+    if (!SysCacheService.instance) {
+      if (!configService) {
+        throw new Error(
+          "SysCacheService must be initialized with ConfigService on first instantiation."
+        );
+      }
+      SysCacheService.instance = new SysCacheService(configService);
+    }
+    return SysCacheService.instance;
+  }
+
+  public setLoaders(
+    systemLoader: UiSystemLoaderService,
+    themeLoader: UiThemeLoaderService
+  ): void {
+    this._uiSystemLoader = systemLoader;
+    this._uiThemeLoader = themeLoader;
+  }
+
+  /**
+   * Loads:
+   * - envConfig (NEW)
+   * - uiConfig
+   * - uiSystems
+   * - uiSystemDescriptors
+   * - themes
+   * - formVariants
+   * - themeDescriptors
+   */
+  public async loadAndCacheAll(): Promise<void> {
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+    if (this.cache.size > 0) return; // already loaded
+
+    console.log("[SysCacheService] 01: Starting Eager Load");
+
+    // -------------------------------------------------------------------
+    // 1. LOAD SHELL CONFIG
+    // -------------------------------------------------------------------
+    const shellConfig = await this.configService.loadConfig();
+
+    // Extract the new envConfig block (replacing license/environment)
+    const envConfig = shellConfig.envConfig || {};
+
+    // Cache it
+    this.cache.set("envConfig", envConfig);
+
+    // Preserve uiConfig loading
+    const uiConfig = shellConfig.uiConfig;
+    this.cache.set("uiConfig", uiConfig);
+
+    // -------------------------------------------------------------------
+    // 2. UI SYSTEMS & THEMES
+    // -------------------------------------------------------------------
+    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+
+    const fullDescriptors = uiSystemsData.map((sys: any) => ({
+      id: sys.id,
+      name: sys.name,
+      version: sys.version,
+      description: sys.description,
+
+      cssUrl: sys.cssUrl,
+      jsUrl: sys.jsUrl,
+      assetPath: sys.assetPath,
+      stylesheets: sys.stylesheets || [],
+      scripts: sys.scripts || [],
+
+      themesAvailable: sys.themesAvailable || [],
+      themeActive: sys.themeActive || null,
+
+      conceptMappings: sys.conceptMappings || {},
+      directiveMap: sys.directiveMap || {},
+
+      tokenMap: sys.tokenMap || {},
+      containers: sys.containers || [],
+      components: sys.components || [],
+      renderRules: sys.renderRules || {},
+
+      metadata: sys.metadata || {},
+      extensions: sys.extensions || {},
+      author: sys.author,
+      license: sys.license,
+      repository: sys.repository,
+
+      displayName: sys.displayName || sys.name,
+    }));
+
+    const simpleSystems = fullDescriptors.map((sys) => ({
+      id: sys.id,
+      name: sys.name,
+      displayName: sys.displayName,
+      themesAvailable: sys.themesAvailable,
+    }));
+
+    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+
+    const themes = (uiThemesData.themes || []).map((t: any) => ({
+      id: t.id,
+      name: t.name,
+    }));
+
+    const variants = (uiThemesData.variants || []).map((v: any) => ({
+      id: v.id,
+      name: v.name,
+    }));
+
+    const descriptors = uiThemesData.descriptors || [];
+
+    // Cache everything
+    this.cache.set("uiSystems", simpleSystems);
+    this.cache.set("uiSystemDescriptors", fullDescriptors);
+    this.cache.set("themes", themes);
+    this.cache.set("formVariants", variants);
+    this.cache.set("themeDescriptors", descriptors);
+    this.cache.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig);
+
+    console.log("[SysCacheService] Load complete.");
+  }
+
+  // -------------------------------------------------------------
+  // BASIC GETTERS
+  // -------------------------------------------------------------
+  public get(key: string): any {
+    return this.cache.get(key);
+  }
+
+  public getUiSystems(): any[] {
+    return this.cache.get("uiSystems") || [];
+  }
+
+  public getUiSystemDescriptors(): any[] {
+    return this.cache.get("uiSystemDescriptors") || [];
+  }
+
+  public getThemes(): any[] {
+    return this.cache.get("themes") || [];
+  }
+
+  public getFormVariants(): any[] {
+    return this.cache.get("formVariants") || [];
+  }
+
+  public getThemeDescriptors(): any[] {
+    return this.cache.get("themeDescriptors") || [];
+  }
+
+  public getConfig(): any {
+    return this.cache.get("uiConfigNormalized") || {};
+  }
+
+  // -------------------------------------------------------------
+  // NEW: ENV CONFIG HELPERS
+  // -------------------------------------------------------------
+  public getEnvConfig(): any {
+    return this.cache.get("envConfig") || {};
+  }
+
+  /** POC: direct access to consumerGuid (tenant identifier) */
+  public getConsumerGuid(): string | undefined {
+    const env = this.getEnvConfig();
+    return env?.consumerGuid || env?.clientContext?.consumerToken || undefined;
+  }
+
+  /** POC: convenience wrapper for apiEndpoint */
+  public getApiEndpoint(): string | undefined {
+    return this.getEnvConfig()?.apiEndpoint;
+  }
+
+  public async ensureReady(): Promise<void> {
+    if (this.cache.size === 0) await this.loadAndCacheAll();
+  }
+}
+
+```
+
+/////////////////////////////////////////////
+In the sys-cache.service.ts, I am able to comment either the previous or latest codes to test either.
+When the latest codes are running, we have the following error. I have also shared the logs.
+The stylesheet http://localhost:5173/assets/ui-systems/material-design/material-design.min.css was not loaded because its MIME type, “text/html”, is not “text/css”.
+But the failure is graceful, the page is rendered well, one can just notice that it is not material-design as expected. But we still need to address the issue.
+Assist me to identify where the issue could be.
+Note that:
+I was able to settle issue after doing away with CacheKey.
+I was also thinking its design is not scalable.
+The strings used to define may change in definition and variety.
+Instead I just used string.
+Lets assume that is what it is now. All definitions are now compatible with legacy consumers
+
+
+Loaded with new SysCacheService codes
+```log
+[SysCacheService] Eager load starting index-C6BpMTLj.js:48:3948
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
+index-C6BpMTLj.js:52:13339
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-C6BpMTLj.js:52:13471
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-C6BpMTLj.js:52:13471
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-C6BpMTLj.js:52:13471
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-C6BpMTLj.js:52:10648
+[SysCacheService] Load complete index-C6BpMTLj.js:48:4552
+[CSS-DIAG] Cache loaded 
+Object {  }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "material-design" }
+index-C6BpMTLj.js:31:3158
+[UiSystemLoaderService.activate] descriptorFromCache: undefined index-C6BpMTLj.js:52:14576
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", jsPath: "/assets/ui-systems/material-design/material-design.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design" }
+index-C6BpMTLj.js:31:3158
+The stylesheet http://localhost:5173/assets/ui-systems/material-design/material-design.min.css was not loaded because its MIME type, “text/html”, is not “text/css”. localhost:5173
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR 
+Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design", ev: error }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED 
+Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", err: Error }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-C6BpMTLj.js:31:3158
+Loading failed for the <script> with source “http://localhost:5173/assets/ui-systems/material-design/material-design.min.js”. localhost:5173:1:1
+[UiSystemLoaderService.activate] script load failed 
+error { target: script, isTrusted: true, srcElement: script
+, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 936.1, … }
+index-C6BpMTLj.js:52:16119
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED 
+Object { jsPath: "/assets/ui-systems/material-design/material-design.min.js", err: error }
+index-C6BpMTLj.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+Object { id: "material-design" }
+```
+// loaded with previous SysCacheService
+```log
+[SHELL] [DEBUG] [Main] Shell config resolved 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BWJpqntj.js:48:1803
+[SysCacheService] 01: Starting Eager Load index-BWJpqntj.js:48:3321
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
+index-BWJpqntj.js:52:13339
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-BWJpqntj.js:52:13471
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-BWJpqntj.js:52:13471
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-BWJpqntj.js:52:13471
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-BWJpqntj.js:52:10648
+[SysCacheService] Load complete. index-BWJpqntj.js:48:4642
+[CSS-DIAG] Cache loaded 
+Object {  }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "material-design" }
+index-BWJpqntj.js:31:3158
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-BWJpqntj.js:52:14576
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
+index-BWJpqntj.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+Object { id: "material-design" }
+index-BWJpqntj.js:31:3158
+[MaterialDesignAdapter] Loaded conceptMappings: 
+Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
+```
+
+```ts
+/////////////////////////////////////////
+// PREVIOUS CODES
+/////////////////////////////////////////
+// import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
+// import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
+// import { ConfigService } from "./config.service";
+
+// export class SysCacheService {
+//   private static instance: SysCacheService;
+//   private cache = new Map<string, any>();
+//   private _uiSystemLoader!: UiSystemLoaderService;
+//   private _uiThemeLoader!: UiThemeLoaderService;
+
+//   constructor(private configService: ConfigService) {}
+
+//   public static getInstance(configService?: ConfigService): SysCacheService {
+//     if (!SysCacheService.instance) {
+//       if (!configService) {
+//         throw new Error(
+//           "SysCacheService must be initialized with ConfigService on first instantiation."
+//         );
+//       }
+//       SysCacheService.instance = new SysCacheService(configService);
+//     }
+//     return SysCacheService.instance;
+//   }
+
+//   public setLoaders(
+//     systemLoader: UiSystemLoaderService,
+//     themeLoader: UiThemeLoaderService
+//   ): void {
+//     this._uiSystemLoader = systemLoader;
+//     this._uiThemeLoader = themeLoader;
+//   }
+
+//   /**
+//    * Loads:
+//    * - envConfig (NEW)
+//    * - uiConfig
+//    * - uiSystems
+//    * - uiSystemDescriptors
+//    * - themes
+//    * - formVariants
+//    * - themeDescriptors
+//    */
+//   public async loadAndCacheAll(): Promise<void> {
+//     if (!this._uiSystemLoader || !this._uiThemeLoader) {
+//       throw new Error("SysCacheService: loaders must be set before load.");
+//     }
+//     if (this.cache.size > 0) return; // already loaded
+
+//     console.log("[SysCacheService] 01: Starting Eager Load");
+
+//     // -------------------------------------------------------------------
+//     // 1. LOAD SHELL CONFIG
+//     // -------------------------------------------------------------------
+//     const shellConfig = await this.configService.loadConfig();
+
+//     // Extract the new envConfig block (replacing license/environment)
+//     const envConfig = shellConfig.envConfig || {};
+
+//     // Cache it
+//     this.cache.set("envConfig", envConfig);
+
+//     // Preserve uiConfig loading
+//     const uiConfig = shellConfig.uiConfig;
+//     this.cache.set("uiConfig", uiConfig);
+
+//     // -------------------------------------------------------------------
+//     // 2. UI SYSTEMS & THEMES
+//     // -------------------------------------------------------------------
+//     const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+
+//     const fullDescriptors = uiSystemsData.map((sys: any) => ({
+//       id: sys.id,
+//       name: sys.name,
+//       version: sys.version,
+//       description: sys.description,
+
+//       cssUrl: sys.cssUrl,
+//       jsUrl: sys.jsUrl,
+//       assetPath: sys.assetPath,
+//       stylesheets: sys.stylesheets || [],
+//       scripts: sys.scripts || [],
+
+//       themesAvailable: sys.themesAvailable || [],
+//       themeActive: sys.themeActive || null,
+
+//       conceptMappings: sys.conceptMappings || {},
+//       directiveMap: sys.directiveMap || {},
+
+//       tokenMap: sys.tokenMap || {},
+//       containers: sys.containers || [],
+//       components: sys.components || [],
+//       renderRules: sys.renderRules || {},
+
+//       metadata: sys.metadata || {},
+//       extensions: sys.extensions || {},
+//       author: sys.author,
+//       license: sys.license,
+//       repository: sys.repository,
+
+//       displayName: sys.displayName || sys.name,
+//     }));
+
+//     const simpleSystems = fullDescriptors.map((sys) => ({
+//       id: sys.id,
+//       name: sys.name,
+//       displayName: sys.displayName,
+//       themesAvailable: sys.themesAvailable,
+//     }));
+
+//     const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+
+//     const themes = (uiThemesData.themes || []).map((t: any) => ({
+//       id: t.id,
+//       name: t.name,
+//     }));
+
+//     const variants = (uiThemesData.variants || []).map((v: any) => ({
+//       id: v.id,
+//       name: v.name,
+//     }));
+
+//     const descriptors = uiThemesData.descriptors || [];
+
+//     // Cache everything
+//     this.cache.set("uiSystems", simpleSystems);
+//     this.cache.set("uiSystemDescriptors", fullDescriptors);
+//     this.cache.set("themes", themes);
+//     this.cache.set("formVariants", variants);
+//     this.cache.set("themeDescriptors", descriptors);
+//     this.cache.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig);
+
+//     console.log("[SysCacheService] Load complete.");
+//   }
+
+//   // -------------------------------------------------------------
+//   // BASIC GETTERS
+//   // -------------------------------------------------------------
+//   public get(key: string): any {
+//     return this.cache.get(key);
+//   }
+
+//   public getUiSystems(): any[] {
+//     return this.cache.get("uiSystems") || [];
+//   }
+
+//   public getUiSystemDescriptors(): any[] {
+//     return this.cache.get("uiSystemDescriptors") || [];
+//   }
+
+//   public getThemes(): any[] {
+//     return this.cache.get("themes") || [];
+//   }
+
+//   public getFormVariants(): any[] {
+//     return this.cache.get("formVariants") || [];
+//   }
+
+//   public getThemeDescriptors(): any[] {
+//     return this.cache.get("themeDescriptors") || [];
+//   }
+
+//   public getConfig(): any {
+//     return this.cache.get("uiConfigNormalized") || {};
+//   }
+
+//   // -------------------------------------------------------------
+//   // NEW: ENV CONFIG HELPERS
+//   // -------------------------------------------------------------
+//   public getEnvConfig(): any {
+//     return this.cache.get("envConfig") || {};
+//   }
+
+//   /** POC: direct access to consumerGuid (tenant identifier) */
+//   public getConsumerGuid(): string | undefined {
+//     const env = this.getEnvConfig();
+//     return env?.consumerGuid || env?.clientContext?.consumerToken || undefined;
+//   }
+
+//   /** POC: convenience wrapper for apiEndpoint */
+//   public getApiEndpoint(): string | undefined {
+//     return this.getEnvConfig()?.apiEndpoint;
+//   }
+
+//   public async ensureReady(): Promise<void> {
+//     if (this.cache.size === 0) await this.loadAndCacheAll();
+//   }
+// }
+
+/////////////////////////////////////////
+// LATEST CODES
+/////////////////////////////////////////
+
+import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./config.service";
+import {
+  // CacheKey,
+  CacheListener,
+  CacheMeta,
+  SysCacheMap,
+} from "../models/sys-cache.model";
+
+export class SysCacheService {
+  private static instance: SysCacheService;
+
+  /** Core cache store */
+  // private cache = new Map<CacheKey | string, CacheEntry>();
+  private cache = new Map<string, any>();
+
+  /** Reactive listeners */
+  private listeners = new Map< string, Set<CacheListener<any>>>();
+
+  private versionCounter = 0;
+
+  private _uiSystemLoader!: UiSystemLoaderService;
+  private _uiThemeLoader!: UiThemeLoaderService;
+
+  constructor(private configService: ConfigService) {}
+
+  // ------------------------------------------------------------------
+  // SINGLETON
+  // ------------------------------------------------------------------
+  public static getInstance(configService?: ConfigService): SysCacheService {
+    if (!SysCacheService.instance) {
+      if (!configService) {
+        throw new Error(
+          "SysCacheService must be initialized with ConfigService on first instantiation."
+        );
+      }
+      SysCacheService.instance = new SysCacheService(configService);
+    }
+    return SysCacheService.instance;
+  }
+
+  public setLoaders(
+    systemLoader: UiSystemLoaderService,
+    themeLoader: UiThemeLoaderService
+  ): void {
+    this._uiSystemLoader = systemLoader;
+    this._uiThemeLoader = themeLoader;
+  }
+
+  // ------------------------------------------------------------------
+  // CORE CACHE API (NEW)
+  // ------------------------------------------------------------------
+  // Legacy + typed set
+  public set<T>(
+    key: string,
+    value: T,
+    source?: CacheMeta["source"]
+  ): void;
+
+  public set<K extends keyof SysCacheMap>(
+    key: K,
+    value: SysCacheMap[K],
+    source?: CacheMeta["source"]
+  ): void;
+
+  // Implementation
+  public set(
+    key: string,
+    value: any,
+    source: CacheMeta["source"] = "runtime"
+  ): void {
+    const meta: CacheMeta = {
+      source,
+      version: ++this.versionCounter,
+      timestamp: Date.now(),
+    };
+
+    this.cache.set(key, { value, meta });
+    this.notify(key, value, meta);
+  }
+
+  public get(key: string): any | undefined;
+  public get<K extends keyof SysCacheMap>(key: K): SysCacheMap[K] | undefined;
+
+  public get(key: string): any | undefined {
+    const entry = this.cache.get(key);
+    return entry?.value;
+  }
+
+  public getMeta(key: string): CacheMeta | undefined {
+    const entry = this.cache.get(key);
+    return entry?.meta;
+  }
+
+  public subscribe<T>(
+    key: string,
+    listener: CacheListener<T>,
+    emitImmediately = true
+  ): () => void {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+
+    this.listeners.get(key)!.add(listener);
+
+    // Late subscriber → immediate sync
+    if (emitImmediately && this.cache.has(key)) {
+      const entry = this.cache.get(key)!;
+      listener(entry.value, entry.meta);
+    }
+
+    // Unsubscribe
+    return () => {
+      this.listeners.get(key)?.delete(listener);
+    };
+  }
+
+  private notify<T>(key, value: T, meta: CacheMeta): void {
+    this.listeners.get(key)?.forEach((listener) => listener(value, meta));
+  }
+
+  // ------------------------------------------------------------------
+  // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+  // ------------------------------------------------------------------
+  public async loadAndCacheAll(): Promise<void> {
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    const shellConfig = await this.configService.loadConfig();
+
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", shellConfig.uiConfig || {}, "static");
+
+    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+      shellConfig.uiConfig
+    );
+
+    this.set("uiSystems", uiSystemsData, "static");
+
+    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(
+      shellConfig.uiConfig
+    );
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set(
+      "uiConfigNormalized",
+      uiThemesData.uiConfig || shellConfig.uiConfig,
+      "static"
+    );
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  // ------------------------------------------------------------------
+  // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
+  // ------------------------------------------------------------------
+  public getUiSystems(): any[] {
+    return this.get("uiSystems") || [];
+  }
+
+  public getThemes(): any[] {
+    return this.get("themes") || [];
+  }
+
+  public getFormVariants(): any[] {
+    return this.get("formVariants") || [];
+  }
+
+  public getThemeDescriptors(): any[] {
+    return this.get("themeDescriptors") || [];
+  }
+
+  public getConfig(): any {
+    return this.get("uiConfigNormalized") || {};
+  }
+
+  public getEnvConfig(): any {
+    return this.get("envConfig") || {};
+  }
+
+  public getConsumerGuid(): string | undefined {
+    const env = this.getEnvConfig();
+    return env?.consumerGuid || env?.clientContext?.consumerToken;
+  }
+
+  public getApiEndpoint(): string | undefined {
+    return this.getEnvConfig()?.apiEndpoint;
+  }
+
+  public async ensureReady(): Promise<void> {
+    if (this.cache.size === 0) {
+      await this.loadAndCacheAll();
+    }
+  }
+}
+```
+
+//////////////////////////////////////////////
+I was able to settle issue after doing away with CacheKey.
+I was also thinking its design is not scalable.
+The strings used to define may change in definition and variety.
+Instead I just used string.
+Lets assume that is what it is now. All definitions are now compatible with legacy consumers
+```ts
+import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./config.service";
+import {
+  CacheListener,
+  CacheMeta,
+  SysCacheMap,
+} from "../models/sys-cache.model";
+
+export class SysCacheService {
+  private static instance: SysCacheService;
+
+  /** Core cache store */
+  // private cache = new Map<CacheKey | string, CacheEntry>();
+  private cache = new Map<string, any>();
+
+  /** Reactive listeners */
+  private listeners = new Map< string, Set<CacheListener<any>>>();
+
+  private versionCounter = 0;
+
+  private _uiSystemLoader!: UiSystemLoaderService;
+  private _uiThemeLoader!: UiThemeLoaderService;
+
+  constructor(private configService: ConfigService) {}
+
+  // ------------------------------------------------------------------
+  // SINGLETON
+  // ------------------------------------------------------------------
+  public static getInstance(configService?: ConfigService): SysCacheService {
+    if (!SysCacheService.instance) {
+      if (!configService) {
+        throw new Error(
+          "SysCacheService must be initialized with ConfigService on first instantiation."
+        );
+      }
+      SysCacheService.instance = new SysCacheService(configService);
+    }
+    return SysCacheService.instance;
+  }
+
+  public setLoaders(
+    systemLoader: UiSystemLoaderService,
+    themeLoader: UiThemeLoaderService
+  ): void {
+    this._uiSystemLoader = systemLoader;
+    this._uiThemeLoader = themeLoader;
+  }
+
+  // ------------------------------------------------------------------
+  // CORE CACHE API (NEW)
+  // ------------------------------------------------------------------
+  // Legacy + typed set
+  public set<T>(
+    key: string,
+    value: T,
+    source?: CacheMeta["source"]
+  ): void;
+
+  public set<K extends keyof SysCacheMap>(
+    key: K,
+    value: SysCacheMap[K],
+    source?: CacheMeta["source"]
+  ): void;
+
+  // Implementation
+  public set(
+    key: string,
+    value: any,
+    source: CacheMeta["source"] = "runtime"
+  ): void {
+    const meta: CacheMeta = {
+      source,
+      version: ++this.versionCounter,
+      timestamp: Date.now(),
+    };
+
+    this.cache.set(key, { value, meta });
+    this.notify(key, value, meta);
+  }
+
+  public get(key: string): any | undefined;
+  public get<K extends keyof SysCacheMap>(key: K): SysCacheMap[K] | undefined;
+
+  public get(key: string): any | undefined {
+    const entry = this.cache.get(key);
+    return entry?.value;
+  }
+
+  public getMeta(key: string): CacheMeta | undefined {
+    const entry = this.cache.get(key);
+    return entry?.meta;
+  }
+
+  public subscribe<T>(
+    key: string,
+    listener: CacheListener<T>,
+    emitImmediately = true
+  ): () => void {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+
+    this.listeners.get(key)!.add(listener);
+
+    // Late subscriber → immediate sync
+    if (emitImmediately && this.cache.has(key)) {
+      const entry = this.cache.get(key)!;
+      listener(entry.value, entry.meta);
+    }
+
+    // Unsubscribe
+    return () => {
+      this.listeners.get(key)?.delete(listener);
+    };
+  }
+
+  private notify<T>(key, value: T, meta: CacheMeta): void {
+    this.listeners.get(key)?.forEach((listener) => listener(value, meta));
+  }
+
+  // ------------------------------------------------------------------
+  // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+  // ------------------------------------------------------------------
+  public async loadAndCacheAll(): Promise<void> {
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    const shellConfig = await this.configService.loadConfig();
+
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", shellConfig.uiConfig || {}, "static");
+
+    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+      shellConfig.uiConfig
+    );
+
+    this.set("uiSystems", uiSystemsData, "static");
+
+    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(
+      shellConfig.uiConfig
+    );
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set(
+      "uiConfigNormalized",
+      uiThemesData.uiConfig || shellConfig.uiConfig,
+      "static"
+    );
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  // ------------------------------------------------------------------
+  // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
+  // ------------------------------------------------------------------
+  public getUiSystems(): any[] {
+    return this.get("uiSystems") || [];
+  }
+
+  public getThemes(): any[] {
+    return this.get("themes") || [];
+  }
+
+  public getFormVariants(): any[] {
+    return this.get("formVariants") || [];
+  }
+
+  public getThemeDescriptors(): any[] {
+    return this.get("themeDescriptors") || [];
+  }
+
+  public getConfig(): any {
+    return this.get("uiConfigNormalized") || {};
+  }
+
+  public getEnvConfig(): any {
+    return this.get("envConfig") || {};
+  }
+
+  public getConsumerGuid(): string | undefined {
+    const env = this.getEnvConfig();
+    return env?.consumerGuid || env?.clientContext?.consumerToken;
+  }
+
+  public getApiEndpoint(): string | undefined {
+    return this.getEnvConfig()?.apiEndpoint;
+  }
+
+  public async ensureReady(): Promise<void> {
+    if (this.cache.size === 0) {
+      await this.loadAndCacheAll();
+    }
+  }
+}
+```
+
+```ts
+import "reflect-metadata"; // MUST BE FIRST IMPORT
+import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
+import { LoggerService } from "./CdShell/utils/logger.service";
+import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
+import { ModuleService } from "./CdShell/sys/moduleman/services/module.service";
+import { ControllerService } from "./CdShell/sys/moduleman/services/controller.service";
+import { SysCacheService } from "./CdShell/sys/moduleman/services/sys-cache.service";
+import { UiSystemLoaderService } from "./CdShell/sys/cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "./CdShell/sys/cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./CdShell/sys/moduleman/services/config.service";
+import { diag_css } from "./CdShell/sys/utils/diagnosis";
+import { IConsumerProfile } from "./CdShell/sys/moduleman/models/consumer.model";
+import {
+  IUserProfile,
+  IUserShellConfig,
+} from "./CdShell/sys/cd-user/models/user.model";
+import { UserService } from "./CdShell/sys/cd-user/services/user.service";
+
+export class Main {
+  private svSysCache!: SysCacheService;
+  private svUiSystemLoader!: UiSystemLoaderService;
+  private svConfig: ConfigService;
+  private svModule!: ModuleService;
+  private svMenu!: MenuService;
+  private svController!: ControllerService;
+  private svUiThemeLoader!: UiThemeLoaderService;
+  private svTheme!: ThemeService;
+  private logger = new LoggerService();
+
+  // private splashAnimDone = false;
+  // private appReady = false;
+
+  private svUser = new UserService();
+  private consumerProfile?: IConsumerProfile;
+  private userProfile?: IUserProfile;
+
+  private resolvedShellConfig?: IUserShellConfig;
+
+  constructor() {
+    // intentionally empty — setup moved to init()
+    this.svConfig = new ConfigService();
+    this.svSysCache = new SysCacheService(this.svConfig);
+  }
+
+  /**
+   * Unified initializer: sets up services and shell config.
+   * Backward-compatible: replaces initialize() + init().
+   */
+  async init() {
+    this.logger.debug("[Main] init(): starting");
+
+    // ✅ Ensure ModuleService is properly initialized
+    if (typeof window === "undefined") {
+      this.logger.debug(
+        "[Main] Running in Node → awaiting ensureInitialized()"
+      );
+      await ModuleService.ensureInitialized();
+    } else {
+      this.logger.debug(
+        "[Main] Running in browser → skipping ensureInitialized()"
+      );
+    }
+
+    // ✅ Instantiate services
+    this.svConfig = new ConfigService();
+    this.svSysCache = new SysCacheService(this.svConfig);
+    this.svModule = new ModuleService();
+    this.svMenu = new MenuService();
+    this.svController = new ControllerService();
+    this.svTheme = new ThemeService();
+
+    // ✅ Load shell config and apply log level
+    const shellConfig = await this.svConfig.loadConfig();
+    if (shellConfig.logLevel) {
+      this.logger.setLevel(shellConfig.logLevel);
+    }
+
+    this.logger.debug("[Main] init(): completed");
+  }
+
+  async run() {
+    //---------------------------------------
+    // SPLASH: Show immediately
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig); // your animated SVG starts here
+
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    diag_css("Main.run() started");
+
+    //---------------------------------------
+    // STEP 0: Load base shell config
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login (ACL context)
+    //---------------------------------------
+    const resp = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+    if (!resp) {
+      this.logger.warn(
+        "[Main] Anonymous login failed → continuing with static shell config"
+      );
+    } else {
+      this.logger.debug("[Main] Anonymous login success");
+      this.consumerProfile = resp.data.consumer.consumerProfile || null;
+      this.userProfile = resp.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 0.6: Resolve ACL-based shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.resolveShellConfig(
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config resolved", this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
+
+    //---------------------------------------
+    // STEP 1: Core service instantiation
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    //---------------------------------------
+    // STEP 2: Load cached metadata
+    //---------------------------------------
+    await this.svSysCache.loadAndCacheAll();
+    diag_css("Cache loaded");
+
+    //---------------------------------------
+    // STEP 3: Apply UI-System + Theme pipeline
+    //---------------------------------------
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
+
+    //---------------------------------------
+    // STEP 4: Theme config (logo + title)
+    //---------------------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    diag_css("ThemeConfig loaded", themeConfig);
+
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
+    //---------------------------------------
+    // STEP 5: Prepare menu
+    //---------------------------------------
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
+
+    //---------------------------------------
+    // STEP 6: Sidebar render
+    //---------------------------------------
+    await this.svUiSystemLoader.renderSidebar(this.svMenu, preparedMenu, shellConfig);
+
+    //---------------------------------------
+    // STEP 7: Auto-load default controller
+    //---------------------------------------
+    await this.svController.loadDefaultController(this.svMenu, preparedMenu, defaultModule);
+
+    //---------------------------------------
+    // STEP 8: Mobile UX config
+    //---------------------------------------
+    this.svUiSystemLoader.setupMobileUx();
+
+    //---------------------------------------
+    // APP READY
+    //---------------------------------------
+    this.logger.debug("[Main] app fully bootstrapped");
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
+
+    this.logger.debug("bootstrapShell(): run() complete");
+    diag_css("Main.run() complete");
+  }
+
+}
+
+```
+
 
 //////////////////////////////////////////////////////////////////
 
@@ -15312,6 +16495,8 @@ RawUiComponentMeta not yet implemented-
   - navigation background
   - body background
   - Themes to be designed in a way that they can be packaged and commercialized
+  - design SysCacheService data sync mechanims
+    - upgrade SysCacheService to 'subscibable' and 'syncable'
 
 ///////////////////////////////////////
 
@@ -15352,7 +16537,13 @@ Now that you have a good understanding how the api works, we are going to be fig
 
 ---
 
+- enable/diable https
+
+---
+
 - design SysCacheService data sync mechanims
+  - upgrade SysCacheService to 'subscibable' and 'syncable'
+  - test subscibers
 
 ---
 

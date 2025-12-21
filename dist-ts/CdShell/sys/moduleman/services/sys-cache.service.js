@@ -1,11 +1,22 @@
+// /////////////////////////////////////////
+// // PREVIOUS CODES
+// /////////////////////////////////////////
 // import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
 // import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
 // import { ConfigService } from "./config.service";
 export class SysCacheService {
     constructor(configService) {
         this.configService = configService;
+        /** Core cache store */
+        // private cache = new Map<CacheKey | string, CacheEntry>();
         this.cache = new Map();
+        /** Reactive listeners */
+        this.listeners = new Map();
+        this.versionCounter = 0;
     }
+    // ------------------------------------------------------------------
+    // SINGLETON
+    // ------------------------------------------------------------------
     static getInstance(configService) {
         if (!SysCacheService.instance) {
             if (!configService) {
@@ -19,39 +30,111 @@ export class SysCacheService {
         this._uiSystemLoader = systemLoader;
         this._uiThemeLoader = themeLoader;
     }
-    /**
-     * Loads:
-     * - envConfig (NEW)
-     * - uiConfig
-     * - uiSystems
-     * - uiSystemDescriptors
-     * - themes
-     * - formVariants
-     * - themeDescriptors
-     */
+    // Implementation
+    set(key, value, source = "runtime") {
+        const meta = {
+            source,
+            version: ++this.versionCounter,
+            timestamp: Date.now(),
+        };
+        this.cache.set(key, { value, meta });
+        this.notify(key, value, meta);
+    }
+    get(key) {
+        const entry = this.cache.get(key);
+        return entry?.value;
+    }
+    getMeta(key) {
+        const entry = this.cache.get(key);
+        return entry?.meta;
+    }
+    subscribe(key, listener, emitImmediately = true) {
+        if (!this.listeners.has(key)) {
+            this.listeners.set(key, new Set());
+        }
+        this.listeners.get(key).add(listener);
+        // Late subscriber → immediate sync
+        if (emitImmediately && this.cache.has(key)) {
+            const entry = this.cache.get(key);
+            listener(entry.value, entry.meta);
+        }
+        // Unsubscribe
+        return () => {
+            this.listeners.get(key)?.delete(listener);
+        };
+    }
+    notify(key, value, meta) {
+        this.listeners.get(key)?.forEach((listener) => listener(value, meta));
+    }
+    // ------------------------------------------------------------------
+    // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+    // ------------------------------------------------------------------
     async loadAndCacheAll() {
         if (!this._uiSystemLoader || !this._uiThemeLoader) {
             throw new Error("SysCacheService: loaders must be set before load.");
         }
         if (this.cache.size > 0)
-            return; // already loaded
-        console.log("[SysCacheService] 01: Starting Eager Load");
-        // -------------------------------------------------------------------
-        // 1. LOAD SHELL CONFIG
-        // -------------------------------------------------------------------
+            return;
+        console.log("[SysCacheService] Eager load starting");
         const shellConfig = await this.configService.loadConfig();
-        // Extract the new envConfig block (replacing license/environment)
-        const envConfig = shellConfig.envConfig || {};
-        // Cache it
-        this.cache.set("envConfig", envConfig);
-        // Preserve uiConfig loading
-        const uiConfig = shellConfig.uiConfig;
-        this.cache.set("uiConfig", uiConfig);
-        // -------------------------------------------------------------------
-        // 2. UI SYSTEMS & THEMES
-        // -------------------------------------------------------------------
-        const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
-        const fullDescriptors = uiSystemsData.map((sys) => ({
+        this.set("shellConfig", shellConfig, "static");
+        this.set("envConfig", shellConfig.envConfig || {}, "static");
+        this.set("uiConfig", shellConfig.uiConfig || {}, "static");
+        // const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+        //   shellConfig.uiConfig
+        // );
+        // this.set("uiSystems", uiSystemsData, "static");
+        const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(shellConfig.uiConfig);
+        const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
+        // 🔁 Restore legacy expectations
+        this.set("uiSystems", simple, "static");
+        this.set("uiSystemDescriptors", full, "static");
+        const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(shellConfig.uiConfig);
+        this.set("themes", uiThemesData.themes || [], "static");
+        this.set("formVariants", uiThemesData.variants || [], "static");
+        this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+        this.set("uiConfigNormalized", uiThemesData.uiConfig || shellConfig.uiConfig, "static");
+        console.log("[SysCacheService] Load complete");
+    }
+    // ------------------------------------------------------------------
+    // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
+    // ------------------------------------------------------------------
+    getUiSystems() {
+        return this.get("uiSystems") || [];
+    }
+    getThemes() {
+        return this.get("themes") || [];
+    }
+    getFormVariants() {
+        return this.get("formVariants") || [];
+    }
+    getThemeDescriptors() {
+        return this.get("themeDescriptors") || [];
+    }
+    getConfig() {
+        return this.get("uiConfigNormalized") || {};
+    }
+    getEnvConfig() {
+        return this.get("envConfig") || {};
+    }
+    getConsumerGuid() {
+        const env = this.getEnvConfig();
+        return env?.consumerGuid || env?.clientContext?.consumerToken;
+    }
+    getApiEndpoint() {
+        return this.getEnvConfig()?.apiEndpoint;
+    }
+    async ensureReady() {
+        if (this.cache.size === 0) {
+            await this.loadAndCacheAll();
+        }
+    }
+    /**
+     * Normalizes UI system descriptors to legacy-compatible shape
+     * Required by UiSystemLoaderService.activate()
+     */
+    normalizeUiSystemDescriptors(rawSystems) {
+        const fullDescriptors = rawSystems.map((sys) => ({
             id: sys.id,
             name: sys.name,
             version: sys.version,
@@ -82,66 +165,9 @@ export class SysCacheService {
             displayName: sys.displayName,
             themesAvailable: sys.themesAvailable,
         }));
-        const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
-        const themes = (uiThemesData.themes || []).map((t) => ({
-            id: t.id,
-            name: t.name,
-        }));
-        const variants = (uiThemesData.variants || []).map((v) => ({
-            id: v.id,
-            name: v.name,
-        }));
-        const descriptors = uiThemesData.descriptors || [];
-        // Cache everything
-        this.cache.set("uiSystems", simpleSystems);
-        this.cache.set("uiSystemDescriptors", fullDescriptors);
-        this.cache.set("themes", themes);
-        this.cache.set("formVariants", variants);
-        this.cache.set("themeDescriptors", descriptors);
-        this.cache.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig);
-        console.log("[SysCacheService] Load complete.");
-    }
-    // -------------------------------------------------------------
-    // BASIC GETTERS
-    // -------------------------------------------------------------
-    get(key) {
-        return this.cache.get(key);
-    }
-    getUiSystems() {
-        return this.cache.get("uiSystems") || [];
-    }
-    getUiSystemDescriptors() {
-        return this.cache.get("uiSystemDescriptors") || [];
-    }
-    getThemes() {
-        return this.cache.get("themes") || [];
-    }
-    getFormVariants() {
-        return this.cache.get("formVariants") || [];
-    }
-    getThemeDescriptors() {
-        return this.cache.get("themeDescriptors") || [];
-    }
-    getConfig() {
-        return this.cache.get("uiConfigNormalized") || {};
-    }
-    // -------------------------------------------------------------
-    // NEW: ENV CONFIG HELPERS
-    // -------------------------------------------------------------
-    getEnvConfig() {
-        return this.cache.get("envConfig") || {};
-    }
-    /** POC: direct access to consumerGuid (tenant identifier) */
-    getConsumerGuid() {
-        const env = this.getEnvConfig();
-        return env?.consumerGuid || env?.clientContext?.consumerToken || undefined;
-    }
-    /** POC: convenience wrapper for apiEndpoint */
-    getApiEndpoint() {
-        return this.getEnvConfig()?.apiEndpoint;
-    }
-    async ensureReady() {
-        if (this.cache.size === 0)
-            await this.loadAndCacheAll();
+        return {
+            simple: simpleSystems,
+            full: fullDescriptors,
+        };
     }
 }
