@@ -11,6 +11,7 @@ import {
   IConsumerShellConfig,
 } from "../models/consumer.model";
 import { ConsumerService } from "./consumer.service";
+import { SysCacheService } from "./sys-cache.service";
 
 // ConfigService (singleton)
 export class ConfigService {
@@ -72,21 +73,11 @@ export class ConfigService {
     // const baseConfig = await this.loadStaticShellConfig();
     const baseConfig = await this.loadConfig();
 
-    // const withConsumer = this.mergeShellConfig(
-    //   baseConfig,
-    //   consumerProfile?.shellConfig
-    // );
-
     const withConsumer = this.applyConsumerShellConfig(
       baseConfig,
       consumerProfile?.shellConfig
     );
 
-    // const finalConfig = this.mergeShellConfigWithPolicy(
-    //   withConsumer,
-    //   userProfile?.shellConfig,
-    //   consumerProfile?.shellConfig
-    // );
     const finalConfig = this.applyUserShellConfigWithPolicy(
       withConsumer,
       userProfile?.shellConfig,
@@ -118,25 +109,6 @@ export class ConfigService {
     return final;
   }
 
-  // private mergeShellConfig(
-  //   base: IUserShellConfig,
-  //   override?: Partial<IUserShellConfig>
-  // ): IUserShellConfig {
-  //   if (!override) return base;
-
-  //   return {
-  //     ...base,
-  //     ...override,
-  //     uiConfig: {
-  //       ...base.uiConfig,
-  //       ...override.uiConfig,
-  //     },
-  //     themeConfig: {
-  //       ...base.themeConfig,
-  //       ...override.themeConfig,
-  //     },
-  //   };
-  // }
   private applyConsumerShellConfig(
     base: IUserShellConfig,
     consumerShell?: IConsumerShellConfig
@@ -157,47 +129,6 @@ export class ConfigService {
     };
   }
 
-  // private mergeShellConfigWithPolicy(
-  //   base: IUserShellConfig,
-  //   userShell?: Partial<IUserShellConfig>,
-  //   consumerShell?: IConsumerShellConfig
-  // ): IUserShellConfig {
-  //   if (!userShell || !consumerShell) return base;
-
-  //   const lockDown = consumerShell.lockDown || {};
-
-  //   return {
-  //     ...base,
-
-  //     uiConfig: {
-  //       ...base.uiConfig,
-
-  //       // ---------------------------------------
-  //       // UI SYSTEM
-  //       // ---------------------------------------
-  //       defaultUiSystemId: lockDown.uiSystem
-  //         ? base.uiConfig.defaultUiSystemId
-  //         : (userShell.uiConfig?.defaultUiSystemId ??
-  //           base.uiConfig.defaultUiSystemId),
-
-  //       // ---------------------------------------
-  //       // THEME
-  //       // ---------------------------------------
-  //       defaultThemeId: lockDown.theme
-  //         ? base.uiConfig.defaultThemeId
-  //         : (userShell.uiConfig?.defaultThemeId ??
-  //           base.uiConfig.defaultThemeId),
-
-  //       // ---------------------------------------
-  //       // FORM VARIANT
-  //       // ---------------------------------------
-  //       defaultFormVariant: lockDown.formVariant
-  //         ? base.uiConfig.defaultFormVariant
-  //         : (userShell.uiConfig?.defaultFormVariant ??
-  //           base.uiConfig.defaultFormVariant),
-  //     },
-  //   };
-  // }
   private applyUserShellConfigWithPolicy(
     base: IUserShellConfig,
     userShell?: Partial<IUserShellConfig>,
@@ -279,5 +210,45 @@ export class ConfigService {
       throw new Error("ConfigService: config not loaded; call loadConfig()");
     }
     return this.config.uiConfig;
+  }
+
+  /////////////////////////////////////////
+  // SUBSCRIPTION-BASED CONFIG UPDATES
+  /////////////////////////////////////////
+
+  /**
+   * PHASE 1
+   * Loads shell.config.json and seeds SysCacheService
+   * without changing legacy behavior.
+   */
+  async seedStaticShellConfig(
+    sysCache: SysCacheService
+  ): Promise<IUserShellConfig> {
+    console.log(
+      "%c[PHASE 1][ConfigService] Loading static shell config",
+      "color:#4CAF50;font-weight:bold"
+    );
+
+    const shellConfig = await this.loadShellConfig();
+
+    console.log(
+      "%c[PHASE 1][ConfigService] Seeding static config into SysCache",
+      "color:#4CAF50"
+    );
+
+    sysCache.set("shellConfig", shellConfig, "static");
+    sysCache.set("envConfig", shellConfig.envConfig || {}, "static");
+    sysCache.set("uiConfig", shellConfig.uiConfig || {}, "static");
+
+    console.log(
+      "%c[PHASE 1][ConfigService] Static shell config seeded",
+      "color:#4CAF50",
+      {
+        hasEnv: !!shellConfig.envConfig,
+        hasUi: !!shellConfig.uiConfig,
+      }
+    );
+
+    return shellConfig;
   }
 }

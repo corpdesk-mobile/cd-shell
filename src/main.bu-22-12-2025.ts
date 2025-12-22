@@ -90,26 +90,36 @@ export class Main {
     diag_css("Main.run() started");
 
     //---------------------------------------
-    // STEP 0: Load base shell config (LEGACY)
+    // STEP 0: Load base shell config
     //---------------------------------------
     const baseShellConfig: IUserShellConfig =
       await this.svConfig.loadShellConfig();
 
+    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
     if (baseShellConfig.logLevel) {
       this.logger.setLevel(baseShellConfig.logLevel);
     }
 
-    // --------------------------------------
-    // PHASE 1 (NON-INVASIVE): observe cache
-    // --------------------------------------
+    // //---------------------------------------
+    // // PHASE 1: Seed static shell config: Replaces legacy STEP 0
+    // //---------------------------------------
+    // const baseShellConfig = await this.svConfig.seedStaticShellConfig(
+    //   this.svSysCache
+    // );
+
+    // if (baseShellConfig.logLevel) {
+    //   this.logger.setLevel(baseShellConfig.logLevel);
+    // }
+
+    // Optional Phase 1 Diagnostic Subscriber (Proof)
     this.svSysCache.subscribe("shellConfig", (value, meta) => {
-      console.log("%c[PHASE 1][Cache Observe] shellConfig", "color:#4CAF50", {
-        source: meta.source,
-        version: meta.version,
-        timestamp: new Date(meta.timestamp).toISOString(),
-      });
+      console.log(
+        "%c[PHASE 1][Subscriber] shellConfig update",
+        "color:#2196F3",
+        { source: meta.source, version: meta.version }
+      );
     });
-    
+
     //---------------------------------------
     // STEP 0.5: Anonymous login (ACL context)
     //---------------------------------------

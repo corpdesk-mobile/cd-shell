@@ -80,9 +80,13 @@ export class SysCacheService {
         this.set("shellConfig", shellConfig, "static");
         this.set("envConfig", shellConfig.envConfig || {}, "static");
         this.set("uiConfig", shellConfig.uiConfig || {}, "static");
+        // const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+        //   shellConfig.uiConfig
+        // );
+        // this.set("uiSystems", uiSystemsData, "static");
         const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(shellConfig.uiConfig);
         const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
-        // 🔁 Legacy expectations preserved
+        // 🔁 Restore legacy expectations
         this.set("uiSystems", simple, "static");
         this.set("uiSystemDescriptors", full, "static");
         const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(shellConfig.uiConfig);

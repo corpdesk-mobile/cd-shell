@@ -16324,6 +16324,1369 @@ export class Main {
 
 ```
 
+///////////////////////////////////////////////
+
+Great. That worked. Now we are going to the meat: How we can pole pole migrate consumers from old to new subscribable cache system. I had shared the latest decomposed Main.run(). 
+Take a look at it and give me a plan how step by step, we can test and confirm how the subscriber system is working. 
+I suggest we focus first on how from step 0, we get the first config from the shell.config.json because the initial data must be found here before anon login. This include consumerGuid or consumerToken used to do the initial anon login.
+At this stage there are some components that can access this initial config data but will later auto update to data from backend after anon login.
+Also anon login is implicit but the user is eventually to login and get inclusive of personal configurations after succesfuly loging in.
+The design will later includ a design where SysCacheService can use indexedDb or sqlite to persist its data for personalization via edge technology principles. But we approach there pole pole.
+For now we focus on increamental design implemetations of Main.run process with the associated dependancies.
+
+```ts
+//---------------------------------------
+    // STEP 0: Load base shell config
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+```
+
+```ts
+import "reflect-metadata"; // MUST BE FIRST IMPORT
+import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
+import { LoggerService } from "./CdShell/utils/logger.service";
+import { ThemeService } from "./CdShell/sys/theme/services/theme.service";
+import { ModuleService } from "./CdShell/sys/moduleman/services/module.service";
+import { ControllerService } from "./CdShell/sys/moduleman/services/controller.service";
+import { SysCacheService } from "./CdShell/sys/moduleman/services/sys-cache.service";
+import { UiSystemLoaderService } from "./CdShell/sys/cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "./CdShell/sys/cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./CdShell/sys/moduleman/services/config.service";
+import { diag_css } from "./CdShell/sys/utils/diagnosis";
+import { IConsumerProfile } from "./CdShell/sys/moduleman/models/consumer.model";
+import {
+  IUserProfile,
+  IUserShellConfig,
+} from "./CdShell/sys/cd-user/models/user.model";
+import { UserService } from "./CdShell/sys/cd-user/services/user.service";
+
+export class Main {
+  private svSysCache!: SysCacheService;
+  private svUiSystemLoader!: UiSystemLoaderService;
+  private svConfig: ConfigService;
+  private svModule!: ModuleService;
+  private svMenu!: MenuService;
+  private svController!: ControllerService;
+  private svUiThemeLoader!: UiThemeLoaderService;
+  private svTheme!: ThemeService;
+  private logger = new LoggerService();
+
+  // private splashAnimDone = false;
+  // private appReady = false;
+
+  private svUser = new UserService();
+  private consumerProfile?: IConsumerProfile;
+  private userProfile?: IUserProfile;
+
+  private resolvedShellConfig?: IUserShellConfig;
+
+  constructor() {
+    // intentionally empty — setup moved to init()
+    this.svConfig = new ConfigService();
+    this.svSysCache = new SysCacheService(this.svConfig);
+  }
+
+  /**
+   * Unified initializer: sets up services and shell config.
+   * Backward-compatible: replaces initialize() + init().
+   */
+  async init() {
+    this.logger.debug("[Main] init(): starting");
+
+    // ✅ Ensure ModuleService is properly initialized
+    if (typeof window === "undefined") {
+      this.logger.debug(
+        "[Main] Running in Node → awaiting ensureInitialized()"
+      );
+      await ModuleService.ensureInitialized();
+    } else {
+      this.logger.debug(
+        "[Main] Running in browser → skipping ensureInitialized()"
+      );
+    }
+
+    // ✅ Instantiate services
+    this.svConfig = new ConfigService();
+    this.svSysCache = new SysCacheService(this.svConfig);
+    this.svModule = new ModuleService();
+    this.svMenu = new MenuService();
+    this.svController = new ControllerService();
+    this.svTheme = new ThemeService();
+
+    // ✅ Load shell config and apply log level
+    const shellConfig = await this.svConfig.loadConfig();
+    if (shellConfig.logLevel) {
+      this.logger.setLevel(shellConfig.logLevel);
+    }
+
+    this.logger.debug("[Main] init(): completed");
+  }
+
+  async run() {
+    //---------------------------------------
+    // SPLASH: Show immediately
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig); // your animated SVG starts here
+
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    diag_css("Main.run() started");
+
+    //---------------------------------------
+    // STEP 0: Load base shell config
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login (ACL context)
+    //---------------------------------------
+    const resp = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+    if (!resp) {
+      this.logger.warn(
+        "[Main] Anonymous login failed → continuing with static shell config"
+      );
+    } else {
+      this.logger.debug("[Main] Anonymous login success");
+      this.consumerProfile = resp.data.consumer.consumerProfile || null;
+      this.userProfile = resp.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 0.6: Resolve ACL-based shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.resolveShellConfig(
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config resolved", this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
+
+    //---------------------------------------
+    // STEP 1: Core service instantiation
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    //---------------------------------------
+    // STEP 2: Load cached metadata
+    //---------------------------------------
+    await this.svSysCache.loadAndCacheAll();
+    diag_css("Cache loaded");
+
+    //---------------------------------------
+    // STEP 3: Apply UI-System + Theme pipeline
+    //---------------------------------------
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
+
+    //---------------------------------------
+    // STEP 4: Theme config (logo + title)
+    //---------------------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    diag_css("ThemeConfig loaded", themeConfig);
+
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
+    //---------------------------------------
+    // STEP 5: Prepare menu
+    //---------------------------------------
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
+
+    //---------------------------------------
+    // STEP 6: Sidebar render
+    //---------------------------------------
+    await this.svUiSystemLoader.renderSidebar(this.svMenu, preparedMenu, shellConfig);
+
+    //---------------------------------------
+    // STEP 7: Auto-load default controller
+    //---------------------------------------
+    await this.svController.loadDefaultController(this.svMenu, preparedMenu, defaultModule);
+
+    //---------------------------------------
+    // STEP 8: Mobile UX config
+    //---------------------------------------
+    this.svUiSystemLoader.setupMobileUx();
+
+    //---------------------------------------
+    // APP READY
+    //---------------------------------------
+    this.logger.debug("[Main] app fully bootstrapped");
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
+
+    this.logger.debug("bootstrapShell(): run() complete");
+    diag_css("Main.run() complete");
+  }
+
+}
+
+```
+
+///////////////////////////////////////
+
+Assuming:
+1. The first phase replaces:
+//---------------------------------------
+    // STEP 0: Load base shell config
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+2. We are already at a stage where Main.run() is considered 'decomposed'
+I am suggesting:
+1. The new interventions need to be packaged in helper methods and housed in respective classes.
+For example, the following can be contained in a method in ConfigService class :
+I am just suggesting some concept. You can work in that trajectory.
+```ts
+//---------------------------------------
+// PHASE 1: Seed static shell config into cache
+//---------------------------------------
+this.svSysCache.set(
+  "shellConfig",
+  baseShellConfig,
+  "static"
+);
+
+this.svSysCache.set(
+  "envConfig",
+  baseShellConfig.envConfig || {},
+  "static"
+);
+
+this.svSysCache.set(
+  "uiConfig",
+  baseShellConfig.uiConfig || {},
+  "static"
+);
+
+
+```
+
+////////////////////////////////////////////////
+We have an issue similare to what we dealt with a short while ago. 
+The result is also the same. Graceful launch but what is rendered is not material but some fallback gracious view.
+Where we are having:
+[UiSystemLoaderService.activate] descriptorFromCache: undefined
+Below is partial but more elaborate logs of problematic areas.
+
+```ts
+[UiSystemAdapterRegistry] register: bootstrap-502 
+Object {  }
+index-FyWUHGkE.js:48:6084
+[Bootstrap538AdapterService] constructor() index-FyWUHGkE.js:48:7201
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
+index-FyWUHGkE.js:48:6084
+[MaterialDesignAdapter] constructor() index-FyWUHGkE.js:48:11478
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
+index-FyWUHGkE.js:48:6084
+[Bootstrap538AdapterService] constructor() index-FyWUHGkE.js:48:7201
+[MaterialDesignAdapter] constructor() index-FyWUHGkE.js:48:11478
+start 1 index-FyWUHGkE.js:57:14268
+[SHELL] [DEBUG] [Main] init(): starting index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-FyWUHGkE.js:48:1803
+[ModuleService][constructor]: starting index-FyWUHGkE.js:31:5044
+[ModuleService] Running under Vite (browser). index-FyWUHGkE.js:31:5117
+[ModuleService][constructor]: starting index-FyWUHGkE.js:31:5044
+[ModuleService] Running under Vite (browser). index-FyWUHGkE.js:31:5117
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-FyWUHGkE.js:52:8421
+[SHELL] [DEBUG] [Main] init(): completed index-FyWUHGkE.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-FyWUHGkE.js:52:8421
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-FyWUHGkE.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[PHASE 1][ConfigService] Loading static shell config index-FyWUHGkE.js:52:10349
+[PHASE 1][ConfigService] Seeding static config into SysCache index-FyWUHGkE.js:52:10496
+[PHASE 1][ConfigService] Static shell config seeded 
+Object { hasEnv: true, hasUi: true }
+index-FyWUHGkE.js:52:10708
+[PHASE 1][Subscriber] shellConfig update 
+Object { source: "static", version: 1 }
+index-FyWUHGkE.js:57:12677
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-FyWUHGkE.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-FyWUHGkE.js:57:8531
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-FyWUHGkE.js:57:7301
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-FyWUHGkE.js:57:7301
+[SHELL] [DEBUG] [UserService.login] res: 
+Object { res: {…} }
+index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] [Main] Anonymous login success index-FyWUHGkE.js:48:1803
+[SHELL] [DEBUG] [Main] Shell config resolved 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-FyWUHGkE.js:48:1803
+[CSS-DIAG] Cache loaded 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "material-design" }
+index-FyWUHGkE.js:31:3158
+[UiSystemLoaderService.activate] descriptorFromCache: undefined index-FyWUHGkE.js:52:15095
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", jsPath: "/assets/ui-systems/material-design/material-design.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design" }
+index-FyWUHGkE.js:31:3158
+The stylesheet http://localhost:5173/assets/ui-systems/material-design/material-design.min.css was not loaded because its MIME type, “text/html”, is not “text/css”. localhost:5173
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR 
+Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design", ev: error }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED 
+Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", err: Error }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-FyWUHGkE.js:31:3158
+Loading failed for the <script> with source “http://localhost:5173/assets/ui-systems/material-design/material-design.min.js”. localhost:5173:1:1
+[UiSystemLoaderService.activate] script load failed 
+error { target: script, isTrusted: true, srcElement: script, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1751.12, … }
+index-FyWUHGkE.js:52:16638
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED 
+Object { jsPath: "/assets/ui-systems/material-design/material-design.min.js", err: error }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+Object { id: "material-design" }
+index-FyWUHGkE.js:31:3158
+[MaterialDesignAdapter] Loaded conceptMappings: 
+Object {  }
+index-FyWUHGkE.js:48:11686
+[MaterialDesignAdapter] mapAll() — START index-FyWUHGkE.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = undefined index-FyWUHGkE.js:48:13028
+[MaterialDesignAdapter] getMapping('input') = undefined index-FyWUHGkE.js:48:13028
+[MaterialDesignAdapter] getMapping('formGroup') = undefined index-FyWUHGkE.js:48:13028
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: [] }
+index-FyWUHGkE.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-FyWUHGkE.js:52:7438
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+Object { active: "material-design" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "material-design" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "material-design" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "material-design" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] descriptor not found 
+Object { themeId: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+Object { themeId: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-FyWUHGkE.js:31:3158
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
+index-FyWUHGkE.js:52:17434
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array []
+index-FyWUHGkE.js:52:17633
+[UiSystemLoaderService][applyTheme] descriptors: undefined index-FyWUHGkE.js:52:17727
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+Object { themeDescriptorOrId: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+Object { mode: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "material-design", themeId: "dark" }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-FyWUHGkE.js:31:3158
+[CSS-DIAG] UI-System + Theme applied 
+```
+
+/////////////////////////////////////////
+In your recomendation, we are to:
+Apply it in loadAndCacheAll()
+Replace this ❌:
+```ts
+this.set("uiSystems", uiSystemsData, "static");
+```
+With this ✅:
+```ts
+this.cacheUiSystems(uiSystemsData, "static");
+```
+But not from its current state that we had earlier replaced the same line with:
+```ts
+const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+      shellConfig.uiConfig
+    );
+
+const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
+```
+
+So, below is the current state of loadAndCacheAll() and the earlier introduced normalizeUiSystemDescriptors().
+
+Based on the above, how do we call the new method: this.cacheUiSystems(uiSystemsData, "static");
+
+```ts
+public async loadAndCacheAll(): Promise<void> {
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    const shellConfig = await this.configService.loadConfig();
+
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", shellConfig.uiConfig || {}, "static");
+
+    // const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+    //   shellConfig.uiConfig
+    // );
+
+    // this.set("uiSystems", uiSystemsData, "static");
+    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+      shellConfig.uiConfig
+    );
+
+    const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
+
+    // 🔁 Restore legacy expectations
+    this.set("uiSystems", simple, "static");
+    this.set("uiSystemDescriptors", full, "static");
+
+    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(
+      shellConfig.uiConfig
+    );
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set(
+      "uiConfigNormalized",
+      uiThemesData.uiConfig || shellConfig.uiConfig,
+      "static"
+    );
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  /**
+   * Normalizes UI system descriptors to legacy-compatible shape
+   * Required by UiSystemLoaderService.activate()
+   */
+  private normalizeUiSystemDescriptors(rawSystems: any[]): {
+    simple: any[];
+    full: any[];
+  } {
+    const fullDescriptors = rawSystems.map((sys: any) => ({
+      id: sys.id,
+      name: sys.name,
+      version: sys.version,
+      description: sys.description,
+
+      cssUrl: sys.cssUrl,
+      jsUrl: sys.jsUrl,
+      assetPath: sys.assetPath,
+
+      stylesheets: sys.stylesheets || [],
+      scripts: sys.scripts || [],
+
+      themesAvailable: sys.themesAvailable || [],
+      themeActive: sys.themeActive || null,
+
+      conceptMappings: sys.conceptMappings || {},
+      directiveMap: sys.directiveMap || {},
+      tokenMap: sys.tokenMap || {},
+
+      containers: sys.containers || [],
+      components: sys.components || [],
+      renderRules: sys.renderRules || {},
+
+      metadata: sys.metadata || {},
+      extensions: sys.extensions || {},
+
+      author: sys.author,
+      license: sys.license,
+      repository: sys.repository,
+
+      displayName: sys.displayName || sys.name,
+    }));
+
+    const simpleSystems = fullDescriptors.map((sys) => ({
+      id: sys.id,
+      name: sys.name,
+      displayName: sys.displayName,
+      themesAvailable: sys.themesAvailable,
+    }));
+
+    return {
+      simple: simpleSystems,
+      full: fullDescriptors,
+    };
+  }
+```
+
+//////////////////////////////////////////////////
+The new recommendations have not worked.
+So I have gotten it back to last working state: shown below.
+That means the working version is legacy.
+You can give recommendations with full Main.run() and SysCacheService.loadAndCacheAll().
+If there is any change on any helper, you can give it in full.
+Note below that the section "PHASE 1" in Main.run() is commented. Its associte recommendations in SysCacheService.loadAndCacheAll() as also implemented and remove when it did not work.
+Once you have a recommendation, I will post for you the logs for scrutiny.
+```ts
+export class Main{
+  async run() {
+    //---------------------------------------
+    // SPLASH: Show immediately
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig); // your animated SVG starts here
+
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    diag_css("Main.run() started");
+
+    //---------------------------------------
+    // STEP 0: Load base shell config
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    // //---------------------------------------
+    // // PHASE 1: Seed static shell config: Replaces legacy STEP 0
+    // //---------------------------------------
+    // const baseShellConfig = await this.svConfig.seedStaticShellConfig(
+    //   this.svSysCache
+    // );
+
+    // if (baseShellConfig.logLevel) {
+    //   this.logger.setLevel(baseShellConfig.logLevel);
+    // }
+
+    // Optional Phase 1 Diagnostic Subscriber (Proof)
+    this.svSysCache.subscribe("shellConfig", (value, meta) => {
+      console.log(
+        "%c[PHASE 1][Subscriber] shellConfig update",
+        "color:#2196F3",
+        { source: meta.source, version: meta.version }
+      );
+    });
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login (ACL context)
+    //---------------------------------------
+    const resp = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+    if (!resp) {
+      this.logger.warn(
+        "[Main] Anonymous login failed → continuing with static shell config"
+      );
+    } else {
+      this.logger.debug("[Main] Anonymous login success");
+      this.consumerProfile = resp.data.consumer.consumerProfile || null;
+      this.userProfile = resp.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 0.6: Resolve ACL-based shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.resolveShellConfig(
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config resolved", this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
+
+    //---------------------------------------
+    // STEP 1: Core service instantiation
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    //---------------------------------------
+    // STEP 2: Load cached metadata
+    //---------------------------------------
+    await this.svSysCache.loadAndCacheAll();
+    diag_css("Cache loaded");
+
+    //---------------------------------------
+    // STEP 3: Apply UI-System + Theme pipeline
+    //---------------------------------------
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
+
+    //---------------------------------------
+    // STEP 4: Theme config (logo + title)
+    //---------------------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    diag_css("ThemeConfig loaded", themeConfig);
+
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
+    //---------------------------------------
+    // STEP 5: Prepare menu
+    //---------------------------------------
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
+
+    //---------------------------------------
+    // STEP 6: Sidebar render
+    //---------------------------------------
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
+
+    //---------------------------------------
+    // STEP 7: Auto-load default controller
+    //---------------------------------------
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
+
+    //---------------------------------------
+    // STEP 8: Mobile UX config
+    //---------------------------------------
+    this.svUiSystemLoader.setupMobileUx();
+
+    //---------------------------------------
+    // APP READY
+    //---------------------------------------
+    this.logger.debug("[Main] app fully bootstrapped");
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
+
+    this.logger.debug("bootstrapShell(): run() complete");
+    diag_css("Main.run() complete");
+  }
+}
+```
+
+```ts
+export class SysCacheService{
+  // ------------------------------------------------------------------
+  // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+  // ------------------------------------------------------------------
+  public async loadAndCacheAll(): Promise<void> {
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    const shellConfig = await this.configService.loadConfig();
+
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", shellConfig.uiConfig || {}, "static");
+
+    // const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+    //   shellConfig.uiConfig
+    // );
+
+    // this.set("uiSystems", uiSystemsData, "static");
+    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
+      shellConfig.uiConfig
+    );
+
+    const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
+
+    // 🔁 Restore legacy expectations
+    this.set("uiSystems", simple, "static");
+    this.set("uiSystemDescriptors", full, "static");
+
+    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(
+      shellConfig.uiConfig
+    );
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set(
+      "uiConfigNormalized",
+      uiThemesData.uiConfig || shellConfig.uiConfig,
+      "static"
+    );
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  /**
+   * Normalizes UI system descriptors to legacy-compatible shape
+   * Required by UiSystemLoaderService.activate()
+   */
+  private normalizeUiSystemDescriptors(rawSystems: any[]): {
+    simple: any[];
+    full: any[];
+  } {
+    const fullDescriptors = rawSystems.map((sys: any) => ({
+      id: sys.id,
+      name: sys.name,
+      version: sys.version,
+      description: sys.description,
+
+      cssUrl: sys.cssUrl,
+      jsUrl: sys.jsUrl,
+      assetPath: sys.assetPath,
+
+      stylesheets: sys.stylesheets || [],
+      scripts: sys.scripts || [],
+
+      themesAvailable: sys.themesAvailable || [],
+      themeActive: sys.themeActive || null,
+
+      conceptMappings: sys.conceptMappings || {},
+      directiveMap: sys.directiveMap || {},
+      tokenMap: sys.tokenMap || {},
+
+      containers: sys.containers || [],
+      components: sys.components || [],
+      renderRules: sys.renderRules || {},
+
+      metadata: sys.metadata || {},
+      extensions: sys.extensions || {},
+
+      author: sys.author,
+      license: sys.license,
+      repository: sys.repository,
+
+      displayName: sys.displayName || sys.name,
+    }));
+
+    const simpleSystems = fullDescriptors.map((sys) => ({
+      id: sys.id,
+      name: sys.name,
+      displayName: sys.displayName,
+      themesAvailable: sys.themesAvailable,
+    }));
+
+    return {
+      simple: simpleSystems,
+      full: fullDescriptors,
+    };
+  }
+
+  private cacheUiSystems(
+    rawSystems: any[],
+    source: CacheMeta["source"] = "static"
+  ): void {
+    const { simple, full } = this.normalizeUiSystemDescriptors(rawSystems);
+
+    // 🔁 Legacy compatibility
+    this.set("uiSystems", simple, source);
+    this.set("uiSystemDescriptors", full, source);
+
+    // 🔮 Optional future-facing unified key
+    this.set("uiSystemsNormalized", { simple, full }, source);
+
+    console.log("[SysCacheService] UI systems cached", {
+      simpleCount: simple.length,
+      fullCount: full.length,
+      source,
+    });
+  }
+}
+```
+
+////////////////////////////////////////////////////
+There was no visible issue except at the end, there was a logged message: "Error: Promised response from onMessage listener went out of scope"
+```log
+[UiSystemAdapterRegistry] register: bootstrap-502 
+Object {  }
+index-C5uXBrf-.js:48:6389
+[Bootstrap538AdapterService] constructor() index-C5uXBrf-.js:48:7506
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
+index-C5uXBrf-.js:48:6389
+[MaterialDesignAdapter] constructor() index-C5uXBrf-.js:48:11783
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2) }
+index-C5uXBrf-.js:48:6389
+[Bootstrap538AdapterService] constructor() index-C5uXBrf-.js:48:7506
+[MaterialDesignAdapter] constructor() index-C5uXBrf-.js:48:11783
+start 1 index-C5uXBrf-.js:57:14289
+[SHELL] [DEBUG] [Main] init(): starting index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-C5uXBrf-.js:48:1803
+[ModuleService][constructor]: starting index-C5uXBrf-.js:31:5044
+[ModuleService] Running under Vite (browser). index-C5uXBrf-.js:31:5117
+[ModuleService][constructor]: starting index-C5uXBrf-.js:31:5044
+[ModuleService] Running under Vite (browser). index-C5uXBrf-.js:31:5117
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-C5uXBrf-.js:52:8421
+[SHELL] [DEBUG] [Main] init(): completed index-C5uXBrf-.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-C5uXBrf-.js:52:8421
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-C5uXBrf-.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-C5uXBrf-.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-C5uXBrf-.js:57:8531
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-C5uXBrf-.js:57:7301
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-C5uXBrf-.js:57:7301
+[SHELL] [DEBUG] [UserService.login] res: 
+Object { res: {…} }
+index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [Main] Anonymous login success index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [Main] Shell config resolved 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-C5uXBrf-.js:48:1803
+[SysCacheService] Eager load starting index-C5uXBrf-.js:48:3948
+[PHASE 1][Cache Observe] shellConfig 
+Object { source: "static", version: 1, timestamp: "2025-12-22T05:23:51.429Z" }
+index-C5uXBrf-.js:57:12656
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
+index-C5uXBrf-.js:52:13858
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-C5uXBrf-.js:52:13990
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-C5uXBrf-.js:52:13990
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-C5uXBrf-.js:52:13990
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-C5uXBrf-.js:52:11167
+[SysCacheService] Load complete index-C5uXBrf-.js:48:4650
+[CSS-DIAG] Cache loaded 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "material-design" }
+index-C5uXBrf-.js:31:3158
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-C5uXBrf-.js:52:15095
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+Object { id: "material-design" }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] Loaded conceptMappings: 
+Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
+index-C5uXBrf-.js:48:11991
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+Object { active: "material-design" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "material-design" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "material-design" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "material-design" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+Object { themeId: "dark" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-C5uXBrf-.js:31:3158
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2) }
+index-C5uXBrf-.js:52:17434
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-C5uXBrf-.js:52:17633
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-C5uXBrf-.js:52:17727
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+Object { themeDescriptorOrId: {…} }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+Object { mode: "dark" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "material-design", themeId: "dark" }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-C5uXBrf-.js:31:3158
+ThemeService::loadThemeConfig(default) index-C5uXBrf-.js:48:2268
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-C5uXBrf-.js:31:3158
+[ModuleService][constructor]: starting index-C5uXBrf-.js:31:5044
+[ModuleService] Running under Vite (browser). index-C5uXBrf-.js:31:5117
+[Preload] Loading dev-sync index-C5uXBrf-.js:31:7387
+ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8189
+[ModuleService] 1 index-C5uXBrf-.js:31:8249
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8526
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-C5uXBrf-.js:31:8685
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-C5uXBrf-.js:31:8744
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-C5uXBrf-.js:31:8896
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 22/12/2025, 08:23:51 index-C5uXBrf-.js:31:8984
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-C5uXBrf-.js:31:7683
+[Preload] Completed IdeAgentService index-C5uXBrf-.js:31:7782
+[Preload] Loading dev-sync index-C5uXBrf-.js:31:7387
+ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8189
+[ModuleService] 1 index-C5uXBrf-.js:31:8249
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8526
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-C5uXBrf-.js:31:8685
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-C5uXBrf-.js:31:8744
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-C5uXBrf-.js:31:8896
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 22/12/2025, 08:23:51 index-C5uXBrf-.js:31:8984
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-C5uXBrf-.js:31:7683
+[Preload] Completed IdeAgentClientService index-C5uXBrf-.js:31:7782
+ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-C5uXBrf-.js:31:8189
+[ModuleService] 1 index-C5uXBrf-.js:31:8249
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-C5uXBrf-.js:31:8526
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-C5uXBrf-.js:31:8685
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-C5uXBrf-.js:31:8744
+[ModuleService] Loaded 'cd-user' (Vite mode) at 22/12/2025, 08:23:51 index-C5uXBrf-.js:31:8984
+ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-C5uXBrf-.js:31:8189
+[ModuleService] 1 index-C5uXBrf-.js:31:8249
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-C5uXBrf-.js:31:8526
+[ModuleService][loadModule] moduleInfo: ...trancated...
+index-C5uXBrf-.js:31:8685
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-C5uXBrf-.js:31:8744
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-C5uXBrf-.js:31:8896
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 22/12/2025, 08:23:51 index-C5uXBrf-.js:31:8984
+[CSS-DIAG] Modules Loaded 
+Object { allowedModules: (2) […] }
+index-C5uXBrf-.js:31:3158
+[ControllerService][findControllerInfoByRoute] controllerName: sign-in index-C5uXBrf-.js:31:9990
+[ControllerService][findControllerInfoByRoute] mod: ...tracated... index-C5uXBrf-.js:31:10070
+[ControllerService][findControllerInfoByRoute] controllerName: sign-up index-C5uXBrf-.js:31:9990
+[ControllerService][findControllerInfoByRoute] mod: ...trancated... index-C5uXBrf-.js:31:10070
+[ControllerService][findControllerInfoByRoute] controllerName: settings index-C5uXBrf-.js:31:9990
+[ControllerService][findControllerInfoByRoute] mod: ...trancated.... index-C5uXBrf-.js:31:10070
+[CSS-DIAG] Menu prepared 
+Array [ {…}, {…} ]
+index-C5uXBrf-.js:31:3158
+Starting renderMenuWithSystem() index-C5uXBrf-.js:31:10702
+renderMenuWithSystem()/01 index-C5uXBrf-.js:31:10751
+MenuService::renderPlainMenu()/menu: 
+        trancated...
+      index-C5uXBrf-.js:31:11363
+renderMenuWithSystem()/adapter: {"instance":null} index-C5uXBrf-.js:31:10973
+renderMenuWithSystem()/03 index-C5uXBrf-.js:31:11161
+renderMenuWithSystem()/04 index-C5uXBrf-.js:31:11248
+[CSS-DIAG] Sidebar rendered 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[SIDEBAR-DIAG] Sidebar State: index-C5uXBrf-.js:31:3364
+display: flex index-C5uXBrf-.js:31:3453
+position: relative index-C5uXBrf-.js:31:3487
+width: 260px index-C5uXBrf-.js:31:3523
+flex-direction: column index-C5uXBrf-.js:31:3553
+css file winning: 
+<aside id="cd-sidebar">
+index-C5uXBrf-.js:31:3600
+MenuService::loadResource()/start... index-C5uXBrf-.js:31:13210
+[MenuService][loadResource] options: 
+Object { item: {…} }
+index-C5uXBrf-.js:31:13262
+[ControllerCacheService][getInstance] start... index-C5uXBrf-.js:22:6771
+MenuService::loadResource()/02: Retrieving controller via cache service index-C5uXBrf-.js:31:13728
+[ControllerCacheService][getOrInitializeController] start... index-C5uXBrf-.js:22:6919
+[ControllerCacheService] Creating new instance for: sys/cd-user/sign-in index-C5uXBrf-.js:22:7103
+CdFormGroup::_constructor()/01 cd-directive-binder.service-DGbLY5eG.js:1:46
+CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5eG.js:1:1416
+[Binder] UI-System set to: material-design (via window.CD_ACTIVE_UISYSTEM) cd-directive-binder.service-DGbLY5eG.js:1:1622
+[ControllerCacheService] Cached instance for sys/cd-user/sign-in index-C5uXBrf-.js:22:7762
+[MenuService] Waiting for controller services to initialize... attempt 1 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 2 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 3 index-C5uXBrf-.js:31:14051
+[SHELL] [DEBUG] [Splash] animation completed index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [Splash] waiting 
+Object { splashAnimDone: true, appReady: false }
+index-C5uXBrf-.js:48:1803
+[MenuService] Waiting for controller services to initialize... attempt 4 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 5 index-C5uXBrf-.js:31:14051
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+[MenuService] Waiting for controller services to initialize... attempt 6 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 7 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 8 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 9 index-C5uXBrf-.js:31:14051
+[MenuService] Waiting for controller services to initialize... attempt 10 index-C5uXBrf-.js:31:14051
+MenuService::loadResource()/03: Injecting template into DOM index-C5uXBrf-.js:31:14194
+MenuService::loadResource()/04: Executing __activate() index-C5uXBrf-.js:31:14449
+[ctlSignIn][__activate] 01 index-BEx0eJtE.js:28:584
+[CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
+[Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
+MenuService::loadResource()/end index-C5uXBrf-.js:31:14694
+[CSS-DIAG] Default controller loaded 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[SHELL] [DEBUG] [Main] app fully bootstrapped index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] [Splash] conditions met → hiding splash index-C5uXBrf-.js:48:1803
+[SHELL] [DEBUG] bootstrapShell(): run() complete index-C5uXBrf-.js:48:1803
+[CSS-DIAG] Main.run() complete 
+Object {  }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 1 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] Applying mapping to element: 
+Object { tag: "BUTTON", mapping: {…} }
+index-C5uXBrf-.js:48:13550
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 2 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapInputs: FIELD #0 
+Object { field: div.cd-form-field }
+index-C5uXBrf-.js:52:5904
+[MaterialDesignAdapter] MDCTextField constructed 
+Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded, inst: {…} }
+index-C5uXBrf-.js:52:2187
+[MaterialDesignAdapter] mapInputs: transformed wrapper  
+Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded }
+index-C5uXBrf-.js:52:6362
+[MaterialDesignAdapter] mapInputs: FIELD #1 
+Object { field: div.cd-form-field }
+index-C5uXBrf-.js:52:5904
+[MaterialDesignAdapter] MDCTextField constructed 
+Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded, inst: {…} }
+index-C5uXBrf-.js:52:2187
+[MaterialDesignAdapter] mapInputs: transformed wrapper  
+Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded }
+index-C5uXBrf-.js:52:6362
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 1 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+[SHELL] [DEBUG] [Splash] removed, app revealed index-C5uXBrf-.js:48:1803
+[MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 1 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-C5uXBrf-.js:48:13333
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-C5uXBrf-.js:31:3158
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-C5uXBrf-.js:31:3158
+[MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
+Error: Promised response from onMessage listener went out of scope 2 index.js:4716:38
+Source map error: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
+_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1069:22
+SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
+_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
+
+Resource URL: http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css
+Source Map URL: material-components-web.min.css.map
+```
+
+
 
 //////////////////////////////////////////////////////////////////
 
@@ -16451,6 +17814,8 @@ Git update:
 - add envConfig: EnvConfig to shell config
 - confirm if splashscreen is running
 - confirm the system can fetch and use config from backend
+- implement new subscribable SysCacheService
+  - test subscibers (phase 1)
 
 --- 
 
@@ -16495,7 +17860,7 @@ RawUiComponentMeta not yet implemented-
   - navigation background
   - body background
   - Themes to be designed in a way that they can be packaged and commercialized
-  - design SysCacheService data sync mechanims
+  Design SysCacheService data sync mechanims
     - upgrade SysCacheService to 'subscibable' and 'syncable'
 
 ///////////////////////////////////////
@@ -16543,7 +17908,8 @@ Now that you have a good understanding how the api works, we are going to be fig
 
 - design SysCacheService data sync mechanims
   - upgrade SysCacheService to 'subscibable' and 'syncable'
-  - test subscibers
+  - test subscibers (phase 1)
+  - test subscibers (phase 2)
 
 ---
 
