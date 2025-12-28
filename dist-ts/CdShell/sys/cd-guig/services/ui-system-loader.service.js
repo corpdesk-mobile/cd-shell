@@ -30,6 +30,8 @@ export class UiSystemLoaderService {
         this.activeSystem = null;
         this.splashAnimDone = false;
         this.appReady = false;
+        this.uiReady = false;
+        this.uiMutationTimer = null;
         this.sysCache = sysCache;
     }
     static getInstance(sysCache) {
@@ -308,6 +310,7 @@ export class UiSystemLoaderService {
         return DEFAULT_SYSTEM;
     }
     getFullDescriptor(id) {
+        this.logger.debug("[UiSystemLoaderService.getFullDescriptor()] start");
         const list = this.sysCache.get("uiSystemDescriptors") || [];
         return list.find((d) => d.id === id);
     }
@@ -315,6 +318,7 @@ export class UiSystemLoaderService {
      * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
      */
     async applyStartupUiSettings(svSysCache) {
+        this.logger.debug("[UiSystemLoaderService.applyStartupUiSettings()] start");
         // const cfgSvc = ConfigService.getInstance();
         // ensure sys cache is ready
         await svSysCache.ensureReady();
@@ -416,6 +420,12 @@ export class UiSystemLoaderService {
             }, 800);
         });
     }
+    revealApp() {
+        const root = document.getElementById("cd-root");
+        if (root) {
+            root.style.visibility = "visible";
+        }
+    }
     /////////////////////////////////////////
     // new decomposed methods go here
     /////////////////////////////////////////
@@ -430,6 +440,7 @@ export class UiSystemLoaderService {
      * - Do not add logic here.
      */
     async bootstrapUiSystemAndTheme(svSysCache) {
+        this.logger.debug("[UiSystemLoaderService.bootstrapUiSystemAndTheme()] start");
         await this.applyStartupUiSettings(svSysCache);
         diag_css("UI-System + Theme applied");
     }
@@ -495,5 +506,20 @@ export class UiSystemLoaderService {
         });
         window.addEventListener("resize", applyMobileState);
         applyMobileState();
+    }
+    notifyUiMutation() {
+        if (this.uiMutationTimer) {
+            clearTimeout(this.uiMutationTimer);
+        }
+        this.uiMutationTimer = window.setTimeout(() => {
+            this.uiReady = true;
+            this.tryReveal();
+        }, 150); // 100–200ms works well
+    }
+    tryReveal() {
+        if (this.appReady && this.uiReady) {
+            this.hideSplash();
+            this.revealApp();
+        }
     }
 }

@@ -619,10 +619,14 @@ export class MaterialDesignAdapterService {
             });
         });
     }
+    onMutation(cb) {
+        this._mutationCallback = cb;
+    }
     // master mapping pass
     mapAll() {
         console.log("%c[MaterialDesignAdapter] mapAll() — START", "background:#223;color:#9cf;padding:2px");
         try {
+            this._mutationCallback?.();
             this.mapButtons();
             this.mapInputs();
             this.mapFormGroups();
@@ -640,6 +644,7 @@ export class MaterialDesignAdapterService {
     observeMutations() {
         if (this.observer)
             return;
+        this._mutationCallback?.();
         diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
         this.observer = new MutationObserver((mutations) => {
             // lightweight debounce: schedule mapAll on idle

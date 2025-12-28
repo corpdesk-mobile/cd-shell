@@ -53,7 +53,7 @@ export class Main {
         // SPLASH: Show immediately
         //---------------------------------------
         this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
-        await this.svUiSystemLoader.showSplash(this.svConfig); // your animated SVG starts here
+        await this.svUiSystemLoader.showSplash(this.svConfig);
         this.logger.setLevel("debug");
         this.logger.debug("starting bootstrapShell()");
         diag_css("Main.run() started");
@@ -64,34 +64,32 @@ export class Main {
         if (baseShellConfig.logLevel) {
             this.logger.setLevel(baseShellConfig.logLevel);
         }
-        // --------------------------------------
-        // PHASE 1 (NON-INVASIVE): observe cache
-        // --------------------------------------
+        //---------------------------------------
+        // PHASE 1: Observe cache (non-invasive)
+        //---------------------------------------
         this.svSysCache.subscribe("shellConfig", (value, meta) => {
-            console.log("%c[PHASE 1][Cache Observe] shellConfig", "color:#4CAF50", {
+            console.log("%c[PHASE][Cache] shellConfig", "color:#4CAF50", {
                 source: meta.source,
                 version: meta.version,
-                timestamp: new Date(meta.timestamp).toISOString(),
             });
         });
         //---------------------------------------
-        // STEP 0.5: Anonymous login (ACL context)
+        // STEP 0.5: Anonymous login
         //---------------------------------------
-        const resp = await this.svUser.loginAnonUser(baseShellConfig.envConfig.clientContext.consumerToken);
-        if (!resp) {
-            this.logger.warn("[Main] Anonymous login failed → continuing with static shell config");
+        // const resp = await this.svUser.loginAnonUser(
+        //   baseShellConfig.envConfig.clientContext.consumerToken
+        // );
+        // this.logger.debug("[Main.run] resp:", resp);
+        // if (resp) {
+        //   this.consumerProfile = resp.data.consumer.consumerProfile || null;
+        //   this.userProfile = resp.data.userData.userProfile || null;
+        // }
+        const fx = await this.svUser.loginAnonUser(baseShellConfig.envConfig.clientContext.consumerToken);
+        this.logger.debug("[Main.run] fx:", fx);
+        if (fx?.state && fx.data) {
+            this.consumerProfile = fx.data.data.consumer.consumerProfile || null;
+            this.userProfile = fx.data.data.userData.userProfile || null;
         }
-        else {
-            this.logger.debug("[Main] Anonymous login success");
-            this.consumerProfile = resp.data.consumer.consumerProfile || null;
-            this.userProfile = resp.data.userData.userProfile || null;
-        }
-        //---------------------------------------
-        // STEP 0.6: Resolve ACL-based shell config
-        //---------------------------------------
-        this.resolvedShellConfig = await this.svConfig.resolveShellConfig(this.consumerProfile, this.userProfile);
-        this.logger.debug("[Main] Shell config resolved", this.resolvedShellConfig);
-        const shellConfig = this.resolvedShellConfig;
         //---------------------------------------
         // STEP 1: Core service instantiation
         //---------------------------------------
@@ -99,10 +97,20 @@ export class Main {
         this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
         this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
         //---------------------------------------
-        // STEP 2: Load cached metadata
+        // STEP 2: Load STATIC cache (CRITICAL)
         //---------------------------------------
         await this.svSysCache.loadAndCacheAll();
-        diag_css("Cache loaded");
+        diag_css("Cache loaded (static)");
+        //---------------------------------------
+        // PHASE 2: Promote ACL-resolved shell config
+        //---------------------------------------
+        this.resolvedShellConfig = await this.svConfig.promoteResolvedShellConfig(this.svSysCache, this.consumerProfile, this.userProfile);
+        this.logger.debug("[Main] Shell config promoted", this.resolvedShellConfig);
+        this.svSysCache.applyResolvedShellConfig(this.resolvedShellConfig);
+        const shellConfig = this.resolvedShellConfig;
+        if (!this.svSysCache.hasConsumerContext()) {
+            this.logger.info("[UI] Running in consumer-less mode");
+        }
         //---------------------------------------
         // STEP 3: Apply UI-System + Theme pipeline
         //---------------------------------------
@@ -139,7 +147,6 @@ export class Main {
         this.logger.debug("[Main] app fully bootstrapped");
         this.svUiSystemLoader.appReady = true;
         this.svUiSystemLoader.tryHideSplash();
-        this.logger.debug("bootstrapShell(): run() complete");
         diag_css("Main.run() complete");
     }
 }

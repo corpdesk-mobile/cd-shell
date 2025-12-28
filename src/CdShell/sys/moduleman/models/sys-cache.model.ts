@@ -13,7 +13,7 @@ import { IConsumerProfile } from "./consumer.model";
 export type CacheListener<T> = (value: T, meta: CacheMeta) => void;
 
 export interface CacheMeta {
-  source: "static" | "consumer" | "user" | "runtime";
+  source: "static" | "consumer" | "user" | "runtime" | "resolved";
   version: number;
   timestamp: number;
 }

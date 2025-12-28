@@ -48,6 +48,7 @@ export const profileDefaultConfig = [
  * there needs to be a function that set the default 'role' for a user
  */
 export const userProfileDefault = {
+    userGuid: '',
     avatar: {
         url: `https://${config.profiles.cdApiLocal.hostName}/assets/images/users/avatar-anon.jpg`,
     },

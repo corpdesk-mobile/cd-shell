@@ -87,8 +87,9 @@ export interface IConsumerShellConfig extends IShellConfig {
 }
 
 export interface IConsumerProfile {
+  consumerGuid: string;
   /** Basic company/tenant information */
-  consumerData: ConsumerModel;
+  // consumerData: ConsumerModel;
 
   /** Optional business descriptions, tags, extra metadata */
   bio?: string;

@@ -780,5 +780,278 @@ If you want, next I can:
 
 Just say the word.
 
+---
+
+Excellent — this code confirms *exactly* where the FOUC is coming from, and it also shows you already have **90% of the correct machinery** in place. The remaining 10% is about **who controls visibility, and when**.
+
+I’ll stay very concrete and align strictly with *your current structure*, not theoretical SPA advice.
+
+---
+
+## 1. What your current setup is doing (truth table)
+
+### index.html
+
+```html
+<div id="cd-root" style="visibility: hidden">
+```
+
+✅ This is **correct** and intentional
+❌ But nothing *guarantees* when it becomes visible relative to *visual stability*
+
+Right now, visibility is indirectly controlled by **splash removal**, not by **UI readiness**.
+
+---
+
+### Main.run() (critical insight)
+
+Your pipeline is *logically correct*:
+
+1. Splash shown
+2. Cache loaded
+3. UI system + theme bootstrapped
+4. Menu rendered
+5. Default controller loaded
+6. `appReady = true`
+7. `tryHideSplash()`
+
+But **FOUC happens here**:
+
+> Menu DOM is injected **after** CSS is loaded, but **before adapter mapping settles**
+
+And because:
+
+* `#cd-root` visibility is tied to splash removal
+* splash removal is tied to `appReady`
+* `appReady` is *logical*, not *visual*
+
+👉 You reveal the DOM while the adapter is still mutating it.
+
+---
+
+## 2. The single most important architectural correction
+
+### **Separate “App Ready” from “UI Ready”**
+
+Right now you have:
+
+```ts
+this.svUiSystemLoader.appReady = true;
+this.svUiSystemLoader.tryHideSplash();
+```
+
+You need **one more gate**:
+
+```ts
+this.svUiSystemLoader.uiReady = true;
+```
+
+And splash removal must depend on **both**.
+
+---
+
+## 3. Minimal, aligned fix (no redesign)
+
+### Step A: Make `cd-root` visibility controlled *only* by UiSystemLoader
+
+Remove any implicit coupling between splash removal and visibility.
+
+In `index.html` (keep this):
+
+```html
+<div id="cd-root" style="visibility: hidden">
+```
+
+---
+
+### Step B: Add explicit UI visibility control
+
+In `UiSystemLoaderService` (or equivalent):
+
+```ts
+revealApp() {
+  const root = document.getElementById("cd-root");
+  if (root) {
+    root.style.visibility = "visible";
+  }
+}
+```
+
+And **do not call this** until UI is stable.
+
+---
+
+## 4. How to define “UI stable” in *your system*
+
+This is the key part, and your logs already prove the need:
+
+### Observations from your trace
+
+* `MaterialDesignAdapter.mapAll()` runs:
+
+  * on activation
+  * on menu render
+  * on controller injection
+  * via MutationObserver
+* Multiple `mapAll()` calls happen *after* sidebar render
+* Layout shifts occur during those calls
+
+So **“CSS loaded” is not enough**
+**“Adapter activated” is not enough**
+
+---
+
+## 5. Correct definition of UI-ready (Corpdesk-specific)
+
+> **UI is ready when adapter mutations have gone quiet**
+
+That’s it.
+
+Not “mapAll ran once”.
+Not “menu rendered”.
+But **no DOM adaptation for N ms**.
+
+---
+
+## 6. Practical implementation (fits your current code)
+
+### In MaterialDesignAdapter (or base adapter)
+
+Add a small signal:
+
+```ts
+onMutation(cb: () => void) {
+  this._mutationCallback = cb;
+}
+```
+
+Call it inside:
+
+* `mapAll()`
+* MutationObserver callback
+
+---
+
+### In UiSystemLoaderService
+
+Add a *quiet-period latch*:
+
+```ts
+private uiMutationTimer: number | null = null;
+
+notifyUiMutation() {
+  if (this.uiMutationTimer) {
+    clearTimeout(this.uiMutationTimer);
+  }
+
+  this.uiMutationTimer = window.setTimeout(() => {
+    this.uiReady = true;
+    this.tryReveal();
+  }, 150); // 100–200ms works well
+}
+```
+
+Wire adapters to call `notifyUiMutation()`.
+
+---
+
+### Final reveal logic
+
+```ts
+tryReveal() {
+  if (this.appReady && this.uiReady) {
+    this.hideSplash();
+    this.revealApp();
+  }
+}
+```
+
+This alone will eliminate **all visible FOUC** without slowing boot.
+
+---
+
+## 7. Why this works with *your* menu system
+
+Your menu rendering is:
+
+* async
+* controller-dependent
+* adapter-dependent
+* mutation-heavy
+
+Trying to “finish rendering before mapping” is a losing battle.
+
+Instead, you:
+
+* let everything render freely
+* **keep it invisible**
+* reveal only after stabilization
+
+This aligns with:
+
+* your phased architecture
+* your diagnostic logging
+* your adapter abstraction
+
+---
+
+## 8. One small CSS improvement (optional but powerful)
+
+To reduce *any residual flash* even if timing slips:
+
+```css
+#cd-root {
+  transition: opacity 0.15s ease;
+}
+#cd-root[data-visible="false"] {
+  opacity: 0;
+}
+#cd-root[data-visible="true"] {
+  opacity: 1;
+}
+```
+
+Then toggle `data-visible` instead of `visibility`.
+
+This gives you a **graceful reveal**, not a hard cut.
+
+---
+
+## 9. What *not* to do (important)
+
+❌ Don’t preload menu CSS earlier
+❌ Don’t delay menu rendering
+❌ Don’t block adapter mapping
+❌ Don’t tie reveal to `bootstrapUiSystemAndTheme()` completion
+
+Those all fight your architecture instead of cooperating with it.
+
+---
+
+## 10. Mental model (matches how you think)
+
+* **Splash** = “System is alive”
+* **AppReady** = “Logic is ready”
+* **UiReady** = “Sculpture is finished”
+* **Reveal** = “Remove the cloth”
+
+Right now you’re revealing after *logic*.
+You just need to reveal after *form*.
+
+Once you add `uiReady`, FOUC disappears without hacks.
+
+If you want, next we can:
+
+* formalize `PHASE 3: VISUAL_READY`
+* add CSS-DIAG markers for stabilization
+* or refactor adapters into promise-based lifecycles
+
+You’re *very* close — this is refinement, not rework.
+
+────────────────────────
+Date: 24 Dec 2025, Time: 18:58 (EAT)
+────────────────────────
+
+
 
 

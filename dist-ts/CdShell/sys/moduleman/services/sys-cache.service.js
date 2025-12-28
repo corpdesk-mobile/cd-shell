@@ -1,12 +1,8 @@
-// /////////////////////////////////////////
-// // PREVIOUS CODES
-// /////////////////////////////////////////
-// import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
-// import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
-// import { ConfigService } from "./config.service";
+import { LoggerService } from "../../../utils/logger.service";
 export class SysCacheService {
     constructor(configService) {
         this.configService = configService;
+        this.logger = new LoggerService();
         /** Core cache store */
         // private cache = new Map<CacheKey | string, CacheEntry>();
         this.cache = new Map();
@@ -70,26 +66,33 @@ export class SysCacheService {
     // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
     // ------------------------------------------------------------------
     async loadAndCacheAll() {
+        this.logger.debug("[SysCacheService.loadAndCacheAll()] start");
         if (!this._uiSystemLoader || !this._uiThemeLoader) {
             throw new Error("SysCacheService: loaders must be set before load.");
         }
         if (this.cache.size > 0)
             return;
         console.log("[SysCacheService] Eager load starting");
-        const shellConfig = await this.configService.loadConfig();
+        // 🔑 PHASE-2 AWARE CONFIG RESOLUTION
+        const shellConfig = this.get("shellConfig") ?? (await this.configService.loadConfig());
+        const uiConfig = shellConfig.uiConfig || {};
+        // Ensure canonical cache presence
         this.set("shellConfig", shellConfig, "static");
         this.set("envConfig", shellConfig.envConfig || {}, "static");
-        this.set("uiConfig", shellConfig.uiConfig || {}, "static");
-        const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(shellConfig.uiConfig);
-        const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
-        // 🔁 Legacy expectations preserved
-        this.set("uiSystems", simple, "static");
-        this.set("uiSystemDescriptors", full, "static");
-        const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(shellConfig.uiConfig);
+        this.set("uiConfig", uiConfig, "static");
+        // -------------------------------------------------
+        // UI SYSTEMS (authoritative descriptors)
+        // -------------------------------------------------
+        const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+        this.cacheUiSystems(uiSystemsData, "static");
+        // -------------------------------------------------
+        // UI THEMES
+        // -------------------------------------------------
+        const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
         this.set("themes", uiThemesData.themes || [], "static");
         this.set("formVariants", uiThemesData.variants || [], "static");
         this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
-        this.set("uiConfigNormalized", uiThemesData.uiConfig || shellConfig.uiConfig, "static");
+        this.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig, "static");
         console.log("[SysCacheService] Load complete");
     }
     // ------------------------------------------------------------------
@@ -130,6 +133,7 @@ export class SysCacheService {
      * Required by UiSystemLoaderService.activate()
      */
     normalizeUiSystemDescriptors(rawSystems) {
+        this.logger.debug("[SysCacheService.normalizeUiSystemDescriptors()] start");
         const fullDescriptors = rawSystems.map((sys) => ({
             id: sys.id,
             name: sys.name,
@@ -167,6 +171,7 @@ export class SysCacheService {
         };
     }
     cacheUiSystems(rawSystems, source = "static") {
+        this.logger.debug("[SysCacheService.cacheUiSystems()] start");
         const { simple, full } = this.normalizeUiSystemDescriptors(rawSystems);
         // 🔁 Legacy compatibility
         this.set("uiSystems", simple, source);
@@ -176,6 +181,36 @@ export class SysCacheService {
         console.log("[SysCacheService] UI systems cached", {
             simpleCount: simple.length,
             fullCount: full.length,
+            source,
+        });
+    }
+    hasConsumerContext() {
+        return !!this.get("shellConfig:meta")?.hasConsumerProfile;
+    }
+    // ------------------------------------------------------------------
+    // PHASE-2 RESOLUTION (CONSUMER / USER OVERRIDES)
+    // ------------------------------------------------------------------
+    applyResolvedShellConfig(resolvedShellConfig, source = "resolved") {
+        this.logger.debug("[SysCacheService.applyResolvedShellConfig()] start");
+        this.logger.debug("[SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:", resolvedShellConfig);
+        if (!resolvedShellConfig)
+            return;
+        const uiConfig = resolvedShellConfig.uiConfig || {};
+        const envConfig = resolvedShellConfig.envConfig || {};
+        // Override canonical keys
+        this.set("shellConfig", resolvedShellConfig, source);
+        this.set("uiConfig", uiConfig, source);
+        this.set("envConfig", envConfig, source);
+        // Optional normalized alias (used by loaders)
+        this.set("uiConfigNormalized", uiConfig, source);
+        // Metadata flag (used by hasConsumerContext)
+        this.set("shellConfig:meta", {
+            hasConsumerProfile: true,
+            appliedAt: Date.now(),
+        }, source);
+        console.log("[SysCacheService] Resolved shell config applied", {
+            defaultUiSystemId: uiConfig.defaultUiSystemId,
+            defaultThemeId: uiConfig.defaultThemeId,
             source,
         });
     }

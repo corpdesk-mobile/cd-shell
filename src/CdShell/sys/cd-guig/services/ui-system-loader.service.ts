@@ -47,6 +47,8 @@ export class UiSystemLoaderService {
   private sysCache!: SysCacheService;
   splashAnimDone = false;
   appReady = false;
+  uiReady = false;
+  private uiMutationTimer: number | null = null;
 
   constructor(sysCache: SysCacheService) {
     this.sysCache = sysCache;
@@ -418,6 +420,7 @@ export class UiSystemLoaderService {
   }
 
   private getFullDescriptor(id: string): UiSystemDescriptor | undefined {
+    this.logger.debug("[UiSystemLoaderService.getFullDescriptor()] start");
     const list = this.sysCache.get("uiSystemDescriptors") || [];
     return list.find((d: any) => d.id === id);
   }
@@ -426,6 +429,7 @@ export class UiSystemLoaderService {
    * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
    */
   async applyStartupUiSettings(svSysCache: SysCacheService): Promise<void> {
+    this.logger.debug("[UiSystemLoaderService.applyStartupUiSettings()] start");
     // const cfgSvc = ConfigService.getInstance();
     // ensure sys cache is ready
     await svSysCache.ensureReady();
@@ -544,6 +548,13 @@ export class UiSystemLoaderService {
     });
   }
 
+  revealApp() {
+    const root = document.getElementById("cd-root");
+    if (root) {
+      root.style.visibility = "visible";
+    }
+  }
+
   /////////////////////////////////////////
   // new decomposed methods go here
   /////////////////////////////////////////
@@ -558,6 +569,7 @@ export class UiSystemLoaderService {
    * - Do not add logic here.
    */
   async bootstrapUiSystemAndTheme(svSysCache: SysCacheService): Promise<void> {
+    this.logger.debug("[UiSystemLoaderService.bootstrapUiSystemAndTheme()] start");
     await this.applyStartupUiSettings(svSysCache);
     diag_css("UI-System + Theme applied");
   }
@@ -638,5 +650,23 @@ export class UiSystemLoaderService {
 
     window.addEventListener("resize", applyMobileState);
     applyMobileState();
+  }
+
+  notifyUiMutation() {
+    if (this.uiMutationTimer) {
+      clearTimeout(this.uiMutationTimer);
+    }
+
+    this.uiMutationTimer = window.setTimeout(() => {
+      this.uiReady = true;
+      this.tryReveal();
+    }, 150); // 100–200ms works well
+  }
+
+  tryReveal() {
+    if (this.appReady && this.uiReady) {
+      this.hideSplash();
+      this.revealApp();
+    }
   }
 }

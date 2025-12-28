@@ -749,6 +749,12 @@ export class MaterialDesignAdapterService implements IUiSystemAdapter {
     });
   }
 
+  private _mutationCallback?: () => void;
+
+  onMutation(cb: () => void) {
+    this._mutationCallback = cb;
+  }
+
   // master mapping pass
   private mapAll() {
     console.log(
@@ -756,6 +762,7 @@ export class MaterialDesignAdapterService implements IUiSystemAdapter {
       "background:#223;color:#9cf;padding:2px"
     );
     try {
+      this._mutationCallback?.();
       this.mapButtons();
       this.mapInputs();
       this.mapFormGroups();
@@ -775,6 +782,7 @@ export class MaterialDesignAdapterService implements IUiSystemAdapter {
   // ---------------------------------------------------------------------------
   private observeMutations() {
     if (this.observer) return;
+    this._mutationCallback?.();
     diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
     this.observer = new MutationObserver((mutations) => {
       // lightweight debounce: schedule mapAll on idle

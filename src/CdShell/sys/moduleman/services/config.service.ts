@@ -1,4 +1,5 @@
 // import { ShellConfig } from "../../base";
+import { LoggerService } from "../../../utils/logger.service";
 import { IShellConfig } from "../../base";
 import {
   IUserProfile,
@@ -15,6 +16,7 @@ import { SysCacheService } from "./sys-cache.service";
 
 // ConfigService (singleton)
 export class ConfigService {
+  private logger = new LoggerService();
   private static instance: ConfigService | null = null;
   private config: IShellConfig | null = null;
   private readonly CONFIG_PATH = "/shell.config.json";
@@ -91,22 +93,102 @@ export class ConfigService {
     consumerProfile?: IConsumerProfile | null,
     userProfile?: IUserProfile | null
   ): Promise<IUserShellConfig> {
+    this.logger.debug("[ConfigService.resolveShellConfig] start");
+
     const base = await this.loadConfig();
 
-    // 1. Apply consumer defaults
+    // --------------------------------------------------
+    // STRUCTURAL VALIDATION (TYPE + RUNTIME)
+    // --------------------------------------------------
+
+    const hasConsumerShellConfig =
+      !!consumerProfile &&
+      typeof consumerProfile === "object" &&
+      typeof consumerProfile.shellConfig === "object" &&
+      consumerProfile.shellConfig !== null;
+
+    const hasUserShellConfig =
+      !!userProfile &&
+      typeof userProfile === "object" &&
+      typeof userProfile.shellConfig === "object" &&
+      userProfile.shellConfig !== null;
+
+    // --------------------------------------------------
+    // OBSERVABILITY (EXPLICIT DEGRADATION SIGNALS)
+    // --------------------------------------------------
+
+    this.logger.info("[ConfigService.resolveShellConfig] input integrity", {
+      hasConsumerProfile: !!consumerProfile,
+      hasConsumerShellConfig,
+      hasUserProfile: !!userProfile,
+      hasUserShellConfig,
+    });
+
+    if (consumerProfile && !hasConsumerShellConfig) {
+      this.logger.error(
+        "[ConfigService.resolveShellConfig] consumerProfile present but shellConfig missing or invalid",
+        {
+          consumerProfile,
+          degradation: "Consumer policy ignored",
+        }
+      );
+    }
+
+    if (userProfile && !hasUserShellConfig) {
+      this.logger.warn(
+        "[ConfigService.resolveShellConfig] userProfile present but shellConfig missing or invalid",
+        {
+          userProfile,
+          degradation: "User overrides ignored",
+        }
+      );
+    }
+
+    // --------------------------------------------------
+    // EFFECTIVE POLICY INPUTS
+    // --------------------------------------------------
+
+    const consumerShellConfig = hasConsumerShellConfig
+      ? consumerProfile!.shellConfig
+      : undefined;
+
+    const userShellConfig = hasUserShellConfig
+      ? userProfile!.shellConfig
+      : undefined;
+
+    // --------------------------------------------------
+    // CONFIG RESOLUTION PIPELINE
+    // --------------------------------------------------
+
+    // 1. Apply consumer defaults (if valid)
     const withConsumer = this.applyConsumerShellConfig(
       base,
-      consumerProfile?.shellConfig
+      consumerShellConfig
     );
 
-    // 2. Apply user overrides (if allowed)
+    // 2. Apply user overrides (policy-aware)
     const final = this.applyUserShellConfigWithPolicy(
       withConsumer,
-      userProfile?.shellConfig,
-      consumerProfile?.shellConfig
+      userShellConfig,
+      consumerShellConfig
     );
 
+    this.logger.debug("[ConfigService.resolveShellConfig] resolved", final);
+
     return final;
+  }
+
+  private hasValidConsumerShellConfig(
+    consumerProfile?: IConsumerProfile | null
+  ): consumerProfile is IConsumerProfile & {
+    shellConfig: IConsumerShellConfig;
+  } {
+    return !!(
+      consumerProfile &&
+      typeof consumerProfile === "object" &&
+      consumerProfile.shellConfig &&
+      typeof consumerProfile.shellConfig === "object"
+    );
   }
 
   private applyConsumerShellConfig(
@@ -134,10 +216,65 @@ export class ConfigService {
     userShell?: Partial<IUserShellConfig>,
     consumerShell?: IConsumerShellConfig
   ): IUserShellConfig {
-    if (!userShell || !consumerShell) return base;
+    this.logger.debug("[ConfigService.applyUserShellConfigWithPolicy()] start");
+
+    this.logger.debug(
+      "[ConfigService.applyUserShellConfigWithPolicy()] base:",
+      base
+    );
+
+    this.logger.debug(
+      "[ConfigService.applyUserShellConfigWithPolicy()] userShell:",
+      userShell
+    );
+
+    this.logger.debug(
+      "[ConfigService.applyUserShellConfigWithPolicy()] consumerShell:",
+      consumerShell
+    );
+
+    if (!userShell) {
+      this.logger.debug(
+        "[ConfigService] No user shell config → base config retained"
+      );
+      return base;
+    }
+
+    // USER_ONLY context → allow user overrides fully
+    if (!consumerShell) {
+      this.logger.info(
+        "[ConfigService] USER_ONLY context → applying unrestricted user shell config"
+      );
+
+      return {
+        ...base,
+        ...userShell,
+        uiConfig: {
+          ...base.uiConfig,
+          ...userShell.uiConfig,
+        },
+        themeConfig: {
+          ...base.themeConfig,
+          ...userShell.themeConfig,
+        },
+      };
+    }
+
+    this.logger.debug(
+      "[ConfigService.applyUserShellConfigWithPolicy()] userProfile and consumerProfile present → enforcing lockDown and allowedOptions"
+    );
 
     const lockDown = consumerShell.lockDown ?? {};
     const allowed = consumerShell.allowedOptions ?? {};
+
+    this.logger.debug(
+      "[ConfigService.applyUserShellConfigWithPolicy()] lockDown:",
+      lockDown
+    );
+    this.logger.debug(
+      "[ConfigService.applyUserShellConfigWithPolicy()] allowed:",
+      allowed
+    );
 
     const resolveValue = <T>(
       locked: boolean | undefined,
@@ -250,5 +387,135 @@ export class ConfigService {
     );
 
     return shellConfig;
+  }
+
+  // ConfigService.ts
+  // public async promoteResolvedShellConfig(
+  //   cache: SysCacheService,
+  //   consumerProfile?: IConsumerProfile | null,
+  //   userProfile?: IUserProfile | null
+  // ): Promise<IUserShellConfig> {
+  //   this.logger.debug("[ConfigService.promoteResolvedShellConfig()] start");
+  //   this.logger.debug(
+  //     "[ConfigService.promoteResolvedShellConfig()] consumerProfile:",
+  //     consumerProfile
+  //   );
+  //   this.logger.debug(
+  //     "[ConfigService.promoteResolvedShellConfig()] userProfile:",
+  //     userProfile
+  //   );
+
+  //   const resolutionMode = this.classifyResolutionContext(
+  //     consumerProfile,
+  //     userProfile
+  //   );
+
+  //   this.logger.info("[ConfigService] Resolution context", {
+  //     mode: resolutionMode,
+  //     hasConsumer: !!consumerProfile,
+  //     hasUser: !!userProfile,
+  //   });
+
+  //   console.groupCollapsed(
+  //     "%c[PHASE 2][ConfigService] Promote resolved shell config",
+  //     "color:#4CAF50"
+  //   );
+
+  //   const resolved = await this.resolveShellConfig(
+  //     consumerProfile,
+  //     userProfile
+  //   );
+
+  //   console.log("[PHASE 2] resolvedShellConfig:", resolved);
+
+  //   cache.set("shellConfig", resolved, "consumer");
+  //   cache.set("envConfig", resolved.envConfig || {}, "consumer");
+  //   cache.set("uiConfig", resolved.uiConfig || {}, "consumer");
+
+  //   console.log("[PHASE 2] Cache promotion complete");
+
+  //   console.groupEnd();
+  //   return resolved;
+  // }
+  public async promoteResolvedShellConfig(
+    cache: SysCacheService,
+    consumerProfile?: IConsumerProfile | null,
+    userProfile?: IUserProfile | null
+  ): Promise<IUserShellConfig> {
+    this.logger.debug("[ConfigService.promoteResolvedShellConfig] start");
+
+    const resolutionMode = this.classifyResolutionContext(
+      consumerProfile,
+      userProfile
+    );
+
+    this.logger.debug(
+      "[ConfigService.promoteResolvedShellConfig] resolutionMode:",
+      resolutionMode
+    );
+
+    const cacheSource = this.mapResolutionModeToCacheSource(resolutionMode);
+
+    console.groupCollapsed(
+      "%c[PHASE 2][ConfigService] Promote resolved shell config",
+      "color:#4CAF50"
+    );
+
+    this.logger.info("[PHASE 2] Resolution context", {
+      resolutionMode,
+      cacheSource,
+      hasConsumer: !!consumerProfile,
+      hasUser: !!userProfile,
+    });
+
+    const resolvedShellConfig = await this.resolveShellConfig(
+      consumerProfile,
+      userProfile
+    );
+
+    console.log("[PHASE 2] resolvedShellConfig:", resolvedShellConfig);
+
+    // 🔒 Cache provenance is now explicit and valid
+    cache.set("shellConfig", resolvedShellConfig, cacheSource);
+    cache.set("envConfig", resolvedShellConfig.envConfig || {}, cacheSource);
+    cache.set("uiConfig", resolvedShellConfig.uiConfig || {}, cacheSource);
+
+    console.log("[PHASE 2] Cache promotion complete", { cacheSource });
+
+    console.groupEnd();
+
+    return resolvedShellConfig;
+  }
+
+  private classifyResolutionContext(
+    consumerProfile?: IConsumerProfile | null,
+    userProfile?: IUserProfile | null
+  ): "STATIC_ONLY" | "USER_ONLY" | "CONSUMER_ONLY" | "FULL_CONTEXT" {
+    if (consumerProfile && userProfile) return "FULL_CONTEXT";
+    if (consumerProfile && !userProfile) return "CONSUMER_ONLY";
+    if (!consumerProfile && userProfile) return "USER_ONLY";
+    return "STATIC_ONLY";
+  }
+
+  private mapResolutionModeToCacheSource(
+    mode: "STATIC_ONLY" | "CONSUMER_ONLY" | "USER_ONLY" | "FULL_CONTEXT"
+  ): "static" | "consumer" | "user" {
+    switch (mode) {
+      case "STATIC_ONLY":
+        return "static";
+
+      case "CONSUMER_ONLY":
+        return "consumer";
+
+      case "USER_ONLY":
+        return "user";
+
+      case "FULL_CONTEXT":
+        // user overrides consumer overrides static
+        return "user";
+
+      default:
+        return "static";
+    }
   }
 }

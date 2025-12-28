@@ -26,10 +26,53 @@ export class UserService {
     // ---------------------------------------------
     // Login
     // ---------------------------------------------
+    // async login(
+    //   user: UserModel,
+    //   consumerGuid: string
+    // ): Promise<ICdResponse | null> {
+    //   if (!consumerGuid) {
+    //     this.logger.warn("[UserService.login] consumerGuid missing");
+    //     return null;
+    //   }
+    //   EnvUserLogin.dat.f_vals[0].data = {
+    //     userName: user.userName,
+    //     password: user.password,
+    //     consumerGuid,
+    //   };
+    //   this.logger.debug("[UserService.login] attempting login", {
+    //     user: user.userName,
+    //     consumerGuid,
+    //   });
+    //   try {
+    //     const res = await this.http.proc(EnvUserLogin, "cdApiLocal");
+    //     this.logger.debug("[UserService.login] res:", {
+    //       res,
+    //     });
+    //     if (!res?.state || !res.data) {
+    //       this.logger.warn("[UserService.login] login failed", {
+    //         reason: res?.message,
+    //       });
+    //       return null;
+    //     }
+    //     const resp = res.data;
+    //     if (resp.app_state?.sess?.cd_token) {
+    //       this.setCdToken(resp.app_state.sess.cd_token);
+    //     }
+    //     return resp;
+    //   } catch (err: any) {
+    //     this.logger.warn("[UserService.login] network/login error", {
+    //       message: err?.message,
+    //     });
+    //     return null;
+    //   }
+    // }
     async login(user, consumerGuid) {
         if (!consumerGuid) {
             this.logger.warn("[UserService.login] consumerGuid missing");
-            return null;
+            return {
+                state: false,
+                message: "consumerGuid missing",
+            };
         }
         EnvUserLogin.dat.f_vals[0].data = {
             userName: user.userName,
@@ -41,53 +84,79 @@ export class UserService {
             consumerGuid,
         });
         try {
-            const res = await this.http.proc(EnvUserLogin, "cdApiLocal");
-            this.logger.debug("[UserService.login] res:", {
-                res,
-            });
-            if (!res?.state || !res.data) {
+            const fx = await this.http.proc(EnvUserLogin, "cdApiLocal");
+            this.logger.debug("[UserService.login] fx:", fx);
+            if (!fx?.state || !fx.data) {
                 this.logger.warn("[UserService.login] login failed", {
-                    reason: res?.message,
+                    reason: fx?.message,
                 });
-                return null;
+                return fx;
             }
-            const resp = res.data;
+            const resp = fx.data;
             if (resp.app_state?.sess?.cd_token) {
                 this.setCdToken(resp.app_state.sess.cd_token);
             }
-            return resp;
+            return fx;
         }
         catch (err) {
             this.logger.warn("[UserService.login] network/login error", {
                 message: err?.message,
             });
-            return null;
+            return {
+                state: false,
+                message: err?.message ?? "login error",
+            };
         }
     }
     // ===================================================================
     // ANON LOGIN
     // ===================================================================
+    // async loginAnonUser(consumerGuid: string): Promise<ICdResponse | void> {
+    //   this.logger.debug("[UserService.loginAnonUser] Performing anon login");
+    //   // const consumerGuid = this.svSysCache.getConsumerGuid();
+    //   this.logger.debug("[UserService.loginAnonUser] consumerGuid", consumerGuid);
+    //   if (!consumerGuid) {
+    //     this.logger.warn(
+    //       "[UserService.loginAnonUser] No consumerGuid → skipping anon login"
+    //     );
+    //     return;
+    //   }
+    //   const anonUser: UserModel = {
+    //     userName: "anon",
+    //     password: "-",
+    //   };
+    //   const resp = await this.login(anonUser, consumerGuid);
+    //   this.logger.debug("[UserService.loginAnonUser] resp:", resp);
+    //   if (!resp) {
+    //     this.logger.warn(
+    //       "[UserService.loginAnonUser] anon login failed → continuing with static shell config"
+    //     );
+    //     return;
+    //   }
+    //   this.logger.debug("[UserService.loginAnonUser] anon login success");
+    //   // this.consumerProfile = resp.data.consumer.consumerProfile || null;
+    //   // this.userProfile = resp.data.userData.userProfile || null;
+    //   return resp
+    // }
     async loginAnonUser(consumerGuid) {
         this.logger.debug("[UserService.loginAnonUser] Performing anon login");
-        // const consumerGuid = this.svSysCache.getConsumerGuid();
         this.logger.debug("[UserService.loginAnonUser] consumerGuid", consumerGuid);
         if (!consumerGuid) {
             this.logger.warn("[UserService.loginAnonUser] No consumerGuid → skipping anon login");
-            return;
+            return null;
         }
         const anonUser = {
             userName: "anon",
             password: "-",
         };
-        const resp = await this.login(anonUser, consumerGuid);
-        if (!resp) {
+        const fx = await this.login(anonUser, consumerGuid);
+        this.logger.debug("[UserService.loginAnonUser] fx:", fx);
+        if (!fx?.state || !fx.data) {
             this.logger.warn("[UserService.loginAnonUser] anon login failed → continuing with static shell config");
-            return;
+            return fx;
         }
         this.logger.debug("[UserService.loginAnonUser] anon login success");
-        // this.consumerProfile = resp.data.consumer.consumerProfile || null;
-        // this.userProfile = resp.data.userData.userProfile || null;
-        return resp;
+        return fx;
     }
     // ---------------------------------------------
     // Fetch user profile
