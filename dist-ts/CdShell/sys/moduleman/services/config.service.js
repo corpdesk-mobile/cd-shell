@@ -60,15 +60,64 @@ export class ConfigService {
         return finalConfig;
     }
     async resolveShellConfig(consumerProfile, userProfile) {
-        this.logger.debug("[ConfigService.resolveShellConfig()] start");
-        this.logger.debug("[ConfigService.resolveShellConfig()] consumerProfile:", consumerProfile);
-        this.logger.debug("[ConfigService.resolveShellConfig()] userProfile:", userProfile);
+        this.logger.debug("[ConfigService.resolveShellConfig] start");
         const base = await this.loadConfig();
-        // 1. Apply consumer defaults
-        const withConsumer = this.applyConsumerShellConfig(base, consumerProfile?.shellConfig);
-        // 2. Apply user overrides (if allowed)
-        const final = this.applyUserShellConfigWithPolicy(withConsumer, userProfile?.shellConfig, consumerProfile?.shellConfig);
+        // --------------------------------------------------
+        // STRUCTURAL VALIDATION (TYPE + RUNTIME)
+        // --------------------------------------------------
+        const hasConsumerShellConfig = !!consumerProfile &&
+            typeof consumerProfile === "object" &&
+            typeof consumerProfile.shellConfig === "object" &&
+            consumerProfile.shellConfig !== null;
+        const hasUserShellConfig = !!userProfile &&
+            typeof userProfile === "object" &&
+            typeof userProfile.shellConfig === "object" &&
+            userProfile.shellConfig !== null;
+        // --------------------------------------------------
+        // OBSERVABILITY (EXPLICIT DEGRADATION SIGNALS)
+        // --------------------------------------------------
+        this.logger.info("[ConfigService.resolveShellConfig] input integrity", {
+            hasConsumerProfile: !!consumerProfile,
+            hasConsumerShellConfig,
+            hasUserProfile: !!userProfile,
+            hasUserShellConfig,
+        });
+        if (consumerProfile && !hasConsumerShellConfig) {
+            this.logger.error("[ConfigService.resolveShellConfig] consumerProfile present but shellConfig missing or invalid", {
+                consumerProfile,
+                degradation: "Consumer policy ignored",
+            });
+        }
+        if (userProfile && !hasUserShellConfig) {
+            this.logger.warn("[ConfigService.resolveShellConfig] userProfile present but shellConfig missing or invalid", {
+                userProfile,
+                degradation: "User overrides ignored",
+            });
+        }
+        // --------------------------------------------------
+        // EFFECTIVE POLICY INPUTS
+        // --------------------------------------------------
+        const consumerShellConfig = hasConsumerShellConfig
+            ? consumerProfile.shellConfig
+            : undefined;
+        const userShellConfig = hasUserShellConfig
+            ? userProfile.shellConfig
+            : undefined;
+        // --------------------------------------------------
+        // CONFIG RESOLUTION PIPELINE
+        // --------------------------------------------------
+        // 1. Apply consumer defaults (if valid)
+        const withConsumer = this.applyConsumerShellConfig(base, consumerShellConfig);
+        // 2. Apply user overrides (policy-aware)
+        const final = this.applyUserShellConfigWithPolicy(withConsumer, userShellConfig, consumerShellConfig);
+        this.logger.debug("[ConfigService.resolveShellConfig] resolved", final);
         return final;
+    }
+    hasValidConsumerShellConfig(consumerProfile) {
+        return !!(consumerProfile &&
+            typeof consumerProfile === "object" &&
+            consumerProfile.shellConfig &&
+            typeof consumerProfile.shellConfig === "object");
     }
     applyConsumerShellConfig(base, consumerShell) {
         if (!consumerShell)

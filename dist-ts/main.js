@@ -76,14 +76,6 @@ export class Main {
         //---------------------------------------
         // STEP 0.5: Anonymous login
         //---------------------------------------
-        // const resp = await this.svUser.loginAnonUser(
-        //   baseShellConfig.envConfig.clientContext.consumerToken
-        // );
-        // this.logger.debug("[Main.run] resp:", resp);
-        // if (resp) {
-        //   this.consumerProfile = resp.data.consumer.consumerProfile || null;
-        //   this.userProfile = resp.data.userData.userProfile || null;
-        // }
         const fx = await this.svUser.loginAnonUser(baseShellConfig.envConfig.clientContext.consumerToken);
         this.logger.debug("[Main.run] fx:", fx);
         if (fx?.state && fx.data) {

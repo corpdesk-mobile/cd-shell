@@ -354,6 +354,14 @@ export class ModuleService {
       allowedModules.push(adminModule);
     }
 
+    // Load moduleman (non-default)
+    const modulemanModule = await this.loadModule("sys", "moduleman");
+    if (modulemanModule) {
+      // 💡 Set the isDefault flag after loading
+      modulemanModule.isDefault = false;
+      allowedModules.push(modulemanModule);
+    }
+
     return allowedModules;
   }
 }

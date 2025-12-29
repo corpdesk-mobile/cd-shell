@@ -22291,6 +22291,128 @@ src/CdShell/sys/cd-admin/
     └── index.js
 ```
 
+////////////////////////////////////////////////////
+
+In corpdesk, we have an effort to keep developing a generic html syntax that is ui-system agnosic which can be intepreted by corpdesk ui-system adaptors to generate specific html for given ui-systems.
+A corpdesk instance consumed by a given tenant, can be configured to be say, bootstrap-538, or material-design etc.
+Below are references for compiled generic sytax. In any of the files, look for the __template() method.
+src/CdShell/sys/cd-user/view/sign-in.controller.js
+src/CdShell/sys/cd-admin/view/cd-admin-settings.controller.js
+src/CdShell/sys/moduleman/view/consumer-resource.controller.js
+
+We need to be able to do generic synax for tabs. For POC,we are focussing on bootstrap and material-design.
+Review the __template() in src/CdShell/sys/moduleman/view/consumer-resource.controller.js so that the template can serve both bootsrap and material-design.
+Below are some references.
+Material Desig Tabs
+Reference: https://github.com/material-components/material-web/blob/main/docs/components/tabs.md
+Sample:
+```html
+<md-tabs>
+  <md-secondary-tab>
+    <md-icon slot="icon">flight</md-icon>
+    Travel
+  </md-secondary-tab>
+  <md-secondary-tab>
+    <md-icon slot="icon">hotel</md-icon>
+    Hotel
+  </md-secondary-tab>
+  <md-secondary-tab>
+    <md-icon slot="icon">hiking</md-icon>
+    Activities
+  </md-secondary-tab>
+</md-tabs>
+```
+Bootstrap tabs
+Reference: https://getbootstrap.com/docs/5.0/components/navs-tabs/
+```html
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">Active</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+  </li>
+</ul>
+```
+
+Material design in react:
+https://mui.com/material-ui/react-accordion/
+```ts
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Button from '@mui/material/Button';
+
+export default function AccordionUsage() {
+  return (
+    <div>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography component="span">Accordion 1</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Accordion 2</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3-content"
+          id="panel3-header"
+        >
+          <Typography component="span">Accordion Actions</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+        <AccordionActions>
+          <Button>Cancel</Button>
+          <Button>Agree</Button>
+        </AccordionActions>
+      </Accordion>
+    </div>
+  );
+}
+```
+
+Directory for adaptors:
+src/CdShell/app/ui-adaptor-port/services
+
+Other related files:
+src/CdShell/sys/cd-guig/services/cd-directive-binder.service.ts
+src/CdShell/sys/cd-guig/controllers/cd-form.control.ts
+src/CdShell/sys/cd-guig/controllers/cd-form-group.control.ts
+
+
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -22423,7 +22545,7 @@ Git update:
   - test subscibers (phase 1)
 - modify backend config via api call
   - review updateUserProfile then used similar principle for updating consumerProfile
-  
+
 
 --- 
 
@@ -22516,6 +22638,8 @@ Now that you have a good understanding how the api works, we are going to be fig
 ---
 
 - do gui for controlling config from front end
+  - set up how tabs can be intepreted by all adaptors
+  - set up how adaptors can be intepreted by all adptors
 
 ---
 
