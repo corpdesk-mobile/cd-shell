@@ -1,8 +1,10 @@
+// src/CdShell/sys/moduleman/view/index.js
+
 // ------------------------------------------------------------
 // index.js
 // ------------------------------------------------------------
 import { ctlConsumerResource } from "./consumer-resource.controller.js";
-import { ctlConsumerResource2 } from "./consumer-resource.controller2.js";
+import { ctlConsumerResource2 } from "./consumer-resource2.controller.js";
 
 export const consumerResourceModule = {
   ctx: "sys",
@@ -27,12 +29,6 @@ export const consumerResourceModule = {
           route: "sys/moduleman/consumer-resource",
           template: ctlConsumerResource.__template(),
         },
-      ],
-    },
-    {
-      label: "consumer2",
-      route: "sys/consumer2",
-      children: [
         {
           label: "consumer-resource2",
           itemType: "route",

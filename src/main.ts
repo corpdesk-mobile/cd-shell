@@ -15,6 +15,8 @@ import {
   IUserShellConfig,
 } from "./CdShell/sys/cd-user/models/user.model";
 import { UserService } from "./CdShell/sys/cd-user/services/user.service";
+import { UiSystemAdapterDiscoveryService } from "./CdShell/sys/cd-guig/services/ui-system-adaptor-discovery.service";
+import { UiSystemAdapterRegistry } from "./CdShell/sys/cd-guig/services/ui-system-registry.service";
 
 export class Main {
   private svSysCache!: SysCacheService;
@@ -128,6 +130,22 @@ export class Main {
     this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
     this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
     this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    //---------------------------------------
+    // STEP 1.5: Discover & register UI adapters (CRITICAL)
+    //---------------------------------------
+    this.logger.debug("[Main] Discovering UI system adapters");
+
+    UiSystemAdapterDiscoveryService.discoverAndRegister();
+
+    const adapters = UiSystemAdapterRegistry.list();
+    this.logger.debug("[Main] UI adapters registered", adapters);
+
+    if (!adapters.length) {
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check discovery paths."
+      );
+    }
 
     //---------------------------------------
     // STEP 2: Load STATIC cache (CRITICAL)

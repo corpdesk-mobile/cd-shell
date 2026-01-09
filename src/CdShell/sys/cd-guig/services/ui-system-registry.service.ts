@@ -35,4 +35,5 @@ export class UiSystemAdapterRegistry {
   static list(): string[] {
     return Array.from(this.registry.keys());
   }
+  
 }

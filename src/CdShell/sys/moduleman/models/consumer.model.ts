@@ -3,11 +3,7 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  PrimaryColumn,
-  Unique,
 } from "../../../sys/utils/orm-shim";
-import { v4 as uuidv4 } from "uuid";
-import { validateOrReject } from "class-validator";
 import { IShellConfig } from "../../base";
 // import { IShellConfig } from "./config.model";
 

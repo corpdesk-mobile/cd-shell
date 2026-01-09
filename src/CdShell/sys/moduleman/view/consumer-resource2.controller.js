@@ -93,47 +93,55 @@ export const ctlConsumerResource2 = {
         <h2>Consumer Shell Configuration</h2>
 
         <form id="consumerShellConfigForm" class="cd-form">
-          <fieldset>
-            <legend>Identity</legend>
+          
+          <cd-tabs id="shellConfigTabs" active-tab="tab-identity">
+            
+            <cd-tab id="tab-identity" icon="fingerprint" label="Identity">
+              <div class="mt-3">
+                <div class="cd-form-field">
+                  <label>Application Name</label>
+                  <input type="text" name="appName" cdFormControl />
+                </div>
 
-            <div class="cd-form-field">
-              <label>Application Name</label>
-              <input type="text" name="appName" cdFormControl />
-            </div>
+                <div class="cd-form-field">
+                  <label>Log Level</label>
+                  <select name="logLevel" cdFormControl>
+                    <option value="debug">debug</option>
+                    <option value="info">info</option>
+                    <option value="warn">warn</option>
+                    <option value="error">error</option>
+                  </select>
+                </div>
+              </div>
+            </cd-tab>
 
-            <div class="cd-form-field">
-              <label>Log Level</label>
-              <select name="logLevel" cdFormControl>
-                <option value="debug">debug</option>
-                <option value="info">info</option>
-                <option value="warn">warn</option>
-                <option value="error">error</option>
-              </select>
-            </div>
-          </fieldset>
+            <cd-tab id="tab-startup" icon="rocket_launch" label="Startup">
+              <div class="mt-3">
+                <div class="cd-form-field">
+                  <label>
+                    <input type="checkbox" name="splashEnabled" cdFormControl />
+                    Enable Splash Screen
+                  </label>
+                </div>
 
-          <fieldset>
-            <legend>Startup (Splash)</legend>
+                <div class="cd-form-field">
+                  <label>Splash Asset Path</label>
+                  <input type="text" name="splashPath" cdFormControl />
+                </div>
 
-            <div class="cd-form-field">
-              <label>
-                <input type="checkbox" name="splashEnabled" cdFormControl />
-                Enable Splash Screen
-              </label>
-            </div>
+                <div class="cd-form-field">
+                  <label>Minimum Duration (ms)</label>
+                  <input type="number" name="splashMinDuration" cdFormControl />
+                </div>
+              </div>
+            </cd-tab>
 
-            <div class="cd-form-field">
-              <label>Splash Asset Path</label>
-              <input type="text" name="splashPath" cdFormControl />
-            </div>
+          </cd-tabs>
 
-            <div class="cd-form-field">
-              <label>Minimum Duration (ms)</label>
-              <input type="number" name="splashMinDuration" cdFormControl />
-            </div>
-          </fieldset>
-
-          <button cdButton (click)="onSave()">Save Configuration</button>
+          <div class="mt-4">
+            <button cdButton (click)="onSave()">Save Configuration</button>
+          </div>
+          
         </form>
       </div>
     `;
@@ -164,4 +172,3 @@ export const ctlConsumerResource2 = {
     console.log("[ctlConsumerResource] consumer shellConfig updated", patch);
   },
 };
-

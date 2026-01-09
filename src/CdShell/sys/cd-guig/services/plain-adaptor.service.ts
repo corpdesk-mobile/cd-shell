@@ -1,10 +1,19 @@
 import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
-import { IUiSystemAdapter } from "../models/ui-system-adaptor.model";
+import { UiThemeDescriptor } from "../../dev-descriptor/models/ui-theme-descriptor.model";
+import {
+  IUiSystemAdapter,
+  UiAdapterMeta,
+} from "../models/ui-system-adaptor.model";
 
 export class PlainAdapter implements IUiSystemAdapter {
   private descriptor?: UiSystemDescriptor;
   private linkEl?: HTMLLinkElement;
   private appliedClass?: string;
+  protected meta!: UiAdapterMeta;
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
+  }
 
   async activate(descriptor: UiSystemDescriptor): Promise<void> {
     this.descriptor = descriptor;
@@ -58,7 +67,7 @@ export class PlainAdapter implements IUiSystemAdapter {
   deactivate(): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  async applyTheme(themeId: string) {
+  async applyTheme(theme: UiThemeDescriptor) {
     // plain css theme uses CSS variables, no per-system logic needed
   }
 }

@@ -214,4 +214,26 @@ export class SysCacheService {
             source,
         });
     }
+    getUiSystemById(systemId) {
+        const systems = this.get("uiSystemDescriptors") || [];
+        return systems.find((s) => s.id === systemId);
+    }
+    getThemeById(themeId) {
+        const themes = this.get("themeDescriptors") || [];
+        return themes.find((t) => t.id === themeId);
+    }
+    resolveTheme(input) {
+        if (!input)
+            return undefined;
+        if (typeof input === "string")
+            return this.getThemeById(input);
+        return input;
+    }
+    resolveUiSystem(input) {
+        if (!input)
+            return undefined;
+        if (typeof input === "string")
+            return this.getUiSystemById(input);
+        return input;
+    }
 }

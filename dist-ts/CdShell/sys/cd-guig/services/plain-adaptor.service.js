@@ -1,4 +1,7 @@
 export class PlainAdapter {
+    setMeta(meta) {
+        this.meta = meta;
+    }
     async activate(descriptor) {
         this.descriptor = descriptor;
         // remove any previously injected stylesheet
@@ -45,7 +48,7 @@ export class PlainAdapter {
     deactivate() {
         throw new Error("Method not implemented.");
     }
-    async applyTheme(themeId) {
+    async applyTheme(theme) {
         // plain css theme uses CSS variables, no per-system logic needed
     }
 }

@@ -10,7 +10,6 @@ import {
 import { LoggerService } from "../../../utils/logger.service";
 
 export class SysCacheService {
-
   private logger = new LoggerService();
   private static instance: SysCacheService;
 
@@ -296,7 +295,10 @@ export class SysCacheService {
     source: CacheMeta["source"] = "resolved"
   ): void {
     this.logger.debug("[SysCacheService.applyResolvedShellConfig()] start");
-    this.logger.debug("[SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:", resolvedShellConfig);
+    this.logger.debug(
+      "[SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:",
+      resolvedShellConfig
+    );
 
     if (!resolvedShellConfig) return;
 
@@ -326,5 +328,27 @@ export class SysCacheService {
       defaultThemeId: uiConfig.defaultThemeId,
       source,
     });
+  }
+
+  public getUiSystemById(systemId: string): any | undefined {
+    const systems = this.get("uiSystemDescriptors") || [];
+    return systems.find((s: any) => s.id === systemId);
+  }
+
+  public getThemeById(themeId: string): any | undefined {
+    const themes = this.get("themeDescriptors") || [];
+    return themes.find((t: any) => t.id === themeId);
+  }
+
+  public resolveTheme(input: string | any): any | undefined {
+    if (!input) return undefined;
+    if (typeof input === "string") return this.getThemeById(input);
+    return input;
+  }
+
+  public resolveUiSystem(input: string | any): any | undefined {
+    if (!input) return undefined;
+    if (typeof input === "string") return this.getUiSystemById(input);
+    return input;
   }
 }

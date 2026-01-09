@@ -1,4 +1,13 @@
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+/**
+ * Initialization options for the LoggerService.
+ * new LoggerService(); // legacy default
+new LoggerService({ context: "Shell", level: "debug" }); // existing
+new LoggerService("UiThemeNormalizer"); // new ergonomic form
+new LoggerService("UiThemeNormalizer", { level: "warn" }); // optional extension
+
+ */
+
+export type LogLevel = "debug" | "info" | "warn" | "error";
 
 interface LoggerOptions {
   context?: string;
@@ -11,10 +20,31 @@ export class LoggerService {
   private level: LogLevel;
   private silent: boolean;
 
-  constructor(options: LoggerOptions = {}) {
-    this.context = options.context || 'Shell';
-    this.level = options.level || 'debug';
-    this.silent = options.silent || false;
+  // constructor(options: LoggerOptions = {}) {
+  //   this.context = options.context || "Shell";
+  //   this.level = options.level || "debug";
+  //   this.silent = options.silent || false;
+  // }
+  constructor(
+    contextOrOptions: string | LoggerOptions = {},
+    options?: LoggerOptions
+  ) {
+    let resolvedOptions: LoggerOptions;
+
+    // --- NEW ergonomic constructor support ---
+    if (typeof contextOrOptions === "string") {
+      resolvedOptions = {
+        context: contextOrOptions,
+        ...options,
+      };
+    } else {
+      resolvedOptions = contextOrOptions;
+    }
+
+    // --- Existing defaults preserved ---
+    this.context = resolvedOptions.context || "Shell";
+    this.level = resolvedOptions.level || "debug";
+    this.silent = resolvedOptions.silent || false;
   }
 
   private shouldLog(level: LogLevel): boolean {
@@ -33,35 +63,35 @@ export class LoggerService {
     const prefix = `[${this.context.toUpperCase()}] [${level.toUpperCase()}]`;
 
     switch (level) {
-      case 'debug':
+      case "debug":
         console.debug(prefix, message, ...args);
         break;
-      case 'info':
+      case "info":
         console.info(prefix, message, ...args);
         break;
-      case 'warn':
+      case "warn":
         console.warn(prefix, message, ...args);
         break;
-      case 'error':
+      case "error":
         console.error(prefix, message, ...args);
         break;
     }
   }
 
   debug(message: string, ...args: unknown[]) {
-    this.log('debug', message, ...args);
+    this.log("debug", message, ...args);
   }
 
   info(message: string, ...args: unknown[]) {
-    this.log('info', message, ...args);
+    this.log("info", message, ...args);
   }
 
   warn(message: string, ...args: unknown[]) {
-    this.log('warn', message, ...args);
+    this.log("warn", message, ...args);
   }
 
   error(message: string, ...args: unknown[]) {
-    this.log('error', message, ...args);
+    this.log("error", message, ...args);
   }
 
   setContext(context: string) {
@@ -80,3 +110,4 @@ export class LoggerService {
     this.silent = false;
   }
 }
+

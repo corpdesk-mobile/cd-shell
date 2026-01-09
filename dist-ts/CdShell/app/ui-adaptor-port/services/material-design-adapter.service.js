@@ -1,14 +1,140 @@
+import { CdUiContainerType, CdUiControlType, CdUiLayoutType, UiAdapterStatus, } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { UiAdapterLifecycle, UiAdapterPhase, } from "../../../sys/cd-guig/models/ui-system-introspector.model";
+import { BaseUiAdapter } from "../../../sys/cd-guig/services/base-ui-adapter.service";
 import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 import { diag_css } from "../../../sys/utils/diagnosis";
-export class MaterialDesignAdapterService {
+export class MaterialDesignAdapterService extends BaseUiAdapter {
     constructor() {
+        // private descriptor: UiSystemDescriptor | null = null;
+        // private observer: MutationObserver | null = null;
+        // private appliedSet = new WeakSet<HTMLElement>();
+        super(...arguments);
+        // private mdcInitQueued = false;
+        // private mdcInstances = new Set<any>();
+        // protected meta!: UiAdapterMeta;
         this.descriptor = null;
         this.observer = null;
         this.appliedSet = new WeakSet();
         this.mdcInitQueued = false;
         this.mdcInstances = new Set();
-        console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+        this.adapterId = "material-design";
+        this.capabilities = {
+            layouts: [CdUiLayoutType.GRID],
+            containers: [
+                CdUiContainerType.TABS,
+                CdUiContainerType.TAB,
+                CdUiContainerType.CARD,
+            ],
+            controls: [
+                CdUiControlType.BUTTON,
+                CdUiControlType.TEXT_FIELD,
+                CdUiControlType.SELECT,
+            ],
+        };
+        this.meta = {
+            id: "material-design",
+            version: "mdc",
+            status: UiAdapterStatus.ACTIVE,
+            vendor: "Material Design",
+        };
     }
+    // constructor() {
+    //   console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+    // }
+    /* ======================================================================
+     * ACTIVATION
+     * ====================================================================== */
+    async onActivate(descriptor) {
+        this.log("info", "lifecycle:activate:start", "Material adapter activating", {
+            lifecycle: this.lifecycle,
+        });
+        if (!descriptor) {
+            this.log("error", "activate:error", "Descriptor is null");
+            return;
+        }
+        /* ------------------------------
+         * INITIALIZED
+         * ------------------------------ */
+        if (this.lifecycle === UiAdapterLifecycle.CREATED) {
+            this.descriptor = descriptor;
+            this.appliedSet = new WeakSet();
+            this.transitionTo(UiAdapterLifecycle.INITIALIZED);
+        }
+        /* ------------------------------
+         * ACTIVATED
+         * ------------------------------ */
+        if (this.lifecycle === UiAdapterLifecycle.INITIALIZED) {
+            this.transitionTo(UiAdapterLifecycle.ACTIVATED);
+        }
+        /* ------------------------------
+         * MAPPED
+         * ------------------------------ */
+        if (this.lifecycle === UiAdapterLifecycle.ACTIVATED) {
+            this.mapAll();
+            this.transitionTo(UiAdapterLifecycle.MAPPED);
+        }
+        /* ------------------------------
+         * OBSERVING
+         * ------------------------------ */
+        if (this.lifecycle === UiAdapterLifecycle.MAPPED) {
+            this.observeMutations();
+            this.transitionTo(UiAdapterLifecycle.OBSERVING);
+        }
+        /* ------------------------------
+         * Shell coordination
+         * ------------------------------ */
+        if (this.lifecycle >= UiAdapterLifecycle.OBSERVING) {
+            this.setPhase(UiAdapterPhase.CONTROLLER_READY, "Material adapter controller ready");
+            this.markDomStable("Initial Material mapping completed");
+        }
+        this.log("info", "lifecycle:activate:end", "Material adapter activated", {
+            lifecycle: this.lifecycle,
+        });
+    }
+    async onDeactivate() {
+        this.log("info", "lifecycle:deactivate:start", "Material adapter deactivating");
+        if (this.observer) {
+            try {
+                this.observer.disconnect();
+            }
+            catch { }
+            this.observer = null;
+        }
+        try {
+            document.documentElement.removeAttribute("data-md-theme");
+        }
+        catch { }
+        try {
+            this.mdcInstances.forEach((inst) => inst.destroy?.());
+            this.mdcInstances.clear();
+        }
+        catch { }
+        this.descriptor = null;
+        this.appliedSet = new WeakSet();
+        this.transitionTo(UiAdapterLifecycle.CREATED);
+        this.log("info", "lifecycle:deactivate:end", "Material adapter deactivated");
+    }
+    /* ======================================================================
+     * THEME
+     * ====================================================================== */
+    onApplyTheme(theme) {
+        // Migration-safe: do not hard-fail lifecycle yet
+        if (this.lifecycle < UiAdapterLifecycle.ACTIVATED) {
+            this.logger.warn(`[UI-ADAPTER:${this.adapterId}] applyTheme skipped – adapter not activated`, { lifecycle: this.lifecycle });
+            return;
+        }
+        if (!theme)
+            return;
+        const mode = theme.mode || (theme.id === "dark" ? "dark" : "light");
+        document.documentElement.setAttribute("data-md-theme", mode === "dark" ? "dark" : "light");
+        this.transitionTo(UiAdapterLifecycle.THEMED);
+        this.logger.debug(`[UI-ADAPTER:${this.adapterId}] applyTheme:done`, {
+            mode,
+        });
+    }
+    // public setMeta(meta: UiAdapterMeta): void {
+    //   this.meta = meta;
+    // }
     // ---------------------------------------------------------------------------
     // Activation / Deactivation
     // ---------------------------------------------------------------------------
@@ -585,6 +711,86 @@ export class MaterialDesignAdapterService {
             }
         });
     }
+    // Inside material-design-adapter.service.ts
+    mapTabs() {
+        const tabsContainers = document.querySelectorAll("cd-tabs");
+        tabsContainers.forEach((container) => {
+            if (this.appliedSet.has(container))
+                return;
+            const activeTabId = container.getAttribute("active-tab");
+            const cdTabs = Array.from(container.querySelectorAll("cd-tab"));
+            const tabsId = container.id || `tabs-${Math.random().toString(36).slice(2, 5)}`;
+            // 1. Build the MDC M2 Shell
+            const tabBar = document.createElement("div");
+            tabBar.className = "mdc-tab-bar";
+            tabBar.setAttribute("role", "tablist");
+            const scroller = document.createElement("div");
+            scroller.className = "mdc-tab-scroller";
+            const scrollArea = document.createElement("div");
+            scrollArea.className = "mdc-tab-scroller__scroll-area";
+            const scrollContent = document.createElement("div");
+            scrollContent.className = "mdc-tab-scroller__scroll-content";
+            const contentWrapper = document.createElement("div");
+            contentWrapper.className = "cd-md-tabs-content mt-3";
+            // 2. Process child <cd-tab> elements
+            cdTabs.forEach((tab, index) => {
+                const tabId = tab.id || `${tabsId}-t-${index}`;
+                const label = tab.getAttribute("label") || "Tab";
+                const isActive = tab.id === activeTabId || (!activeTabId && index === 0);
+                // Create the Button (Force type="button" to prevent SPA reloads)
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `mdc-tab ${isActive ? "mdc-tab--active" : ""}`;
+                btn.setAttribute("role", "tab");
+                btn.setAttribute("aria-selected", isActive ? "true" : "false");
+                btn.id = `${tabId}-btn`;
+                // Inner structure for MDC effects
+                btn.innerHTML = `
+        <span class="mdc-tab__content">
+          <span class="mdc-tab__text-label">${label}</span>
+        </span>
+        <span class="mdc-tab-indicator ${isActive ? "mdc-tab-indicator--active" : ""}">
+          <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+        </span>
+        <span class="mdc-tab__ripple"></span>
+      `;
+                // Create the Content Pane
+                const pane = document.createElement("div");
+                pane.id = `${tabId}-pane`;
+                pane.style.display = isActive ? "block" : "none";
+                pane.innerHTML = tab.innerHTML;
+                contentWrapper.appendChild(pane);
+                // 3. SPA-Friendly Click Handler
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault(); // Safety check
+                    // Deactivate all buttons in this bar
+                    scrollContent.querySelectorAll(".mdc-tab").forEach((b) => {
+                        b.classList.remove("mdc-tab--active");
+                        b.querySelector(".mdc-tab-indicator")?.classList.remove("mdc-tab-indicator--active");
+                    });
+                    // Activate clicked button
+                    btn.classList.add("mdc-tab--active");
+                    btn
+                        .querySelector(".mdc-tab-indicator")
+                        ?.classList.add("mdc-tab-indicator--active");
+                    // Toggle Panes
+                    Array.from(contentWrapper.children).forEach((p) => (p.style.display = "none"));
+                    pane.style.display = "block";
+                    console.log(`[MaterialAdapter] Switched to tab: ${label}`);
+                });
+                scrollContent.appendChild(btn);
+            });
+            // Final Assembly
+            scrollArea.appendChild(scrollContent);
+            scroller.appendChild(scrollArea);
+            tabBar.appendChild(scroller);
+            const fragment = document.createDocumentFragment();
+            fragment.appendChild(tabBar);
+            fragment.appendChild(contentWrapper);
+            container.replaceWith(fragment);
+            this.appliedSet.add(tabBar);
+        });
+    }
     mapFormGroups() {
         const mapping = this.getMapping("formGroup");
         if (!mapping)
@@ -630,6 +836,7 @@ export class MaterialDesignAdapterService {
             this.mapButtons();
             this.mapInputs();
             this.mapFormGroups();
+            this.mapTabs();
             this.mapOtherConcepts();
             this.scheduleMdcInit();
         }
@@ -670,3 +877,193 @@ export class MaterialDesignAdapterService {
 }
 // Self-register with the adapter registry
 UiSystemAdapterRegistry.register("material-design", new MaterialDesignAdapterService());
+/////////////////////////////////////////////////////////////////
+// export class MaterialDesignAdapterService extends BaseUiAdapter {
+//   private mdcInitQueued = false;
+//   private mdcInstances = new Set<any>();
+//   protected getIconMap(): Record<string, string> {
+//     return {
+//       identity: "fingerprint",
+//       startup: "rocket_launch",
+//       settings: "settings",
+//       save: "done",
+//     };
+//   }
+//   // ---------------------------------------------------------------------------
+//   // NEW WORLD: DESCRIPTOR SYNTHESIS
+//   // ---------------------------------------------------------------------------
+//   protected createContainer(
+//     d: CdUiContainerDescriptor,
+//     parent: HTMLElement
+//   ): HTMLElement {
+//     let el: HTMLElement;
+//     let targetContainer: HTMLElement;
+//     switch (d.containerType) {
+//       case CdUiContainerType.TABS:
+//         // Hierarchical structure for MDC Tab Bar
+//         el = document.createElement("div");
+//         el.className = "mdc-tab-bar";
+//         el.setAttribute("role", "tablist");
+//         el.innerHTML = `
+//           <div class="mdc-tab-scroller">
+//             <div class="mdc-tab-scroller__scroll-area">
+//               <div class="mdc-tab-scroller__scroll-content"></div>
+//             </div>
+//           </div>
+//         `;
+//         targetContainer = el.querySelector(
+//           ".mdc-tab-scroller__scroll-content"
+//         ) as HTMLElement;
+//         break;
+//       case CdUiContainerType.TAB:
+//         const btn = document.createElement("button");
+//         btn.className = "mdc-tab";
+//         btn.setAttribute("role", "tab");
+//         // OPTION A: Type Casting (Recommended for internal logic)
+//         (btn as HTMLButtonElement).type = "button";
+//         // OPTION B: Using setAttribute (Safe for any HTMLElement)
+//         // btn.setAttribute("type", "button");
+//         btn.innerHTML = `
+//           <span class="mdc-tab__content">
+//             <span class="mdc-tab__text-label">${d.label || ""}</span>
+//           </span>
+//           <span class="mdc-tab-indicator">
+//             <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+//           </span>
+//           <span class="mdc-tab__ripple"></span>
+//         `;
+//         el = btn;
+//         targetContainer = el;
+//         break;
+//       case CdUiContainerType.CARD:
+//         el = document.createElement("div");
+//         el.className = "mdc-card mdc-card--outlined mb-3 p-3";
+//         targetContainer = el;
+//         break;
+//       default:
+//         el = document.createElement("div");
+//         targetContainer = el;
+//     }
+//     el.id = d.id;
+//     parent.appendChild(el);
+//     this.scheduleMdcInit();
+//     return targetContainer;
+//   }
+//   protected createControl(
+//     d: CdUiControlDescriptor,
+//     parent: HTMLElement
+//   ): HTMLElement {
+//     let el: HTMLElement;
+//     switch (d.controlType) {
+//       case CdUiControlType.BUTTON:
+//         el = document.createElement("button");
+//         const mapping = this.getMapping("button");
+//         el.className = mapping?.class || "mdc-button mdc-button--raised";
+//         el.innerHTML = `
+//           <span class="mdc-button__ripple"></span>
+//           <span class="mdc-button__label">${d.id}</span>
+//         `;
+//         break;
+//       case CdUiControlType.TEXT_FIELD:
+//         // Use the wrapper pattern from the previous working version
+//         const wrapper = document.createElement("label");
+//         wrapper.className =
+//           "mdc-text-field mdc-text-field--filled cd-md-text-field";
+//         wrapper.innerHTML = `
+//           <span class="mdc-text-field__ripple"></span>
+//           <span class="mdc-floating-label">${d.placeholder || ""}</span>
+//           <input type="text" class="mdc-text-field__input" id="${d.id}">
+//           <span class="mdc-line-ripple"></span>
+//         `;
+//         el = wrapper;
+//         break;
+//       default:
+//         el = document.createElement("span");
+//         el.innerText = d.id;
+//     }
+//     el.id = d.id;
+//     parent.appendChild(el);
+//     this.scheduleMdcInit();
+//     return el;
+//   }
+//   // ---------------------------------------------------------------------------
+//   // COMPATIBILITY & LIFECYCLE
+//   // ---------------------------------------------------------------------------
+//   protected mapAll(): void {
+//     // Ported from previous version: map existing DOM tags
+//     this.mapButtons();
+//     this.mapFormGroups();
+//     this.scheduleMdcInit();
+//   }
+//   async applyTheme(themeId: string): Promise<void> {
+//     const mode = themeId === "dark" ? "dark" : "light";
+//     document.documentElement.setAttribute("data-md-theme", mode);
+//     diag_css("[MaterialDesignAdapter] Theme Applied", { mode });
+//   }
+//   async deactivate(): Promise<void> {
+//     await super.deactivate();
+//     this.mdcInstances.forEach((inst) => inst.destroy?.());
+//     this.mdcInstances.clear();
+//   }
+//   // ---------------------------------------------------------------------------
+//   // PRIVATE MDC LOGIC (Preserved from old version)
+//   // ---------------------------------------------------------------------------
+//   private mapButtons() {
+//     const mapping = this.getMapping("button");
+//     document
+//       .querySelectorAll<HTMLElement>("button[cdButton]")
+//       .forEach((btn) => {
+//         if (this.appliedSet.has(btn)) return;
+//         btn.classList.add(
+//           ...(mapping?.class?.split(" ") || [
+//             "mdc-button",
+//             "mdc-button--raised",
+//           ])
+//         );
+//         // Upgrade internal structure for ripple
+//         if (!btn.querySelector(".mdc-button__label")) {
+//           const txt = btn.innerText;
+//           btn.innerHTML = `<span class="mdc-button__ripple"></span><span class="mdc-button__label">${txt}</span>`;
+//         }
+//         this.appliedSet.add(btn);
+//       });
+//   }
+//   private mapFormGroups() {
+//     // Ported logic: transforms .cd-form-field into MDC TextFields
+//     document
+//       .querySelectorAll<HTMLElement>(".cd-form-field")
+//       .forEach((field) => {
+//         if (this.appliedSet.has(field)) return;
+//         // This refers to the prepareMdcDom logic you provided earlier
+//         // For brevity in this refactor, synthesize() replaces most of this,
+//         // but mapAll() can still call it for legacy support.
+//       });
+//   }
+//   private scheduleMdcInit() {
+//     if (this.mdcInitQueued) return;
+//     this.mdcInitQueued = true;
+//     setTimeout(() => {
+//       const mdc = (window as any).mdc;
+//       if (!mdc) return;
+//       // Auto-init all components found in the DOM
+//       document
+//         .querySelectorAll(".mdc-text-field, .mdc-tab-bar")
+//         .forEach((el) => {
+//           if ((el as any).__cd_mdc_initialized) return;
+//           try {
+//             if (el.classList.contains("mdc-text-field"))
+//               new mdc.textField.MDCTextField(el);
+//             if (el.classList.contains("mdc-tab-bar"))
+//               new mdc.tabBar.MDCTabBar(el);
+//             (el as any).__cd_mdc_initialized = true;
+//           } catch (e) {}
+//         });
+//       this.mdcInitQueued = false;
+//     }, 50);
+//   }
+// }
+// // Self-register with the adapter registry
+// UiSystemAdapterRegistry.register(
+//   "material-design",
+//   new MaterialDesignAdapterService()
+// );

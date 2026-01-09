@@ -13772,12 +13772,13 @@ export class Main {
 ////////////////////////////////////
 We are now having the page rendered.
 But there are a few formating issues.
+
 1. sidebar is appearing as a row after the header before cd-main-content
 2. Earlier the background for the header was blue. It is now just blackish
 3. The background for sidbar was dark but slightly lighter than the conten area. Now they are equally dark
 4. The login form is now not 100% as earlier but shorter and centralized.
-In short, there could be some css issue.
-We have not changed any logic or css values, there must be flow issue that is resulting in css undesired effect.
+   In short, there could be some css issue.
+   We have not changed any logic or css values, there must be flow issue that is resulting in css undesired effect.
 
 ```html
 <body>
@@ -13942,15 +13943,15 @@ We have not changed any logic or css values, there must be flow issue that is re
 ```
 
 ```log
-[UiSystemAdapterRegistry] register: bootstrap-502 
+[UiSystemAdapterRegistry] register: bootstrap-502
 Object {  }
 index-B5BK6woa.js:15:23109
 [Bootstrap538AdapterService] constructor() index-B5BK6woa.js:15:24226
-[UiSystemAdapterRegistry] register: bootstrap-538 
+[UiSystemAdapterRegistry] register: bootstrap-538
 Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
 index-B5BK6woa.js:15:23109
 [MaterialDesignAdapter] constructor() index-B5BK6woa.js:15:28503
-[UiSystemAdapterRegistry] register: material-design 
+[UiSystemAdapterRegistry] register: material-design
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2) }
 index-B5BK6woa.js:15:23109
 [Bootstrap538AdapterService] constructor() index-B5BK6woa.js:15:24226
@@ -13959,114 +13960,114 @@ start 1 index-B5BK6woa.js:57:4988
 [ModuleService][constructor]: starting index-B5BK6woa.js:15:15479
 [ModuleService] Running under Vite (browser). index-B5BK6woa.js:15:15552
 [SHELL] [DEBUG] [Main] init(): starting index-B5BK6woa.js:15:13029
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-B5BK6woa.js:19:14500
 [SHELL] [DEBUG] [Main] init(): completed index-B5BK6woa.js:15:13029
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-B5BK6woa.js:19:14500
 [SHELL] [DEBUG] Main.run() started index-B5BK6woa.js:15:13029
 [SysCacheService] 01: Starting Eager Load index-B5BK6woa.js:15:20818
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-B5BK6woa.js:19:8417
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-B5BK6woa.js:19:8549
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-B5BK6woa.js:19:8549
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-B5BK6woa.js:19:8549
-[UiThemeLoaderService][fetchAvailableThemes] start 
+[UiThemeLoaderService][fetchAvailableThemes] start
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
 index-B5BK6woa.js:19:16727
 [SysCacheService] Load complete. index-B5BK6woa.js:15:22139
-[SHELL] [DEBUG] [UserService.login] attempting login 
+[SHELL] [DEBUG] [UserService.login] attempting login
 Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
 index-B5BK6woa.js:15:13029
 [HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-B5BK6woa.js:33:6447
 [HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-B5BK6woa.js:33:5217
-[HttpService] Request Config: 
+[HttpService] Request Config:
 Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
 index-B5BK6woa.js:33:5217
-[SHELL] [DEBUG] [UserService.login] res: 
+[SHELL] [DEBUG] [UserService.login] res:
 Object { res: {…} }
 index-B5BK6woa.js:15:13029
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-B5BK6woa.js:15:22972
-[UiSystemLoaderService.activate] descriptorFromCache: 
+[UiSystemLoaderService.activate] descriptorFromCache:
 Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
 index-B5BK6woa.js:19:9654
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED
 Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
 index-B5BK6woa.js:15:28711
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
 Object { themeId: "dark" }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded
 Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
 index-B5BK6woa.js:15:22972
 ThemeService::loadThemeConfig(default) index-B5BK6woa.js:15:13494
@@ -14078,10 +14079,10 @@ ModuleService::loadModule()/01: index-B5BK6woa.js:15:18460
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-B5BK6woa.js:15:18624
 [ModuleService] 1 index-B5BK6woa.js:15:18684
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-B5BK6woa.js:15:18961
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-B5BK6woa.js:15:19120
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-B5BK6woa.js:15:19179
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-B5BK6woa.js:15:19331
@@ -14093,10 +14094,10 @@ ModuleService::loadModule()/01: index-B5BK6woa.js:15:18460
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-B5BK6woa.js:15:18624
 [ModuleService] 1 index-B5BK6woa.js:15:18684
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-B5BK6woa.js:15:18961
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-B5BK6woa.js:15:19120
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-B5BK6woa.js:15:19179
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-B5BK6woa.js:15:19331
@@ -14107,10 +14108,10 @@ ModuleService::loadModule()/01: index-B5BK6woa.js:15:18460
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-B5BK6woa.js:15:18624
 [ModuleService] 1 index-B5BK6woa.js:15:18684
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-B5BK6woa.js:15:18961
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
 index-B5BK6woa.js:15:19120
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…}, {…} ]
 index-B5BK6woa.js:15:19179
 [ModuleService] Loaded 'cd-user' (Vite mode) at 19/12/2025, 19:04:58 index-B5BK6woa.js:15:19419
@@ -14118,10 +14119,10 @@ ModuleService::loadModule()/01: index-B5BK6woa.js:15:18460
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-B5BK6woa.js:15:18624
 [ModuleService] 1 index-B5BK6woa.js:15:18684
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-B5BK6woa.js:15:18961
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
 index-B5BK6woa.js:15:19120
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-B5BK6woa.js:15:19179
 [ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-B5BK6woa.js:15:19331
@@ -14135,14 +14136,14 @@ index-B5BK6woa.js:15:19179
 ThemeService::loadThemeConfig(default) index-B5BK6woa.js:15:13494
 Starting renderMenuWithSystem() index-B5BK6woa.js:40:8129
 renderMenuWithSystem()/01 index-B5BK6woa.js:40:8178
-MenuService::renderPlainMenu()/menu: 
+MenuService::renderPlainMenu()/menu:
         ...trancated...
       index-B5BK6woa.js:40:8790
 renderMenuWithSystem()/adapter: {"instance":null} index-B5BK6woa.js:40:8400
 renderMenuWithSystem()/03 index-B5BK6woa.js:40:8588
 renderMenuWithSystem()/04 index-B5BK6woa.js:40:8675
 MenuService::loadResource()/start... index-B5BK6woa.js:40:10637
-[MenuService][loadResource] options: 
+[MenuService][loadResource] options:
 Object { item: {…} }
 index-B5BK6woa.js:40:10689
 [ControllerCacheService][getInstance] start... index-B5BK6woa.js:40:6771
@@ -14159,71 +14160,71 @@ CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5
 [MenuService] Waiting for controller services to initialize... attempt 4 index-B5BK6woa.js:40:11478
 [MenuService] Waiting for controller services to initialize... attempt 5 index-B5BK6woa.js:40:11478
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
@@ -14241,92 +14242,92 @@ MenuService::loadResource()/end index-B5BK6woa.js:40:12121
 [SHELL] [DEBUG] [Main] bootstrapUi(): complete index-B5BK6woa.js:15:13029
 [SHELL] [DEBUG] Main.run() complete index-B5BK6woa.js:15:13029
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] Applying mapping to element: 
+[MaterialDesignAdapter] Applying mapping to element:
 Object { tag: "BUTTON", mapping: {…} }
 index-B5BK6woa.js:15:30270
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 2 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] mapInputs: FIELD #0 
+[MaterialDesignAdapter] mapInputs: FIELD #0
 Object { field: div.cd-form-field }
 index-B5BK6woa.js:19:5901
-[MaterialDesignAdapter] MDCTextField constructed 
+[MaterialDesignAdapter] MDCTextField constructed
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded, inst: {…} }
 index-B5BK6woa.js:19:2184
-[MaterialDesignAdapter] mapInputs: transformed wrapper  
+[MaterialDesignAdapter] mapInputs: transformed wrapper
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded }
 index-B5BK6woa.js:19:6359
-[MaterialDesignAdapter] mapInputs: FIELD #1 
+[MaterialDesignAdapter] mapInputs: FIELD #1
 Object { field: div.cd-form-field }
 index-B5BK6woa.js:19:5901
-[MaterialDesignAdapter] MDCTextField constructed 
+[MaterialDesignAdapter] MDCTextField constructed
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded, inst: {…} }
 index-B5BK6woa.js:19:2184
-[MaterialDesignAdapter] mapInputs: transformed wrapper  
+[MaterialDesignAdapter] mapInputs: transformed wrapper
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded }
 index-B5BK6woa.js:19:6359
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
 [MaterialDesignAdapter] mapAll() — START index-B5BK6woa.js:19:7165
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-B5BK6woa.js:15:22972
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-B5BK6woa.js:15:30053
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-B5BK6woa.js:15:22972
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-B5BK6woa.js:15:22972
 [MaterialDesignAdapter] mapAll() — END index-B5BK6woa.js:19:7435
@@ -14357,6 +14358,7 @@ this.svUiSystemLoader.reapplyShellLayout();
 
 It would mean we fix this.svUiSystemLoader.reapplyShellLayout(); in Main.applyStartupUiSettings().
 If so give me the full revised Main.applyStartupUiSettings().
+
 ```ts
 private async applyStartupUiSettings(
     shellConfig: IUserShellConfig
@@ -14390,22 +14392,35 @@ element {
 }
 @layer {
   * {
-    scrollbar-color: var(--darkreader-background-b0b0b0, #414648) var(--darkreader-background-f1f1f1, #222425);
+    scrollbar-color: var(--darkreader-background-b0b0b0, #414648)
+      var(--darkreader-background-f1f1f1, #222425);
   }
 }
 element {
   visibility: visible;
 }
-body, input, textarea, select, button {
-  color: var(--darkreader-text--cd-color-text, var(--darkreader-text-000000, #cdcbc8));
+body,
+input,
+textarea,
+select,
+button {
+  color: var(
+    --darkreader-text--cd-color-text,
+    var(--darkreader-text-000000, #cdcbc8)
+  );
 }
-body, input, textarea, select, button {
+body,
+input,
+textarea,
+select,
+button {
   font-family: var(--cd-bridge-body-font-family);
   font-size: var(--cd-bridge-body-font-size);
   color: var(--cd-color-text);
 }
 @layer {
-  html, body {
+  html,
+  body {
     color: var(--darkreader-text-000000, #cdcbc8);
   }
 }
@@ -14415,7 +14430,10 @@ element {
   --cd-background-color: white;
   --cd-text-color: black;
   --cd-primary-color: #007bff;
-  --darkreader-bg--cd-primary-color: var(--darkreader-background-007bff, #065ab5);
+  --darkreader-bg--cd-primary-color: var(
+    --darkreader-background-007bff,
+    #065ab5
+  );
   --darkreader-text--cd-primary-color: var(--darkreader-text-007bff, #3291e0);
 }
 :root {
@@ -14440,8 +14458,9 @@ So this works.
 But not that we still did not have the anon login fitted.
 What we now need to do is to restart decomposition but one stet at a time and keep testing.
 After successfull decomposition, then we can restore the anon login.
+
 ```ts
-export class Main{
+export class Main {
   async run() {
     //---------------------------------------
     // SPLASH: Show immediately
@@ -14720,8 +14739,9 @@ export class Main{
 /////////////////////////////////////////////
 Just a reminder Main.loginAnonUser() was introduced to get and set config values from consumer and user profile.
 This was then to be resolved via ConfigService.resolveShellConfig()
+
 ```ts
-export class Main{
+export class Main {
   // ===================================================================
   // LOGIN
   // ===================================================================
@@ -14761,7 +14781,7 @@ export class Main{
 ```
 
 ```ts
-export class ConfigService{
+export class ConfigService {
   async resolveShellConfig(
     consumerProfile?: IConsumerProfile | null,
     userProfile?: IUserProfile | null
@@ -14797,8 +14817,9 @@ We then use the data to resolve the configuration via ConfigService.resolveShell
 Below are some references.
 
 // current working state of Main.run() and Main.loginAnonUser()
+
 ```ts
-export class Main{
+export class Main {
   async run() {
     //---------------------------------------
     // SPLASH: Show immediately
@@ -14912,11 +14933,12 @@ export class Main{
     this.userProfile = resp.data.userData.userProfile || null;
   }
 }
-
 ```
+
 // current state of resolveShellConfig()
+
 ```ts
-export class ConfigService{
+export class ConfigService {
   async resolveShellConfig(
     consumerProfile?: IConsumerProfile | null,
     userProfile?: IUserProfile | null
@@ -14945,6 +14967,7 @@ export class ConfigService{
 Having decomposed the Main.run(), I moved all the methods to respective associated classes.
 It is now as clean as expected with only init() and run().
 We now move to assessing how configurations work and whether they are conforming to the laid policy.
+
 ```ts
 import "reflect-metadata"; // MUST BE FIRST IMPORT
 import { MenuService } from "./CdShell/sys/moduleman/services/menu.service";
@@ -15114,12 +15137,20 @@ export class Main {
     //---------------------------------------
     // STEP 6: Sidebar render
     //---------------------------------------
-    await this.svUiSystemLoader.renderSidebar(this.svMenu, preparedMenu, shellConfig);
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
 
     //---------------------------------------
     // STEP 7: Auto-load default controller
     //---------------------------------------
-    await this.svController.loadDefaultController(this.svMenu, preparedMenu, defaultModule);
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
 
     //---------------------------------------
     // STEP 8: Mobile UX config
@@ -15136,9 +15167,7 @@ export class Main {
     this.logger.debug("bootstrapShell(): run() complete");
     diag_css("Main.run() complete");
   }
-
 }
-
 ```
 
 ////////////////////////
@@ -15148,6 +15177,7 @@ Property 'find' does not exist on type 'unknown'.ts(2339)
 any
 
 Example
+
 ```ts
 getSystemById(id: string): UiSystemDescriptor | undefined {
     const available = this.sysCache.get("uiSystems") || [];
@@ -15160,6 +15190,7 @@ I have shared the set() method before and after recent type correction.
 We may need to adjust the new one to conform to older requirements.
 Otherwise, all the previous consumers are complaining.
 Before
+
 ```ts
 public set<T>(
     key: CacheKey | string,
@@ -15176,7 +15207,9 @@ public set<T>(
     this.notify(key, value, meta);
   }
 ```
+
 After
+
 ```ts
 public set<K extends CacheKey>(key: K, value: SysCacheMap[K], ): void {
     this.cache.set(key, value);
@@ -15257,7 +15290,8 @@ export class SysCacheService {
     // -------------------------------------------------------------------
     // 2. UI SYSTEMS & THEMES
     // -------------------------------------------------------------------
-    const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+    const uiSystemsData =
+      await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
 
     const fullDescriptors = uiSystemsData.map((sys: any) => ({
       id: sys.id,
@@ -15298,7 +15332,8 @@ export class SysCacheService {
       themesAvailable: sys.themesAvailable,
     }));
 
-    const uiThemesData = await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+    const uiThemesData =
+      await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
 
     const themes = (uiThemesData.themes || []).map((t: any) => ({
       id: t.id,
@@ -15376,7 +15411,6 @@ export class SysCacheService {
     if (this.cache.size === 0) await this.loadAndCacheAll();
   }
 }
-
 ```
 
 /////////////////////////////////////////////
@@ -15392,125 +15426,127 @@ The strings used to define may change in definition and variety.
 Instead I just used string.
 Lets assume that is what it is now. All definitions are now compatible with legacy consumers
 
-
 Loaded with new SysCacheService codes
+
 ```log
 [SysCacheService] Eager load starting index-C6BpMTLj.js:48:3948
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-C6BpMTLj.js:52:13339
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-C6BpMTLj.js:52:13471
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-C6BpMTLj.js:52:13471
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-C6BpMTLj.js:52:13471
-[UiThemeLoaderService][fetchAvailableThemes] start 
+[UiThemeLoaderService][fetchAvailableThemes] start
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
 index-C6BpMTLj.js:52:10648
 [SysCacheService] Load complete index-C6BpMTLj.js:48:4552
-[CSS-DIAG] Cache loaded 
+[CSS-DIAG] Cache loaded
 Object {  }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-C6BpMTLj.js:31:3158
 [UiSystemLoaderService.activate] descriptorFromCache: undefined index-C6BpMTLj.js:52:14576
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", jsPath: "/assets/ui-systems/material-design/material-design.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design" }
 index-C6BpMTLj.js:31:3158
 The stylesheet http://localhost:5173/assets/ui-systems/material-design/material-design.min.css was not loaded because its MIME type, “text/html”, is not “text/css”. localhost:5173
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR
 Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design", ev: error }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED
 Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", err: Error }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-C6BpMTLj.js:31:3158
 Loading failed for the <script> with source “http://localhost:5173/assets/ui-systems/material-design/material-design.min.js”. localhost:5173:1:1
-[UiSystemLoaderService.activate] script load failed 
+[UiSystemLoaderService.activate] script load failed
 error { target: script, isTrusted: true, srcElement: script
 , eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 936.1, … }
 index-C6BpMTLj.js:52:16119
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED
 Object { jsPath: "/assets/ui-systems/material-design/material-design.min.js", err: error }
 index-C6BpMTLj.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 ```
+
 // loaded with previous SysCacheService
+
 ```log
-[SHELL] [DEBUG] [Main] Shell config resolved 
+[SHELL] [DEBUG] [Main] Shell config resolved
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-BWJpqntj.js:48:1803
 [SysCacheService] 01: Starting Eager Load index-BWJpqntj.js:48:3321
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-BWJpqntj.js:52:13339
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-BWJpqntj.js:52:13471
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-BWJpqntj.js:52:13471
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-BWJpqntj.js:52:13471
-[UiThemeLoaderService][fetchAvailableThemes] start 
+[UiThemeLoaderService][fetchAvailableThemes] start
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
 index-BWJpqntj.js:52:10648
 [SysCacheService] Load complete. index-BWJpqntj.js:48:4642
-[CSS-DIAG] Cache loaded 
+[CSS-DIAG] Cache loaded
 Object {  }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-BWJpqntj.js:31:3158
-[UiSystemLoaderService.activate] descriptorFromCache: 
+[UiSystemLoaderService.activate] descriptorFromCache:
 Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
 index-BWJpqntj.js:52:14576
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED
 Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
 index-BWJpqntj.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-BWJpqntj.js:31:3158
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
 ```
 
@@ -15728,7 +15764,7 @@ export class SysCacheService {
   private cache = new Map<string, any>();
 
   /** Reactive listeners */
-  private listeners = new Map< string, Set<CacheListener<any>>>();
+  private listeners = new Map<string, Set<CacheListener<any>>>();
 
   private versionCounter = 0;
 
@@ -15764,11 +15800,7 @@ export class SysCacheService {
   // CORE CACHE API (NEW)
   // ------------------------------------------------------------------
   // Legacy + typed set
-  public set<T>(
-    key: string,
-    value: T,
-    source?: CacheMeta["source"]
-  ): void;
+  public set<T>(key: string, value: T, source?: CacheMeta["source"]): void;
 
   public set<K extends keyof SysCacheMap>(
     key: K,
@@ -15922,6 +15954,7 @@ I was also thinking its design is not scalable.
 The strings used to define may change in definition and variety.
 Instead I just used string.
 Lets assume that is what it is now. All definitions are now compatible with legacy consumers
+
 ```ts
 import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
 import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
@@ -15940,7 +15973,7 @@ export class SysCacheService {
   private cache = new Map<string, any>();
 
   /** Reactive listeners */
-  private listeners = new Map< string, Set<CacheListener<any>>>();
+  private listeners = new Map<string, Set<CacheListener<any>>>();
 
   private versionCounter = 0;
 
@@ -15976,11 +16009,7 @@ export class SysCacheService {
   // CORE CACHE API (NEW)
   // ------------------------------------------------------------------
   // Legacy + typed set
-  public set<T>(
-    key: string,
-    value: T,
-    source?: CacheMeta["source"]
-  ): void;
+  public set<T>(key: string, value: T, source?: CacheMeta["source"]): void;
 
   public set<K extends keyof SysCacheMap>(
     key: K,
@@ -16297,12 +16326,20 @@ export class Main {
     //---------------------------------------
     // STEP 6: Sidebar render
     //---------------------------------------
-    await this.svUiSystemLoader.renderSidebar(this.svMenu, preparedMenu, shellConfig);
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
 
     //---------------------------------------
     // STEP 7: Auto-load default controller
     //---------------------------------------
-    await this.svController.loadDefaultController(this.svMenu, preparedMenu, defaultModule);
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
 
     //---------------------------------------
     // STEP 8: Mobile UX config
@@ -16319,15 +16356,13 @@ export class Main {
     this.logger.debug("bootstrapShell(): run() complete");
     diag_css("Main.run() complete");
   }
-
 }
-
 ```
 
 ///////////////////////////////////////////////
 
-Great. That worked. Now we are going to the meat: How we can pole pole migrate consumers from old to new subscribable cache system. I had shared the latest decomposed Main.run(). 
-Take a look at it and give me a plan how step by step, we can test and confirm how the subscriber system is working. 
+Great. That worked. Now we are going to the meat: How we can pole pole migrate consumers from old to new subscribable cache system. I had shared the latest decomposed Main.run().
+Take a look at it and give me a plan how step by step, we can test and confirm how the subscriber system is working.
 I suggest we focus first on how from step 0, we get the first config from the shell.config.json because the initial data must be found here before anon login. This include consumerGuid or consumerToken used to do the initial anon login.
 At this stage there are some components that can access this initial config data but will later auto update to data from backend after anon login.
 Also anon login is implicit but the user is eventually to login and get inclusive of personal configurations after succesfuly loging in.
@@ -16336,10 +16371,9 @@ For now we focus on increamental design implemetations of Main.run process with 
 
 ```ts
 //---------------------------------------
-    // STEP 0: Load base shell config
-    //---------------------------------------
-    const baseShellConfig: IUserShellConfig =
-      await this.svConfig.loadShellConfig();
+// STEP 0: Load base shell config
+//---------------------------------------
+const baseShellConfig: IUserShellConfig = await this.svConfig.loadShellConfig();
 ```
 
 ```ts
@@ -16511,12 +16545,20 @@ export class Main {
     //---------------------------------------
     // STEP 6: Sidebar render
     //---------------------------------------
-    await this.svUiSystemLoader.renderSidebar(this.svMenu, preparedMenu, shellConfig);
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
 
     //---------------------------------------
     // STEP 7: Auto-load default controller
     //---------------------------------------
-    await this.svController.loadDefaultController(this.svMenu, preparedMenu, defaultModule);
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
 
     //---------------------------------------
     // STEP 8: Mobile UX config
@@ -16533,72 +16575,59 @@ export class Main {
     this.logger.debug("bootstrapShell(): run() complete");
     diag_css("Main.run() complete");
   }
-
 }
-
 ```
 
 ///////////////////////////////////////
 
 Assuming:
-1. The first phase replaces:
-//---------------------------------------
+
+1.  The first phase replaces:
+    //---------------------------------------
     // STEP 0: Load base shell config
     //---------------------------------------
     const baseShellConfig: IUserShellConfig =
-      await this.svConfig.loadShellConfig();
+    await this.svConfig.loadShellConfig();
 
-    console.log("[Main.run()] baseShellConfig:", baseShellConfig);
-    if (baseShellConfig.logLevel) {
-      this.logger.setLevel(baseShellConfig.logLevel);
-    }
-2. We are already at a stage where Main.run() is considered 'decomposed'
-I am suggesting:
-1. The new interventions need to be packaged in helper methods and housed in respective classes.
-For example, the following can be contained in a method in ConfigService class :
-I am just suggesting some concept. You can work in that trajectory.
+        console.log("[Main.run()] baseShellConfig:", baseShellConfig);
+        if (baseShellConfig.logLevel) {
+          this.logger.setLevel(baseShellConfig.logLevel);
+        }
+
+2.  We are already at a stage where Main.run() is considered 'decomposed'
+    I am suggesting:
+3.  The new interventions need to be packaged in helper methods and housed in respective classes.
+    For example, the following can be contained in a method in ConfigService class :
+    I am just suggesting some concept. You can work in that trajectory.
+
 ```ts
 //---------------------------------------
 // PHASE 1: Seed static shell config into cache
 //---------------------------------------
-this.svSysCache.set(
-  "shellConfig",
-  baseShellConfig,
-  "static"
-);
+this.svSysCache.set("shellConfig", baseShellConfig, "static");
 
-this.svSysCache.set(
-  "envConfig",
-  baseShellConfig.envConfig || {},
-  "static"
-);
+this.svSysCache.set("envConfig", baseShellConfig.envConfig || {}, "static");
 
-this.svSysCache.set(
-  "uiConfig",
-  baseShellConfig.uiConfig || {},
-  "static"
-);
-
-
+this.svSysCache.set("uiConfig", baseShellConfig.uiConfig || {}, "static");
 ```
 
 ////////////////////////////////////////////////
-We have an issue similare to what we dealt with a short while ago. 
+We have an issue similare to what we dealt with a short while ago.
 The result is also the same. Graceful launch but what is rendered is not material but some fallback gracious view.
 Where we are having:
 [UiSystemLoaderService.activate] descriptorFromCache: undefined
 Below is partial but more elaborate logs of problematic areas.
 
 ```ts
-[UiSystemAdapterRegistry] register: bootstrap-502 
+[UiSystemAdapterRegistry] register: bootstrap-502
 Object {  }
 index-FyWUHGkE.js:48:6084
 [Bootstrap538AdapterService] constructor() index-FyWUHGkE.js:48:7201
-[UiSystemAdapterRegistry] register: bootstrap-538 
+[UiSystemAdapterRegistry] register: bootstrap-538
 Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
 index-FyWUHGkE.js:48:6084
 [MaterialDesignAdapter] constructor() index-FyWUHGkE.js:48:11478
-[UiSystemAdapterRegistry] register: material-design 
+[UiSystemAdapterRegistry] register: material-design
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-FyWUHGkE.js:48:6084
 [Bootstrap538AdapterService] constructor() index-FyWUHGkE.js:48:7201
@@ -16610,185 +16639,190 @@ start 1 index-FyWUHGkE.js:57:14268
 [ModuleService] Running under Vite (browser). index-FyWUHGkE.js:31:5117
 [ModuleService][constructor]: starting index-FyWUHGkE.js:31:5044
 [ModuleService] Running under Vite (browser). index-FyWUHGkE.js:31:5117
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-FyWUHGkE.js:52:8421
 [SHELL] [DEBUG] [Main] init(): completed index-FyWUHGkE.js:48:1803
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-FyWUHGkE.js:52:8421
-[SHELL] [DEBUG] [Splash] loading 
+[SHELL] [DEBUG] [Splash] loading
 Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
 index-FyWUHGkE.js:48:1803
 [SHELL] [DEBUG] starting bootstrapShell() index-FyWUHGkE.js:48:1803
-[CSS-DIAG] Main.run() started 
+[CSS-DIAG] Main.run() started
 Object {  }
 index-FyWUHGkE.js:31:3158
 [PHASE 1][ConfigService] Loading static shell config index-FyWUHGkE.js:52:10349
 [PHASE 1][ConfigService] Seeding static config into SysCache index-FyWUHGkE.js:52:10496
-[PHASE 1][ConfigService] Static shell config seeded 
+[PHASE 1][ConfigService] Static shell config seeded
 Object { hasEnv: true, hasUi: true }
 index-FyWUHGkE.js:52:10708
-[PHASE 1][Subscriber] shellConfig update 
+[PHASE 1][Subscriber] shellConfig update
 Object { source: "static", version: 1 }
 index-FyWUHGkE.js:57:12677
 [SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-FyWUHGkE.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-FyWUHGkE.js:48:1803
-[SHELL] [DEBUG] [UserService.login] attempting login 
+[SHELL] [DEBUG] [UserService.login] attempting login
 Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
 index-FyWUHGkE.js:48:1803
 [HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-FyWUHGkE.js:57:8531
 [HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-FyWUHGkE.js:57:7301
-[HttpService] Request Config: 
+[HttpService] Request Config:
 Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
 index-FyWUHGkE.js:57:7301
-[SHELL] [DEBUG] [UserService.login] res: 
+[SHELL] [DEBUG] [UserService.login] res:
 Object { res: {…} }
 index-FyWUHGkE.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-FyWUHGkE.js:48:1803
 [SHELL] [DEBUG] [Main] Anonymous login success index-FyWUHGkE.js:48:1803
-[SHELL] [DEBUG] [Main] Shell config resolved 
+[SHELL] [DEBUG] [Main] Shell config resolved
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-FyWUHGkE.js:48:1803
-[CSS-DIAG] Cache loaded 
+[CSS-DIAG] Cache loaded
 Object {  }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-FyWUHGkE.js:31:3158
 [UiSystemLoaderService.activate] descriptorFromCache: undefined index-FyWUHGkE.js:52:15095
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", jsPath: "/assets/ui-systems/material-design/material-design.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design" }
 index-FyWUHGkE.js:31:3158
 The stylesheet http://localhost:5173/assets/ui-systems/material-design/material-design.min.css was not loaded because its MIME type, “text/html”, is not “text/css”. localhost:5173
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR
 Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design", ev: error }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED
 Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", err: Error }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-FyWUHGkE.js:31:3158
 Loading failed for the <script> with source “http://localhost:5173/assets/ui-systems/material-design/material-design.min.js”. localhost:5173:1:1
-[UiSystemLoaderService.activate] script load failed 
+[UiSystemLoaderService.activate] script load failed
 error { target: script, isTrusted: true, srcElement: script, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1751.12, … }
 index-FyWUHGkE.js:52:16638
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED
 Object { jsPath: "/assets/ui-systems/material-design/material-design.min.js", err: error }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-FyWUHGkE.js:31:3158
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object {  }
 index-FyWUHGkE.js:48:11686
 [MaterialDesignAdapter] mapAll() — START index-FyWUHGkE.js:52:7168
 [MaterialDesignAdapter] getMapping('button') = undefined index-FyWUHGkE.js:48:13028
 [MaterialDesignAdapter] getMapping('input') = undefined index-FyWUHGkE.js:48:13028
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-FyWUHGkE.js:48:13028
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-FyWUHGkE.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-FyWUHGkE.js:52:7438
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
 Object { systemId: "material-design" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/themes/common/base.css", id: "shell-base" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/css/index.css", id: "shell-index" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded
 Object {  }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
 Object { themeId: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] descriptor not found 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] descriptor not found
 Object { themeId: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected
 Object { themeId: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start
 Object { systemId: "material-design", themeId: "dark" }
 index-FyWUHGkE.js:31:3158
-[UiSystemLoaderService.applyTheme] adapter received: 
+[UiSystemLoaderService.applyTheme] adapter received:
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-FyWUHGkE.js:52:17434
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Array []
 index-FyWUHGkE.js:52:17633
 [UiSystemLoaderService][applyTheme] descriptors: undefined index-FyWUHGkE.js:52:17727
-[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme()
 Object { themeDescriptorOrId: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme
 Object { mode: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done
 Object { systemId: "material-design", themeId: "dark" }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete
 Object {  }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done
 Object {  }
 index-FyWUHGkE.js:31:3158
-[CSS-DIAG] UI-System + Theme applied 
+[CSS-DIAG] UI-System + Theme applied
 ```
 
 /////////////////////////////////////////
 In your recomendation, we are to:
 Apply it in loadAndCacheAll()
 Replace this ❌:
+
 ```ts
 this.set("uiSystems", uiSystemsData, "static");
 ```
+
 With this ✅:
+
 ```ts
 this.cacheUiSystems(uiSystemsData, "static");
 ```
+
 But not from its current state that we had earlier replaced the same line with:
+
 ```ts
 const uiSystemsData = await this._uiSystemLoader.fetchAvailableSystems(
-      shellConfig.uiConfig
-    );
+  shellConfig.uiConfig
+);
 
 const { simple, full } = this.normalizeUiSystemDescriptors(uiSystemsData);
 ```
@@ -16908,8 +16942,9 @@ You can give recommendations with full Main.run() and SysCacheService.loadAndCac
 If there is any change on any helper, you can give it in full.
 Note below that the section "PHASE 1" in Main.run() is commented. Its associte recommendations in SysCacheService.loadAndCacheAll() as also implemented and remove when it did not work.
 Once you have a recommendation, I will post for you the logs for scrutiny.
+
 ```ts
-export class Main{
+export class Main {
   async run() {
     //---------------------------------------
     // SPLASH: Show immediately
@@ -17052,7 +17087,7 @@ export class Main{
 ```
 
 ```ts
-export class SysCacheService{
+export class SysCacheService {
   // ------------------------------------------------------------------
   // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
   // ------------------------------------------------------------------
@@ -17181,16 +17216,17 @@ export class SysCacheService{
 
 ////////////////////////////////////////////////////
 There was no visible issue except at the end, there was a logged message: "Error: Promised response from onMessage listener went out of scope"
+
 ```log
-[UiSystemAdapterRegistry] register: bootstrap-502 
+[UiSystemAdapterRegistry] register: bootstrap-502
 Object {  }
 index-C5uXBrf-.js:48:6389
 [Bootstrap538AdapterService] constructor() index-C5uXBrf-.js:48:7506
-[UiSystemAdapterRegistry] register: bootstrap-538 
+[UiSystemAdapterRegistry] register: bootstrap-538
 Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
 index-C5uXBrf-.js:48:6389
 [MaterialDesignAdapter] constructor() index-C5uXBrf-.js:48:11783
-[UiSystemAdapterRegistry] register: material-design 
+[UiSystemAdapterRegistry] register: material-design
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2) }
 index-C5uXBrf-.js:48:6389
 [Bootstrap538AdapterService] constructor() index-C5uXBrf-.js:48:7506
@@ -17202,191 +17238,191 @@ start 1 index-C5uXBrf-.js:57:14289
 [ModuleService] Running under Vite (browser). index-C5uXBrf-.js:31:5117
 [ModuleService][constructor]: starting index-C5uXBrf-.js:31:5044
 [ModuleService] Running under Vite (browser). index-C5uXBrf-.js:31:5117
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-C5uXBrf-.js:52:8421
 [SHELL] [DEBUG] [Main] init(): completed index-C5uXBrf-.js:48:1803
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-C5uXBrf-.js:52:8421
-[SHELL] [DEBUG] [Splash] loading 
+[SHELL] [DEBUG] [Splash] loading
 Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
 index-C5uXBrf-.js:48:1803
 [SHELL] [DEBUG] starting bootstrapShell() index-C5uXBrf-.js:48:1803
-[CSS-DIAG] Main.run() started 
+[CSS-DIAG] Main.run() started
 Object {  }
 index-C5uXBrf-.js:31:3158
 [SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-C5uXBrf-.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-C5uXBrf-.js:48:1803
-[SHELL] [DEBUG] [UserService.login] attempting login 
+[SHELL] [DEBUG] [UserService.login] attempting login
 Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
 index-C5uXBrf-.js:48:1803
 [HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-C5uXBrf-.js:57:8531
 [HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-C5uXBrf-.js:57:7301
-[HttpService] Request Config: 
+[HttpService] Request Config:
 Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
 index-C5uXBrf-.js:57:7301
-[SHELL] [DEBUG] [UserService.login] res: 
+[SHELL] [DEBUG] [UserService.login] res:
 Object { res: {…} }
 index-C5uXBrf-.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-C5uXBrf-.js:48:1803
 [SHELL] [DEBUG] [Main] Anonymous login success index-C5uXBrf-.js:48:1803
-[SHELL] [DEBUG] [Main] Shell config resolved 
+[SHELL] [DEBUG] [Main] Shell config resolved
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-C5uXBrf-.js:48:1803
 [SysCacheService] Eager load starting index-C5uXBrf-.js:48:3948
-[PHASE 1][Cache Observe] shellConfig 
+[PHASE 1][Cache Observe] shellConfig
 Object { source: "static", version: 1, timestamp: "2025-12-22T05:23:51.429Z" }
 index-C5uXBrf-.js:57:12656
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-C5uXBrf-.js:52:13858
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-C5uXBrf-.js:52:13990
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-C5uXBrf-.js:52:13990
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-C5uXBrf-.js:52:13990
-[UiThemeLoaderService][fetchAvailableThemes] start 
+[UiThemeLoaderService][fetchAvailableThemes] start
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
 index-C5uXBrf-.js:52:11167
 [SysCacheService] Load complete index-C5uXBrf-.js:48:4650
-[CSS-DIAG] Cache loaded 
+[CSS-DIAG] Cache loaded
 Object {  }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-C5uXBrf-.js:31:3158
-[UiSystemLoaderService.activate] descriptorFromCache: 
+[UiSystemLoaderService.activate] descriptorFromCache:
 Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
 index-C5uXBrf-.js:52:15095
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED
 Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
 index-C5uXBrf-.js:48:11991
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
 Object { systemId: "material-design" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/themes/common/base.css", id: "shell-base" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/css/index.css", id: "shell-index" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded
 Object {  }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
 Object { themeId: "dark" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded
 Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected
 Object { themeId: "dark" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start
 Object { systemId: "material-design", themeId: "dark" }
 index-C5uXBrf-.js:31:3158
-[UiSystemLoaderService.applyTheme] adapter received: 
+[UiSystemLoaderService.applyTheme] adapter received:
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2) }
 index-C5uXBrf-.js:52:17434
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Array [ {…}, {…} ]
 index-C5uXBrf-.js:52:17633
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 index-C5uXBrf-.js:52:17727
-[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme()
 Object { themeDescriptorOrId: {…} }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme
 Object { mode: "dark" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done
 Object { systemId: "material-design", themeId: "dark" }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete
 Object {  }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done
 Object {  }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] UI-System + Theme applied 
+[CSS-DIAG] UI-System + Theme applied
 Object {  }
 index-C5uXBrf-.js:31:3158
 ThemeService::loadThemeConfig(default) index-C5uXBrf-.js:48:2268
-[CSS-DIAG] ThemeConfig loaded 
+[CSS-DIAG] ThemeConfig loaded
 Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 index-C5uXBrf-.js:31:3158
 [ModuleService][constructor]: starting index-C5uXBrf-.js:31:5044
@@ -17396,10 +17432,10 @@ ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8189
 [ModuleService] 1 index-C5uXBrf-.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-C5uXBrf-.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-C5uXBrf-.js:31:8744
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-C5uXBrf-.js:31:8896
@@ -17411,10 +17447,10 @@ ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8189
 [ModuleService] 1 index-C5uXBrf-.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-C5uXBrf-.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-C5uXBrf-.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-C5uXBrf-.js:31:8744
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-C5uXBrf-.js:31:8896
@@ -17425,10 +17461,10 @@ ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-C5uXBrf-.js:31:8189
 [ModuleService] 1 index-C5uXBrf-.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-C5uXBrf-.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
 index-C5uXBrf-.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…}, {…} ]
 index-C5uXBrf-.js:31:8744
 [ModuleService] Loaded 'cd-user' (Vite mode) at 22/12/2025, 08:23:51 index-C5uXBrf-.js:31:8984
@@ -17438,12 +17474,12 @@ ModuleService::loadModule()/01: index-C5uXBrf-.js:31:8025
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-C5uXBrf-.js:31:8526
 [ModuleService][loadModule] moduleInfo: ...trancated...
 index-C5uXBrf-.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-C5uXBrf-.js:31:8744
 [ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-C5uXBrf-.js:31:8896
 [ModuleService] Loaded 'cd-admin' (Vite mode) at 22/12/2025, 08:23:51 index-C5uXBrf-.js:31:8984
-[CSS-DIAG] Modules Loaded 
+[CSS-DIAG] Modules Loaded
 Object { allowedModules: (2) […] }
 index-C5uXBrf-.js:31:3158
 [ControllerService][findControllerInfoByRoute] controllerName: sign-in index-C5uXBrf-.js:31:9990
@@ -17452,18 +17488,18 @@ index-C5uXBrf-.js:31:3158
 [ControllerService][findControllerInfoByRoute] mod: ...trancated... index-C5uXBrf-.js:31:10070
 [ControllerService][findControllerInfoByRoute] controllerName: settings index-C5uXBrf-.js:31:9990
 [ControllerService][findControllerInfoByRoute] mod: ...trancated.... index-C5uXBrf-.js:31:10070
-[CSS-DIAG] Menu prepared 
+[CSS-DIAG] Menu prepared
 Array [ {…}, {…} ]
 index-C5uXBrf-.js:31:3158
 Starting renderMenuWithSystem() index-C5uXBrf-.js:31:10702
 renderMenuWithSystem()/01 index-C5uXBrf-.js:31:10751
-MenuService::renderPlainMenu()/menu: 
+MenuService::renderPlainMenu()/menu:
         trancated...
       index-C5uXBrf-.js:31:11363
 renderMenuWithSystem()/adapter: {"instance":null} index-C5uXBrf-.js:31:10973
 renderMenuWithSystem()/03 index-C5uXBrf-.js:31:11161
 renderMenuWithSystem()/04 index-C5uXBrf-.js:31:11248
-[CSS-DIAG] Sidebar rendered 
+[CSS-DIAG] Sidebar rendered
 Object {  }
 index-C5uXBrf-.js:31:3158
 [SIDEBAR-DIAG] Sidebar State: index-C5uXBrf-.js:31:3364
@@ -17471,11 +17507,11 @@ display: flex index-C5uXBrf-.js:31:3453
 position: relative index-C5uXBrf-.js:31:3487
 width: 260px index-C5uXBrf-.js:31:3523
 flex-direction: column index-C5uXBrf-.js:31:3553
-css file winning: 
+css file winning:
 <aside id="cd-sidebar">
 index-C5uXBrf-.js:31:3600
 MenuService::loadResource()/start... index-C5uXBrf-.js:31:13210
-[MenuService][loadResource] options: 
+[MenuService][loadResource] options:
 Object { item: {…} }
 index-C5uXBrf-.js:31:13262
 [ControllerCacheService][getInstance] start... index-C5uXBrf-.js:22:6771
@@ -17490,77 +17526,77 @@ CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5
 [MenuService] Waiting for controller services to initialize... attempt 2 index-C5uXBrf-.js:31:14051
 [MenuService] Waiting for controller services to initialize... attempt 3 index-C5uXBrf-.js:31:14051
 [SHELL] [DEBUG] [Splash] animation completed index-C5uXBrf-.js:48:1803
-[SHELL] [DEBUG] [Splash] waiting 
+[SHELL] [DEBUG] [Splash] waiting
 Object { splashAnimDone: true, appReady: false }
 index-C5uXBrf-.js:48:1803
 [MenuService] Waiting for controller services to initialize... attempt 4 index-C5uXBrf-.js:31:14051
 [MenuService] Waiting for controller services to initialize... attempt 5 index-C5uXBrf-.js:31:14051
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
@@ -17575,103 +17611,103 @@ MenuService::loadResource()/04: Executing __activate() index-C5uXBrf-.js:31:1444
 [CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
 [Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
 MenuService::loadResource()/end index-C5uXBrf-.js:31:14694
-[CSS-DIAG] Default controller loaded 
+[CSS-DIAG] Default controller loaded
 Object {  }
 index-C5uXBrf-.js:31:3158
 [SHELL] [DEBUG] [Main] app fully bootstrapped index-C5uXBrf-.js:48:1803
 [SHELL] [DEBUG] [Splash] conditions met → hiding splash index-C5uXBrf-.js:48:1803
 [SHELL] [DEBUG] bootstrapShell(): run() complete index-C5uXBrf-.js:48:1803
-[CSS-DIAG] Main.run() complete 
+[CSS-DIAG] Main.run() complete
 Object {  }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] Applying mapping to element: 
+[MaterialDesignAdapter] Applying mapping to element:
 Object { tag: "BUTTON", mapping: {…} }
 index-C5uXBrf-.js:48:13550
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 2 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] mapInputs: FIELD #0 
+[MaterialDesignAdapter] mapInputs: FIELD #0
 Object { field: div.cd-form-field }
 index-C5uXBrf-.js:52:5904
-[MaterialDesignAdapter] MDCTextField constructed 
+[MaterialDesignAdapter] MDCTextField constructed
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded, inst: {…} }
 index-C5uXBrf-.js:52:2187
-[MaterialDesignAdapter] mapInputs: transformed wrapper  
+[MaterialDesignAdapter] mapInputs: transformed wrapper
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded }
 index-C5uXBrf-.js:52:6362
-[MaterialDesignAdapter] mapInputs: FIELD #1 
+[MaterialDesignAdapter] mapInputs: FIELD #1
 Object { field: div.cd-form-field }
 index-C5uXBrf-.js:52:5904
-[MaterialDesignAdapter] MDCTextField constructed 
+[MaterialDesignAdapter] MDCTextField constructed
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded, inst: {…} }
 index-C5uXBrf-.js:52:2187
-[MaterialDesignAdapter] mapInputs: transformed wrapper  
+[MaterialDesignAdapter] mapInputs: transformed wrapper
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field.mdc-ripple-upgraded }
 index-C5uXBrf-.js:52:6362
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
 [SHELL] [DEBUG] [Splash] removed, app revealed index-C5uXBrf-.js:48:1803
 [MaterialDesignAdapter] mapAll() — START index-C5uXBrf-.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-C5uXBrf-.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-C5uXBrf-.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-C5uXBrf-.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-C5uXBrf-.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-C5uXBrf-.js:52:7438
@@ -17689,24 +17725,25 @@ Source Map URL: material-components-web.min.css.map
 /////////////////////////////////////
 
 When the following code is put in inplace of the legacy one, we have an issue (spelled by the logs below)
+
 ```ts
 this.resolvedShellConfig = await this.svConfig.promoteResolvedShellConfig(
-      this.svSysCache,
-      this.consumerProfile,
-      this.userProfile
-    );
+  this.svSysCache,
+  this.consumerProfile,
+  this.userProfile
+);
 ```
 
 ```log
-[UiSystemAdapterRegistry] register: bootstrap-502 
+[UiSystemAdapterRegistry] register: bootstrap-502
 Object {  }
 index-B1tP9MHM.js:48:6389
 [Bootstrap538AdapterService] constructor() index-B1tP9MHM.js:48:7506
-[UiSystemAdapterRegistry] register: bootstrap-538 
+[UiSystemAdapterRegistry] register: bootstrap-538
 Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
 index-B1tP9MHM.js:48:6389
 [MaterialDesignAdapter] constructor() index-B1tP9MHM.js:48:11783
-[UiSystemAdapterRegistry] register: material-design 
+[UiSystemAdapterRegistry] register: material-design
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-B1tP9MHM.js:48:6389
 [Bootstrap538AdapterService] constructor() index-B1tP9MHM.js:48:7506
@@ -17718,164 +17755,164 @@ start 1 index-B1tP9MHM.js:57:14313
 [ModuleService] Running under Vite (browser). index-B1tP9MHM.js:31:5117
 [ModuleService][constructor]: starting index-B1tP9MHM.js:31:5044
 [ModuleService] Running under Vite (browser). index-B1tP9MHM.js:31:5117
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-B1tP9MHM.js:52:8421
 [SHELL] [DEBUG] [Main] init(): completed index-B1tP9MHM.js:48:1803
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-B1tP9MHM.js:52:8421
-[SHELL] [DEBUG] [Splash] loading 
+[SHELL] [DEBUG] [Splash] loading
 Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
 index-B1tP9MHM.js:48:1803
 [SHELL] [DEBUG] starting bootstrapShell() index-B1tP9MHM.js:48:1803
-[CSS-DIAG] Main.run() started 
+[CSS-DIAG] Main.run() started
 Object {  }
 index-B1tP9MHM.js:31:3158
 [SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-B1tP9MHM.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-B1tP9MHM.js:48:1803
-[SHELL] [DEBUG] [UserService.login] attempting login 
+[SHELL] [DEBUG] [UserService.login] attempting login
 Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
 index-B1tP9MHM.js:48:1803
 [HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-B1tP9MHM.js:57:8531
 [HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-B1tP9MHM.js:57:7301
-[HttpService] Request Config: 
+[HttpService] Request Config:
 Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
 index-B1tP9MHM.js:57:7301
-[SHELL] [DEBUG] [UserService.login] res: 
+[SHELL] [DEBUG] [UserService.login] res:
 Object { res: {…} }
 index-B1tP9MHM.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-B1tP9MHM.js:48:1803
 [SHELL] [DEBUG] [Main] Anonymous login success index-B1tP9MHM.js:48:1803
 [PHASE 2][ConfigService] Promote resolved shell config index-B1tP9MHM.js:52:10877
-[SHELL] [DEBUG] [Main] Shell config resolved 
+[SHELL] [DEBUG] [Main] Shell config resolved
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-B1tP9MHM.js:48:1803
-[CSS-DIAG] Cache loaded 
+[CSS-DIAG] Cache loaded
 Object {  }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-B1tP9MHM.js:31:3158
 [UiSystemLoaderService.activate] descriptorFromCache: undefined index-B1tP9MHM.js:52:15527
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", jsPath: "/assets/ui-systems/material-design/material-design.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design" }
 index-B1tP9MHM.js:31:3158
 The stylesheet http://localhost:5173/assets/ui-systems/material-design/material-design.min.css was not loaded because its MIME type, “text/html”, is not “text/css”. localhost:5173
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] ERROR
 Object { path: "/assets/ui-systems/material-design/material-design.min.css", id: "material-design", ev: error }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOAD FAILED
 Object { cssPath: "/assets/ui-systems/material-design/material-design.min.css", err: Error }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-B1tP9MHM.js:31:3158
 Loading failed for the <script> with source “http://localhost:5173/assets/ui-systems/material-design/material-design.min.js”. localhost:5173:1:1
-[UiSystemLoaderService.activate] script load failed 
+[UiSystemLoaderService.activate] script load failed
 error { target: script, isTrusted: true, srcElement: script, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1076.78, … }
 index-B1tP9MHM.js:52:17070
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOAD FAILED
 Object { jsPath: "/assets/ui-systems/material-design/material-design.min.js", err: error }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-B1tP9MHM.js:31:3158
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object {  }
 index-B1tP9MHM.js:48:11991
 [MaterialDesignAdapter] mapAll() — START index-B1tP9MHM.js:52:7168
 [MaterialDesignAdapter] getMapping('button') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('input') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-B1tP9MHM.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-B1tP9MHM.js:52:7438
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
 Object { systemId: "material-design" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/themes/common/base.css", id: "shell-base" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/css/index.css", id: "shell-index" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded
 Object {  }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
 Object { themeId: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] descriptor not found 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] descriptor not found
 Object { themeId: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected
 Object { themeId: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start
 Object { systemId: "material-design", themeId: "dark" }
 index-B1tP9MHM.js:31:3158
-[UiSystemLoaderService.applyTheme] adapter received: 
+[UiSystemLoaderService.applyTheme] adapter received:
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-B1tP9MHM.js:52:17866
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Array []
 index-B1tP9MHM.js:52:18065
 [UiSystemLoaderService][applyTheme] descriptors: undefined index-B1tP9MHM.js:52:18159
-[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme()
 Object { themeDescriptorOrId: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme
 Object { mode: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done
 Object { systemId: "material-design", themeId: "dark" }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete
 Object {  }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done
 Object {  }
 index-B1tP9MHM.js:31:3158
-[CSS-DIAG] UI-System + Theme applied 
+[CSS-DIAG] UI-System + Theme applied
 Object {  }
 index-B1tP9MHM.js:31:3158
 ThemeService::loadThemeConfig(default) index-B1tP9MHM.js:48:2268
-[CSS-DIAG] ThemeConfig loaded 
+[CSS-DIAG] ThemeConfig loaded
 Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 index-B1tP9MHM.js:31:3158
 [ModuleService][constructor]: starting index-B1tP9MHM.js:31:5044
@@ -17885,10 +17922,10 @@ ModuleService::loadModule()/01: index-B1tP9MHM.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-B1tP9MHM.js:31:8189
 [ModuleService] 1 index-B1tP9MHM.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-B1tP9MHM.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-B1tP9MHM.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-B1tP9MHM.js:31:8744
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-B1tP9MHM.js:31:8896
@@ -17900,10 +17937,10 @@ ModuleService::loadModule()/01: index-B1tP9MHM.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-B1tP9MHM.js:31:8189
 [ModuleService] 1 index-B1tP9MHM.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-B1tP9MHM.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-B1tP9MHM.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-B1tP9MHM.js:31:8744
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-B1tP9MHM.js:31:8896
@@ -17914,10 +17951,10 @@ ModuleService::loadModule()/01: index-B1tP9MHM.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-B1tP9MHM.js:31:8189
 [ModuleService] 1 index-B1tP9MHM.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-B1tP9MHM.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
 index-B1tP9MHM.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…}, {…} ]
 index-B1tP9MHM.js:31:8744
 [ModuleService] Loaded 'cd-user' (Vite mode) at 22/12/2025, 15:51:10 index-B1tP9MHM.js:31:8984
@@ -17925,22 +17962,22 @@ ModuleService::loadModule()/01: index-B1tP9MHM.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-B1tP9MHM.js:31:8189
 [ModuleService] 1 index-B1tP9MHM.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-B1tP9MHM.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
 index-B1tP9MHM.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-B1tP9MHM.js:31:8744
 [ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-B1tP9MHM.js:31:8896
 [ModuleService] Loaded 'cd-admin' (Vite mode) at 22/12/2025, 15:51:10 index-B1tP9MHM.js:31:8984
-[CSS-DIAG] Modules Loaded 
+[CSS-DIAG] Modules Loaded
 Object { allowedModules: (2) […] }
 index-B1tP9MHM.js:31:3158
 [ControllerService][findControllerInfoByRoute] controllerName: sign-in index-B1tP9MHM.js:31:9990
 [ControllerService][findControllerInfoByRoute] mod: ...trancated index-B1tP9MHM.js:31:10070
 [ControllerService][findControllerInfoByRoute] controllerName: sign-up index-B1tP9MHM.js:31:9990
 [ControllerService][findControllerInfoByRoute] mod: ...trancated index-B1tP9MHM.js:31:10070
-[CSS-DIAG] Menu prepared 
+[CSS-DIAG] Menu prepared
 Array [ {…}, {…} ]
 index-B1tP9MHM.js:31:3158
 Starting renderMenuWithSystem() index-B1tP9MHM.js:31:10702
@@ -17950,7 +17987,7 @@ MenuService::renderPlainMenu()/menu: ...trancated
 renderMenuWithSystem()/adapter: {"instance":null} index-B1tP9MHM.js:31:10973
 renderMenuWithSystem()/03 index-B1tP9MHM.js:31:11161
 renderMenuWithSystem()/04 index-B1tP9MHM.js:31:11248
-[CSS-DIAG] Sidebar rendered 
+[CSS-DIAG] Sidebar rendered
 Object {  }
 index-B1tP9MHM.js:31:3158
 [SIDEBAR-DIAG] Sidebar State: index-B1tP9MHM.js:31:3364
@@ -17958,11 +17995,11 @@ display: flex index-B1tP9MHM.js:31:3453
 position: relative index-B1tP9MHM.js:31:3487
 width: 260px index-B1tP9MHM.js:31:3523
 flex-direction: column index-B1tP9MHM.js:31:3553
-css file winning: 
+css file winning:
 <aside id="cd-sidebar">
 index-B1tP9MHM.js:31:3600
 MenuService::loadResource()/start... index-B1tP9MHM.js:31:13210
-[MenuService][loadResource] options: 
+[MenuService][loadResource] options:
 Object { item: {…} }
 index-B1tP9MHM.js:31:13262
 [ControllerCacheService][getInstance] start... index-B1tP9MHM.js:22:6771
@@ -17978,7 +18015,7 @@ CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5
 [MaterialDesignAdapter] getMapping('button') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('input') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-B1tP9MHM.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-B1tP9MHM.js:52:7438
@@ -17986,7 +18023,7 @@ index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] getMapping('button') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('input') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-B1tP9MHM.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-B1tP9MHM.js:52:7438
@@ -17994,7 +18031,7 @@ index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] getMapping('button') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('input') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-B1tP9MHM.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-B1tP9MHM.js:52:7438
@@ -18005,22 +18042,22 @@ MenuService::loadResource()/04: Executing __activate() index-B1tP9MHM.js:31:1444
 [CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
 [Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
 MenuService::loadResource()/end index-B1tP9MHM.js:31:14694
-[CSS-DIAG] Default controller loaded 
+[CSS-DIAG] Default controller loaded
 Object {  }
 index-B1tP9MHM.js:31:3158
 [SHELL] [DEBUG] [Main] app fully bootstrapped index-B1tP9MHM.js:48:1803
-[SHELL] [DEBUG] [Splash] waiting 
+[SHELL] [DEBUG] [Splash] waiting
 Object { splashAnimDone: false, appReady: true }
 index-B1tP9MHM.js:48:1803
 [SHELL] [DEBUG] bootstrapShell(): run() complete index-B1tP9MHM.js:48:1803
-[CSS-DIAG] Main.run() complete 
+[CSS-DIAG] Main.run() complete
 Object {  }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — START index-B1tP9MHM.js:52:7168
 [MaterialDesignAdapter] getMapping('button') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('input') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-B1tP9MHM.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-B1tP9MHM.js:52:7438
@@ -18031,7 +18068,7 @@ index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] getMapping('button') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('input') = undefined index-B1tP9MHM.js:48:13333
 [MaterialDesignAdapter] getMapping('formGroup') = undefined index-B1tP9MHM.js:48:13333
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: [] }
 index-B1tP9MHM.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-B1tP9MHM.js:52:7438
@@ -18040,6 +18077,7 @@ index-B1tP9MHM.js:31:3158
 //////////////////////////////////////
 Below is the run() that had issues.
 Give me your recomendations with fully modified run()
+
 ```ts
 async run() {
     //---------------------------------------
@@ -18202,8 +18240,9 @@ async run() {
 The return from HttpService.proc() is of type CdFxReturn<ICdResponse>.
 Kindly review the signatures and returns by UserService.login() and UserService.loginAnonUser(): either the signature or return needs to be adjusted.
 Otherwise the consumers downstrem will get confusing results.
+
 ```ts
-export class HttpService{
+export class HttpService {
   async proc(
     params: ICdRequest,
     profileName?: string
@@ -18212,7 +18251,9 @@ export class HttpService{
     const name = profileName || "cdShell";
     const endpoint = this.cfg.profiles?.[name]?.endpoint;
 
-    console.log(`[HttpService] proc() → profile: ${name}, endpoint: ${endpoint}`);
+    console.log(
+      `[HttpService] proc() → profile: ${name}, endpoint: ${endpoint}`
+    );
     await this.ensureInstance(name, endpoint);
     const cfg: AxiosRequestConfig = {
       ...(this.cdApiAxiosConfig || {}),
@@ -18225,7 +18266,7 @@ export class HttpService{
 ```
 
 ```ts
-export class UserService{
+export class UserService {
   async login(
     user: UserModel,
     consumerGuid: string
@@ -18306,12 +18347,13 @@ export class UserService{
 
     // this.consumerProfile = resp.data.consumer.consumerProfile || null;
     // this.userProfile = resp.data.userData.userProfile || null;
-    return resp
+    return resp;
   }
 }
 ```
 
 References for ICdResponse
+
 ```ts
 export interface ICdResponse {
   app_state: IAppState;
@@ -18353,7 +18395,9 @@ export interface ISessResp {
   initTime?: string;
 }
 ```
+
 Actual response from the HttpService.proc()
+
 ```json
 {
   "state": true,
@@ -18640,16 +18684,17 @@ Actual response from the HttpService.proc()
 //////////////////////////////////
 Knowing the new adjustments, below are the relevant lines to amend at Main.run().
 Adjust the codes accordingly.
+
 ```ts
 const resp = await this.svUser.loginAnonUser(
-      baseShellConfig.envConfig.clientContext.consumerToken
-    );
+  baseShellConfig.envConfig.clientContext.consumerToken
+);
 
-    this.logger.debug("[Main.run] resp:", resp);
-    if (resp) {
-      this.consumerProfile = resp.data.consumer.consumerProfile || null;
-      this.userProfile = resp.data.userData.userProfile || null;
-    }
+this.logger.debug("[Main.run] resp:", resp);
+if (resp) {
+  this.consumerProfile = resp.data.consumer.consumerProfile || null;
+  this.userProfile = resp.data.userData.userProfile || null;
+}
 ```
 
 /////////////////////////////////////////
@@ -18659,11 +18704,12 @@ This will give us opportunity to deal with this case and put some observability 
 I would like you to review the case when consumerProfile is null in terms of observability and making sure the relevant methods aware and necessary and deliberate decisions are take to gracefully manage the case.
 Later we will look at other cases. But you can start preempting scenarios and dealing with them in advance.
 
-Blow is the logs for 
+Blow is the logs for
+
 ```log
 [SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig()] start index-YoeS9gF4.js:48:1803
 [SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig()] consumerProfile: null index-YoeS9gF4.js:48:1803
-[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig()] userProfile: 
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig()] userProfile:
 Object { avatar: {…}, userData: {…}, fieldPermissions: {…} }
 ```
 
@@ -18764,8 +18810,14 @@ export class ConfigService {
     userProfile?: IUserProfile | null
   ): Promise<IUserShellConfig> {
     this.logger.debug("[ConfigService.resolveShellConfig()] start");
-    this.logger.debug("[ConfigService.resolveShellConfig()] consumerProfile:", consumerProfile);
-    this.logger.debug("[ConfigService.resolveShellConfig()] userProfile:", userProfile);
+    this.logger.debug(
+      "[ConfigService.resolveShellConfig()] consumerProfile:",
+      consumerProfile
+    );
+    this.logger.debug(
+      "[ConfigService.resolveShellConfig()] userProfile:",
+      userProfile
+    );
     const base = await this.loadConfig();
 
     // 1. Apply consumer defaults
@@ -18934,8 +18986,14 @@ export class ConfigService {
     userProfile?: IUserProfile | null
   ): Promise<IUserShellConfig> {
     this.logger.debug("[ConfigService.promoteResolvedShellConfig()] start");
-    this.logger.debug("[ConfigService.promoteResolvedShellConfig()] consumerProfile:", consumerProfile);
-    this.logger.debug("[ConfigService.promoteResolvedShellConfig()] userProfile:", userProfile);
+    this.logger.debug(
+      "[ConfigService.promoteResolvedShellConfig()] consumerProfile:",
+      consumerProfile
+    );
+    this.logger.debug(
+      "[ConfigService.promoteResolvedShellConfig()] userProfile:",
+      userProfile
+    );
     console.groupCollapsed(
       "%c[PHASE 2][ConfigService] Promote resolved shell config",
       "color:#4CAF50"
@@ -18958,11 +19016,9 @@ export class ConfigService {
     return resolved;
   }
 }
-
 ```
 
 ```ts
-
 import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
 import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
 import { ConfigService } from "./config.service";
@@ -19085,52 +19141,46 @@ export class SysCacheService {
   // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
   // ------------------------------------------------------------------
   public async loadAndCacheAll(): Promise<void> {
-  if (!this._uiSystemLoader || !this._uiThemeLoader) {
-    throw new Error("SysCacheService: loaders must be set before load.");
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    // 🔑 PHASE-2 AWARE CONFIG RESOLUTION
+    const shellConfig =
+      this.get("shellConfig") ?? (await this.configService.loadConfig());
+
+    const uiConfig = shellConfig.uiConfig || {};
+
+    // Ensure canonical cache presence
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", uiConfig, "static");
+
+    // -------------------------------------------------
+    // UI SYSTEMS (authoritative descriptors)
+    // -------------------------------------------------
+    const uiSystemsData =
+      await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+
+    this.cacheUiSystems(uiSystemsData, "static");
+
+    // -------------------------------------------------
+    // UI THEMES
+    // -------------------------------------------------
+    const uiThemesData =
+      await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig, "static");
+
+    console.log("[SysCacheService] Load complete");
   }
-
-  if (this.cache.size > 0) return;
-
-  console.log("[SysCacheService] Eager load starting");
-
-  // 🔑 PHASE-2 AWARE CONFIG RESOLUTION
-  const shellConfig =
-    this.get("shellConfig") ??
-    (await this.configService.loadConfig());
-
-  const uiConfig = shellConfig.uiConfig || {};
-
-  // Ensure canonical cache presence
-  this.set("shellConfig", shellConfig, "static");
-  this.set("envConfig", shellConfig.envConfig || {}, "static");
-  this.set("uiConfig", uiConfig, "static");
-
-  // -------------------------------------------------
-  // UI SYSTEMS (authoritative descriptors)
-  // -------------------------------------------------
-  const uiSystemsData =
-    await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
-
-  this.cacheUiSystems(uiSystemsData, "static");
-
-  // -------------------------------------------------
-  // UI THEMES
-  // -------------------------------------------------
-  const uiThemesData =
-    await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
-
-  this.set("themes", uiThemesData.themes || [], "static");
-  this.set("formVariants", uiThemesData.variants || [], "static");
-  this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
-  this.set(
-    "uiConfigNormalized",
-    uiThemesData.uiConfig || uiConfig,
-    "static"
-  );
-
-  console.log("[SysCacheService] Load complete");
-}
-
 
   // ------------------------------------------------------------------
   // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
@@ -19249,7 +19299,6 @@ export class SysCacheService {
     });
   }
 }
-
 ```
 
 ///////////////////////////////////////
@@ -19258,6 +19307,7 @@ Below is the captured response from anon login.
 I am aware the current consumer.consumerProfile is null.
 I have deliberately not worked on the backend yet.
 This will give us opportunity to deal with this case and put some observability to track this case.
+
 ```json
 {
   "state": true,
@@ -19546,6 +19596,7 @@ This will give us opportunity to deal with this case and put some observability 
 In 6. Cache-level observability, you have recommended use of cache.set() in ConfigService.promoteResolvedShellConfig().
 Below is its current state.
 Give me the full revised promoteResolvedShellConfig().
+
 ```ts
 public async promoteResolvedShellConfig(
     cache: SysCacheService,
@@ -19600,20 +19651,21 @@ public async promoteResolvedShellConfig(
 
 cahe.set() calls are complaining about the 3rd input resolutionMode.
 No overload matches this call.
-  Overload 1 of 2, '(key: string, value: IUserShellConfig, source?: "static" | "consumer" | "user" | "runtime"): void', gave the following error.
-    Argument of type '"STATIC_ONLY" | "USER_ONLY" | "CONSUMER_ONLY" | "FULL_CONTEXT"' is not assignable to parameter of type '"static" | "consumer" | "user" | "runtime"'.
-      Type '"STATIC_ONLY"' is not assignable to type '"static" | "consumer" | "user" | "runtime"'.
-  Overload 2 of 2, '(key: "shellConfig", value: IUserShellConfig, source?: "static" | "consumer" | "user" | "runtime"): void', gave the following error.
-    Argument of type '"STATIC_ONLY" | "USER_ONLY" | "CONSUMER_ONLY" | "FULL_CONTEXT"' is not assignable to parameter of type '"static" | "consumer" | "user" | "runtime"'.
-      Type '"STATIC_ONLY"' is not assignable to type '"static" | "consumer" | "user" | "runtime"'.
+Overload 1 of 2, '(key: string, value: IUserShellConfig, source?: "static" | "consumer" | "user" | "runtime"): void', gave the following error.
+Argument of type '"STATIC_ONLY" | "USER_ONLY" | "CONSUMER_ONLY" | "FULL_CONTEXT"' is not assignable to parameter of type '"static" | "consumer" | "user" | "runtime"'.
+Type '"STATIC_ONLY"' is not assignable to type '"static" | "consumer" | "user" | "runtime"'.
+Overload 2 of 2, '(key: "shellConfig", value: IUserShellConfig, source?: "static" | "consumer" | "user" | "runtime"): void', gave the following error.
+Argument of type '"STATIC_ONLY" | "USER_ONLY" | "CONSUMER_ONLY" | "FULL_CONTEXT"' is not assignable to parameter of type '"static" | "consumer" | "user" | "runtime"'.
+Type '"STATIC_ONLY"' is not assignable to type '"static" | "consumer" | "user" | "runtime"'.
 
 Example:
+
 ```ts
 cache.set(
-      "shellConfig",
-      resolvedShellConfig,
-      resolutionMode // ← source is now semantic, not generic
-    );
+  "shellConfig",
+  resolvedShellConfig,
+  resolutionMode // ← source is now semantic, not generic
+);
 ```
 
 //////////////////////////////////////////////////
@@ -19623,21 +19675,22 @@ But there was one undesired galaring effect.
 FOUC was observed during menu rendering.
 Now that we have a working splash screen, I am not sure how we can deal with this.
 You can help me brain storm around this issue.
+
 ```log
 Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. node.js:409:1
 GET
 http://localhost:5173/favicon.ico
 [HTTP/1.1 404 Not Found 2353ms]
 
-[UiSystemAdapterRegistry] register: bootstrap-502 
+[UiSystemAdapterRegistry] register: bootstrap-502
 Object {  }
 index-OQYhppk9.js:48:6390
 [Bootstrap538AdapterService] constructor() index-OQYhppk9.js:48:7507
-[UiSystemAdapterRegistry] register: bootstrap-538 
+[UiSystemAdapterRegistry] register: bootstrap-538
 Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
 index-OQYhppk9.js:48:6390
 [MaterialDesignAdapter] constructor() index-OQYhppk9.js:48:11784
-[UiSystemAdapterRegistry] register: material-design 
+[UiSystemAdapterRegistry] register: material-design
 Object { descriptor: null, observer: null, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-OQYhppk9.js:48:6390
 [Bootstrap538AdapterService] constructor() index-OQYhppk9.js:48:7507
@@ -19649,203 +19702,203 @@ start 1 index-OQYhppk9.js:57:14400
 [ModuleService] Running under Vite (browser). index-OQYhppk9.js:31:5117
 [ModuleService][constructor]: starting index-OQYhppk9.js:31:5044
 [ModuleService] Running under Vite (browser). index-OQYhppk9.js:31:5117
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-OQYhppk9.js:52:8440
 [SHELL] [DEBUG] [Main] init(): completed index-OQYhppk9.js:48:1803
-[ConfigService] loaded config: 
+[ConfigService] loaded config:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-OQYhppk9.js:52:8440
-[SHELL] [DEBUG] [Splash] loading 
+[SHELL] [DEBUG] [Splash] loading
 Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
 index-OQYhppk9.js:48:1803
 [SHELL] [DEBUG] starting bootstrapShell() index-OQYhppk9.js:48:1803
-[CSS-DIAG] Main.run() started 
+[CSS-DIAG] Main.run() started
 Object {  }
 index-OQYhppk9.js:31:3158
 [SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-OQYhppk9.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-OQYhppk9.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-OQYhppk9.js:48:1803
-[SHELL] [DEBUG] [UserService.login] attempting login 
+[SHELL] [DEBUG] [UserService.login] attempting login
 Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
 index-OQYhppk9.js:48:1803
 [HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-OQYhppk9.js:57:8531
 [HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-OQYhppk9.js:57:7301
-[HttpService] Request Config: 
+[HttpService] Request Config:
 Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
 index-OQYhppk9.js:57:7301
-[SHELL] [DEBUG] [UserService.login] fx: 
+[SHELL] [DEBUG] [UserService.login] fx:
 Object { state: true, data: {…}, message: "Request succeeded" }
 index-OQYhppk9.js:48:1803
-[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx:
 Object { state: true, data: {…}, message: "Request succeeded" }
 index-OQYhppk9.js:48:1803
 [SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-OQYhppk9.js:48:1803
-[SHELL] [DEBUG] [Main.run] fx: 
+[SHELL] [DEBUG] [Main.run] fx:
 Object { state: true, data: {…}, message: "Request succeeded" }
 index-OQYhppk9.js:48:1803
 [SysCacheService] Eager load starting index-OQYhppk9.js:48:3948
-[PHASE][Cache] shellConfig 
+[PHASE][Cache] shellConfig
 Object { source: "static", version: 1 }
 index-OQYhppk9.js:57:12819
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-OQYhppk9.js:52:15325
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-OQYhppk9.js:52:15457
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-OQYhppk9.js:52:15457
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-OQYhppk9.js:52:15457
-[SysCacheService] UI systems cached 
+[SysCacheService] UI systems cached
 Object { simpleCount: 3, fullCount: 3, source: "static" }
 index-OQYhppk9.js:48:6150
-[UiThemeLoaderService][fetchAvailableThemes] start 
+[UiThemeLoaderService][fetchAvailableThemes] start
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
 index-OQYhppk9.js:52:12634
 [SysCacheService] Load complete index-OQYhppk9.js:48:4553
-[CSS-DIAG] Cache loaded (static) 
+[CSS-DIAG] Cache loaded (static)
 Object {  }
 index-OQYhppk9.js:31:3158
 [SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-OQYhppk9.js:48:1803
 [PHASE 2][ConfigService] Promote resolved shell config index-OQYhppk9.js:52:11502
-[SHELL] [DEBUG] [Main] Shell config promoted 
+[SHELL] [DEBUG] [Main] Shell config promoted
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-OQYhppk9.js:48:1803
 [SHELL] [INFO] [UI] Running in consumer-less mode index-OQYhppk9.js:48:1844
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-OQYhppk9.js:31:3158
-[UiSystemLoaderService.activate] descriptorFromCache: 
+[UiSystemLoaderService.activate] descriptorFromCache:
 Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
 index-OQYhppk9.js:52:16562
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED
 Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
 index-OQYhppk9.js:48:11992
 [MaterialDesignAdapter] mapAll() — START index-OQYhppk9.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-OQYhppk9.js:52:7438
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
 Object { systemId: "material-design" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/themes/common/base.css", id: "shell-base" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/css/index.css", id: "shell-index" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded
 Object {  }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
 Object { themeId: "dark" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded
 Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected
 Object { themeId: "dark" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start
 Object { systemId: "material-design", themeId: "dark" }
 index-OQYhppk9.js:31:3158
-[UiSystemLoaderService.applyTheme] adapter received: 
+[UiSystemLoaderService.applyTheme] adapter received:
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-OQYhppk9.js:52:18901
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Array [ {…}, {…} ]
 index-OQYhppk9.js:52:19100
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 index-OQYhppk9.js:52:19194
-[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme()
 Object { themeDescriptorOrId: {…} }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme
 Object { mode: "dark" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done
 Object { systemId: "material-design", themeId: "dark" }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete
 Object {  }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done
 Object {  }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] UI-System + Theme applied 
+[CSS-DIAG] UI-System + Theme applied
 Object {  }
 index-OQYhppk9.js:31:3158
 ThemeService::loadThemeConfig(default) index-OQYhppk9.js:48:2268
-[CSS-DIAG] ThemeConfig loaded 
+[CSS-DIAG] ThemeConfig loaded
 Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 index-OQYhppk9.js:31:3158
 [ModuleService][constructor]: starting index-OQYhppk9.js:31:5044
@@ -19855,10 +19908,10 @@ ModuleService::loadModule()/01: index-OQYhppk9.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-OQYhppk9.js:31:8189
 [ModuleService] 1 index-OQYhppk9.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-OQYhppk9.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-OQYhppk9.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-OQYhppk9.js:31:8744
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-OQYhppk9.js:31:8896
@@ -19870,10 +19923,10 @@ ModuleService::loadModule()/01: index-OQYhppk9.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-OQYhppk9.js:31:8189
 [ModuleService] 1 index-OQYhppk9.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-OQYhppk9.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
 index-OQYhppk9.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-OQYhppk9.js:31:8744
 [ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-OQYhppk9.js:31:8896
@@ -19884,10 +19937,10 @@ ModuleService::loadModule()/01: index-OQYhppk9.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-OQYhppk9.js:31:8189
 [ModuleService] 1 index-OQYhppk9.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-OQYhppk9.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
 index-OQYhppk9.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…}, {…} ]
 index-OQYhppk9.js:31:8744
 [ModuleService] Loaded 'cd-user' (Vite mode) at 24/12/2025, 09:29:22 index-OQYhppk9.js:31:8984
@@ -19895,15 +19948,15 @@ ModuleService::loadModule()/01: index-OQYhppk9.js:31:8025
 [ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-OQYhppk9.js:31:8189
 [ModuleService] 1 index-OQYhppk9.js:31:8249
 [ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-OQYhppk9.js:31:8526
-[ModuleService][loadModule] moduleInfo: 
+[ModuleService][loadModule] moduleInfo:
 Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […] }
 index-OQYhppk9.js:31:8685
-[ModuleService][loadModule] moduleInfo.controllers: 
+[ModuleService][loadModule] moduleInfo.controllers:
 Array [ {…} ]
 index-OQYhppk9.js:31:8744
 [ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-OQYhppk9.js:31:8896
 [ModuleService] Loaded 'cd-admin' (Vite mode) at 24/12/2025, 09:29:22 index-OQYhppk9.js:31:8984
-[CSS-DIAG] Modules Loaded 
+[CSS-DIAG] Modules Loaded
 Object { allowedModules: (2) […] }
 index-OQYhppk9.js:31:3158
 [ControllerService][findControllerInfoByRoute] controllerName: sign-in index-OQYhppk9.js:31:9990
@@ -19915,13 +19968,13 @@ index-OQYhppk9.js:31:3158
 index-OQYhppk9.js:31:3158
 Starting renderMenuWithSystem() index-OQYhppk9.js:31:10702
 renderMenuWithSystem()/01 index-OQYhppk9.js:31:10751
-MenuService::renderPlainMenu()/menu: 
+MenuService::renderPlainMenu()/menu:
         ...trancated
       index-OQYhppk9.js:31:11363
 renderMenuWithSystem()/adapter: {"instance":null} index-OQYhppk9.js:31:10973
 renderMenuWithSystem()/03 index-OQYhppk9.js:31:11161
 renderMenuWithSystem()/04 index-OQYhppk9.js:31:11248
-[CSS-DIAG] Sidebar rendered 
+[CSS-DIAG] Sidebar rendered
 Object {  }
 index-OQYhppk9.js:31:3158
 [SIDEBAR-DIAG] Sidebar State: index-OQYhppk9.js:31:3364
@@ -19929,11 +19982,11 @@ display: flex index-OQYhppk9.js:31:3453
 position: relative index-OQYhppk9.js:31:3487
 width: 260px index-OQYhppk9.js:31:3523
 flex-direction: column index-OQYhppk9.js:31:3553
-css file winning: 
+css file winning:
 <aside id="cd-sidebar">
 index-OQYhppk9.js:31:3600
 MenuService::loadResource()/start... index-OQYhppk9.js:31:13210
-[MenuService][loadResource] options: 
+[MenuService][loadResource] options:
 Object { item: {…} }
 index-OQYhppk9.js:31:13262
 [ControllerCacheService][getInstance] start... index-OQYhppk9.js:22:6771
@@ -19948,25 +20001,25 @@ CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5
 [MenuService] Waiting for controller services to initialize... attempt 2 index-OQYhppk9.js:31:14051
 [MenuService] Waiting for controller services to initialize... attempt 3 index-OQYhppk9.js:31:14051
 [MaterialDesignAdapter] mapAll() — START index-OQYhppk9.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-OQYhppk9.js:52:7438
@@ -19983,80 +20036,80 @@ MenuService::loadResource()/04: Executing __activate() index-OQYhppk9.js:31:1444
 [CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
 [Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
 MenuService::loadResource()/end index-OQYhppk9.js:31:14694
-[CSS-DIAG] Default controller loaded 
+[CSS-DIAG] Default controller loaded
 Object {  }
 index-OQYhppk9.js:31:3158
 [SHELL] [DEBUG] [Main] app fully bootstrapped index-OQYhppk9.js:48:1803
-[SHELL] [DEBUG] [Splash] waiting 
+[SHELL] [DEBUG] [Splash] waiting
 Object { splashAnimDone: false, appReady: true }
 index-OQYhppk9.js:48:1803
-[CSS-DIAG] Main.run() complete 
+[CSS-DIAG] Main.run() complete
 Object {  }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — START index-OQYhppk9.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] Applying mapping to element: 
+[MaterialDesignAdapter] Applying mapping to element:
 Object { tag: "BUTTON", mapping: {…} }
 index-OQYhppk9.js:48:13551
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 2 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] mapInputs: FIELD #0 
+[MaterialDesignAdapter] mapInputs: FIELD #0
 Object { field: div.cd-form-field }
 index-OQYhppk9.js:52:5904
-[MaterialDesignAdapter] MDCTextField constructed 
+[MaterialDesignAdapter] MDCTextField constructed
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field, inst: {…} }
 index-OQYhppk9.js:52:2187
-[MaterialDesignAdapter] mapInputs: transformed wrapper  
+[MaterialDesignAdapter] mapInputs: transformed wrapper
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field }
 index-OQYhppk9.js:52:6362
-[MaterialDesignAdapter] mapInputs: FIELD #1 
+[MaterialDesignAdapter] mapInputs: FIELD #1
 Object { field: div.cd-form-field }
 index-OQYhppk9.js:52:5904
-[MaterialDesignAdapter] MDCTextField constructed 
+[MaterialDesignAdapter] MDCTextField constructed
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field, inst: {…} }
 index-OQYhppk9.js:52:2187
-[MaterialDesignAdapter] mapInputs: transformed wrapper  
+[MaterialDesignAdapter] mapInputs: transformed wrapper
 Object { wrapper: label.mdc-text-field.mdc-text-field--filled.cd-md-text-field }
 index-OQYhppk9.js:52:6362
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-OQYhppk9.js:52:7438
 [MaterialDesignAdapter] mapAll() — START index-OQYhppk9.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-OQYhppk9.js:52:7438
@@ -20064,48 +20117,48 @@ index-OQYhppk9.js:31:3158
 [SHELL] [DEBUG] [Splash] conditions met → hiding splash index-OQYhppk9.js:48:1803
 [SHELL] [DEBUG] [Splash] removed, app revealed index-OQYhppk9.js:48:1803
 [MaterialDesignAdapter] mapAll() — START index-OQYhppk9.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-OQYhppk9.js:52:7438
 [MaterialDesignAdapter] mapAll() — START index-OQYhppk9.js:52:7168
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 1 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-OQYhppk9.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-OQYhppk9.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-OQYhppk9.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-OQYhppk9.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-OQYhppk9.js:52:7438
@@ -20116,6 +20169,7 @@ Error: Promised response from onMessage listener went out of scope index.js:4716
 Below are some codes in their current state.
 You can gather more context to align your response.
 // index.html
+
 ```html
 <!doctype html>
 <html lang="en">
@@ -20154,9 +20208,10 @@ You can gather more context to align your response.
     <script type="module" src="/src/app.ts"></script>
   </body>
 </html>
-
 ```
+
 public/assets/css/index.css
+
 ```css
 /* ---------------------------------------------
    GLOBAL RESET
@@ -20206,12 +20261,21 @@ body {
   height: 4px;
   background-color: currentColor;
   border-radius: 4px;
-  transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.2s ease,
+    top 0.3s ease;
 }
 
-#cd-burger .top { top: 0; }
-#cd-burger .middle { top: 10px; }
-#cd-burger .bottom { top: 20px; }
+#cd-burger .top {
+  top: 0;
+}
+#cd-burger .middle {
+  top: 10px;
+}
+#cd-burger .bottom {
+  top: 20px;
+}
 
 /* OPEN STATE: transforms into an X */
 #cd-burger.open .top {
@@ -20315,11 +20379,10 @@ body {
   outline: none !important;
   box-shadow: none !important;
 }
-
 ```
 
 ```ts
-export class Main{
+export class Main {
   async run() {
     //---------------------------------------
     // SPLASH: Show immediately
@@ -20463,11 +20526,12 @@ export class Main{
 /////////////////////////////////////////////////
 I have included uiReady and revealApp() in the UiSystemLoaderService class.
 You can take a look at the whole class and implement the remaining updates and other recomendations for implementing:
+
 - formalize PHASE 3: VISUAL_READY
 - add CSS-DIAG markers for stabilization
 - refactor adapters into promise-based lifecycles
-You can then share any new methods and the revised ones in full.
-You can let me know if there is any class you need details for update.
+  You can then share any new methods and the revised ones in full.
+  You can let me know if there is any class you need details for update.
 
 ```ts
 export class UiSystemLoaderService {
@@ -21078,7 +21142,6 @@ export class UiSystemLoaderService {
     applyMobileState();
   }
 }
-
 ```
 
 //////////////////////////////////////////
@@ -21090,10 +21153,12 @@ this.observer = new MutationObserver(() => {
   this.mapAll();
 });
 ```
+
 to be integrated in the codes to be inside the MutationObserver.
 Below is the existing code. Give me the full integrated code.
 
 MaterialDesignAdapterService.observeMutations()
+
 ```ts
 private observeMutations() {
     if (this.observer) return;
@@ -21121,17 +21186,19 @@ private observeMutations() {
 
 ////////////////////////////////////
 Below are section of the logs that shows:
+
 1. anon login is successful
 2. response contains consumer.consumerProfile which has the config settings
 3. config settings in the consumer has deliberatly been set to load bootstrap-538 ui-system while the default static settings in the frontend app is set to material design.
 4. We expected the bootstrap-538 to be loaded by preference seem to be given to default static settings in the frontend app
 
 Take a look at the logs and implementation for Main.run() and try and find out why the process does not seem to work as expecte.
+
 ```log
-[SHELL] [DEBUG] [UserService.login] fx: 
+[SHELL] [DEBUG] [UserService.login] fx:
 Object { state: true, data: {…}, message: "Request succeeded" }
 index-DGa8MEcN.js:48:1803
-[SHELL] [DEBUG] [Main.run] fx: 
+[SHELL] [DEBUG] [Main.run] fx:
 Object { state: true, data: {…}, message: "Request succeeded" }
 ​
 data: Object { app_state: {…}, data: {…} }
@@ -21198,108 +21265,110 @@ state: true
 ​
 <prototype>: Object { … }
 index-DGa8MEcN.js:48:1803
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-DGa8MEcN.js:52:15512
-[SysCacheService] UI systems cached 
+[SysCacheService] UI systems cached
 Object { simpleCount: 3, fullCount: 3, source: "static" }
 index-DGa8MEcN.js:48:6150
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-DGa8MEcN.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-DGa8MEcN.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-DGa8MEcN.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-DGa8MEcN.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-DGa8MEcN.js:48:13334
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-DGa8MEcN.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-DGa8MEcN.js:52:7530
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
 Object { systemId: "material-design" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/themes/common/base.css", id: "shell-base" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/css/index.css", id: "shell-index" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded
 Object {  }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start
 Object { themeId: "dark" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded
 Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected
 Object { themeId: "dark" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start
 Object { systemId: "material-design", themeId: "dark" }
 index-DGa8MEcN.js:31:3158
-[UiSystemLoaderService.applyTheme] adapter received: 
+[UiSystemLoaderService.applyTheme] adapter received:
 Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
 index-DGa8MEcN.js:52:19088
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Array [ {…}, {…} ]
 index-DGa8MEcN.js:52:19287
-[UiSystemLoaderService][applyTheme] descriptors: 
+[UiSystemLoaderService][applyTheme] descriptors:
 Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 index-DGa8MEcN.js:52:19381
-[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme()
 Object { themeDescriptorOrId: {…} }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme
 Object { mode: "dark" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done
 Object { systemId: "material-design", themeId: "dark" }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete
 Object {  }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done
 Object {  }
 index-DGa8MEcN.js:31:3158
-[CSS-DIAG] UI-System + Theme applied 
+[CSS-DIAG] UI-System + Theme applied
 Object {  }
 index-DGa8MEcN.js:31:3158
 ThemeService::loadThemeConfig(default) index-DGa8MEcN.js:48:2268
-[CSS-DIAG] ThemeConfig loaded 
+[CSS-DIAG] ThemeConfig loaded
 Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
 ```
+
 Main.run()
+
 ```ts
 async run() {
     //---------------------------------------
@@ -21443,6 +21512,7 @@ async run() {
 ///////////////////////////////
 Below is the current implementation of SysCacheService.
 You can update it to your current recommendations.
+
 ```ts
 import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
 import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
@@ -21728,7 +21798,6 @@ export class SysCacheService {
     return !!this.get("shellConfig:meta")?.hasConsumerProfile;
   }
 }
-
 ```
 
 //////////////////////////////////////////////////////////////
@@ -21737,17 +21806,18 @@ I have added:
 [SysCacheService.normalizeUiSystemDescriptors()] start and [SysCacheService.cacheUiSystems()] start
 I hope it helps to resolve the persisting issue.
 Below are partial logs.
+
 ```log
 [SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-KAl0b4lK.js:48:1803
-[SHELL] [DEBUG] [Main.run] fx: 
+[SHELL] [DEBUG] [Main.run] fx:
 Object { state: true, data: {…}, message: "Request succeeded" }
 index-KAl0b4lK.js:48:1803
 [SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-KAl0b4lK.js:48:1803
 [SysCacheService] Eager load starting index-KAl0b4lK.js:48:4030
-[PHASE][Cache] shellConfig 
+[PHASE][Cache] shellConfig
 Object { source: "static", version: 1 }
 index-KAl0b4lK.js:57:12819
-[UiSystemLoaderService] Registered UI Systems: 
+[UiSystemLoaderService] Registered UI Systems:
 Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
 index-KAl0b4lK.js:52:15512
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-KAl0b4lK.js:52:15644
@@ -21755,118 +21825,119 @@ index-KAl0b4lK.js:52:15512
 [UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-KAl0b4lK.js:52:15644
 [SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-KAl0b4lK.js:48:1803
 [SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-KAl0b4lK.js:48:1803
-[SysCacheService] UI systems cached 
+[SysCacheService] UI systems cached
 Object { simpleCount: 3, fullCount: 3, source: "static" }
 index-KAl0b4lK.js:48:6370
-[UiThemeLoaderService][fetchAvailableThemes] start 
+[UiThemeLoaderService][fetchAvailableThemes] start
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
 index-KAl0b4lK.js:52:12779
 [SysCacheService] Load complete index-KAl0b4lK.js:48:4635
-[CSS-DIAG] Cache loaded (static) 
+[CSS-DIAG] Cache loaded (static)
 Object {  }
 index-KAl0b4lK.js:31:3158
 [SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-KAl0b4lK.js:48:1803
 [PHASE 2][ConfigService] Promote resolved shell config index-KAl0b4lK.js:52:11647
-[SHELL] [DEBUG] [Main] Shell config promoted 
+[SHELL] [DEBUG] [Main] Shell config promoted
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-KAl0b4lK.js:48:1803
 [SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-KAl0b4lK.js:48:1803
-[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:
 Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
 index-KAl0b4lK.js:48:1803
-[PHASE][Cache] shellConfig 
+[PHASE][Cache] shellConfig
 Object { source: "resolved", version: 14 }
 index-KAl0b4lK.js:57:12819
-[SysCacheService] Resolved shell config applied 
+[SysCacheService] Resolved shell config applied
 Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", source: "resolved" }
 index-KAl0b4lK.js:48:7016
 [SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-KAl0b4lK.js:48:1803
 [SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-KAl0b4lK.js:48:1803
-[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start
 Object { systemId: "material-design", themeId: "dark" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] START 
+[CSS-DIAG] [UiSystemLoaderService.activate] START
 Object { id: "material-design" }
 index-KAl0b4lK.js:31:3158
 [SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-KAl0b4lK.js:48:1803
-[UiSystemLoaderService.activate] descriptorFromCache: 
+[UiSystemLoaderService.activate] descriptorFromCache:
 Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
 index-KAl0b4lK.js:52:16749
-[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS
 Object {  }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED
 Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED
 Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED
 Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED
 Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+[CSS-DIAG] [MaterialDesignAdapter] activate() START
 Object { id: "material-design" }
 index-KAl0b4lK.js:31:3158
-[MaterialDesignAdapter] Loaded conceptMappings: 
+[MaterialDesignAdapter] Loaded conceptMappings:
 Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
 index-KAl0b4lK.js:48:12802
 [MaterialDesignAdapter] mapAll() — START index-KAl0b4lK.js:52:7213
-[MaterialDesignAdapter] getMapping('button') = 
+[MaterialDesignAdapter] getMapping('button') =
 Object { class: "mdc-button mdc-button--raised" }
 index-KAl0b4lK.js:48:14144
-[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons()
 Object { count: 0 }
 index-KAl0b4lK.js:31:3158
-[MaterialDesignAdapter] getMapping('input') = 
+[MaterialDesignAdapter] getMapping('input') =
 Object { class: "mdc-text-field__input", attrs: {} }
 index-KAl0b4lK.js:48:14144
-[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs()
 Object { candidates: 0 }
 index-KAl0b4lK.js:31:3158
-[MaterialDesignAdapter] getMapping('formGroup') = 
+[MaterialDesignAdapter] getMapping('formGroup') =
 Object { class: "mdc-form-field" }
 index-KAl0b4lK.js:48:14144
-[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups()
 Object { count: 0 }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts()
 Object { concepts: (1) […] }
 index-KAl0b4lK.js:31:3158
 [MaterialDesignAdapter] mapAll() — END index-KAl0b4lK.js:52:7530
-[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH
 Object {  }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE
 Object { active: "material-design" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED
 Object { id: "material-design" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE
 Object { activeSystem: "material-design" }
 index-KAl0b4lK.js:31:3158
-[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated
 Object { systemId: "material-design" }
 index-KAl0b4lK.js:31:3158
 ```
 
 /////////////////////////////////////////////////
 Take a look at the ConfigService class to help resolve the exact issue.
+
 ```ts
 // import { ShellConfig } from "../../base";
 import { LoggerService } from "../../../utils/logger.service";
@@ -22162,7 +22233,10 @@ export class ConfigService {
       userProfile
     );
 
-    this.logger.debug("[ConfigService.promoteResolvedShellConfig] resolutionMode:", resolutionMode);
+    this.logger.debug(
+      "[ConfigService.promoteResolvedShellConfig] resolutionMode:",
+      resolutionMode
+    );
 
     const cacheSource = this.mapResolutionModeToCacheSource(resolutionMode);
 
@@ -22229,7 +22303,6 @@ export class ConfigService {
     }
   }
 }
-
 ```
 
 ////////////////////////////////////////////////////
@@ -22295,17 +22368,19 @@ src/CdShell/sys/cd-admin/
 
 In corpdesk, we have an effort to keep developing a generic html syntax that is ui-system agnosic which can be intepreted by corpdesk ui-system adaptors to generate specific html for given ui-systems.
 A corpdesk instance consumed by a given tenant, can be configured to be say, bootstrap-538, or material-design etc.
-Below are references for compiled generic sytax. In any of the files, look for the __template() method.
+Below are references for compiled generic sytax. In any of the files, look for the \_\_template() method.
+project repository: https://github.com/corpdesk-mobile/cd-shell
 src/CdShell/sys/cd-user/view/sign-in.controller.js
 src/CdShell/sys/cd-admin/view/cd-admin-settings.controller.js
 src/CdShell/sys/moduleman/view/consumer-resource.controller.js
 
 We need to be able to do generic synax for tabs. For POC,we are focussing on bootstrap and material-design.
-Review the __template() in src/CdShell/sys/moduleman/view/consumer-resource.controller.js so that the template can serve both bootsrap and material-design.
+Review the \_\_template() in src/CdShell/sys/moduleman/view/consumer-resource.controller.js so that the template can serve both bootsrap and material-design.
 Below are some references.
 Material Desig Tabs
 Reference: https://github.com/material-components/material-web/blob/main/docs/components/tabs.md
 Sample:
+
 ```html
 <md-tabs>
   <md-secondary-tab>
@@ -22322,8 +22397,10 @@ Sample:
   </md-secondary-tab>
 </md-tabs>
 ```
+
 Bootstrap tabs
 Reference: https://getbootstrap.com/docs/5.0/components/navs-tabs/
+
 ```html
 <ul class="nav nav-tabs">
   <li class="nav-item">
@@ -22336,13 +22413,16 @@ Reference: https://getbootstrap.com/docs/5.0/components/navs-tabs/
     <a class="nav-link" href="#">Link</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"
+      >Disabled</a
+    >
   </li>
 </ul>
 ```
 
 Material design in react:
 https://mui.com/material-ui/react-accordion/
+
 ```ts
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
@@ -22411,11 +22491,18017 @@ src/CdShell/sys/cd-guig/services/cd-directive-binder.service.ts
 src/CdShell/sys/cd-guig/controllers/cd-form.control.ts
 src/CdShell/sys/cd-guig/controllers/cd-form-group.control.ts
 
+///////////////////////////////////////
+
+The following can be properly interpreted by the adaptor.
+Study it and represent the same visual logic with tabs.
+
+```js
+__template() {
+    return `
+      <div class="cd-panel">
+        <h2>Consumer Shell Configuration</h2>
+
+        <form id="consumerShellConfigForm" class="cd-form">
+          <fieldset>
+            <legend>Identity</legend>
+
+            <div class="cd-form-field">
+              <label>Application Name</label>
+              <input type="text" name="appName" cdFormControl />
+            </div>
+
+            <div class="cd-form-field">
+              <label>Log Level</label>
+              <select name="logLevel" cdFormControl>
+                <option value="debug">debug</option>
+                <option value="info">info</option>
+                <option value="warn">warn</option>
+                <option value="error">error</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Startup (Splash)</legend>
+
+            <div class="cd-form-field">
+              <label>
+                <input type="checkbox" name="splashEnabled" cdFormControl />
+                Enable Splash Screen
+              </label>
+            </div>
+
+            <div class="cd-form-field">
+              <label>Splash Asset Path</label>
+              <input type="text" name="splashPath" cdFormControl />
+            </div>
+
+            <div class="cd-form-field">
+              <label>Minimum Duration (ms)</label>
+              <input type="number" name="splashMinDuration" cdFormControl />
+            </div>
+          </fieldset>
+
+          <button cdButton (click)="onSave()">Save Configuration</button>
+        </form>
+      </div>
+    `;
+  },
+```
+
+////////////////////////////////////////////////
+
+Sample 1:
+```html
+<div class="component-demo__stage-content">
+  <!--?lit$844164137$--><!---->
+  <div
+    class="stage-transition-container-variant stage-transition-container-variant--show"
+  >
+    <!--?lit$844164137$--><!--?lit$844164137$--><!--?lit$844164137$-->
+    <div class="mdc-tab-bar" role="tablist">
+      <div class="mdc-tab-scroller">
+        <div
+          class="mdc-tab-scroller__scroll-area mdc-tab-scroller__scroll-area--scroll"
+          style="margin-bottom: 0px;"
+        >
+          <div class="mdc-tab-scroller__scroll-content">
+            <!--?lit$844164137$--><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-tab--active mdc-ripple-upgraded"
+              aria-selected="true"
+              tabindex="0"
+              id="goog_212361173-FIXED-0"
+              style="--mdc-ripple-fg-size: 131px; --mdc-ripple-fg-scale: 1.7871540253689826; --mdc-ripple-fg-translate-start: 40.5px, -52.53334045410156px; --mdc-ripple-fg-translate-end: 43.958335876464844px, -41.5px;"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab One</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-FIXED-1"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Two</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-FIXED-2"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Three</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--?--><!--?-->
+  </div>
+  <!----><!---->
+  <div class="stage-transition-container-variant">
+    <!--?lit$844164137$--><!--?lit$844164137$--><!--?lit$844164137$-->
+    <div class="mdc-tab-bar" role="tablist">
+      <div class="mdc-tab-scroller">
+        <div
+          class="mdc-tab-scroller__scroll-area mdc-tab-scroller__scroll-area--scroll"
+          style="margin-bottom: 0px;"
+        >
+          <div class="mdc-tab-scroller__scroll-content">
+            <!--?lit$844164137$--><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-tab--active mdc-ripple-upgraded"
+              aria-selected="true"
+              tabindex="0"
+              id="goog_212361173-SCROLLABLE-0"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab One</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-1"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Two</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-2"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Three</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-3"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Four</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-4"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Five</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-5"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Six</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-6"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Seven</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-7"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Eight</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-8"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Nine</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!----><!---->
+            <button
+              role="tab"
+              class="mdc-tab mdc-ripple-upgraded"
+              aria-selected="false"
+              tabindex="-1"
+              id="goog_212361173-SCROLLABLE-9"
+            >
+              <span class="mdc-tab__content">
+                <!--?lit$844164137$-->
+                <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                  ><!--?lit$844164137$-->Tab Ten</span
+                >
+                <!--?lit$844164137$-->
+              </span>
+              <!--?lit$844164137$-->
+              <span class="mdc-tab-indicator">
+                <span
+                  class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                ></span>
+              </span>
+
+              <span class="mdc-tab__ripple"></span>
+            </button>
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--?--><!--?-->
+  </div>
+  <!---->
+</div>
+```
+
+
+I took some extract of html from the browser inspector.
+The html is shared below.
+Reference: https://m2.material.io/components/tabs
+The html is rendering properly when pasted in the corpdesk form.
+The only thing that is not working is, when the tab is clicked, it tries to reload the page. But our app being an SPA, this disorient the application flow.
+I suggest that you assist me to clean up the sample below in a way that we can use it as a target html in the adaptor.
+But we also have to have a strategy on what will be done with the 'click' on the tab to expose the right display.
+We can start with very simple sample and make adjustment on the material-design adaptor to parse accordingly.
+```html
+<div class="component-demo__tab-section">
+  <!--?lit$844164137$--><!--?lit$844164137$-->
+  <div class="mdc-tab-bar" role="tablist">
+    <div class="mdc-tab-scroller">
+      <div
+        class="mdc-tab-scroller__scroll-area mdc-tab-scroller__scroll-area--scroll"
+        style="margin-bottom: 0px;"
+      >
+        <div class="mdc-tab-scroller__scroll-content">
+          <!--?lit$844164137$--><!---->
+          <button
+            role="tab"
+            class="mdc-tab component-demo__tab mdc-ripple-upgraded"
+            aria-selected="false"
+            tabindex="-1"
+            id="goog_212361176-0"
+            style="--mdc-ripple-fg-size: 54px; --mdc-ripple-fg-scale: 2.074074074074074; --mdc-ripple-fg-translate-start: 28px, -3.0333328247070312px; --mdc-ripple-fg-translate-end: 18px, -3px;"
+          >
+            <span class="mdc-tab__content">
+              <!--?lit$844164137$-->
+              <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                ><!--?lit$844164137$-->Fixed</span
+              >
+              <!--?lit$844164137$-->
+            </span>
+            <!--?lit$844164137$-->
+            <span class="mdc-tab-indicator">
+              <span
+                class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+              ></span>
+            </span>
+
+            <span class="mdc-tab__ripple"></span>
+          </button>
+          <!----><!---->
+          <button
+            role="tab"
+            class="mdc-tab component-demo__tab mdc-ripple-upgraded mdc-tab--active"
+            aria-selected="true"
+            tabindex="0"
+            id="goog_212361176-1"
+            style="--mdc-ripple-fg-size: 72px; --mdc-ripple-fg-scale: 1.9524424721724973; --mdc-ripple-fg-translate-start: 41px, -10.033332824707031px; --mdc-ripple-fg-translate-end: 24.71666717529297px, -12px;"
+          >
+            <span class="mdc-tab__content">
+              <!--?lit$844164137$-->
+              <!--?lit$844164137$--><span class="mdc-tab__text-label"
+                ><!--?lit$844164137$-->Scrollable</span
+              >
+              <!--?lit$844164137$-->
+            </span>
+            <!--?lit$844164137$-->
+            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+              <span
+                class="mdc-tab-indicator__content
+            mdc-tab-indicator__content--underline"
+                style=""
+              ></span>
+            </span>
+
+            <span class="mdc-tab__ripple"></span>
+          </button>
+          <!---->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--?-->
+</div>
+```
+
+///////////////////////////////////////////
+
+You have suggested to add the btn.add() to mapTabs(). 
+Where is it best position to add it.
+You can give me the refactored mapTabs()
+
+```ts
+btn.addEventListener("click", (e) => {
+    e.preventDefault(); // Stop any default link behavior
+    
+    // 1. Update Header UI
+    navUl.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+    btn.classList.add("active");
+
+    // 2. Update Content Panes
+    contentDiv.querySelectorAll(".tab-pane").forEach((p: any) => {
+        p.classList.remove("show", "active");
+    });
+    const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+    if (targetPane) targetPane.classList.add("show", "active");
+
+    // 3. Emit Generic Event (Optional: for the controller to listen to)
+    container.dispatchEvent(new CustomEvent('cd-tab-change', { detail: { tabId } }));
+});
+```
+
+```ts
+private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("data-bs-toggle", "tab");
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+        btn.setAttribute("type", "button");
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-controls", `${tabId}-pane`);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`; // Assumes Bootstrap Icons
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create Tab Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move content from generic tab to pane
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Replace the original <cd-tabs> with the new Bootstrap structure
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+      container.replaceWith(fragment);
+
+      // Track these to avoid re-processing if they were to contain nested tabs
+      this.appliedSet.add(navUl as any);
+    });
+  }
+```
+
+/////////////////////////////////////
+Attached are adaptors for IUiSystemAdapter, bootstrap-538, material design.
+You can confirm that as we implement BaseUiAdapter, we should not loose feature in each.
+But any feature in any of the material-design and bootstrap-538 should be available in all.
+Also if it is possible to meet the objective by just relying on IUiSystemAdapter without the BaseAdaptor.
+Just for your information, material-design has the reaches features but as POC and example to the rest.
+We also need some analysis to make sure both(as examples) are at par.
+
+//////////////////////////////////////
+What do you think if we add all the know standard controls(map<generic-control-name>, eg mapButtons():void), which must be implemented by a given adaptor.
+This would ensure considstency and harmony accross adaptors.
+Ones that are known to cut accross all like mapInput() can be implemented at the base but with option of overriding at the specific adaptor.
+But I leave it to you for consideration.
+```ts
+export interface IUiSystemAdapter {
+  activate(descriptor: UiSystemDescriptor): Promise<void>;
+  deactivate(): Promise<void>;
+  applyTheme(themeId: string): Promise<void>;
+}
+```
+
+/////////////////////////////
+I suggest at this stage, we include all the known standard controlls.
+Below is a list from material design. We are not bound to use the exact list but it is a guide.
+You can use standard knowldge that you have to develop a fairly complete one.
+Even if initially we have some default stubs to represent implemtation (for example one that implements input), then as we continue development we can keep filling up the map.
+
+App bars: bottom
+    App bars: top
+    Backdrop
+    Banners
+    Bottom navigation
+    Buttons
+    Buttons: floating action button
+    Cards
+    Checkboxes
+    Chips
+    Data tables
+    Date pickers
+    Dialogs
+    Dividers
+    Image lists
+    Lists
+    Menus
+    Navigation drawer
+    Navigation rail
+    Progress indicators
+    Radio buttons
+    Sheets: bottom
+    Sheets: side
+    Sliders
+    Snackbars
+    Switches
+    Tabs
+    Text fields
+    Time pickers
+    Tooltips 
+
+/////////////////////////////////////////////////
+
+We have implemented: 1. Parity: SPA-Friendly Bootstrap Adaptor. The 2nd item(2. The Next R&D Phase: UI-State Persistence via JSDP) can be implemented at a later stage. It has always been in the plan but could be very involving. The net effect should be that when a user successfully logs in, the system takes the user to where she/he was last...plus several hierarchy of memory trail. So for now, we can just go to No 3: (3. Proposed Ingredient: The Semantic Icon Registry)
+Question:
+1. Where do iconRegistry and getSystemIcon()
+
+Suggestion:
+Such facilities should be positioned in some common place for all the adaptors or have some BaseAdptor which forces all adaptors to always be in tandem in structural and development levels. The idea of BaseAdptor is so profound because as we continue to add features in each but despite the diversity, at its best all adaptors should share homogenous features. So as we attend to the icon issue, the afore mentioned need to be taken into account and better still should be tackled wholistically via BaseAdaptor.
+From this point I let to to look at the issue from professional and standard conventions so we tackle the idea of BaseAdaptor concept well.
+
+/////////////////////////////////////////
+
+I usually dont do detail design first. I approach it like a sculpture who starts with a square knowing what is being targeted is a circle. Mid-way we make it octagon and keep progressing with polygons. Even when not done, we are always approaching the target. Now what we have is at the acceptable level of mophability via ai agents and journey towards software automation. At this stage, I would like you to deduce documentation in respect to 1. Phylosophy and targets, 2. Design 3. Implementation. The documentation should be one that can be modified for rfc and patent application.
+I needed you to focus on is documentation in respect to 1. Phylosophy and targets, 2. Design 3. Implementation for using generic descriptors akin to html by the developer, then the output is compiled by us-system-adaptors that are tailored around descriptors concept. Now you can reflect the outcome of what we have achieve so far from concept to implementation.
+
+
+///////////////////////////////////////
+
+The machine restarted and I have lost some context.
+Below is my recollection of key paths that we followed:
+1. We determined and established BaseUiAdapter
+2. We determined that we need to include known standard controls(map<generic-control-name>, eg mapButtons():void) in BaseUiAdapter, which must be implemented by a given adaptor. 
+3. Rather than implement 2, and now that you have given a very concrete foundation, it has given me some idea on how to construct the base. We first need serries of descriptors. This can even be in hierachial structure: just like DOM. These controls have been used over a long time now and it is possible to classify them. In corpdesk we use a concept called descriptors. In fact we have descriptor module that tries to classify various elements and comonents that make up the software development world. From module, component (which include models, services and controllers), we have entities that define the process from development, to deproment and so on. Now we can have hierachial descriptrion/interface (descriptors) for controls that. This structure becomes a contract for defining the methods that create controlls. This way developers and ai agents have a defined way of using the utilities. From here you can assist to work in that trajectory.
+Below is some example:
+
+---
+
+## 2. Refined Descriptor Taxonomy
+
+Let’s lock this in properly.
+
+```
+CdUiDescriptor
+├── CdUiLayoutDescriptor        (pure layout semantics)
+├── CdUiContainerDescriptor     (structural grouping & navigation)
+├── CdUiControlDescriptor       (atomic interaction)
+├── CdUiCompositeDescriptor     (domain-level compositions)
+```
+
+---
+
+## 3. Corrected `CdUiContainerDescriptor`
+
+```ts
+export interface CdUiContainerDescriptor extends CdUiDescriptor {
+  role: "container";
+  containerType:
+    | "card"
+    | "panel"
+    | "section"
+    | "dialog"
+    | "sheet"
+    | "drawer"
+    | "tabs"
+    | "accordion"
+    | "menu"
+    | "list";
+}
+```
+
+### Why `menu` and `list` also belong here
+
+Same reasoning:
+
+* They structure children
+* They orchestrate interaction
+* They are not atomic
+
+---
+
+## 4. Downstream
+
+### A. Tab Items Become Containers Too
+
+A `tabs` container implies children of a **known contract**:
+
+```ts
+export interface CdUiTabDescriptor extends CdUiContainerDescriptor {
+  containerType: "tab";
+  label: string;
+  icon?: string;
+}
+```
+
+Example Usage:
+
+```ts
+{
+  id: "settings-tabs",
+  role: "container",
+  containerType: "tabs",
+  children: [
+    {
+      id: "general-tab",
+      containerType: "tab",
+      label: "General",
+      children: [...]
+    },
+    {
+      id: "security-tab",
+      containerType: "tab",
+      label: "Security",
+      children: [...]
+    }
+  ]
+}
+```
+
+No ambiguity. No hacks.
+
+---
+
+### B. Accordion Panels Are Containers, Not Items
+
+```ts
+export interface CdUiAccordionItemDescriptor extends CdUiContainerDescriptor {
+  containerType: "accordionItem";
+  title: string;
+  expanded?: boolean;
+}
+```
+
+Again: children live *inside*.
+
+---
+
+## 5. Revised `CdUiControlDescriptor` (Cleaner & Smaller)
+
+```ts
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: "control";
+  controlType:
+    | "button"
+    | "iconButton"
+    | "textField"
+    | "textArea"
+    | "checkbox"
+    | "radio"
+    | "switch"
+    | "slider"
+    | "select"
+    | "progress"
+    | "tooltip";
+}
+```
+
+
+
+/////////////////////////////////////////
+
+Can you extend the write up with some display of mermaid diagrams and sample codes of what we have implemented so far.
+Eg showing how the following works at POC leve:
+1. IUiSystemAdapter
+2. BaseUiAdapter
+3. Bootstrap538AdapterService
+4. MaterialDesignAdapterService
+
+////////////////////////////////////////
+
+Below we have what was existing as UiSystemDescriptor.
+We also have a new definition DEFAULT_SYSTEM.
+There seem to be some type confilict.
+The error showing is:
+ype 'number' is not assignable to type 'UiSystemDescriptor'.ts(2322)
+const DEFAULT_SYSTEM: UiSystemDescriptor
+You can assit to harmonize.
+```ts
+export const DEFAULT_SYSTEM: UiSystemDescriptor = {
+  id: "bootstrap-538",
+  version: "5.3.8",
+  themeActive: "light",
+}
+
+
+export interface UiSystemDescriptor {
+  id: string;
+  name?: string;
+  version?: string;
+
+  cssUrl?: string | null;
+  jsUrl?: string | null;
+
+  stylesheets?: string[];
+  scripts?: string[];
+
+  description?: string;
+  author?: string;
+  license?: string;
+  repository?: string;
+
+  tokenMap?: Record<string, string>;
+  conceptMappings?: Record<string, { class?: string; [k: string]: any }>;
+  renderRules?: Record<string, (domNode: UiDomDescriptor, props:any) => string>;
+
+  containers?: UiContainerDescriptor[];
+  components?: UiComponentDescriptor[];
+
+  metadata?: Record<string, any>;
+  extensions?: Record<string, any>;
+
+  themesAvailable?: UiThemeDescriptor[];
+  themeActive?: string;
+}
+```
+
+////////////////////////////////////////////////////////
+
+
+Below is the current state of BaseUiAdapter.
+Confirm that the class is as should be and does not have any extra methods lingering from old version or if there is a potential issue.
+Note that createControl(), attachEventListeners() and handleAction() are commented.
+Worth mentioning is that when not commented they throw typescript errors like:
+Function implementation is missing or not immediately following the declaration.ts(2391)
+(method) BaseUiAdapter.createControl(d: CdUiControlDescriptor, parent: HTMLElement): HTMLElement (+1 overload)
+
+```ts
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+
+  //////////////////////////////////////////////////////////
+  protected observer: MutationObserver | null = null;
+
+  // Semantic Icon Registry (Generic Key -> System Specific String)
+  protected abstract getIconMap(): Record<string, string>;
+
+  // Every adapter must implement its specific conversion logic
+  protected abstract mapAll(): void;
+
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor;
+    this.observeMutations();
+    this.mapAll();
+  }
+
+  async deactivate(): Promise<void> {
+    this.observer?.disconnect();
+    this.observer = null;
+  }
+
+  async applyTheme(themeId: string): Promise<void> {
+    diag_css(`[${this.constructor.name}] Applying theme: ${themeId}`);
+    // Logic for theme switching (CSS variables etc)
+  }
+
+  /**
+   * Translates a generic icon name to a system-specific identifier.
+   */
+  protected getSystemIcon(genericName: string | null): string {
+    if (!genericName) return "";
+    const map = this.getIconMap();
+    return map[genericName] || genericName;
+  }
+
+  protected observeMutations() {
+    if (this.observer) return;
+    this.observer = new MutationObserver(() => {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 30);
+      }
+    });
+    this.observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Helper to get concept mapping from descriptor
+  protected getMapping(concept: string): UiConceptMapping | undefined {
+    return this.descriptor?.conceptMappings?.[concept];
+  }
+
+  // Contract: Sub-class only handles aesthetics
+  protected abstract implementControl(
+    d: CdUiControlDescriptor,
+    parent: HTMLElement
+  ): HTMLElement;
+
+  //////////////////////////////////////////////////////////
+
+  /**
+   * THE SYNTHESIS ENGINE: Recursively processes the descriptor tree.
+   */
+  public synthesize(descriptor: CdUiDescriptor, parent: HTMLElement): void {
+    let currentElement: HTMLElement;
+
+    // 1. Delegate creation to the specific adaptor implementation
+    switch (descriptor.role) {
+      case CdUiRole.CONTAINER:
+        currentElement = this.createContainer(
+          descriptor as CdUiContainerDescriptor,
+          parent
+        );
+        break;
+      case CdUiRole.CONTROL:
+        currentElement = this.createControl(
+          descriptor as CdUiControlDescriptor,
+          parent
+        );
+        // Controls often have actions, so we attach global behavior here
+        this.attachControlIntelligence(
+          currentElement,
+          descriptor as CdUiControlDescriptor
+        );
+        break;
+      default:
+        currentElement = parent;
+    }
+
+    // 2. RECURSION: The engine handles the tree-walking automatically
+    if (descriptor.children && descriptor.children.length > 0) {
+      descriptor.children.forEach((child) =>
+        this.synthesize(child, currentElement)
+      );
+    }
+  }
+
+  // --- THE ENFORCED CONTRACT ---
+  // Every specific adaptor MUST implement these or the code won't compile.
+  protected abstract createContainer(
+    d: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ): HTMLElement;
+  protected abstract createControl(
+    d: CdUiControlDescriptor,
+    parent: HTMLElement
+  ): HTMLElement;
+
+  // Shared Intelligence: Handled once in the base for all systems
+  private attachControlIntelligence(el: HTMLElement, d: CdUiControlDescriptor) {
+    if (d.controlType === CdUiControlType.BUTTON) {
+      (el as any).type = "button"; // Force SPA-safe
+      el.addEventListener("click", (e) => this.handleAction(d, e));
+    }
+  }
+
+  protected abstract handleAction(d: CdUiControlDescriptor, e: Event): void;
+}
+```
+
+//////////////////////////////////////////////
+
+Below is the current state of Bootstrap538AdapterService.
+Can you assess it if it is ready. If not do for me a full version of the refactored one relying on the latest BaseUiAdapter.
+Given that BaseUiAdapter relies on descriptors for defining controlls, I sill have mapButtons() is still present but I assume in the new design, this should be implemented differently.
+If this is the case, what the equivalence of mapAll() in the new design.
+
+```ts
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected getIconMap() {
+    return {
+      identity: "fingerprint",
+      startup: "rocket-takeoff",
+      settings: "gear-wide-connected",
+      save: "check-circle",
+    };
+  }
+
+  protected mapAll() {
+    this.mapButtons();
+    this.mapTabs(); // Shared feature
+    // ... other mappers
+  }
+
+  private mapTabs() {
+    // Uses this.getSystemIcon(tab.getAttribute('icon'))
+    // to generate <i class="bi bi-${icon}">
+  }
+
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    const btns = document.querySelectorAll("button[cdButton]");
+    btns.forEach((btn) => {
+      if (this.appliedSet.has(btn as HTMLElement)) return;
+      btn.classList.add(
+        ...(mapping?.class?.split(" ") || ["btn", "btn-primary"])
+      );
+      this.appliedSet.add(btn as HTMLElement);
+    });
+  }
+
+  protected createContainer(
+    d: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ): HTMLElement {
+    switch (d.containerType) {
+      case CdUiContainerType.TABS:
+        const nav = document.createElement("ul");
+        nav.className = "nav nav-tabs mb-3";
+        parent.appendChild(nav);
+        return nav; // Children (tabs) will be appended here
+
+      case CdUiContainerType.CARD:
+        const card = document.createElement("div");
+        card.className = "card shadow-sm";
+        parent.appendChild(card);
+        return card;
+
+      // The IDE will help you ensure all Enums are covered here
+      default:
+        return parent;
+    }
+  }
+
+  protected createControl(
+    d: CdUiControlDescriptor,
+    parent: HTMLElement
+  ): HTMLElement {
+    // Implementation for buttons, textFields, etc.
+    const el = document.createElement("button");
+    el.className = "btn btn-primary";
+    parent.appendChild(el);
+    return el;
+  }
+}
+```
+
+//////////////////////////////////////////////////
+
+Below is the definition of CdUiControlDescriptor.
+How do we also make it iherit the properties of HTMLElement.
+This would relove some potential type issues downstream.
+```ts
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType; // Use Enum
+  value?: any;
+}
+```
+
+///////////////////////////////////////////////////
+
+Use the Bootstrap538AdapterService to do and equivalent for MaterialDesignAdapterService
+```ts
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  
+  protected getIconMap(): Record<string, string> {
+    return {
+      identity: "fingerprint",
+      startup: "rocket-takeoff",
+      settings: "gear-wide-connected",
+      save: "check-circle",
+    };
+  }
+
+  /**
+   * COMPATIBILITY BRIDGE: 
+   * Maps existing HTML decorated with attributes to Bootstrap.
+   */
+  protected mapAll(): void {
+    this.mapButtons();
+    // this.mapInputs(); ... etc
+  }
+
+  // ---------------------------------------------------------------------------
+  // NEW WORLD: DESCRIPTOR SYNTHESIS
+  // ---------------------------------------------------------------------------
+
+  protected createContainer(d: CdUiContainerDescriptor, parent: HTMLElement): HTMLElement {
+    let el: HTMLElement;
+
+    switch (d.containerType) {
+      case CdUiContainerType.TABS:
+        el = document.createElement("ul");
+        el.className = "nav nav-tabs mb-3";
+        break;
+
+      case CdUiContainerType.TAB:
+        el = document.createElement("li");
+        el.className = "nav-item";
+        el.innerHTML = `<button class="nav-link" data-bs-toggle="tab">${d.label || ''}</button>`;
+        break;
+
+      case CdUiContainerType.CARD:
+        el = document.createElement("div");
+        el.className = "card shadow-sm mb-3";
+        break;
+
+      default:
+        el = document.createElement("div");
+    }
+
+    el.id = d.id;
+    parent.appendChild(el);
+    return el;
+  }
+
+  protected createControl(d: CdUiControlDescriptor, parent: HTMLElement): HTMLElement {
+    let el: HTMLElement;
+
+    switch (d.controlType) {
+      case CdUiControlType.BUTTON:
+        el = document.createElement("button");
+        const mapping = this.getMapping("button");
+        el.className = mapping?.class || "btn btn-primary";
+        el.innerText = d.id; // Or a label property if added
+        break;
+
+      case CdUiControlType.TEXT_FIELD:
+        el = document.createElement("input");
+        el.className = "form-control";
+        (el as HTMLInputElement).placeholder = d.placeholder || "";
+        break;
+
+      case CdUiControlType.SWITCH:
+        const wrapper = document.createElement("div");
+        wrapper.className = "form-check form-switch";
+        wrapper.innerHTML = `<input class="form-check-input" type="checkbox" id="${d.id}">`;
+        el = wrapper;
+        break;
+
+      default:
+        el = document.createElement("span");
+    }
+
+    el.id = d.id;
+    parent.appendChild(el);
+    return el;
+  }
+
+  // ---------------------------------------------------------------------------
+  // OLD WORLD: TAG UPGRADING (mapAll helpers)
+  // ---------------------------------------------------------------------------
+
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    const btns = document.querySelectorAll("button[cdButton]");
+    btns.forEach((btn) => {
+      const el = btn as HTMLElement;
+      if (this.appliedSet.has(el)) return;
+      
+      el.classList.add(...(mapping?.class?.split(" ") || ["btn", "btn-primary"]));
+      
+      // Auto-handle icons if present in attribute
+      const icon = el.getAttribute("icon");
+      if (icon) {
+        const iconName = this.getSystemIcon(icon);
+        el.innerHTML = `<i class="bi bi-${iconName} me-2"></i>` + el.innerHTML;
+      }
+
+      this.appliedSet.add(el);
+    });
+  }
+
+  /**
+   * Optional Override: if you need to do something specific 
+   * after a click before it bubbles to the Shell.
+   */
+  protected handleAction(d: CdUiControlDescriptor, event: Event): void {
+    // Add Bootstrap-specific click effects here if needed
+    super.handleAction(d, event);
+  }
+}
+```
+
+//////////////////////////////////////
+
+ui-system adaptors interpret/compile html into selected ui-system. So the html code base is always consistent. In the earlier design of adaptors, there was an issue of harmony between adaptors in terms of code base.
+We have now introduced BaseUiAdapter and a number of interfaces to harmonize development between adaptors.
+I would like you to update your context and develop capacity to debug this system to work as expected after the new updates.
+Below is the new modifications:
+1. New interfaces in: src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts
+2. BaseUiAdapter
+Once you have looked at this, I will share example of implementation for bootstrap-538.
+
+```ts
+// src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts
+import { Bootstrap502AdapterService } from "../../../app/ui-adaptor-port/services/bootstrap-502-adapter.service";
+import { Bootstrap538AdapterService } from "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service";
+import { MaterialDesignAdapterService } from "../../../app/ui-adaptor-port/services/material-design-adapter.service";
+import { PlainAdapterService } from "../../../app/ui-adaptor-port/services/plain-adapter.service";
+import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
+
+export interface IUiSystemAdapter {
+  activate(descriptor: UiSystemDescriptor): Promise<void>;
+  deactivate(): Promise<void>;
+  applyTheme(themeId: string): Promise<void>;
+}
+
+/**
+ * A single concept's mapping information.
+ * Example concepts:
+ * - "button"
+ * - "input"
+ * - "formGroup"
+ * - "card"
+ */
+export interface UiConceptMapping {
+  /** CSS class string to apply to the rendered element */
+  class?: string;
+
+  /** Inline style overrides (rarely used, but supported) */
+  style?: Record<string, string>;
+
+  /** Attribute overrides (e.g., {"data-bs-toggle": "tooltip"}) */
+  attrs?: Record<string, string>;
+
+  /** Optional: transform raw DOM before render */
+  transform?: (el: HTMLElement) => void;
+
+  /** Optional: metadata for future AI/plugin use */
+  metadata?: Record<string, any>;
+}
+
+/**
+ * Collection of mappings for a single UI system.
+ * Maps concept → mapping configuration
+ */
+export type UiSystemMapping = Record<string, UiConceptMapping>;
+
+export const SYSTEM_ADAPTERS: Record<string, IUiSystemAdapter> = {
+  "bootstrap-502": new Bootstrap502AdapterService(),
+  "bootstrap-538": new Bootstrap538AdapterService(),
+  "material-design": new MaterialDesignAdapterService(),
+  plain: new PlainAdapterService(),
+};
+
+/**
+ * 1. Define specific IDs as a Union type or Enum to prevent
+ * "string" vs "specific string" mismatches.
+ */
+// export type UiSystemId = "bootstrap-538" | "material-design" | "tailwind" | string;
+
+export type UiSystemId =
+  | "bootstrap-538"
+  | "bootstrap-502"
+  | "tailwind"
+  | "material-mui"
+  | "material-design"
+  | "custom";
+
+/**
+ * 2. Harmonized DEFAULT_SYSTEM
+ * Ensure no trailing commas or hidden characters are present.
+ */
+export const DEFAULT_SYSTEM: UiSystemDescriptor = {
+  id: "bootstrap-538",
+  version: "5.3.8",
+  themeActive: "light",
+};
+
+/**
+ * Defines the high-level role of a descriptor
+ */
+export enum CdUiRole {
+  LAYOUT = "layout",
+  CONTAINER = "container",
+  CONTROL = "control",
+  COMPOSITE = "composite",
+}
+
+/** * Strict catalog of structural containers
+ */
+export enum CdUiContainerType {
+  TABS = "tabs",
+  TAB = "tab",
+  CARD = "card",
+  ACCORDION = "accordion",
+  SECTION = "section",
+  DIALOG = "dialog",
+}
+
+/** * Strict catalog of atomic controls
+ */
+export enum CdUiControlType {
+  BUTTON = "button",
+  TEXT_FIELD = "textField",
+  CHECKBOX = "checkbox",
+  SELECT = "select",
+  SWITCH = "switch",
+}
+
+export interface CdUiDescriptor {
+  id: string;
+  role: CdUiRole; // Use Enum
+  children?: CdUiDescriptor[];
+}
+
+export interface CdUiContainerDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTAINER;
+  containerType: CdUiContainerType; // Use Enum
+  label?: string;
+  icon?: string;
+}
+
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType; // Use Enum
+  value?: any;
+  placeholder?: string;
+}
+
+export interface CdUiAction {
+  type: "navigate" | "submit" | "call_fx" | "toggle_target";
+  target?: string; // e.g., a route or a component ID
+  params?: Record<string, any>;
+}
+
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType;
+  action?: CdUiAction; // The semantic intent of the interaction
+}
+
+```
+
+```ts
+// src/CdShell/sys/cd-guig/services/base-ui-adapter.service.ts
+import {
+  CdUiContainerDescriptor,
+  CdUiControlDescriptor,
+  CdUiControlType,
+  CdUiDescriptor,
+  CdUiRole,
+  IUiSystemAdapter,
+  UiConceptMapping,
+} from "../models/ui-system-adaptor.model";
+import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
+import { diag_css } from "../../utils/diagnosis";
+
+
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+  protected observer: MutationObserver | null = null;
+
+  // --- CONTRACT: Sub-classes MUST implement these ---
+  protected abstract getIconMap(): Record<string, string>;
+
+  /** The "Old World" hook for scanning existing DOM decorated with tags */
+  protected abstract mapAll(): void;
+
+  /** The "New World" hook: Create visual structure for a Container */
+  protected abstract createContainer(
+    d: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ): HTMLElement;
+
+  /** The "New World" hook: Create visual element for a Control */
+  protected abstract createControl(
+    d: CdUiControlDescriptor,
+    parent: HTMLElement
+  ): HTMLElement;
+
+  // --- LIFECYCLE ---
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor;
+    this.observeMutations();
+    this.mapAll();
+  }
+
+  async deactivate(): Promise<void> {
+    this.observer?.disconnect();
+    this.observer = null;
+  }
+
+  async applyTheme(themeId: string): Promise<void> {
+    diag_css(`[${this.constructor.name}] Applying theme: ${themeId}`);
+  }
+
+  // --- SYNTHESIS ENGINE (The DNA) ---
+  public synthesize(descriptor: CdUiDescriptor, parent: HTMLElement): void {
+    let currentElement: HTMLElement;
+
+    switch (descriptor.role) {
+      case CdUiRole.CONTAINER:
+        currentElement = this.createContainer(
+          descriptor as CdUiContainerDescriptor,
+          parent
+        );
+        break;
+
+      case CdUiRole.CONTROL:
+        // 1. Specific adapter creates the visual element
+        currentElement = this.createControl(
+          descriptor as CdUiControlDescriptor,
+          parent
+        );
+        // 2. Base class attaches the standard "Intelligence" (Actions/SPA Safety)
+        this.attachControlIntelligence(
+          currentElement,
+          descriptor as CdUiControlDescriptor
+        );
+        break;
+
+      default:
+        currentElement = parent;
+    }
+
+    // 3. RECURSION
+    if (descriptor.children && descriptor.children.length > 0) {
+      descriptor.children.forEach((child) =>
+        this.synthesize(child, currentElement)
+      );
+    }
+  }
+
+  // --- INTERNAL UTILITIES ---
+
+  /**
+   * Centralized Logic: Every control generated by the factory gets this automatically.
+   */
+  private attachControlIntelligence(el: HTMLElement, d: CdUiControlDescriptor) {
+    // SPA Safety for buttons
+    if (d.controlType === CdUiControlType.BUTTON) {
+      if (el instanceof HTMLButtonElement) {
+        el.type = "button";
+      }
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.handleAction(d, e);
+      });
+    }
+    // Future: Add logic for TEXT_FIELD (auto-bind to model), SWITCH, etc.
+  }
+
+  /**
+   * Universal Action Handler: Dispatches semantic events to the Corpdesk Shell.
+   */
+  protected handleAction(d: CdUiControlDescriptor, event: Event): void {
+    if (!d.action) return;
+
+    console.log(`[BaseUiAdapter] Executing Action: ${d.action.type}`, d.action);
+
+    // We use the event target as the starting point for the bubble
+    const targetEl = event.target as HTMLElement;
+
+    if (targetEl) {
+      const cdEvent = new CustomEvent("cd-ui-action", {
+        detail: {
+          descriptorId: d.id,
+          action: d.action,
+          originalEvent: event,
+        },
+        bubbles: true,
+        composed: true, // Allows event to cross Shadow DOM boundaries
+      });
+
+      targetEl.dispatchEvent(cdEvent);
+    }
+  }
+
+  protected getSystemIcon(genericName: string | null): string {
+    if (!genericName) return "";
+    return this.getIconMap()[genericName] || genericName;
+  }
+
+  protected observeMutations() {
+    if (this.observer) return;
+    this.observer = new MutationObserver(() => {
+      const callback =
+        "requestIdleCallback" in window
+          ? window.requestIdleCallback
+          : setTimeout;
+      callback(() => this.mapAll(), 30);
+    });
+    this.observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  protected getMapping(concept: string): UiConceptMapping | undefined {
+    return this.descriptor?.conceptMappings?.[concept];
+  }
+}
+
+```
+
+////////////////////////////////////////////////////////
+Below is the state of MaterialDesignAdapterService in its previous working verion.
+Knwing the current design, you can assess the features and update the new version to align with previous version.
+```ts
+export class MaterialDesignAdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  private mdcInitQueued = false;
+  private mdcInstances = new Set<any>();
+
+  constructor() {
+    console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+  }
+
+  // ---------------------------------------------------------------------------
+  // Activation / Deactivation
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[MaterialDesignAdapter] activate() START", {
+      id: descriptor?.id,
+    });
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "[MaterialDesignAdapter] descriptor.conceptMappings missing!"
+      );
+    } else {
+      console.log(
+        "%c[MaterialDesignAdapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // initial mapping
+    this.mapAll();
+
+    // observe DOM for new fields
+    this.observeMutations();
+
+    diag_css("[MaterialDesignAdapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  async deactivate(): Promise<void> {
+    diag_css("[MaterialDesignAdapter] deactivate() START");
+    try {
+      document.documentElement.removeAttribute("data-md-theme");
+    } catch {}
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+      } catch {}
+      this.observer = null;
+    }
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+    // destroy MDC instances if any (best-effort)
+    try {
+      this.mdcInstances.forEach((inst: any) => {
+        try {
+          inst.destroy?.();
+        } catch {}
+      });
+      this.mdcInstances.clear();
+    } catch {}
+    diag_css("[MaterialDesignAdapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // Theme
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[MaterialDesignAdapter] applyTheme()", { themeDescriptorOrId });
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[MaterialDesignAdapter] applyTheme ignored (null theme)");
+        return;
+      }
+      let mode: string | undefined;
+      if (typeof themeDescriptorOrId === "string")
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      else if (typeof themeDescriptorOrId === "object")
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      document.documentElement.setAttribute(
+        "data-md-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+      diag_css("[MaterialDesignAdapter] applied Material theme", { mode });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Concept mapping helpers
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+    console.log(
+      `%c[MaterialDesignAdapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+    if (this.appliedSet.has(el)) {
+      if (mapping.attrs)
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      return;
+    }
+
+    console.log(
+      "%c[MaterialDesignAdapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+    if (mapping.class)
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
+    if (mapping.attrs)
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    this.appliedSet.add(el);
+  }
+
+  private prepareMdcDom(field: HTMLElement): HTMLElement | null {
+    if (!field) return null;
+    if (field.dataset.mdTransformed === "1") {
+      const existing = field.querySelector<HTMLElement>(
+        ".mdc-text-field, .cd-md-select-wrapper, .cd-md-text-field, .mdc-select"
+      );
+      return existing || null;
+    }
+
+    // find control and label
+    const control = field.querySelector<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >("input, textarea, select");
+    const labelEl = field.querySelector<HTMLLabelElement>("label");
+
+    if (!control) {
+      console.warn(
+        "[prepareMdcDom] no input/textarea/select inside field — skipping",
+        { field }
+      );
+      return null;
+    }
+
+    const labelText = (
+      labelEl?.textContent?.trim() ||
+      control.getAttribute("placeholder") ||
+      control.name ||
+      ""
+    ).trim();
+
+    // remove placeholder (floating label used instead)
+    try {
+      if ("placeholder" in control) control.placeholder = "";
+    } catch {}
+
+    // ensure id on native control
+    if (!control.id)
+      control.id = `mdc-${Math.random().toString(36).slice(2, 8)}`;
+
+    const tag = (control.tagName || "").toUpperCase();
+
+    // --------------- INPUT / TEXTAREA ----------------
+    if (tag === "INPUT" || tag === "TEXTAREA") {
+      const wrapper = document.createElement("label");
+      wrapper.className =
+        "mdc-text-field mdc-text-field--filled cd-md-text-field";
+
+      const ripple = document.createElement("span");
+      ripple.className = "mdc-text-field__ripple";
+
+      const floatingLabel = document.createElement("span");
+      floatingLabel.className = "mdc-floating-label";
+      floatingLabel.setAttribute("for", control.id);
+      floatingLabel.textContent = labelText || "";
+
+      control.classList.add("mdc-text-field__input");
+
+      const lineRipple = document.createElement("span");
+      lineRipple.className = "mdc-line-ripple";
+
+      wrapper.appendChild(ripple);
+      wrapper.appendChild(floatingLabel);
+      wrapper.appendChild(control);
+      wrapper.appendChild(lineRipple);
+
+      try {
+        field.replaceWith(wrapper);
+        wrapper.dataset.mdTransformed = "1";
+      } catch (err) {
+        console.warn("[prepareMdcDom] replaceWith failed (input)", err, {
+          field,
+          wrapper,
+        });
+        return null;
+      }
+
+      return wrapper;
+    }
+
+    // --------------- SELECT (Model-A: MDC Select structure) ----------------
+    else if (tag === "SELECT") {
+      const nativeSelect = control as HTMLSelectElement;
+
+      // --- NEW: remove default placeholder option ("") to avoid double text conflict ---
+      let placeholderText = "";
+      if (
+        nativeSelect.options.length > 0 &&
+        nativeSelect.options[0].value === ""
+      ) {
+        placeholderText = nativeSelect.options[0].text || "";
+        nativeSelect.remove(0);
+      }
+
+      // Build root wrapper with MDC-select class
+      const wrapper = document.createElement("div");
+      wrapper.className = "mdc-select mdc-select--filled cd-md-select-wrapper";
+      wrapper.setAttribute("role", "listbox");
+
+      // Hide native select
+      nativeSelect.style.display = "none";
+      nativeSelect.classList.remove("mdc-text-field__input");
+      wrapper.appendChild(nativeSelect);
+
+      // Anchor (trigger)
+      const anchor = document.createElement("div");
+      anchor.className = "mdc-select__anchor";
+      anchor.setAttribute("role", "button");
+      anchor.setAttribute("aria-haspopup", "listbox");
+      anchor.setAttribute("aria-expanded", "false");
+      anchor.setAttribute(
+        "aria-labelledby",
+        `${control.id}-label ${control.id}-selected-text`
+      );
+      anchor.tabIndex = 0;
+
+      // ripple
+      const ripple = document.createElement("span");
+      ripple.className = "mdc-select__ripple";
+      anchor.appendChild(ripple);
+
+      // floating label (acts as the true placeholder)
+      const floatingLabel = document.createElement("span");
+      floatingLabel.className = "mdc-floating-label";
+      floatingLabel.id = `${control.id}-label`;
+      floatingLabel.textContent = labelText || placeholderText;
+      anchor.appendChild(floatingLabel);
+
+      // selected text (EMPTY because user has not selected anything yet)
+      const selectedContainer = document.createElement("span");
+      selectedContainer.className = "mdc-select__selected-text-container";
+      const selectedText = document.createElement("span");
+      selectedText.className = "mdc-select__selected-text";
+      selectedText.id = `${control.id}-selected-text`;
+      selectedText.textContent = ""; // <-- NEW: always empty initially
+      selectedContainer.appendChild(selectedText);
+      anchor.appendChild(selectedContainer);
+
+      // dropdown icon
+      const dropdownIcon = document.createElement("span");
+      dropdownIcon.className = "mdc-select__dropdown-icon";
+      dropdownIcon.innerHTML = `
+      <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5" focusable="false">
+        <polygon class="mdc-select__dropdown-icon-inactive" stroke="none" fill-rule="evenodd" points="7 10 12 15 17 10"></polygon>
+        <polygon class="mdc-select__dropdown-icon-active" stroke="none" fill-rule="evenodd" points="7 15 12 10 17 15"></polygon>
+      </svg>`;
+      anchor.appendChild(dropdownIcon);
+
+      // line ripple
+      const lineRipple = document.createElement("span");
+      lineRipple.className = "mdc-line-ripple";
+      anchor.appendChild(lineRipple);
+
+      wrapper.appendChild(anchor);
+
+      // menu surface
+      const menu = document.createElement("div");
+      menu.className =
+        "mdc-select__menu mdc-menu mdc-menu-surface cd-md-select-menu";
+      menu.setAttribute("role", "presentation");
+      menu.setAttribute("aria-hidden", "true");
+
+      const list = document.createElement("ul");
+      list.className = "mdc-list";
+      list.setAttribute("role", "listbox");
+      list.setAttribute("tabindex", "-1");
+
+      // Populate options AFTER removing placeholder
+      Array.from(nativeSelect.options).forEach((opt, idx) => {
+        const li = document.createElement("li");
+        li.className = "mdc-list-item";
+        li.setAttribute("role", "option");
+        li.setAttribute("data-value", opt.value);
+        li.setAttribute("data-index", String(idx));
+        li.tabIndex = -1;
+
+        const rippleSpan = document.createElement("span");
+        rippleSpan.className = "mdc-list-item__ripple";
+
+        const textSpan = document.createElement("span");
+        textSpan.className = "mdc-list-item__text";
+        textSpan.textContent = opt.text;
+
+        li.appendChild(rippleSpan);
+        li.appendChild(textSpan);
+
+        list.appendChild(li);
+      });
+
+      menu.appendChild(list);
+      wrapper.appendChild(menu);
+
+      try {
+        field.replaceWith(wrapper);
+        wrapper.dataset.mdTransformed = "1";
+      } catch (err) {
+        console.warn("[prepareMdcDom] replaceWith failed (select)", err, {
+          field,
+          wrapper,
+        });
+        return null;
+      }
+
+      // store references
+      (wrapper as any).__cd_native_select = nativeSelect;
+      (wrapper as any).__cd_anchor = anchor;
+      (wrapper as any).__cd_selected_text = selectedText;
+      (wrapper as any).__cd_menu_el = menu;
+
+      return wrapper;
+    } else {
+      console.warn("[prepareMdcDom] unknown control tag — skipping", {
+        tag,
+        field,
+      });
+      return null;
+    }
+  }
+
+  // CSS fallback handlers for focus/blur if MDC not available (text fields)
+  private attachCssFallback(wrapper: HTMLElement) {
+    try {
+      const inputEl = wrapper.querySelector<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >("input, textarea, select");
+      if (!inputEl) return;
+
+      // If a native value exists keep label floated
+      if (
+        (inputEl as HTMLInputElement).value &&
+        (inputEl as HTMLInputElement).value.length > 0
+      ) {
+        wrapper.classList.add("mdc-text-field--focused");
+      }
+
+      if (!(inputEl as any).__cd_md_handlers_attached) {
+        inputEl.addEventListener("focus", () =>
+          wrapper.classList.add("mdc-text-field--focused")
+        );
+        inputEl.addEventListener("blur", () => {
+          if (
+            !(inputEl as HTMLInputElement).value ||
+            (inputEl as HTMLInputElement).value.length === 0
+          ) {
+            wrapper.classList.remove("mdc-text-field--focused");
+          }
+        });
+        (inputEl as any).__cd_md_handlers_attached = true;
+      }
+    } catch (err) {
+      console.warn("[attachCssFallback] error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // MDC initialization (UMD)
+  // - Uses window.mdc.* families (textField, menu)
+  // ---------------------------------------------------------------------------
+  private initMdcTextField(wrapper: HTMLElement) {
+    if (!wrapper) return;
+    try {
+      const mdcGlobal = (window as any).mdc;
+      // ensure it's a text-field wrapper (label.mdc-text-field)
+      if (!wrapper.classList.contains("mdc-text-field")) return;
+
+      // avoid double-init
+      if ((wrapper as any).__cd_mdc_initialized) return;
+
+      if (
+        !mdcGlobal ||
+        !mdcGlobal.textField ||
+        !mdcGlobal.textField.MDCTextField
+      ) {
+        // MDC textfield not present — attach css fallback handlers
+        this.attachCssFallback(wrapper);
+        return;
+      }
+
+      // Guard: ensure control has .value & validity (MDCTextField expects native input)
+      const native = wrapper.querySelector<
+        HTMLInputElement | HTMLTextAreaElement
+      >(".mdc-text-field__input");
+      if (!native) {
+        this.attachCssFallback(wrapper);
+        return;
+      }
+
+      // Some MDC versions access native.validity — ensure element supports it
+      const isStandardInput =
+        typeof (native as HTMLInputElement).validity !== "undefined";
+      if (!isStandardInput) {
+        // don't attempt MDCTextField init if native doesn't support validity
+        this.attachCssFallback(wrapper);
+        return;
+      }
+
+      try {
+        const inst = new mdcGlobal.textField.MDCTextField(wrapper);
+        this.mdcInstances.add(inst);
+        (wrapper as any).__cd_mdc_initialized = true;
+        console.debug("[MaterialDesignAdapter] MDCTextField constructed", {
+          wrapper,
+          inst,
+        });
+      } catch (err) {
+        console.warn(
+          "[MaterialDesignAdapter] MDCTextField construction failed — falling back to CSS handlers",
+          err
+        );
+        (wrapper as any).__cd_mdc_initialized = false;
+        this.attachCssFallback(wrapper);
+      }
+    } catch (err) {
+      console.error("[MaterialDesignAdapter] initMdcTextField fatal", err);
+      this.attachCssFallback(wrapper);
+    }
+  }
+
+  private initMdcSelect(wrapper: HTMLElement) {
+    if (!wrapper) return;
+    try {
+      if ((wrapper as any).__cd_select_initialized) return;
+
+      const mdcGlobal = (window as any).mdc;
+      const nativeSelect = (wrapper as any)
+        .__cd_native_select as HTMLSelectElement;
+      const anchor = (wrapper as any).__cd_anchor as HTMLElement;
+      const selectedText = (wrapper as any).__cd_selected_text as HTMLElement;
+      const menuEl = (wrapper as any).__cd_menu_el as HTMLElement;
+
+      if (!nativeSelect || !anchor || !menuEl) {
+        this.initMdcSelectFallback(wrapper);
+        (wrapper as any).__cd_select_initialized = true;
+        return;
+      }
+
+      // Clean initial selected text (no default pre-selected UI text)
+      selectedText.textContent = "";
+
+      // preferred MDCSelect
+      if (mdcGlobal && mdcGlobal.select && mdcGlobal.select.MDCSelect) {
+        try {
+          const selectInst = new mdcGlobal.select.MDCSelect(wrapper);
+          this.mdcInstances.add(selectInst);
+          (wrapper as any).__cd_mdc_select_inst = selectInst;
+
+          // ensure no default is selected
+          if (
+            selectInst.selectedIndex === 0 &&
+            nativeSelect.selectedIndex > -1
+          ) {
+            selectInst.selectedIndex = -1;
+          }
+
+          selectInst.listen("MDCSelect:change", () => {
+            try {
+              const idx = selectInst.selectedIndex;
+
+              nativeSelect.selectedIndex = idx;
+
+              const ev = new Event("change", { bubbles: true });
+              nativeSelect.dispatchEvent(ev);
+
+              selectedText.textContent =
+                selectInst.selectedText ||
+                nativeSelect.options[idx]?.text ||
+                "";
+            } catch (err) {
+              console.warn(
+                "[MaterialDesignAdapter] MDCSelect change error",
+                err
+              );
+            }
+          });
+
+          nativeSelect.addEventListener("change", () => {
+            const idx = nativeSelect.selectedIndex;
+            selectedText.textContent = nativeSelect.options[idx]?.text || "";
+          });
+
+          (wrapper as any).__cd_select_initialized = true;
+          return;
+        } catch (err) {
+          console.warn("[MaterialDesignAdapter] MDCSelect init failed", err);
+        }
+      }
+
+      // fallback: MDCMenu
+      if (mdcGlobal && mdcGlobal.menu && mdcGlobal.menu.MDCMenu) {
+        try {
+          const menuInst = new mdcGlobal.menu.MDCMenu(menuEl);
+          (menuEl as any).__cd_mdc_menu_inst = menuInst;
+          this.mdcInstances.add(menuInst);
+
+          anchor.addEventListener("click", () => {
+            menuInst.open = !menuInst.open;
+          });
+
+          menuEl.querySelectorAll(".mdc-list-item").forEach((li) => {
+            li.addEventListener("click", () => {
+              const idx = Number(li.getAttribute("data-index"));
+              nativeSelect.selectedIndex = idx;
+
+              const ev = new Event("change", { bubbles: true });
+              nativeSelect.dispatchEvent(ev);
+
+              selectedText.textContent = nativeSelect.options[idx]?.text || "";
+              menuInst.open = false;
+            });
+          });
+
+          (wrapper as any).__cd_select_initialized = true;
+          return;
+        } catch (err) {
+          console.warn("[MaterialDesignAdapter] MDCMenu fallback failed", err);
+        }
+      }
+
+      // last fallback
+      this.initMdcSelectFallback(wrapper);
+      (wrapper as any).__cd_select_initialized = true;
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] initMdcSelect fatal", err);
+      this.initMdcSelectFallback(wrapper);
+      (wrapper as any).__cd_select_initialized = true;
+    }
+  }
+
+  // Plain JS fallback for select/menu behaviour (when MDC not loaded)
+  private initMdcSelectFallback(wrapper: HTMLElement) {
+    try {
+      if ((wrapper as any).__cd_select_fallback_attached) return;
+      const menuEl = (wrapper as any).__cd_menu_el as HTMLElement;
+      const trigger = (wrapper as any).__cd_trigger as HTMLButtonElement;
+      const nativeSelect = (wrapper as any)
+        .__cd_native_select as HTMLSelectElement;
+      const triggerLabel = (wrapper as any).__cd_trigger_label as HTMLElement;
+      if (!menuEl || !trigger || !nativeSelect) return;
+
+      let open = false;
+      const openMenu = () => {
+        menuEl.style.display = "block";
+        trigger.setAttribute("aria-expanded", "true");
+        open = true;
+      };
+      const closeMenu = () => {
+        menuEl.style.display = "none";
+        trigger.setAttribute("aria-expanded", "false");
+        open = false;
+      };
+      menuEl.style.display = "none";
+      // toggle
+      trigger.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        if (open) closeMenu();
+        else openMenu();
+      });
+      // click outside closes
+      document.addEventListener("click", (ev) => {
+        if (!wrapper.contains(ev.target as Node)) closeMenu();
+      });
+      // sync native select -> trigger label
+      nativeSelect.addEventListener("change", () => {
+        const selOpt = nativeSelect.options[nativeSelect.selectedIndex];
+        triggerLabel.textContent = selOpt ? selOpt.text : "";
+      });
+
+      (wrapper as any).__cd_select_fallback_attached = true;
+      console.debug("[MaterialDesignAdapter] JS fallback select/menu attached");
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] initMdcSelectFallback error", err);
+    }
+  }
+
+  private scheduleMdcInit() {
+    if (this.mdcInitQueued) return;
+    this.mdcInitQueued = true;
+    setTimeout(() => {
+      this.mdcInitQueued = false;
+      // initialize all wrappers in page
+      document
+        .querySelectorAll<HTMLElement>(
+          ".cd-md-text-field, .cd-md-select-wrapper, .mdc-select"
+        )
+        .forEach((el) => {
+          // text fields
+          if (el.classList.contains("mdc-text-field")) {
+            if (!(el as any).__cd_mdc_initialized) this.initMdcTextField(el);
+          } else if (
+            el.classList.contains("cd-md-select-wrapper") ||
+            el.classList.contains("mdc-select")
+          ) {
+            if (!(el as any).__cd_select_initialized) this.initMdcSelect(el);
+          }
+        });
+    }, 40);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Mapping passes
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapButtons()", { count: nodes.length });
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  /**
+   * mapInputs()
+   * - Finds `.cd-form-field` containers
+   * - Transforms them into MDC wrappers (label.mdc-text-field) or Model-A select wrappers
+   * - Initializes MDC (or applies CSS/JS fallback)
+   */
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    const formFieldNodes = Array.from(
+      document.querySelectorAll<HTMLElement>(".cd-form-field")
+    );
+    diag_css("[MaterialDesignAdapter] mapInputs()", {
+      candidates: formFieldNodes.length,
+    });
+
+    formFieldNodes.forEach((field, idx) => {
+      try {
+        console.debug(`[MaterialDesignAdapter] mapInputs: FIELD #${idx}`, {
+          field,
+        });
+
+        // Transform DOM
+        const wrapper = this.prepareMdcDom(field);
+
+        if (!wrapper) {
+          console.debug(
+            "[MaterialDesignAdapter] mapInputs: prepareMdcDom returned null (skipping)"
+          );
+          return;
+        }
+
+        // Apply mapping.attrs (if any) — apply to wrapper to allow descriptor overrides
+        if (mapping.attrs)
+          Object.entries(mapping.attrs).forEach(([k, v]) =>
+            wrapper.setAttribute(k, v as string)
+          );
+
+        // Mark as applied
+        this.appliedSet.add(wrapper);
+
+        // Initialize appropriate MDC bits depending on wrapper type
+        if (wrapper.classList.contains("mdc-text-field")) {
+          this.initMdcTextField(wrapper);
+        } else if (wrapper.classList.contains("cd-md-select-wrapper")) {
+          this.initMdcSelect(wrapper);
+        }
+
+        // schedule a global init pass to catch any wrappers that might have been missed
+        this.scheduleMdcInit();
+
+        console.debug(
+          "[MaterialDesignAdapter] mapInputs: transformed wrapper ",
+          { wrapper }
+        );
+      } catch (err) {
+        console.warn("[MaterialDesignAdapter] mapInputs error", err);
+      }
+    });
+  }
+
+  // Inside material-design-adapter.service.ts
+
+  private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 5)}`;
+
+      // 1. Build the MDC M2 Shell
+      const tabBar = document.createElement("div");
+      tabBar.className = "mdc-tab-bar";
+      tabBar.setAttribute("role", "tablist");
+
+      const scroller = document.createElement("div");
+      scroller.className = "mdc-tab-scroller";
+
+      const scrollArea = document.createElement("div");
+      scrollArea.className = "mdc-tab-scroller__scroll-area";
+
+      const scrollContent = document.createElement("div");
+      scrollContent.className = "mdc-tab-scroller__scroll-content";
+
+      const contentWrapper = document.createElement("div");
+      contentWrapper.className = "cd-md-tabs-content mt-3";
+
+      // 2. Process child <cd-tab> elements
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "Tab";
+        const isActive =
+          tab.id === activeTabId || (!activeTabId && index === 0);
+
+        // Create the Button (Force type="button" to prevent SPA reloads)
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `mdc-tab ${isActive ? "mdc-tab--active" : ""}`;
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+        btn.id = `${tabId}-btn`;
+
+        // Inner structure for MDC effects
+        btn.innerHTML = `
+        <span class="mdc-tab__content">
+          <span class="mdc-tab__text-label">${label}</span>
+        </span>
+        <span class="mdc-tab-indicator ${isActive ? "mdc-tab-indicator--active" : ""}">
+          <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+        </span>
+        <span class="mdc-tab__ripple"></span>
+      `;
+
+        // Create the Content Pane
+        const pane = document.createElement("div");
+        pane.id = `${tabId}-pane`;
+        pane.style.display = isActive ? "block" : "none";
+        pane.innerHTML = tab.innerHTML;
+        contentWrapper.appendChild(pane);
+
+        // 3. SPA-Friendly Click Handler
+        btn.addEventListener("click", (e) => {
+          e.preventDefault(); // Safety check
+
+          // Deactivate all buttons in this bar
+          scrollContent.querySelectorAll(".mdc-tab").forEach((b) => {
+            b.classList.remove("mdc-tab--active");
+            b.querySelector(".mdc-tab-indicator")?.classList.remove(
+              "mdc-tab-indicator--active"
+            );
+          });
+
+          // Activate clicked button
+          btn.classList.add("mdc-tab--active");
+          btn
+            .querySelector(".mdc-tab-indicator")
+            ?.classList.add("mdc-tab-indicator--active");
+
+          // Toggle Panes
+          Array.from(contentWrapper.children).forEach(
+            (p: any) => (p.style.display = "none")
+          );
+          pane.style.display = "block";
+
+          console.log(`[MaterialAdapter] Switched to tab: ${label}`);
+        });
+
+        scrollContent.appendChild(btn);
+      });
+
+      // Final Assembly
+      scrollArea.appendChild(scrollContent);
+      scroller.appendChild(scrollArea);
+      tabBar.appendChild(scroller);
+
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(tabBar);
+      fragment.appendChild(contentWrapper);
+
+      container.replaceWith(fragment);
+      this.appliedSet.add(tabBar as any);
+    });
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapFormGroups()", {
+      count: nodes.length,
+    });
+    nodes.forEach((el) => {
+      this.applyMappingToElement(el, mapping);
+      try {
+        this.prepareMdcDom(el);
+      } catch {}
+    });
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+    diag_css("[MaterialDesignAdapter] mapOtherConcepts()", { concepts });
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+      nodes.forEach((el) => {
+        this.applyMappingToElement(el, mapping);
+        try {
+          this.prepareMdcDom(el);
+        } catch {}
+      });
+    });
+  }
+
+  private _mutationCallback?: () => void;
+
+  onMutation(cb: () => void) {
+    this._mutationCallback = cb;
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — START",
+      "background:#223;color:#9cf;padding:2px"
+    );
+    try {
+      this._mutationCallback?.();
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+      this.scheduleMdcInit();
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] mapAll error", err);
+    }
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — END",
+      "background:#223;color:#9cf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM observer
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+    this._mutationCallback?.();
+    diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
+    this.observer = new MutationObserver((mutations) => {
+      // lightweight debounce: schedule mapAll on idle
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 24);
+      }
+    });
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register with the adapter registry
+UiSystemAdapterRegistry.register(
+  "material-design",
+  new MaterialDesignAdapterService()
+);
+```
+
+
+
+/////////////////////////////////////////////////////
+Below is the Bootstrap538AdapterService that uses the BaseUiAdapter and logs during launch of the system.
+Before the updates the system was loading ok.
+Try and asses the cause of the raised issue in the log but also with the view of understanding pending processes that needs to be done for the new implementation to work correctly.
+
+```ts
+import { BaseUiAdapter } from "../../../sys/cd-guig/services/base-ui-adapter.service";
+import {
+  CdUiContainerDescriptor,
+  CdUiContainerType,
+  CdUiControlDescriptor,
+  CdUiControlType,
+} from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
+import { LoggerService } from "../../../utils/logger.service";
+
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  private logger = new LoggerService();
+
+  protected getIconMap(): Record<string, string> {
+    this.logger.debug("[Bootstrap538AdapterService] getIconMap() start");
+    return {
+      identity: "fingerprint",
+      startup: "rocket-takeoff",
+      settings: "gear-wide-connected",
+      save: "check-circle",
+    };
+  }
+
+  /**
+   * COMPATIBILITY BRIDGE:
+   * Maps existing HTML decorated with attributes to Bootstrap.
+   */
+  protected mapAll(): void {
+    this.mapButtons();
+    // this.mapInputs(); ... etc
+  }
+
+  // ---------------------------------------------------------------------------
+  // NEW WORLD: DESCRIPTOR SYNTHESIS
+  // ---------------------------------------------------------------------------
+
+  protected createContainer(
+    d: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ): HTMLElement {
+    let el: HTMLElement;
+
+    switch (d.containerType) {
+      case CdUiContainerType.TABS:
+        el = document.createElement("ul");
+        el.className = "nav nav-tabs mb-3";
+        break;
+
+      case CdUiContainerType.TAB:
+        el = document.createElement("li");
+        el.className = "nav-item";
+        el.innerHTML = `<button class="nav-link" data-bs-toggle="tab">${d.label || ""}</button>`;
+        break;
+
+      case CdUiContainerType.CARD:
+        el = document.createElement("div");
+        el.className = "card shadow-sm mb-3";
+        break;
+
+      default:
+        el = document.createElement("div");
+    }
+
+    el.id = d.id;
+    parent.appendChild(el);
+    return el;
+  }
+
+  protected createControl(
+    d: CdUiControlDescriptor,
+    parent: HTMLElement
+  ): HTMLElement {
+    let el: HTMLElement;
+
+    switch (d.controlType) {
+      case CdUiControlType.BUTTON:
+        el = document.createElement("button");
+        const mapping = this.getMapping("button");
+        el.className = mapping?.class || "btn btn-primary";
+        el.innerText = d.id; // Or a label property if added
+        break;
+
+      case CdUiControlType.TEXT_FIELD:
+        el = document.createElement("input");
+        el.className = "form-control";
+        (el as HTMLInputElement).placeholder = d.placeholder || "";
+        break;
+
+      case CdUiControlType.SWITCH:
+        const wrapper = document.createElement("div");
+        wrapper.className = "form-check form-switch";
+        wrapper.innerHTML = `<input class="form-check-input" type="checkbox" id="${d.id}">`;
+        el = wrapper;
+        break;
+
+      default:
+        el = document.createElement("span");
+    }
+
+    el.id = d.id;
+    parent.appendChild(el);
+    return el;
+  }
+
+  // ---------------------------------------------------------------------------
+  // OLD WORLD: TAG UPGRADING (mapAll helpers)
+  // ---------------------------------------------------------------------------
+
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    const btns = document.querySelectorAll("button[cdButton]");
+    btns.forEach((btn) => {
+      const el = btn as HTMLElement;
+      if (this.appliedSet.has(el)) return;
+
+      el.classList.add(
+        ...(mapping?.class?.split(" ") || ["btn", "btn-primary"])
+      );
+
+      // Auto-handle icons if present in attribute
+      const icon = el.getAttribute("icon");
+      if (icon) {
+        const iconName = this.getSystemIcon(icon);
+        el.innerHTML = `<i class="bi bi-${iconName} me-2"></i>` + el.innerHTML;
+      }
+
+      this.appliedSet.add(el);
+    });
+  }
+
+  /**
+   * Optional Override: if you need to do something specific
+   * after a click before it bubbles to the Shell.
+   */
+  protected handleAction(d: CdUiControlDescriptor, event: Event): void {
+    // Add Bootstrap-specific click effects here if needed
+    super.handleAction(d, event);
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+
+```
+
+```log
+[UiSystemAdapterRegistry] register: bootstrap-502 
+Object {  }
+index-DwbsOXMO.js:48:7200
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { descriptor: {…}, appliedSet: WeakSet [], observer: MutationObserver, logger: {…} }
+index-DwbsOXMO.js:48:7200
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: null, appliedSet: WeakSet [], observer: null, mdcInitQueued: false, mdcInstances: Set [] }
+index-DwbsOXMO.js:48:7200
+start 1 index-DwbsOXMO.js:75:14445
+[SHELL] [DEBUG] [Main] init(): starting index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-DwbsOXMO.js:48:1803
+[ModuleService][constructor]: starting index-DwbsOXMO.js:31:5044
+[ModuleService] Running under Vite (browser). index-DwbsOXMO.js:31:5117
+[ModuleService][constructor]: starting index-DwbsOXMO.js:31:5044
+[ModuleService] Running under Vite (browser). index-DwbsOXMO.js:31:5117
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-DwbsOXMO.js:70:2311
+[SHELL] [DEBUG] [Main] init(): completed index-DwbsOXMO.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-DwbsOXMO.js:70:2311
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-DwbsOXMO.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-DwbsOXMO.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-DwbsOXMO.js:75:8509
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-DwbsOXMO.js:75:7280
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-DwbsOXMO.js:75:7280
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-DwbsOXMO.js:48:1803
+[SysCacheService] Eager load starting index-DwbsOXMO.js:48:4030
+[PHASE][Cache] shellConfig 
+Object { source: "static", version: 1 }
+index-DwbsOXMO.js:75:12797
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
+index-DwbsOXMO.js:70:10692
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-DwbsOXMO.js:70:10824
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-DwbsOXMO.js:70:10824
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-DwbsOXMO.js:70:10824
+[SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-DwbsOXMO.js:48:1803
+[SysCacheService] UI systems cached 
+Object { simpleCount: 3, fullCount: 3, source: "static" }
+index-DwbsOXMO.js:48:6370
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-DwbsOXMO.js:70:7959
+[SysCacheService] Load complete index-DwbsOXMO.js:48:4635
+[CSS-DIAG] Cache loaded (static) 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] resolutionMode: FULL_CONTEXT index-DwbsOXMO.js:48:1803
+[PHASE 2][ConfigService] Promote resolved shell config index-DwbsOXMO.js:70:6827
+[SHELL] [DEBUG] [Main] Shell config promoted 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-DwbsOXMO.js:48:1803
+[PHASE][Cache] shellConfig 
+Object { source: "resolved", version: 14 }
+index-DwbsOXMO.js:75:12797
+[SysCacheService] Resolved shell config applied 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", source: "resolved" }
+index-DwbsOXMO.js:48:7016
+[SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] svSysCache 
+Object { configService: {…}, logger: {…}, cache: Map(11), listeners: Map(1), versionCounter: 18, _uiSystemLoader: {…}, _uiThemeLoader: {…} }
+index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] uiConfig 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-DwbsOXMO.js:48:1803
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-DwbsOXMO.js:31:3158
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] systemId bootstrap-538 index-DwbsOXMO.js:48:1803
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "bootstrap-538" }
+index-DwbsOXMO.js:31:3158
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-DwbsOXMO.js:48:1803
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-DwbsOXMO.js:70:11929
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css", order: (2) […] }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bridge.css", order: (3) […] }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "bootstrap-538" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "bootstrap-538" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "bootstrap-538" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+Object { themeId: "dark" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-DwbsOXMO.js:31:3158
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { descriptor: {…}, appliedSet: WeakSet [], observer: MutationObserver, logger: {…} }
+index-DwbsOXMO.js:70:14268
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-DwbsOXMO.js:70:14467
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-DwbsOXMO.js:70:14561
+[CSS-DIAG] [Jn] Applying theme: [object Object] 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-DwbsOXMO.js:31:3158
+ThemeService::loadThemeConfig(default) index-DwbsOXMO.js:48:2268
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-DwbsOXMO.js:31:3158
+[ModuleService][constructor]: starting index-DwbsOXMO.js:31:5044
+[ModuleService] Running under Vite (browser). index-DwbsOXMO.js:31:5117
+[Preload] Loading dev-sync index-DwbsOXMO.js:31:7402
+ModuleService::loadModule()/01: index-DwbsOXMO.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-DwbsOXMO.js:31:8204
+[ModuleService] 1 index-DwbsOXMO.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-DwbsOXMO.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-DwbsOXMO.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-DwbsOXMO.js:31:8759
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-DwbsOXMO.js:31:8911
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 01/01/2026, 19:00:10 index-DwbsOXMO.js:31:8999
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-DwbsOXMO.js:31:7698
+[Preload] Completed IdeAgentService index-DwbsOXMO.js:31:7797
+[Preload] Loading dev-sync index-DwbsOXMO.js:31:7402
+ModuleService::loadModule()/01: index-DwbsOXMO.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-DwbsOXMO.js:31:8204
+[ModuleService] 1 index-DwbsOXMO.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-DwbsOXMO.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-DwbsOXMO.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-DwbsOXMO.js:31:8759
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-DwbsOXMO.js:31:8911
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 01/01/2026, 19:00:10 index-DwbsOXMO.js:31:8999
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-DwbsOXMO.js:31:7698
+[Preload] Completed IdeAgentClientService index-DwbsOXMO.js:31:7797
+ModuleService::loadModule()/01: index-DwbsOXMO.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-DwbsOXMO.js:31:8204
+[ModuleService] 1 index-DwbsOXMO.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-DwbsOXMO.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-DwbsOXMO.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-DwbsOXMO.js:31:8759
+[ModuleService] Loaded 'cd-user' (Vite mode) at 01/01/2026, 19:00:10 index-DwbsOXMO.js:31:8999
+ModuleService::loadModule()/01: index-DwbsOXMO.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-DwbsOXMO.js:31:8204
+[ModuleService] 1 index-DwbsOXMO.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-DwbsOXMO.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
+index-DwbsOXMO.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-DwbsOXMO.js:31:8759
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-DwbsOXMO.js:31:8911
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 01/01/2026, 19:00:10 index-DwbsOXMO.js:31:8999
+ModuleService::loadModule()/01: index-DwbsOXMO.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/moduleman/view/index.js index-DwbsOXMO.js:31:8204
+[ModuleService] 1 index-DwbsOXMO.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/moduleman/view/index.js index-DwbsOXMO.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "moduleman-consumer-resource", moduleName: "consumer-resource", moduleGuid: "consr-0001-0000-0000", controllers: (2) […], menu: (1) […], isDefault: false }
+index-DwbsOXMO.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-DwbsOXMO.js:31:8759
+[ModuleService] Loaded module metadata passively: moduleman. Setup skipped. index-DwbsOXMO.js:31:8911
+[ModuleService] Loaded 'moduleman' (Vite mode) at 01/01/2026, 19:00:10 index-DwbsOXMO.js:31:8999
+[CSS-DIAG] Modules Loaded 
+Object { allowedModules: (3) […] }
+index-DwbsOXMO.js:31:3158
+[ControllerService][findControllerInfoByRoute] controllerName: sign-in index-DwbsOXMO.js:31:10084
+[ControllerService][findControllerInfoByRoute] mod: ...trancated... index-DwbsOXMO.js:31:10164
+[ControllerService][findControllerInfoByRoute] controllerName: sign-up index-DwbsOXMO.js:31:10084
+[ControllerService][findControllerInfoByRoute] mod: ...trancated... index-DwbsOXMO.js:31:10164
+[ControllerService][findControllerInfoByRoute] controllerName: consumer-resource index-DwbsOXMO.js:31:10084
+[ControllerService][findControllerInfoByRoute] mod: ...trancated... index-DwbsOXMO.js:31:10164
+[ControllerService][findControllerInfoByRoute] controllerName: consumer-resource2 index-DwbsOXMO.js:31:10084
+[ControllerService][findControllerInfoByRoute] mod: ...trancated...
+  isDefault: false } index-DwbsOXMO.js:31:10164
+[CSS-DIAG] Menu prepared 
+Array(3) [ {…}, {…}, {…} ]
+index-DwbsOXMO.js:31:3158
+Starting renderMenuWithSystem() index-DwbsOXMO.js:31:10796
+renderMenuWithSystem()/01 index-DwbsOXMO.js:31:10845
+MenuService::renderPlainMenu()/menu: ...trancated...
+      index-DwbsOXMO.js:31:11457
+renderMenuWithSystem()/adapter: {"instance":null} index-DwbsOXMO.js:31:11067
+renderMenuWithSystem()/03 index-DwbsOXMO.js:31:11255
+renderMenuWithSystem()/04 index-DwbsOXMO.js:31:11342
+[CSS-DIAG] Sidebar rendered 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[SIDEBAR-DIAG] Sidebar State: index-DwbsOXMO.js:31:3364
+display: flex index-DwbsOXMO.js:31:3453
+position: relative index-DwbsOXMO.js:31:3487
+width: 260px index-DwbsOXMO.js:31:3523
+flex-direction: column index-DwbsOXMO.js:31:3553
+css file winning: 
+<aside id="cd-sidebar">
+index-DwbsOXMO.js:31:3600
+Uncaught TypeError: Window.requestIdleCallback: Argument 2 can't be converted to a dictionary.
+    observer http://localhost:5173/assets/index-DwbsOXMO.js:48
+index-DwbsOXMO.js:48:9465
+MenuService::loadResource()/start... index-DwbsOXMO.js:31:13304
+[MenuService][loadResource] options: 
+Object { item: {…} }
+index-DwbsOXMO.js:31:13356
+[ControllerCacheService][getInstance] start... index-DwbsOXMO.js:22:6771
+MenuService::loadResource()/02: Retrieving controller via cache service index-DwbsOXMO.js:31:13822
+[ControllerCacheService][getOrInitializeController] start... index-DwbsOXMO.js:22:6919
+[ControllerCacheService] Creating new instance for: sys/cd-user/sign-in index-DwbsOXMO.js:22:7103
+CdFormGroup::_constructor()/01 cd-directive-binder.service-DGbLY5eG.js:1:46
+CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5eG.js:1:1416
+[Binder] UI-System set to: bootstrap-538 (via window.CD_ACTIVE_UISYSTEM) cd-directive-binder.service-DGbLY5eG.js:1:1622
+[ControllerCacheService] Cached instance for sys/cd-user/sign-in index-DwbsOXMO.js:22:7762
+[MenuService] Waiting for controller services to initialize... attempt 1 index-DwbsOXMO.js:31:14145
+Uncaught TypeError: Window.requestIdleCallback: Argument 2 can't be converted to a dictionary.
+    observer http://localhost:5173/assets/index-DwbsOXMO.js:48
+index-DwbsOXMO.js:48:9465
+[MenuService] Waiting for controller services to initialize... attempt 2 index-DwbsOXMO.js:31:14145
+[SHELL] [DEBUG] [Splash] animation completed index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [Splash] waiting 
+Object { splashAnimDone: true, appReady: false }
+index-DwbsOXMO.js:48:1803
+[MenuService] Waiting for controller services to initialize... attempt 3 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 4 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 5 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 6 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 7 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 8 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 9 index-DwbsOXMO.js:31:14145
+[MenuService] Waiting for controller services to initialize... attempt 10 index-DwbsOXMO.js:31:14145
+MenuService::loadResource()/03: Injecting template into DOM index-DwbsOXMO.js:31:14288
+MenuService::loadResource()/04: Executing __activate() index-DwbsOXMO.js:31:14543
+[ctlSignIn][__activate] 01 index-BEx0eJtE.js:28:584
+[CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
+[Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
+Uncaught TypeError: Window.requestIdleCallback: Argument 2 can't be converted to a dictionary.
+    observer http://localhost:5173/assets/index-DwbsOXMO.js:48
+index-DwbsOXMO.js:48:9465
+MenuService::loadResource()/end index-DwbsOXMO.js:31:14788
+[CSS-DIAG] Default controller loaded 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[SHELL] [DEBUG] [Main] app fully bootstrapped index-DwbsOXMO.js:48:1803
+[SHELL] [DEBUG] [Splash] conditions met → hiding splash index-DwbsOXMO.js:48:1803
+[CSS-DIAG] Main.run() complete 
+Object {  }
+index-DwbsOXMO.js:31:3158
+[SHELL] [DEBUG] [Splash] removed, app revealed index-DwbsOXMO.js:48:1803
+Uncaught TypeError: Window.requestIdleCallback: Argument 2 can't be converted to a dictionary.
+    observer http://localhost:5173/assets/index-DwbsOXMO.js:48
+index-DwbsOXMO.js:48:9465
+Source map error: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
+_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1069:22
+SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
+_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
+
+Resource URL: http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css
+Source Map URL: bootstrap.min.css.map
+```
+
+/////////////////////////////////////////////////////////
+
+Just to also cofirm how the previous Bootstrap538AdapterService was setup, I am sharing the codes below.
+
+```ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  constructor() {
+    console.log("%c[Bootstrap538AdapterService] constructor()", "color:#6cf");
+  }
+
+  // ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[Bootstrap538Adapter] activate() START", { id: descriptor?.id });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // DEACTIVATION
+  // ---------------------------------------------------------------------------
+  async deactivate(): Promise<void> {
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THEME APPLICATION
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[Bootstrap538Adapter] applyTheme()", { themeDescriptorOrId });
+
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[Bootstrap538Adapter] applyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+
+      if (typeof themeDescriptorOrId === "string") {
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      } else if (typeof themeDescriptorOrId === "object") {
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[Bootstrap538Adapter] applied Bootstrap theme", { mode });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    console.log(
+      "[Bootstrap538Adapter] getMapping() this.descriptor:",
+      this.descriptor
+    );
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Already mapped but update attributes if any
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapButtons()", { count: nodes.length });
+
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    const selector =
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapInputs()", { count: nodes.length });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapFormGroups()", { count: nodes.length });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — START",
+      "background:#444;color:#aaf;padding:2px"
+    );
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] mapAll error", err);
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — END",
+      "background:#444;color:#aaf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+
+///////////////////////////////////////////////
+
+Another aspect of planned improvement:
+We have a series of methods in the pattern 'map<control-name>' eg mapButtons()
+
+So we built as some organized interface that can allow us to base mapping not from list but structured descriptors.
+Below is the reference we came up with.
+Because all these are new, you have the liberty of making critic and improving based on your assesment.
+Another consideration that can be weighed, is we can start with some fundamental aspects then progressively move towards the migration to full compliance.
+We do not necessarily do a one-off move. So you can plan you migration progressively and we keep testing working state.
+
+```ts
+/**
+ * 2. Harmonized DEFAULT_SYSTEM
+ * Ensure no trailing commas or hidden characters are present.
+ */
+export const DEFAULT_SYSTEM: UiSystemDescriptor = {
+  id: "bootstrap-538",
+  version: "5.3.8",
+  themeActive: "light",
+};
+
+/**
+ * Defines the high-level role of a descriptor
+ */
+export enum CdUiRole {
+  LAYOUT = "layout",
+  CONTAINER = "container",
+  CONTROL = "control",
+  COMPOSITE = "composite",
+}
+
+/** * Strict catalog of structural containers
+ */
+export enum CdUiContainerType {
+  TABS = "tabs",
+  TAB = "tab",
+  CARD = "card",
+  ACCORDION = "accordion",
+  SECTION = "section",
+  DIALOG = "dialog",
+}
+
+/** * Strict catalog of atomic controls
+ */
+export enum CdUiControlType {
+  BUTTON = "button",
+  TEXT_FIELD = "textField",
+  CHECKBOX = "checkbox",
+  SELECT = "select",
+  SWITCH = "switch",
+}
+
+export interface CdUiDescriptor {
+  id: string;
+  role: CdUiRole; // Use Enum
+  children?: CdUiDescriptor[];
+}
+
+export interface CdUiContainerDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTAINER;
+  containerType: CdUiContainerType; // Use Enum
+  label?: string;
+  icon?: string;
+}
+
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType; // Use Enum
+  value?: any;
+  placeholder?: string;
+}
+
+export interface CdUiAction {
+  type: "navigate" | "submit" | "call_fx" | "toggle_target";
+  target?: string; // e.g., a route or a component ID
+  params?: Record<string, any>;
+}
+
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType;
+  action?: CdUiAction; // The semantic intent of the interaction
+}
+```
+
+/////////////////////////////////////////////////
+My recommendation is this: 
+1. We assume, even after extendingBaseUiAdapter in the form:
+
+```ts
+export class Bootstrap538AdapterService extends BaseUiAdapter {}
+```
+and implementing all the BaseUiAdapter features, we should be able to run the old codes.
+This way there is zero disruption.
+2. Then from 1, we start replacing old codes sectionally. 
+The first target of codes can be based on reducing code repetition.
+So all codes that have chance of repretition can be replaced progressively. Each small move is tested before moving to next one.
+3. We can then keep moving along the items mentioned in the proposal you did under "BaseUiAdapter Lifecycle Specification (v1.0 – Anchored)"
+
+The above are just ideas you can think around. I leave it up to you to draw the plan so we executed in progressive fashion.
+
+//////////////////////////////////////////////////////
+I have not noticed any issues yet. Below are the logs.
+Below are the lates logs.
+```log
+[UiSystemAdapterRegistry] register: bootstrap-502 
+Object {  }
+index-xg019btT.js:48:7200
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(5) }
+index-xg019btT.js:48:7200
+[MaterialDesignAdapter] constructor() index-xg019btT.js:48:14938
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
+index-xg019btT.js:48:7200
+[MaterialDesignAdapter] constructor() index-xg019btT.js:48:14938
+start 1 index-xg019btT.js:65:14467
+[SHELL] [DEBUG] [Main] init(): starting index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-xg019btT.js:48:1803
+[ModuleService][constructor]: starting index-xg019btT.js:31:5042
+[ModuleService] Running under Vite (browser). index-xg019btT.js:31:5115
+[ModuleService][constructor]: starting index-xg019btT.js:31:5042
+[ModuleService] Running under Vite (browser). index-xg019btT.js:31:5115
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-xg019btT.js:60:2927
+[SHELL] [DEBUG] [Main] init(): completed index-xg019btT.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-xg019btT.js:60:2927
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-xg019btT.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-xg019btT.js:31:3156
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-xg019btT.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-xg019btT.js:65:8531
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-xg019btT.js:65:7301
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-xg019btT.js:65:7301
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-xg019btT.js:48:1803
+[SysCacheService] Eager load starting index-xg019btT.js:48:4030
+[PHASE][Cache] shellConfig 
+Object { source: "static", version: 1 }
+index-xg019btT.js:65:12819
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-502", "bootstrap-538", "material-design" ]
+index-xg019btT.js:60:11308
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-502/descriptor.json index-xg019btT.js:60:11440
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-xg019btT.js:60:11440
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-xg019btT.js:60:11440
+[SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-xg019btT.js:48:1803
+[SysCacheService] UI systems cached 
+Object { simpleCount: 3, fullCount: 3, source: "static" }
+index-xg019btT.js:48:6370
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-xg019btT.js:60:8575
+[SysCacheService] Load complete index-xg019btT.js:48:4635
+[CSS-DIAG] Cache loaded (static) 
+Object {  }
+index-xg019btT.js:31:3156
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] resolutionMode: FULL_CONTEXT index-xg019btT.js:48:1803
+[PHASE 2][ConfigService] Promote resolved shell config index-xg019btT.js:60:7443
+[SHELL] [DEBUG] [Main] Shell config promoted 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-xg019btT.js:48:1803
+[PHASE][Cache] shellConfig 
+Object { source: "resolved", version: 14 }
+index-xg019btT.js:65:12819
+[SysCacheService] Resolved shell config applied 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", source: "resolved" }
+index-xg019btT.js:48:7016
+[SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] svSysCache 
+Object { configService: {…}, logger: {…}, cache: Map(11), listeners: Map(1), versionCounter: 18, _uiSystemLoader: {…}, _uiThemeLoader: {…} }
+index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] uiConfig 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-xg019btT.js:48:1803
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-xg019btT.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] systemId bootstrap-538 index-xg019btT.js:48:1803
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-xg019btT.js:48:1803
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:60:12545
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css", order: (2) […] }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bridge.css", order: (3) […] }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] activate() START 
+Object { id: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] Loaded conceptMappings: 
+Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
+index-xg019btT.js:48:8862
+[CSS-DIAG] [Bootstrap538Adapter] Initial mapAll() pass 
+Object {  }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] mapAll() — START index-xg019btT.js:48:13899
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapButtons() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-xg019btT.js:48:14157
+[CSS-DIAG] [Bootstrap538Adapter] MutationObserver ATTACH 
+Object {  }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] activate() COMPLETE 
+Object { active: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "bootstrap-538" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+Object { themeId: "dark" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-xg019btT.js:31:3156
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(5) }
+index-xg019btT.js:60:14884
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-xg019btT.js:60:15083
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-xg019btT.js:60:15177
+[CSS-DIAG] [Bootstrap538Adapter] applyTheme() 
+Object { themeDescriptorOrId: {…} }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] applied Bootstrap theme 
+Object { mode: "dark" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-xg019btT.js:31:3156
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-xg019btT.js:31:3156
+ThemeService::loadThemeConfig(default) index-xg019btT.js:48:2268
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-xg019btT.js:31:3156
+[ModuleService][constructor]: starting index-xg019btT.js:31:5042
+[ModuleService] Running under Vite (browser). index-xg019btT.js:31:5115
+[Preload] Loading dev-sync index-xg019btT.js:31:7400
+ModuleService::loadModule()/01: index-xg019btT.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-xg019btT.js:31:8202
+[ModuleService] 1 index-xg019btT.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-xg019btT.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-xg019btT.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-xg019btT.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-xg019btT.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 02/01/2026, 15:49:16 index-xg019btT.js:31:8997
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-xg019btT.js:31:7696
+[Preload] Completed IdeAgentService index-xg019btT.js:31:7795
+[Preload] Loading dev-sync index-xg019btT.js:31:7400
+ModuleService::loadModule()/01: index-xg019btT.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-xg019btT.js:31:8202
+[ModuleService] 1 index-xg019btT.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-xg019btT.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-xg019btT.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-xg019btT.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-xg019btT.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 02/01/2026, 15:49:16 index-xg019btT.js:31:8997
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-xg019btT.js:31:7696
+[Preload] Completed IdeAgentClientService index-xg019btT.js:31:7795
+ModuleService::loadModule()/01: index-xg019btT.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-xg019btT.js:31:8202
+[ModuleService] 1 index-xg019btT.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-xg019btT.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-xg019btT.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-xg019btT.js:31:8757
+[ModuleService] Loaded 'cd-user' (Vite mode) at 02/01/2026, 15:49:16 index-xg019btT.js:31:8997
+ModuleService::loadModule()/01: index-xg019btT.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-xg019btT.js:31:8202
+[ModuleService] 1 index-xg019btT.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-xg019btT.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
+index-xg019btT.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-xg019btT.js:31:8757
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-xg019btT.js:31:8909
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 02/01/2026, 15:49:16 index-xg019btT.js:31:8997
+ModuleService::loadModule()/01: index-xg019btT.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/moduleman/view/index.js index-xg019btT.js:31:8202
+[ModuleService] 1 index-xg019btT.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/moduleman/view/index.js index-xg019btT.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "moduleman-consumer-resource", moduleName: "consumer-resource", moduleGuid: "consr-0001-0000-0000", controllers: (2) […], menu: (1) […], isDefault: false }
+index-xg019btT.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-xg019btT.js:31:8757
+[ModuleService] Loaded module metadata passively: moduleman. Setup skipped. index-xg019btT.js:31:8909
+[ModuleService] Loaded 'moduleman' (Vite mode) at 02/01/2026, 15:49:16 index-xg019btT.js:31:8997
+[CSS-DIAG] Modules Loaded 
+Object tracated index-xg019btT.js:31:10162
+[CSS-DIAG] Menu prepared 
+Array(3) [ {…}, {…}, {…} ]
+index-xg019btT.js:31:3156
+Starting renderMenuWithSystem() index-xg019btT.js:31:10794
+renderMenuWithSystem()/01 index-xg019btT.js:31:10843
+...removed menu service related logs
+[CSS-DIAG] Default controller loaded 
+Object {  }
+index-xg019btT.js:31:3156
+[SHELL] [DEBUG] [Main] app fully bootstrapped index-xg019btT.js:48:1803
+[SHELL] [DEBUG] [Splash] conditions met → hiding splash index-xg019btT.js:48:1803
+[CSS-DIAG] Main.run() complete 
+Object {  }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-xg019btT.js:48:14380
+[Bootstrap538Adapter] mapAll() — START index-xg019btT.js:48:13899
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapButtons() 
+Object { count: 1 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "BUTTON", mapping: {…} }
+index-xg019btT.js:48:10559
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 2 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "INPUT", mapping: {…} }
+index-xg019btT.js:48:10559
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "INPUT", mapping: {…} }
+index-xg019btT.js:48:10559
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 2 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "DIV", mapping: {…} }
+index-xg019btT.js:48:10559
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "DIV", mapping: {…} }
+index-xg019btT.js:48:10559
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-xg019btT.js:48:14157
+[Bootstrap538Adapter] mapAll() — START index-xg019btT.js:48:13899
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapButtons() 
+Object { count: 1 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 2 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 2 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-xg019btT.js:48:14157
+[SHELL] [DEBUG] [Splash] removed, app revealed index-xg019btT.js:48:1803
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-xg019btT.js:48:14380
+[Bootstrap538Adapter] mapAll() — START index-xg019btT.js:48:13899
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapButtons() 
+Object { count: 1 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 2 }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-xg019btT.js:48:10153
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-xg019btT.js:48:10344
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 2 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-xg019btT.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-xg019btT.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-xg019btT.js:48:14157
+Source map error: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
+_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1069:22
+SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
+_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
+
+Resource URL: http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css
+Source Map URL: bootstrap.min.css.map
+```
+
+///////////////////////////////////////////
+
+In the Bootstrap538AdapterService.onActivate(), we have the following.
+In the line await super.onActivate?.(descriptor);, we are getting and error: 
+Abstract method 'onActivate' in class 'BaseUiAdapter' cannot be accessed via super expression.ts(2513)
+(method) BaseUiAdapter.onActivate(d: UiSystemDescriptor): Promise<void> | void
+
+In the old codes there was no onActivate(), but activate().
+I have shared the content of the old activate() below.
+Let me know how we can navigate this.
+```ts
+protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    // === OLD activate() BODY GOES HERE UNCHANGED ===
+    await super.onActivate?.(descriptor); // optional, safe
+    // paste old activate code
+  }
+```
+
+```ts
+// ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[Bootstrap538Adapter] activate() START", { id: descriptor?.id });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+```
+
+/////////////////////////////////////////
+Below are partial logs from renderMenuWithSystem()/adapter: onwards.
+There are a number of repeated warning:
+1. [Bootstrap538Adapter] Mutation detected → scheduling mapAll()
+2. [MenuService] Waiting for controller services to initialize... attempt 1
+What is your comment?
+```log
+renderMenuWithSystem()/adapter: {"instance":null} index-5eKg8GGo.js:31:11065
+renderMenuWithSystem()/03 index-5eKg8GGo.js:31:11253
+renderMenuWithSystem()/04 index-5eKg8GGo.js:31:11340
+[CSS-DIAG] Sidebar rendered 
+Object {  }
+index-5eKg8GGo.js:31:3156
+[SIDEBAR-DIAG] Sidebar State: index-5eKg8GGo.js:31:3362
+display: flex index-5eKg8GGo.js:31:3451
+position: relative index-5eKg8GGo.js:31:3485
+width: 260px index-5eKg8GGo.js:31:3521
+flex-direction: column index-5eKg8GGo.js:31:3551
+css file winning: 
+<aside id="cd-sidebar">
+index-5eKg8GGo.js:31:3598
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-5eKg8GGo.js:48:15874
+MenuService::loadResource()/start... index-5eKg8GGo.js:31:13302
+[MenuService][loadResource] options: 
+Object { item: {…} }
+index-5eKg8GGo.js:31:13354
+[ControllerCacheService][getInstance] start... index-5eKg8GGo.js:22:6771
+MenuService::loadResource()/02: Retrieving controller via cache service index-5eKg8GGo.js:31:13820
+[ControllerCacheService][getOrInitializeController] start... index-5eKg8GGo.js:22:6919
+[ControllerCacheService] Creating new instance for: sys/cd-user/sign-in index-5eKg8GGo.js:22:7103
+CdFormGroup::_constructor()/01 cd-directive-binder.service-DGbLY5eG.js:1:46
+CdDirectiveBinderService::constructor()/start cd-directive-binder.service-DGbLY5eG.js:1:1416
+[Binder] UI-System set to: bootstrap-538 (via window.CD_ACTIVE_UISYSTEM) cd-directive-binder.service-DGbLY5eG.js:1:1622
+[ControllerCacheService] Cached instance for sys/cd-user/sign-in index-5eKg8GGo.js:22:7762
+[MenuService] Waiting for controller services to initialize... attempt 1 index-5eKg8GGo.js:31:14143
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-5eKg8GGo.js:48:15874
+[MenuService] Waiting for controller services to initialize... attempt 2 index-5eKg8GGo.js:31:14143
+[MenuService] Waiting for controller services to initialize... attempt 3 index-5eKg8GGo.js:31:14143
+[SHELL] [DEBUG] [Splash] animation completed index-5eKg8GGo.js:48:1803
+[SHELL] [DEBUG] [Splash] waiting 
+Object { splashAnimDone: true, appReady: false }
+index-5eKg8GGo.js:48:1803
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-5eKg8GGo.js:48:15874
+[MenuService] Waiting for controller services to initialize... attempt 4 index-5eKg8GGo.js:31:14143
+[MenuService] Waiting for controller services to initialize... attempt 5 index-5eKg8GGo.js:31:14143
+[Bootstrap538Adapter] mapAll() — START index-5eKg8GGo.js:48:15393
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapByConcept('button') 
+Object { count: 0, selector: "button[cdButton], button.cd-button" }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-5eKg8GGo.js:48:15651
+[Bootstrap538Adapter] mapAll() — START index-5eKg8GGo.js:48:15393
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapByConcept('button') 
+Object { count: 0, selector: "button[cdButton], button.cd-button" }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-5eKg8GGo.js:48:15651
+[Bootstrap538Adapter] mapAll() — START index-5eKg8GGo.js:48:15393
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapByConcept('button') 
+Object { count: 0, selector: "button[cdButton], button.cd-button" }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-5eKg8GGo.js:48:15651
+[MenuService] Waiting for controller services to initialize... attempt 6 index-5eKg8GGo.js:31:14143
+[MenuService] Waiting for controller services to initialize... attempt 7 index-5eKg8GGo.js:31:14143
+[MenuService] Waiting for controller services to initialize... attempt 8 index-5eKg8GGo.js:31:14143
+[MenuService] Waiting for controller services to initialize... attempt 9 index-5eKg8GGo.js:31:14143
+[MenuService] Waiting for controller services to initialize... attempt 10 index-5eKg8GGo.js:31:14143
+MenuService::loadResource()/03: Injecting template into DOM index-5eKg8GGo.js:31:14286
+MenuService::loadResource()/04: Executing __activate() index-5eKg8GGo.js:31:14541
+[ctlSignIn][__activate] 01 index-BEx0eJtE.js:28:584
+[CdDirectiveBinderService][bindToDom] start cd-directive-binder.service-DGbLY5eG.js:1:1735
+[Binder] Fired event: cd:form:bound cd-directive-binder.service-DGbLY5eG.js:1:3255
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-5eKg8GGo.js:48:15874
+MenuService::loadResource()/end index-5eKg8GGo.js:31:14786
+[CSS-DIAG] Default controller loaded 
+Object {  }
+index-5eKg8GGo.js:31:3156
+[SHELL] [DEBUG] [Main] app fully bootstrapped index-5eKg8GGo.js:48:1803
+[SHELL] [DEBUG] [Splash] conditions met → hiding splash index-5eKg8GGo.js:48:1803
+[CSS-DIAG] Main.run() complete 
+Object {  }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] mapAll() — START index-5eKg8GGo.js:48:15393
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapByConcept('button') 
+Object { count: 1, selector: "button[cdButton], button.cd-button" }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "BUTTON", mapping: {…} }
+index-5eKg8GGo.js:48:12210
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 2 }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "INPUT", mapping: {…} }
+index-5eKg8GGo.js:48:12210
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "INPUT", mapping: {…} }
+index-5eKg8GGo.js:48:12210
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 2 }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "DIV", mapping: {…} }
+index-5eKg8GGo.js:48:12210
+[Bootstrap538Adapter] Applying mapping to element: 
+Object { tag: "DIV", mapping: {…} }
+index-5eKg8GGo.js:48:12210
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-5eKg8GGo.js:48:15651
+[SHELL] [DEBUG] [Splash] removed, app revealed index-5eKg8GGo.js:48:1803
+[Bootstrap538Adapter] Mutation detected → scheduling mapAll() index-5eKg8GGo.js:48:15874
+[Bootstrap538Adapter] mapAll() — START index-5eKg8GGo.js:48:15393
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('button') = 
+Object { class: "btn btn-primary" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapByConcept('button') 
+Object { count: 1, selector: "button[cdButton], button.cd-button" }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('input') = 
+Object { class: "form-control" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapInputs() 
+Object { count: 2 }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] getMapping() this.descriptor: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-5eKg8GGo.js:48:11804
+[Bootstrap538Adapter] getMapping('formGroup') = 
+Object { class: "mb-3" }
+index-5eKg8GGo.js:48:11995
+[CSS-DIAG] [Bootstrap538Adapter] mapFormGroups() 
+Object { count: 2 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-5eKg8GGo.js:31:3156
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-5eKg8GGo.js:31:3156
+[Bootstrap538Adapter] mapAll() — END index-5eKg8GGo.js:48:15651
+Source map error: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
+_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1069:22
+SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
+_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
+
+Resource URL: http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css
+Source Map URL: bootstrap.min.css.map
+Error: Promised response from onMessage listener went out of scope 2 index.js:4716:38
+```
+
+////////////////////////////////////////
+
+I am still at the mappings.
+The previous logs is just after testing the mapButtons(). I am yet to go to phase 4.
+Below is how I have handled mapInputs():
+```ts
+private mapInputs() {
+    // const mapping = this.getMapping("input");
+    // if (!mapping) return;
+
+    // const selector =
+    //   "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]";
+    // const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    // diag_css("[Bootstrap538Adapter] mapInputs()", { count: nodes.length });
+
+    // nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    this.mapByConcept("input", "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]");
+  }
+```
+
+What is not so straight foward are the following.
+Let me know your recomendations on what to do with mapTabs() and mapFormGroups() in the context of mapByConcept().
+
+```ts
+private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css("[Bootstrap538Adapter] mapFormGroups()", { count: nodes.length });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+```
+
+/////////////////////////////
+
+Give me your suggestion on how to introduce the descriptors.
+I presume you have the context of the descriptors.
+Feel free to suggest any modification that can help smooth integration with existing codes.
+Just a reminder from birds eye view of the rationale for the current work:
+There should be 
+- harmonized codes at the adabtor level. 
+- there should be minimum repeated codes
+- avoid listed items or strings but rely on structures using the concept of descriptors.
+- implementation of codes at the adaptor level should be very minimal
+- ease of upgrade of all adaptor codes which should always be at par
+This is being pursued by:
+1. Introduce BaseUiAdaptor
+2. Use of descriptors
+
+```ts
+/**
+ * 2. Harmonized DEFAULT_SYSTEM
+ * Ensure no trailing commas or hidden characters are present.
+ */
+export const DEFAULT_SYSTEM: UiSystemDescriptor = {
+  id: "bootstrap-538",
+  version: "5.3.8",
+  themeActive: "light",
+};
+
+/**
+ * Defines the high-level role of a descriptor
+ */
+export enum CdUiRole {
+  LAYOUT = "layout",
+  CONTAINER = "container",
+  CONTROL = "control",
+  COMPOSITE = "composite",
+}
+
+/** * Strict catalog of structural containers
+ */
+export enum CdUiContainerType {
+  TABS = "tabs",
+  TAB = "tab",
+  CARD = "card",
+  ACCORDION = "accordion",
+  SECTION = "section",
+  DIALOG = "dialog",
+}
+
+/** * Strict catalog of atomic controls
+ */
+export enum CdUiControlType {
+  BUTTON = "button",
+  TEXT_FIELD = "textField",
+  CHECKBOX = "checkbox",
+  SELECT = "select",
+  SWITCH = "switch",
+}
+
+export interface CdUiDescriptor {
+  id: string;
+  role: CdUiRole; // Use Enum
+  children?: CdUiDescriptor[];
+}
+
+export interface CdUiContainerDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTAINER;
+  containerType: CdUiContainerType; // Use Enum
+  label?: string;
+  icon?: string;
+}
+
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType; // Use Enum
+  value?: any;
+  placeholder?: string;
+}
+
+export interface CdUiAction {
+  type: "navigate" | "submit" | "call_fx" | "toggle_target";
+  target?: string; // e.g., a route or a component ID
+  params?: Record<string, any>;
+}
+
+export interface CdUiControlDescriptor extends CdUiDescriptor {
+  role: CdUiRole.CONTROL;
+  controlType: CdUiControlType;
+  action?: CdUiAction; // The semantic intent of the interaction
+}
+```
+
+/////////////////////////////////////////
+I am getting the error:
+Type 'CdUiControlDescriptor' has no properties in common with type 'UiConceptMapping'.
+on the line:
+nodes.forEach((el) => this.applyMappingToElement(el, descriptor));
+inside the method applyControlDescriptor().
+```ts
+private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    // Use selector from descriptor type
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch", // example
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, descriptor));
+  }
+```
+References
+```ts
+type Mapping = UiConceptMapping | undefined;
+```
+
+```ts
+export interface UiConceptMapping {
+  /** CSS class string to apply to the rendered element */
+  class?: string;
+
+  /** Inline style overrides (rarely used, but supported) */
+  style?: Record<string, string>;
+
+  /** Attribute overrides (e.g., {"data-bs-toggle": "tooltip"}) */
+  attrs?: Record<string, string>;
+
+  /** Optional: transform raw DOM before render */
+  transform?: (el: HTMLElement) => void;
+
+  /** Optional: metadata for future AI/plugin use */
+  metadata?: Record<string, any>;
+}
+```
+
+///////////////////////////////////////
+I am getting the following error in the method mapTabsByDescriptor().
+Property 'containerType' does not exist on type 'CdUiDescriptor'
+Similar errors are also thrown on the following in the same method.
+tabDesc.containerType
+tabDesc.icon
+tabDesc.label
+
+```ts
+protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host) return;
+
+    if (this.appliedSet.has(host)) return;
+
+    const tabsId = descriptor.id;
+    const tabs = descriptor.children || [];
+
+    // --- NAV HEADER ---
+    const nav = document.createElement("ul");
+    nav.className = "nav nav-tabs mb-3";
+    nav.setAttribute("role", "tablist");
+
+    // --- CONTENT CONTAINER ---
+    const content = document.createElement("div");
+    content.className = "tab-content";
+
+    tabs.forEach((tabDesc, index) => {
+      if (
+        tabDesc.role !== CdUiRole.CONTAINER ||
+        tabDesc.containerType !== CdUiContainerType.TAB
+      )
+        return;
+
+      const tabId = `${tabsId}-${tabDesc.id}`;
+      const isActive = index === 0;
+
+      /* ---------- NAV ITEM ---------- */
+      const li = document.createElement("li");
+      li.className = "nav-item";
+      li.setAttribute("role", "presentation");
+
+      const btn = document.createElement("button");
+      btn.className = `nav-link ${isActive ? "active" : ""}`;
+      btn.id = `${tabId}-tab`;
+      btn.type = "button";
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("aria-selected", String(isActive));
+      btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+      if (tabDesc.icon) {
+        const icon = document.createElement("i");
+        icon.className = `bi bi-${tabDesc.icon} me-2`;
+        btn.appendChild(icon);
+      }
+
+      btn.appendChild(document.createTextNode(tabDesc.label || tabDesc.id));
+
+      li.appendChild(btn);
+      nav.appendChild(li);
+
+      /* ---------- CONTENT PANE ---------- */
+      const pane = document.createElement("div");
+      pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+      pane.id = `${tabId}-pane`;
+      pane.setAttribute("role", "tabpanel");
+      pane.setAttribute("aria-labelledby", btn.id);
+
+      // Move existing content (if present)
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${tabDesc.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      /* ---------- RECURSIVE CHILD MAPPING ---------- */
+      tabDesc.children?.forEach((child) => this.mapByDescriptor(child, pane));
+    });
+
+    // Replace host
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(nav);
+    fragment.appendChild(content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+```
+
+/////////////////////////////////////////
+In the interface CdUiGridDescriptor, we havne an error:
+Subsequent property declarations must have the same type.  Property 'responsive' must be of type '{ sm?: number; md?: number; lg?: number; xl?: number; }', but here has type 'Partial<Record<"sm" | "md" | "lg" | "xl" | "xxl", number>>'.ts(2717)
+
+```ts
+export interface CdUiGridDescriptor extends CdUiLayoutDescriptor {
+  layoutType: CdUiLayoutType.GRID;
+
+  columns?: number; // total columns (default = 12)
+  span?: number;    // how many columns THIS child spans
+
+  responsive?: Partial<Record<
+    "sm" | "md" | "lg" | "xl" | "xxl",
+    number
+  >>;
+}
+```
+
+//////////////////////////////////////////
+
+mapLayoutByDescriptor() which is set to be in BaseUiAdaptor, is calling mapGridByDescriptor() which is meant to be in Bootstrap538Adapter.
+But BaseUiAdaptor should not import any specific adaptor item or even know of adaptor detail.
+How do you propose we handle this.
+```ts
+protected mapLayoutByDescriptor(
+  descriptor: CdUiLayoutDescriptor,
+  parent: HTMLElement | Document
+): void {
+  switch (descriptor.layoutType) {
+    case CdUiLayoutType.GRID:
+      this.mapGridByDescriptor(descriptor as CdUiGridDescriptor, parent);
+      break;
+  }
+}
+
+```
+
+/////////////////////////////////////////////////
+
+The recommendation "Final mapTabsByDescriptor() (Ultra-Thin)" has an issue similar to what we had earlier:
+Property 'containerType' does not exist on type 'CdUiDescriptor'.
+This is appearing for:
+child.containerType
+child.label and child.icon is also experiencing similar issue.
+
+```ts
+protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (
+        child.role !== CdUiRole.CONTAINER ||
+        child.containerType !== CdUiContainerType.TAB
+      )
+        return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector(`cd-tab#${child.id}`);
+      if (existing) pane.append(...Array.from(existing.childNodes));
+
+      content.appendChild(pane);
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+```
+
+/////////////////////////////////////////
+
+When Bootstrap538AdapterService implements capabilities: UiAdapterCapabilities, the application cannot stat.
+The only log that is displayed in the console is shown below.
+I presume you still have context on how the application starts and may be able to tell how the new definitions need to be integrated with some other codes.
+```log
+[UiSystemAdapterRegistry] register: bootstrap-502 
+Object {  }
+index-B8kPQ33p.js:48:7200
+Uncaught TypeError: can't access property "GRID", Kn is undefined
+    Gn http://localhost:5173/assets/index-B8kPQ33p.js:48
+    <anonymous> http://localhost:5173/assets/index-B8kPQ33p.js:48
+index-B8kPQ33p.js:48:9643
+
+
+```
+
+```ts
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected readonly capabilities: UiAdapterCapabilities = {
+    layouts: [CdUiLayoutType.GRID],
+    containers: [
+      CdUiContainerType.TABS,
+      CdUiContainerType.TAB,
+      CdUiContainerType.CARD,
+    ],
+    controls: [
+      CdUiControlType.BUTTON,
+      CdUiControlType.TEXT_FIELD,
+      CdUiControlType.SELECT,
+      CdUiControlType.CHECKBOX,
+      CdUiControlType.SWITCH,
+    ],
+  };
+}
+```
+
+///////////////////////////////////////////////
+
+Below is a trail of paths we have walked through.
+I have also included the current state of BaseUiAdapter and Bootstrap538AdapterService.
+I am thinking before we move foward, you need to veryfy that the current state of the files is satisfactory to your scrutiny and in the right path the destination.
+Following your verification, we can chat next step foward.
+---
+
+Next Logical Step (When You’re Ready)
+We can now:
+Wire LAYOUT into mapByDescriptor()
+Introduce STACK (vertical layout)
+Move grid span responsibility to children
+Or extract layout decorators like we did for tabs
+Just tell me where you want to go next.
+
+---
+
+If you want, next we can:
+split responsive into gridResponsive vs visibilityResponsive
+or formalize breakpoint enums instead of string literals
+
+---
+
+If you want, next we can:
+formalize capability discovery per adapter
+or align layout mapping with the upcoming descriptor registry
+
+---
+
+Immediate Next Logical Step (Your Choice)
+From here, the clean progression is:
+Capability-based guardrails in container mapping
+Capability-aware control mapping
+Descriptor validation layer (pre-render)
+Adapter comparison & auto-selection
+Theme + grid unification
+When ready, say which one you want to move into next.
+
+```ts
+// src/CdShell/sys/cd-guig/services/base-ui-adapter.service.ts
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor ?? null;
+
+    this.beforeActivate(descriptor);
+    await this.onActivate(descriptor); // ← child implementation
+    this.afterActivate(descriptor);
+  }
+
+  async deactivate(): Promise<void> {
+    this.beforeDeactivate();
+    await this.onDeactivate();
+    this.afterDeactivate();
+    this.descriptor = null;
+  }
+
+  async applyTheme(theme: any): Promise<void> {
+    await this.onApplyTheme(theme);
+  }
+
+  // Hooks (optional)
+  protected beforeActivate(_d: UiSystemDescriptor): void {}
+  protected afterActivate(_d: UiSystemDescriptor): void {}
+  protected beforeDeactivate(): void {}
+  protected afterDeactivate(): void {}
+
+  // Abstracts (MANDATORY)
+  protected abstract onActivate(d: UiSystemDescriptor): Promise<void> | void;
+  protected abstract onDeactivate(): Promise<void> | void;
+  protected abstract onApplyTheme(theme: any): Promise<void> | void;
+
+  protected createTabsSkeleton(tabsId: string): {
+    nav: HTMLUListElement;
+    content: HTMLDivElement;
+  } {
+    const nav = document.createElement("ul");
+    nav.setAttribute("role", "tablist");
+
+    const content = document.createElement("div");
+
+    return { nav, content };
+  }
+
+  protected createTabHeader(
+    tabId: string,
+    label: string,
+    icon?: string,
+    active = false
+  ): HTMLLIElement {
+    const li = document.createElement("li");
+    li.className = "nav-item";
+    li.setAttribute("role", "presentation");
+
+    const btn = document.createElement("button");
+    btn.className = `nav-link ${active ? "active" : ""}`;
+    btn.id = `${tabId}-tab`;
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(active));
+    btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+    if (icon) {
+      const i = document.createElement("i");
+      i.className = `bi bi-${icon} me-2`;
+      btn.appendChild(i);
+    }
+
+    btn.appendChild(document.createTextNode(label));
+    li.appendChild(btn);
+
+    return li;
+  }
+
+  protected createTabPane(tabId: string, active = false): HTMLDivElement {
+    const pane = document.createElement("div");
+    pane.className = `tab-pane fade ${active ? "show active" : ""}`;
+    pane.id = `${tabId}-pane`;
+    pane.setAttribute("role", "tabpanel");
+    pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+    return pane;
+  }
+
+  protected mapLayoutByDescriptor(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    if (!this.supportsLayout(descriptor.layoutType)) return;
+    this.mapLayout(descriptor, parent);
+  }
+
+  protected mapLayout(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    /* intentionally empty */
+  }
+
+  protected abstract getCapabilities(): UiAdapterCapabilities;
+
+  protected supportsLayout(type: CdUiLayoutType): boolean {
+    return this.getCapabilities().layouts?.includes(type) ?? false;
+  }
+
+  protected supportsContainer(type: CdUiContainerType): boolean {
+    return this.getCapabilities().containers?.includes(type) ?? false;
+  }
+
+  protected supportsControl(type: CdUiControlType): boolean {
+    return this.getCapabilities().controls?.includes(type) ?? false;
+  }
+}
+
+```
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
+
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+
+  // constructor() {
+  //   console.log("%c[Bootstrap538AdapterService] constructor()", "color:#6cf");
+  // }
+
+  protected getCapabilities(): UiAdapterCapabilities {
+    return {
+      layouts: [CdUiLayoutType.GRID],
+      containers: [
+        CdUiContainerType.TABS,
+        CdUiContainerType.TAB,
+        CdUiContainerType.CARD,
+      ],
+      controls: [
+        CdUiControlType.BUTTON,
+        CdUiControlType.TEXT_FIELD,
+        CdUiControlType.SELECT,
+        CdUiControlType.CHECKBOX,
+        CdUiControlType.SWITCH,
+      ],
+    };
+  }
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    diag_css("[Bootstrap538Adapter] onActivate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] onActivate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  protected override async onApplyTheme(theme: any): Promise<void> {
+    diag_css("[Bootstrap538Adapter] onApplyTheme()", { theme });
+
+    try {
+      if (!theme) {
+        console.warn("[Bootstrap538Adapter] onApplyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+
+      if (typeof theme === "string") {
+        mode = theme === "dark" ? "dark" : "light";
+      } else if (typeof theme === "object") {
+        mode = theme.mode || (theme.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[Bootstrap538Adapter] applied Bootstrap theme", { mode });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] onApplyTheme error", err);
+    }
+  }
+
+  /**
+   * mapByConcept() is designed for idempotent, element-level decoration based on a selector + mapping
+      That matches:
+        buttons
+        inputs
+        form groups
+        checkboxes
+        selects
+        switches
+      It does not match:
+        structural transformation
+        DOM re-parenting
+        component synthesis
+        composite UI orchestration
+   * @param concept 
+   * @param selector 
+   * @returns 
+   */
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css(`[Bootstrap538Adapter] mapByConcept('${concept}')`, {
+      count: nodes.length,
+      selector,
+    });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  // ---------------------------------------------------------------------------
+  // ACTIVATION
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[Bootstrap538Adapter] activate() START", { id: descriptor?.id });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // DEACTIVATION
+  // ---------------------------------------------------------------------------
+  async deactivate(): Promise<void> {
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THEME APPLICATION
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[Bootstrap538Adapter] applyTheme()", { themeDescriptorOrId });
+
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[Bootstrap538Adapter] applyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+
+      if (typeof themeDescriptorOrId === "string") {
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      } else if (typeof themeDescriptorOrId === "object") {
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[Bootstrap538Adapter] applied Bootstrap theme", { mode });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] applyTheme error", err);
+    }
+  }
+
+  protected decorateTabs(nav: HTMLElement, content: HTMLElement) {
+    nav.className = "nav nav-tabs mb-3";
+    content.className = "tab-content";
+  }
+
+  protected decorateTabHeader(li: HTMLElement, active: boolean) {
+    li.classList.add("nav-item");
+
+    const btn = li.querySelector("button")!;
+    btn.classList.add("nav-link");
+    if (active) btn.classList.add("active");
+  }
+
+  protected decorateTabPane(pane: HTMLElement, active: boolean) {
+    pane.classList.add("tab-pane", "fade");
+    if (active) pane.classList.add("show", "active");
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    console.log(
+      "[Bootstrap538Adapter] getMapping() this.descriptor:",
+      this.descriptor
+    );
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Already mapped but update attributes if any
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    this.mapByConcept("button", "button[cdButton], button.cd-button");
+  }
+
+  private mapInputs() {
+    this.mapByConcept(
+      "input",
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+    );
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    this.mapByConcept("formGroup", ".cd-form-field");
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  private mapByDescriptor(descriptor: CdUiDescriptor, parent?: HTMLElement) {
+    // 1. Resolve target elements
+    const el = parent || document;
+
+    // 2. Map based on role
+    switch (descriptor.role) {
+      case CdUiRole.CONTROL:
+        this.applyControlDescriptor(
+          descriptor as CdUiControlDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.CONTAINER:
+        this.applyContainerDescriptor(
+          descriptor as CdUiContainerDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.COMPOSITE:
+        // Composite could be recursive for groups or sections
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+
+      case CdUiRole.LAYOUT:
+        // Layout mapping if needed (grid, flex, etc.)
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+    }
+  }
+
+  protected mapGridByDescriptor(
+    descriptor: CdUiGridDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    const grid = document.createElement("div");
+    grid.classList.add("row");
+
+    descriptor.children?.forEach((child) => {
+      const col = document.createElement("div");
+      col.classList.add(this.resolveGridColumnClass(descriptor));
+      grid.appendChild(col);
+
+      this.mapByDescriptor(child, col);
+    });
+
+    parent.appendChild(grid);
+  }
+
+  protected resolveGridColumnClass(descriptor: CdUiGridDescriptor): string {
+    const classes: string[] = [];
+
+    const span = descriptor.span;
+    const responsive = descriptor.responsive;
+
+    // Default span
+    if (typeof span === "number") {
+      classes.push(`col-${span}`);
+    } else {
+      classes.push("col"); // auto
+    }
+
+    // Responsive overrides
+    if (responsive) {
+      Object.entries(responsive).forEach(([bp, value]) => {
+        if (typeof value === "number") {
+          classes.push(`col-${bp}-${value}`);
+        }
+      });
+    }
+
+    return classes.join(" ");
+  }
+
+  private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch",
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const mapping = this.resolveControlMapping(descriptor);
+    if (!mapping) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected resolveControlMapping(
+    descriptor: CdUiControlDescriptor
+  ): UiConceptMapping | undefined {
+    return this.descriptor?.conceptMappings?.controls?.[descriptor.controlType];
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — START",
+      "background:#444;color:#aaf;padding:2px"
+    );
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] mapAll error", err);
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — END",
+      "background:#444;color:#aaf;padding:2px"
+    );
+  }
+
+  private applyContainerDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ) {
+    switch (descriptor.containerType) {
+      case CdUiContainerType.TABS:
+        this.mapTabsByDescriptor(descriptor, parent);
+        break;
+
+      case CdUiContainerType.CARD:
+        // Could add card-specific mapping
+        break;
+
+      case CdUiContainerType.SECTION:
+        // Generic container mapping
+        break;
+    }
+
+    // Recursively map children
+    descriptor.children?.forEach((child) =>
+      this.mapByDescriptor(child, parent)
+    );
+  }
+
+  private bindAction(el: HTMLElement, action?: CdUiAction) {
+    if (!action) return;
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switch (action.type) {
+        case "navigate":
+          // your routing code here
+          break;
+        case "submit":
+          // submit form
+          break;
+        case "call_fx":
+          if (
+            action.target &&
+            typeof (window as any)[action.target] === "function"
+          ) {
+            (window as any)[action.target](action.params);
+          }
+          break;
+        case "toggle_target":
+          if (action.target) {
+            const targetEl = document.getElementById(action.target);
+            targetEl?.classList.toggle("d-none");
+          }
+          break;
+      }
+    });
+  }
+
+  protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (!isTabDescriptor(child)) return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${child.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+
+```
+
+/////////////////////////////////////////////////
+
+What you have given is very sound. 
+But I wish to introduce something before we get to your starting point. 
+We need to have BaseUiAdapter and Bootstrap538AdapterService produce logs for:
+1. debuging
+2. versioning
+When we view the logs, we should 
+1. tell proceses that are 'MARKED_FOR_DEPRICATION' and also 
+2. we should be able to follow how adaptor codes are executing.
+During migraion we should be able to follow the process and progress from the logs
+
+```ts
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected abstract readonly capabilities: UiAdapterCapabilities;
+
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor ?? null;
+
+    this.beforeActivate(descriptor);
+    await this.onActivate(descriptor); // ← child implementation
+    this.afterActivate(descriptor);
+  }
+
+  async deactivate(): Promise<void> {
+    this.beforeDeactivate();
+    await this.onDeactivate();
+    this.afterDeactivate();
+    this.descriptor = null;
+  }
+
+  async applyTheme(theme: any): Promise<void> {
+    await this.onApplyTheme(theme);
+  }
+
+  // Hooks (optional)
+  protected beforeActivate(_d: UiSystemDescriptor): void {}
+  protected afterActivate(_d: UiSystemDescriptor): void {}
+  protected beforeDeactivate(): void {}
+  protected afterDeactivate(): void {}
+
+  // Abstracts (MANDATORY)
+  protected abstract onActivate(d: UiSystemDescriptor): Promise<void> | void;
+  protected abstract onDeactivate(): Promise<void> | void;
+  protected abstract onApplyTheme(theme: any): Promise<void> | void;
+
+  protected createTabsSkeleton(tabsId: string): {
+    nav: HTMLUListElement;
+    content: HTMLDivElement;
+  } {
+    const nav = document.createElement("ul");
+    nav.setAttribute("role", "tablist");
+
+    const content = document.createElement("div");
+
+    return { nav, content };
+  }
+
+  protected createTabHeader(
+    tabId: string,
+    label: string,
+    icon?: string,
+    active = false
+  ): HTMLLIElement {
+    const li = document.createElement("li");
+    li.className = "nav-item";
+    li.setAttribute("role", "presentation");
+
+    const btn = document.createElement("button");
+    btn.className = `nav-link ${active ? "active" : ""}`;
+    btn.id = `${tabId}-tab`;
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(active));
+    btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+    if (icon) {
+      const i = document.createElement("i");
+      i.className = `bi bi-${icon} me-2`;
+      btn.appendChild(i);
+    }
+
+    btn.appendChild(document.createTextNode(label));
+    li.appendChild(btn);
+
+    return li;
+  }
+
+  protected createTabPane(tabId: string, active = false): HTMLDivElement {
+    const pane = document.createElement("div");
+    pane.className = `tab-pane fade ${active ? "show active" : ""}`;
+    pane.id = `${tabId}-pane`;
+    pane.setAttribute("role", "tabpanel");
+    pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+    return pane;
+  }
+
+  protected mapLayoutByDescriptor(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    if (!this.supportsLayout(descriptor.layoutType)) return;
+    this.mapLayout(descriptor, parent);
+  }
+
+  protected mapLayout(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    /* intentionally empty */
+  }
+
+  // protected abstract getCapabilities(): UiAdapterCapabilities;
+
+  protected supportsLayout(type: CdUiLayoutType): boolean {
+    return this.getCapabilities().layouts?.includes(type) ?? false;
+  }
+
+  protected supportsContainer(type: CdUiContainerType): boolean {
+    return this.getCapabilities().containers?.includes(type) ?? false;
+  }
+
+  protected supportsControl(type: CdUiControlType): boolean {
+    return this.getCapabilities().controls?.includes(type) ?? false;
+  }
+
+  public getCapabilities(): Readonly<UiAdapterCapabilities> {
+    return this.capabilities;
+  }
+}
+```
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
+
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+  protected readonly capabilities: UiAdapterCapabilities;
+
+  // constructor() {
+  //   console.log("%c[Bootstrap538AdapterService] constructor()", "color:#6cf");
+  // }
+
+  public getCapabilities(): UiAdapterCapabilities {
+    return {
+      layouts: [CdUiLayoutType.GRID],
+      containers: [
+        CdUiContainerType.TABS,
+        CdUiContainerType.TAB,
+        CdUiContainerType.CARD,
+      ],
+      controls: [
+        CdUiControlType.BUTTON,
+        CdUiControlType.TEXT_FIELD,
+        CdUiControlType.SELECT,
+        CdUiControlType.CHECKBOX,
+        CdUiControlType.SWITCH,
+      ],
+    };
+  }
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    diag_css("[Bootstrap538Adapter] onActivate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] onActivate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  protected override async onApplyTheme(theme: any): Promise<void> {
+    diag_css("[Bootstrap538Adapter] onApplyTheme()", { theme });
+
+    try {
+      if (!theme) {
+        console.warn("[Bootstrap538Adapter] onApplyTheme ignored (null theme)");
+        return;
+      }
+
+      let mode: string | undefined;
+
+      if (typeof theme === "string") {
+        mode = theme === "dark" ? "dark" : "light";
+      } else if (typeof theme === "object") {
+        mode = theme.mode || (theme.id === "dark" ? "dark" : "light");
+      }
+
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+
+      diag_css("[Bootstrap538Adapter] applied Bootstrap theme", { mode });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] onApplyTheme error", err);
+    }
+  }
+
+  /**
+   * mapByConcept() is designed for idempotent, element-level decoration based on a selector + mapping
+      That matches:
+        buttons
+        inputs
+        form groups
+        checkboxes
+        selects
+        switches
+      It does not match:
+        structural transformation
+        DOM re-parenting
+        component synthesis
+        composite UI orchestration
+   * @param concept 
+   * @param selector 
+   * @returns 
+   */
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css(`[Bootstrap538Adapter] mapByConcept('${concept}')`, {
+      count: nodes.length,
+      selector,
+    });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected decorateTabs(nav: HTMLElement, content: HTMLElement) {
+    nav.className = "nav nav-tabs mb-3";
+    content.className = "tab-content";
+  }
+
+  protected decorateTabHeader(li: HTMLElement, active: boolean) {
+    li.classList.add("nav-item");
+
+    const btn = li.querySelector("button")!;
+    btn.classList.add("nav-link");
+    if (active) btn.classList.add("active");
+  }
+
+  protected decorateTabPane(pane: HTMLElement, active: boolean) {
+    pane.classList.add("tab-pane", "fade");
+    if (active) pane.classList.add("show", "active");
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    console.log(
+      "[Bootstrap538Adapter] getMapping() this.descriptor:",
+      this.descriptor
+    );
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Already mapped but update attributes if any
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    this.mapByConcept("button", "button[cdButton], button.cd-button");
+  }
+
+  private mapInputs() {
+    this.mapByConcept(
+      "input",
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+    );
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    this.mapByConcept("formGroup", ".cd-form-field");
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  private mapByDescriptor(descriptor: CdUiDescriptor, parent?: HTMLElement) {
+    // 1. Resolve target elements
+    const el = parent || document;
+
+    // 2. Map based on role
+    switch (descriptor.role) {
+      case CdUiRole.CONTROL:
+        this.applyControlDescriptor(
+          descriptor as CdUiControlDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.CONTAINER:
+        this.applyContainerDescriptor(
+          descriptor as CdUiContainerDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.COMPOSITE:
+        // Composite could be recursive for groups or sections
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+
+      case CdUiRole.LAYOUT:
+        // Layout mapping if needed (grid, flex, etc.)
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+    }
+  }
+
+  protected mapGridByDescriptor(
+    descriptor: CdUiGridDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    const grid = document.createElement("div");
+    grid.classList.add("row");
+
+    descriptor.children?.forEach((child) => {
+      const col = document.createElement("div");
+      col.classList.add(this.resolveGridColumnClass(descriptor));
+      grid.appendChild(col);
+
+      this.mapByDescriptor(child, col);
+    });
+
+    parent.appendChild(grid);
+  }
+
+  protected resolveGridColumnClass(descriptor: CdUiGridDescriptor): string {
+    const classes: string[] = [];
+
+    const span = descriptor.span;
+    const responsive = descriptor.responsive;
+
+    // Default span
+    if (typeof span === "number") {
+      classes.push(`col-${span}`);
+    } else {
+      classes.push("col"); // auto
+    }
+
+    // Responsive overrides
+    if (responsive) {
+      Object.entries(responsive).forEach(([bp, value]) => {
+        if (typeof value === "number") {
+          classes.push(`col-${bp}-${value}`);
+        }
+      });
+    }
+
+    return classes.join(" ");
+  }
+
+  private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch",
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const mapping = this.resolveControlMapping(descriptor);
+    if (!mapping) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected resolveControlMapping(
+    descriptor: CdUiControlDescriptor
+  ): UiConceptMapping | undefined {
+    return this.descriptor?.conceptMappings?.controls?.[descriptor.controlType];
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — START",
+      "background:#444;color:#aaf;padding:2px"
+    );
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] mapAll error", err);
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — END",
+      "background:#444;color:#aaf;padding:2px"
+    );
+  }
+
+  private applyContainerDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ) {
+    switch (descriptor.containerType) {
+      case CdUiContainerType.TABS:
+        this.mapTabsByDescriptor(descriptor, parent);
+        break;
+
+      case CdUiContainerType.CARD:
+        // Could add card-specific mapping
+        break;
+
+      case CdUiContainerType.SECTION:
+        // Generic container mapping
+        break;
+    }
+
+    // Recursively map children
+    descriptor.children?.forEach((child) =>
+      this.mapByDescriptor(child, parent)
+    );
+  }
+
+  private bindAction(el: HTMLElement, action?: CdUiAction) {
+    if (!action) return;
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switch (action.type) {
+        case "navigate":
+          // your routing code here
+          break;
+        case "submit":
+          // submit form
+          break;
+        case "call_fx":
+          if (
+            action.target &&
+            typeof (window as any)[action.target] === "function"
+          ) {
+            (window as any)[action.target](action.params);
+          }
+          break;
+        case "toggle_target":
+          if (action.target) {
+            const targetEl = document.getElementById(action.target);
+            targetEl?.classList.toggle("d-none");
+          }
+          break;
+      }
+    });
+  }
+
+  protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (!isTabDescriptor(child)) return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${child.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+
+```ts
+export interface UiThemeDescriptor {
+  /** * Primary identifier used for selection (e.g., 'dark', 'light', 'bootstrap-compact'). 
+   * This is used as the <option value> in the dropdown.
+   */
+  id: string;
+
+  /** * Human-readable name used for display (e.g., 'Dark Mode', 'Classic'). 
+   * This is used as the visible text in the dropdown.
+   */
+  name: string;
+
+  /** * Flag indicating if this is the default theme for its parent UI System. */
+  isDefault?: boolean; // NEW PROPERTY
+
+  /** * Array of paths to CSS files specific to this theme (relative to the public/assets/ path).
+   * This is the asset the UiThemeLoaderService will inject into the <head>.
+   */
+  stylesheets?: string[]; 
+
+  /** * Array of paths to JS files specific to this theme (e.g., initialization scripts).
+   */
+  scripts?: string[]; 
+
+  /** * Key-value pairs for CSS custom properties that should be set globally 
+   * (e.g., {'--primary-color': '#007bff'}).
+   */
+  variables?: Record<string, string>; 
+  
+  /** * Metadata defining the visual and behavioral aspects of the theme.
+   * Consolidates color, typography, spacing, etc., into an optional structure.
+   */
+  metadata?: {
+    colorScheme?: Record<string, string>;
+    typography?: Record<string, string>;
+    spacing?: Record<string, string>;
+    animations?: Record<string, string>;
+    // Any other high-level theme configurations
+  };
+
+  // --- Integration Metadata (optional) ---
+  author?: string;
+  license?: string;
+  repository?: string;
+  
+  /** * Custom system extensions for AI, telemetry, etc.
+   */
+  extensions?: Record<string, any>;
+}
+```
+
+/////////////////////////////////////////
+
+The following are being called in appyTheme() but none is implemented.
+
+this.beforeApplyTheme(themeId);
+    this.onApplyTheme(themeId);
+    this.afterApplyTheme(themeId);
+
+///////////////////////////////////////////////////
+When we got started, most theme related methods requred themeId: string or defined as theme: any.
+In fact IUiSystemAdapter.applyTheme(theme: any): Promise<void>; is still set on theme:any.
+But from the latest codes, what is expected is theme: UiThemeDescriptor.
+To harmonize the definition at all the levels, we will adopt theme: UiThemeDescriptor.
+Note that even when this is done, we have to also harmonize UiThemeDescriptor to cope with the target uses.
+For example in the Bootstrap538AdapterService.onApplyTheme(), we need capacity for managing global classes.
+Based on the above rationale, we need to update UiThemeDescriptor to have classes property.
+```ts
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+protected onApplyTheme(theme: UiThemeDescriptor): void {
+    const root = document.documentElement;
+
+    // CSS variables
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    // Global classes
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.log("debug", "theme:bootstrap", "Bootstrap theme applied", theme);
+  }
+}
+```
+
+```ts
+export interface IUiSystemAdapter {
+  activate(descriptor: UiSystemDescriptor): Promise<void>;
+  deactivate(): Promise<void>;
+  applyTheme(theme: any): Promise<void>;
+}
+```
+
+```ts
+export interface UiThemeDescriptor {
+  /** * Primary identifier used for selection (e.g., 'dark', 'light', 'bootstrap-compact'). 
+   * This is used as the <option value> in the dropdown.
+   */
+  id: string;
+
+  /** * Human-readable name used for display (e.g., 'Dark Mode', 'Classic'). 
+   * This is used as the visible text in the dropdown.
+   */
+  name: string;
+
+  /** * Flag indicating if this is the default theme for its parent UI System. */
+  isDefault?: boolean; // NEW PROPERTY
+
+  /** * Array of paths to CSS files specific to this theme (relative to the public/assets/ path).
+   * This is the asset the UiThemeLoaderService will inject into the <head>.
+   */
+  stylesheets?: string[]; 
+
+  /** * Array of paths to JS files specific to this theme (e.g., initialization scripts).
+   */
+  scripts?: string[]; 
+
+  /** * Key-value pairs for CSS custom properties that should be set globally 
+   * (e.g., {'--primary-color': '#007bff'}).
+   */
+  variables?: Record<string, string>; 
+  
+  /** * Metadata defining the visual and behavioral aspects of the theme.
+   * Consolidates color, typography, spacing, etc., into an optional structure.
+   */
+  metadata?: {
+    colorScheme?: Record<string, string>;
+    typography?: Record<string, string>;
+    spacing?: Record<string, string>;
+    animations?: Record<string, string>;
+    // Any other high-level theme configurations
+  };
+
+  // --- Integration Metadata (optional) ---
+  author?: string;
+  license?: string;
+  repository?: string;
+  
+  /** * Custom system extensions for AI, telemetry, etc.
+   */
+  extensions?: Record<string, any>;
+}
+```
+
+/////////////////////////////////////////////////
+Below is partial logs with some error.
+What is your take?
+```ts
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-dass33wT.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] systemId bootstrap-538 index-dass33wT.js:48:1803
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "bootstrap-538" }
+index-dass33wT.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-dass33wT.js:48:1803
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-dass33wT.js:60:13166
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css", order: (2) […] }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bridge.css", order: (3) […] }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" }
+index-dass33wT.js:31:3156
+[UiSystemLoaderService.activate] adapter activation failed TypeError: can't access property "id", this.meta is undefined
+    log http://localhost:5173/assets/index-dass33wT.js:48
+    activate http://localhost:5173/assets/index-dass33wT.js:48
+    activate http://localhost:5173/assets/index-dass33wT.js:60
+index-dass33wT.js:60:15252
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "bootstrap-538" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "bootstrap-538" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+Object { themeId: "dark" }
+index-dass33wT.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-dass33wT.js:31:3156
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { descriptor: {…}, observer: null, appliedSet: WeakSet [] }
+index-dass33wT.js:60:15505
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-dass33wT.js:60:15704
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-dass33wT.js:60:15798
+[MAIN.applyStartupUiSettings] applyTheme failed TypeError: can't access property "id", this.meta is undefined
+    log http://localhost:5173/assets/index-dass33wT.js:48
+    applyTheme http://localhost:5173/assets/index-dass33wT.js:48
+    applyTheme http://localhost:5173/assets/index-dass33wT.js:60
+    applyStartupUiSettings http://localhost:5173/assets/index-dass33wT.js:60
+index-dass33wT.js:60:19083
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-dass33wT.js:31:3156
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-dass33wT.js:31:3156
+ThemeService::loadThemeConfig(default)
+```
+
+////////////////////////////////////////////
+
+In the UiSystemLoaderService.activate(), we are introducing:
+```ts
+const adapter = UiSystemAdapterRegistry.get(id);
+
+    adapter.setMeta({
+      id: descriptor.id,
+      name: descriptor.name,
+      version: descriptor.version,
+      status: descriptor.deprecated ? "MARKED_FOR_DEPRECATION" : "ACTIVE",
+    });
+```
+
+But UiSystemAdapterRegistry.get() is returning IUiSystemAdapter.
+We expected it to have setMeta() but it does not.
+Knowing the architrecture, the decision that lingers is:
+Should we have 
+1. setMeta() as a method in IUiSystemAdapter or
+2. Refactor UiSystemAdapterRegistry to return BaseUiAdapter, which is where setMeta() is residing
+
+
+```ts
+export class UiSystemAdapterRegistry {
+  private static registry = new Map<string, IUiSystemAdapter>();
+
+  static register(id: string, adapter: IUiSystemAdapter) {
+    console.log("[UiSystemAdapterRegistry] register:", id, adapter);
+    this.registry.set(id, adapter);
+  }
+
+  static get(id: string): IUiSystemAdapter | null {
+    return this.registry.get(id) || null;
+  }
+
+  static list(): string[] {
+    return Array.from(this.registry.keys());
+  }
+}
+```
+
+//////////////////////////////////////////////////
+Hi Chase, below are the lates BaseUiAdapter and Bootstrap538AdapterService.
+The main focus in latest development is in the improving observability of how we will be phasing out old codes and phasing in the new ones via the logs.
+We are currently able to launch the application without any issue.
+I would just need you to check if we are ready to move forward with what we have.
+If you think they are ready, you can suggest which actions we start with else you can point out areas that need refinement before we start the migration.
+```ts
+// src/CdShell/sys/cd-guig/services/base-ui-adapter.service.ts
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+
+  // Must be provided by every adapter
+  // protected abstract readonly meta: UiAdapterMeta;
+  protected meta!: UiAdapterMeta;
+  protected abstract readonly capabilities: UiAdapterCapabilities;
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
+  }
+
+  /* ------------------------------------------------------------------
+   * Public lifecycle (stable API)
+   * ------------------------------------------------------------------ */
+
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor ?? null;
+
+    this.log("info", "activate:start", "Adapter activation started");
+
+    if (this.meta.status !== UiAdapterStatus.ACTIVE) {
+      this.log(
+        "warn",
+        "adapter:status",
+        `Adapter status = ${this.meta.status}`
+      );
+    }
+
+    this.beforeActivate(descriptor);
+    await this.onActivate(descriptor);
+    this.afterActivate(descriptor);
+
+    this.log("info", "activate:end", "Adapter activation completed");
+  }
+
+  async deactivate(): Promise<void> {
+    this.log("info", "deactivate:start", "Adapter deactivation started");
+
+    await this.onDeactivate();
+
+    this.log("info", "deactivate:end", "Adapter deactivation completed");
+    this.descriptor = null;
+  }
+
+  async applyTheme(theme: UiThemeDescriptor): Promise<void> {
+    if (!theme) {
+      this.log("debug", "theme:skip", "No theme descriptor provided");
+      return;
+    }
+
+    this.log("info", "theme:apply:start", `Applying theme '${theme}'`);
+
+    this.beforeApplyTheme(theme);
+    this.onApplyTheme(theme);
+    this.afterApplyTheme(theme);
+
+    this.log("info", "theme:apply:end", `Theme '${theme}' applied`);
+  }
+
+  /* ------------------------------------------------------------------
+   * Lifecycle hooks (override as needed)
+   * ------------------------------------------------------------------ */
+
+  protected beforeActivate(_descriptor: UiSystemDescriptor): void {}
+  protected afterActivate(_descriptor: UiSystemDescriptor): void {}
+  protected abstract onActivate(descriptor: UiSystemDescriptor): Promise<void>;
+
+  protected beforeDeactivate(): void {}
+  protected async onDeactivate(): Promise<void> {}
+  protected afterDeactivate(): void {}
+
+  protected beforeApplyTheme(theme: UiThemeDescriptor): void {
+    // optional lifecycle hook
+  }
+
+  protected abstract onApplyTheme(theme: UiThemeDescriptor): void;
+
+  protected afterApplyTheme(_theme: UiThemeDescriptor): void {
+    // optional lifecycle hook
+  }
+
+  protected createTabsSkeleton(tabsId: string): {
+    nav: HTMLUListElement;
+    content: HTMLDivElement;
+  } {
+    const nav = document.createElement("ul");
+    nav.setAttribute("role", "tablist");
+
+    const content = document.createElement("div");
+
+    return { nav, content };
+  }
+
+  protected createTabHeader(
+    tabId: string,
+    label: string,
+    icon?: string,
+    active = false
+  ): HTMLLIElement {
+    const li = document.createElement("li");
+    li.className = "nav-item";
+    li.setAttribute("role", "presentation");
+
+    const btn = document.createElement("button");
+    btn.className = `nav-link ${active ? "active" : ""}`;
+    btn.id = `${tabId}-tab`;
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(active));
+    btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+    if (icon) {
+      const i = document.createElement("i");
+      i.className = `bi bi-${icon} me-2`;
+      btn.appendChild(i);
+    }
+
+    btn.appendChild(document.createTextNode(label));
+    li.appendChild(btn);
+
+    return li;
+  }
+
+  protected createTabPane(tabId: string, active = false): HTMLDivElement {
+    const pane = document.createElement("div");
+    pane.className = `tab-pane fade ${active ? "show active" : ""}`;
+    pane.id = `${tabId}-pane`;
+    pane.setAttribute("role", "tabpanel");
+    pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+    return pane;
+  }
+
+  protected mapLayoutByDescriptor(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    if (!this.supportsLayout(descriptor.layoutType)) return;
+    this.mapLayout(descriptor, parent);
+  }
+
+  protected mapLayout(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    /* intentionally empty */
+  }
+
+  /* ------------------------------------------------------------------
+   * Capability guards (centralized + traced)
+   * ------------------------------------------------------------------ */
+
+  public getCapabilities(): Readonly<UiAdapterCapabilities> {
+    return this.capabilities;
+  }
+
+  protected supportsLayout(type: CdUiLayoutType): boolean {
+    const supported = this.capabilities.layouts?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:layout",
+        `Layout '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  protected supportsContainer(type: CdUiContainerType): boolean {
+    const supported = this.capabilities.containers?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:container",
+        `Container '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  protected supportsControl(type: CdUiControlType): boolean {
+    const supported = this.capabilities.controls?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:control",
+        `Control '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  /* ------------------------------------------------------------------
+   * Logging helpers (DO NOT override)
+   * ------------------------------------------------------------------ */
+
+  protected log(
+    level: "debug" | "info" | "warn" | "error",
+    phase: string,
+    message: string,
+    data?: unknown
+  ): void {
+    const prefix = `[UiAdapter:${this.meta.id}@${this.meta.version}]`;
+    const status =
+      this.meta.status !== UiAdapterStatus.ACTIVE
+        ? `⚠ ${this.meta.status}`
+        : "";
+
+    const payload = {
+      adapter: this.meta.id,
+      version: this.meta.version,
+      status: this.meta.status,
+      phase,
+      descriptorId: this.descriptor?.id,
+      data,
+    };
+
+    switch (level) {
+      case "debug":
+        console.debug(prefix, phase, status, message, payload);
+        break;
+      case "info":
+        console.info(prefix, phase, status, message, payload);
+        break;
+      case "warn":
+        console.warn(prefix, phase, status, message, payload);
+        break;
+      case "error":
+        console.error(prefix, phase, status, message, payload);
+        break;
+    }
+  }
+
+  /* ------------------------------------------------------------------
+   * Explicit helpers for migration clarity
+   * ------------------------------------------------------------------ */
+
+  protected logLegacy(phase: string, message: string, data?: unknown): void {
+    this.log("warn", `legacy:${phase}`, message, data);
+  }
+
+  protected logDeprecated(
+    phase: string,
+    message: string,
+    data?: unknown
+  ): void {
+    this.log("warn", `deprecated:${phase}`, message, data);
+  }
+}
+
+```
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+  protected readonly capabilities: UiAdapterCapabilities;
+  protected readonly meta: UiAdapterMeta;
+
+
+  public getCapabilities(): UiAdapterCapabilities {
+    return {
+      layouts: [CdUiLayoutType.GRID],
+      containers: [
+        CdUiContainerType.TABS,
+        CdUiContainerType.TAB,
+        CdUiContainerType.CARD,
+      ],
+      controls: [
+        CdUiControlType.BUTTON,
+        CdUiControlType.TEXT_FIELD,
+        CdUiControlType.SELECT,
+        CdUiControlType.CHECKBOX,
+        CdUiControlType.SWITCH,
+      ],
+    };
+  }
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    diag_css("[Bootstrap538Adapter] onActivate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] onActivate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  protected onApplyTheme(theme: UiThemeDescriptor): void {
+    const root = document.documentElement;
+
+    /* ---------- Remove previous theme classes ---------- */
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix!))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    /* ---------- Apply CSS variables ---------- */
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    /* ---------- Apply global classes ---------- */
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.log("debug", "theme:apply", `Theme applied: ${theme.id}`, theme);
+  }
+
+  /**
+   * mapByConcept() is designed for idempotent, element-level decoration based on a selector + mapping
+      That matches:
+        buttons
+        inputs
+        form groups
+        checkboxes
+        selects
+        switches
+      It does not match:
+        structural transformation
+        DOM re-parenting
+        component synthesis
+        composite UI orchestration
+   * @param concept 
+   * @param selector 
+   * @returns 
+   */
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css(`[Bootstrap538Adapter] mapByConcept('${concept}')`, {
+      count: nodes.length,
+      selector,
+    });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected decorateTabs(nav: HTMLElement, content: HTMLElement) {
+    nav.className = "nav nav-tabs mb-3";
+    content.className = "tab-content";
+  }
+
+  protected decorateTabHeader(li: HTMLElement, active: boolean) {
+    li.classList.add("nav-item");
+
+    const btn = li.querySelector("button")!;
+    btn.classList.add("nav-link");
+    if (active) btn.classList.add("active");
+  }
+
+  protected decorateTabPane(pane: HTMLElement, active: boolean) {
+    pane.classList.add("tab-pane", "fade");
+    if (active) pane.classList.add("show", "active");
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    console.log(
+      "[Bootstrap538Adapter] getMapping() this.descriptor:",
+      this.descriptor
+    );
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Already mapped but update attributes if any
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    this.mapByConcept("button", "button[cdButton], button.cd-button");
+  }
+
+  private mapInputs() {
+    this.mapByConcept(
+      "input",
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+    );
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    this.mapByConcept("formGroup", ".cd-form-field");
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  private mapByDescriptor(descriptor: CdUiDescriptor, parent?: HTMLElement) {
+    // 1. Resolve target elements
+    const el = parent || document;
+
+    // 2. Map based on role
+    switch (descriptor.role) {
+      case CdUiRole.CONTROL:
+        this.applyControlDescriptor(
+          descriptor as CdUiControlDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.CONTAINER:
+        this.applyContainerDescriptor(
+          descriptor as CdUiContainerDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.COMPOSITE:
+        // Composite could be recursive for groups or sections
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+
+      case CdUiRole.LAYOUT:
+        // Layout mapping if needed (grid, flex, etc.)
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+    }
+  }
+
+  protected mapGridByDescriptor(
+    descriptor: CdUiGridDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    const grid = document.createElement("div");
+    grid.classList.add("row");
+
+    descriptor.children?.forEach((child) => {
+      const col = document.createElement("div");
+      col.classList.add(this.resolveGridColumnClass(descriptor));
+      grid.appendChild(col);
+
+      this.mapByDescriptor(child, col);
+    });
+
+    parent.appendChild(grid);
+  }
+
+  protected resolveGridColumnClass(descriptor: CdUiGridDescriptor): string {
+    const classes: string[] = [];
+
+    const span = descriptor.span;
+    const responsive = descriptor.responsive;
+
+    // Default span
+    if (typeof span === "number") {
+      classes.push(`col-${span}`);
+    } else {
+      classes.push("col"); // auto
+    }
+
+    // Responsive overrides
+    if (responsive) {
+      Object.entries(responsive).forEach(([bp, value]) => {
+        if (typeof value === "number") {
+          classes.push(`col-${bp}-${value}`);
+        }
+      });
+    }
+
+    return classes.join(" ");
+  }
+
+  private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch",
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const mapping = this.resolveControlMapping(descriptor);
+    if (!mapping) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected resolveControlMapping(
+    descriptor: CdUiControlDescriptor
+  ): UiConceptMapping | undefined {
+    return this.descriptor?.conceptMappings?.controls?.[descriptor.controlType];
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — START",
+      "background:#444;color:#aaf;padding:2px"
+    );
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] mapAll error", err);
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — END",
+      "background:#444;color:#aaf;padding:2px"
+    );
+  }
+
+  private applyContainerDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ) {
+    switch (descriptor.containerType) {
+      case CdUiContainerType.TABS:
+        this.mapTabsByDescriptor(descriptor, parent);
+        break;
+
+      case CdUiContainerType.CARD:
+        // Could add card-specific mapping
+        break;
+
+      case CdUiContainerType.SECTION:
+        // Generic container mapping
+        break;
+    }
+
+    // Recursively map children
+    descriptor.children?.forEach((child) =>
+      this.mapByDescriptor(child, parent)
+    );
+  }
+
+  private bindAction(el: HTMLElement, action?: CdUiAction) {
+    if (!action) return;
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switch (action.type) {
+        case "navigate":
+          // your routing code here
+          break;
+        case "submit":
+          // submit form
+          break;
+        case "call_fx":
+          if (
+            action.target &&
+            typeof (window as any)[action.target] === "function"
+          ) {
+            (window as any)[action.target](action.params);
+          }
+          break;
+        case "toggle_target":
+          if (action.target) {
+            const targetEl = document.getElementById(action.target);
+            targetEl?.classList.toggle("d-none");
+          }
+          break;
+      }
+    });
+  }
+
+  protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (!isTabDescriptor(child)) return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${child.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+
+///////////////////////////////////////////////
+
+You can identify the methods that we can start with, refactor them and get them back to me so I can update my side then test.
+
+```ts
+// src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+  protected readonly capabilities: UiAdapterCapabilities;
+  protected readonly meta: UiAdapterMeta;
+
+  public getCapabilities(): UiAdapterCapabilities {
+    console.log(
+      `[${this.constructor.name}] getCapabilities() `
+    );
+    return {
+      layouts: [CdUiLayoutType.GRID],
+      containers: [
+        CdUiContainerType.TABS,
+        CdUiContainerType.TAB,
+        CdUiContainerType.CARD,
+      ],
+      controls: [
+        CdUiControlType.BUTTON,
+        CdUiControlType.TEXT_FIELD,
+        CdUiControlType.SELECT,
+        CdUiControlType.CHECKBOX,
+        CdUiControlType.SWITCH,
+      ],
+    };
+  }
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    console.log(
+      `[${this.constructor.name}] onActivate() descriptor.id =`,
+      descriptor?.id
+    );
+    diag_css("[Bootstrap538Adapter] onActivate() START", {
+      id: descriptor?.id,
+    });
+
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
+        "color:orange"
+      );
+    } else {
+      console.log(
+        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // Initial mapping
+    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM changes
+    this.observeMutations();
+
+    diag_css("[Bootstrap538Adapter] onActivate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    console.log(
+      `[${this.constructor.name}] onDeactivate() `
+    );
+    diag_css("[Bootstrap538Adapter] deactivate() START");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+      console.log("[Bootstrap538Adapter] removed data-bs-theme");
+    } catch {}
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+  }
+
+  protected onApplyTheme(theme: UiThemeDescriptor): void {
+    console.log(
+      `[${this.constructor.name}] onApplyTheme() theme.id =`,
+      theme?.id
+    );
+    const root = document.documentElement;
+
+    /* ---------- Remove previous theme classes ---------- */
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix!))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    /* ---------- Apply CSS variables ---------- */
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    /* ---------- Apply global classes ---------- */
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.log("debug", "theme:apply", `Theme applied: ${theme.id}`, theme);
+  }
+
+  /**
+   * mapByConcept() is designed for idempotent, element-level decoration based on a selector + mapping
+      That matches:
+        buttons
+        inputs
+        form groups
+        checkboxes
+        selects
+        switches
+      It does not match:
+        structural transformation
+        DOM re-parenting
+        component synthesis
+        composite UI orchestration
+   * @param concept 
+   * @param selector 
+   * @returns 
+   */
+  private mapByConcept(concept: string, selector: string): void {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] mapByConcept('${concept}', '${selector}')`
+    );
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    diag_css(`[Bootstrap538Adapter] mapByConcept('${concept}')`, {
+      count: nodes.length,
+      selector,
+    });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  // // ---------------------------------------------------------------------------
+  // // ACTIVATION
+  // // ---------------------------------------------------------------------------
+  
+  protected decorateTabs(nav: HTMLElement, content: HTMLElement) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabs()`
+    );
+    nav.className = "nav nav-tabs mb-3";
+    content.className = "tab-content";
+  }
+
+  protected decorateTabHeader(li: HTMLElement, active: boolean) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabHeader()`
+    );
+    li.classList.add("nav-item");
+
+    const btn = li.querySelector("button")!;
+    btn.classList.add("nav-link");
+    if (active) btn.classList.add("active");
+  }
+
+  protected decorateTabPane(pane: HTMLElement, active: boolean) {
+    this.log("info", "map:concept", `[${this.constructor.name}] decorateTabPane()`);
+    pane.classList.add("tab-pane", "fade");
+    if (active) pane.classList.add("show", "active");
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    console.log(
+      "[Bootstrap538Adapter] getMapping() this.descriptor:",
+      this.descriptor
+    );
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+
+    console.log(
+      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] applyMappingToElement()`
+    );
+
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Already mapped but update attributes if any
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => {
+        if (c) el.classList.add(c);
+      });
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapButtons()`);
+    this.mapByConcept("button", "button[cdButton], button.cd-button");
+  }
+
+  private mapInputs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapInputs()`);
+    this.mapByConcept(
+      "input",
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+    );
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapTabs()`);
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapFormGroups()`);
+    this.mapByConcept("formGroup", ".cd-form-field");
+  }
+
+  private mapOtherConcepts() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapOtherConcepts()`);
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  private mapByDescriptor(descriptor: CdUiDescriptor, parent?: HTMLElement) {
+    this.log("info", "map:descriptor", `[${this.constructor.name}] mapByDescriptor('${descriptor.role}')`);
+    // 1. Resolve target elements
+    const el = parent || document;
+
+    // 2. Map based on role
+    switch (descriptor.role) {
+      case CdUiRole.CONTROL:
+        this.applyControlDescriptor(
+          descriptor as CdUiControlDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.CONTAINER:
+        this.applyContainerDescriptor(
+          descriptor as CdUiContainerDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.COMPOSITE:
+        // Composite could be recursive for groups or sections
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+
+      case CdUiRole.LAYOUT:
+        // Layout mapping if needed (grid, flex, etc.)
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+    }
+  }
+
+  protected mapGridByDescriptor(
+    descriptor: CdUiGridDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    this.log("info", "map:descriptor", `[${this.constructor.name}] mapGridByDescriptor()`);
+    const grid = document.createElement("div");
+    grid.classList.add("row");
+
+    descriptor.children?.forEach((child) => {
+      const col = document.createElement("div");
+      col.classList.add(this.resolveGridColumnClass(descriptor));
+      grid.appendChild(col);
+
+      this.mapByDescriptor(child, col);
+    });
+
+    parent.appendChild(grid);
+  }
+
+  protected resolveGridColumnClass(descriptor: CdUiGridDescriptor): string {
+    this.log("info", "map:descriptor", `[${this.constructor.name}] resolveGridColumnClass()`);
+    const classes: string[] = [];
+
+    const span = descriptor.span;
+    const responsive = descriptor.responsive;
+
+    // Default span
+    if (typeof span === "number") {
+      classes.push(`col-${span}`);
+    } else {
+      classes.push("col"); // auto
+    }
+
+    // Responsive overrides
+    if (responsive) {
+      Object.entries(responsive).forEach(([bp, value]) => {
+        if (typeof value === "number") {
+          classes.push(`col-${bp}-${value}`);
+        }
+      });
+    }
+
+    return classes.join(" ");
+  }
+
+  private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    this.log("info", "map:descriptor", `[${this.constructor.name}] applyControlDescriptor('${descriptor.controlType}')`);
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch",
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const mapping = this.resolveControlMapping(descriptor);
+    if (!mapping) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected resolveControlMapping(
+    descriptor: CdUiControlDescriptor
+  ): UiConceptMapping | undefined {
+    this.log("info", "map:descriptor", `[${this.constructor.name}] resolveControlMapping('${descriptor.controlType}')`);
+    return this.descriptor?.conceptMappings?.controls?.[descriptor.controlType];
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — START",
+      "background:#444;color:#aaf;padding:2px"
+    );
+    this.log("info", "map:all", `[${this.constructor.name}] mapAll()`);
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] mapAll error", err);
+    }
+
+    console.log(
+      "%c[Bootstrap538Adapter] mapAll() — END",
+      "background:#444;color:#aaf;padding:2px"
+    );
+  }
+
+  private applyContainerDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ) {
+    this.log("info", "map:descriptor", `[${this.constructor.name}] applyContainerDescriptor('${descriptor.containerType}')`);
+    switch (descriptor.containerType) {
+      case CdUiContainerType.TABS:
+        this.mapTabsByDescriptor(descriptor, parent);
+        break;
+
+      case CdUiContainerType.CARD:
+        // Could add card-specific mapping
+        break;
+
+      case CdUiContainerType.SECTION:
+        // Generic container mapping
+        break;
+    }
+
+    // Recursively map children
+    descriptor.children?.forEach((child) =>
+      this.mapByDescriptor(child, parent)
+    );
+  }
+
+  private bindAction(el: HTMLElement, action?: CdUiAction) {
+    this.log("info", "map:action", `[${this.constructor.name}] bindAction()`);
+    if (!action) return;
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switch (action.type) {
+        case "navigate":
+          // your routing code here
+          break;
+        case "submit":
+          // submit form
+          break;
+        case "call_fx":
+          if (
+            action.target &&
+            typeof (window as any)[action.target] === "function"
+          ) {
+            (window as any)[action.target](action.params);
+          }
+          break;
+        case "toggle_target":
+          if (action.target) {
+            const targetEl = document.getElementById(action.target);
+            targetEl?.classList.toggle("d-none");
+          }
+          break;
+      }
+    });
+  }
+
+  protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    this.log(
+      "info",
+      "descriptor:container:tabs",
+      "Mapping tabs via descriptor",
+      descriptor
+    );
+    
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (!isTabDescriptor(child)) return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${child.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    this.log("info", "observer", `[${this.constructor.name}] observeMutations()`);
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+
+
+```
+
+///////////////////////////////////////////////
+Below the current state of BaseUiAdapter and Bootstrap538AdapterService.
+I have already set up UiAdapterPhase in the src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts which is as per your recommendation above in No. 5.
+You can start from BaseUiAdapter.currentPhase and BaseUiAdapter.currentPhase() onwards.
+You can give me the full BaseUiAdapter when done.
+
+If there is any modification in Bootstrap538AdapterService, you can share the method that is refactored or advise accordingly.
+
+```ts
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+
+  // Must be provided by every adapter
+  // protected abstract readonly meta: UiAdapterMeta;
+  protected meta!: UiAdapterMeta;
+  protected abstract readonly capabilities: UiAdapterCapabilities;
+
+  // protected setMeta(meta: UiAdapterMeta): void {
+  //   this.meta = meta;
+  // }
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
+  }
+
+  /* ------------------------------------------------------------------
+   * Public lifecycle (stable API)
+   * ------------------------------------------------------------------ */
+
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor ?? null;
+
+    this.log("info", "activate:start", "Adapter activation started");
+
+    if (this.meta.status !== UiAdapterStatus.ACTIVE) {
+      this.log(
+        "warn",
+        "adapter:status",
+        `Adapter status = ${this.meta.status}`
+      );
+    }
+
+    this.beforeActivate(descriptor);
+    await this.onActivate(descriptor);
+    this.afterActivate(descriptor);
+
+    this.log("info", "activate:end", "Adapter activation completed");
+  }
+
+  async deactivate(): Promise<void> {
+    this.log("info", "deactivate:start", "Adapter deactivation started");
+
+    await this.onDeactivate();
+
+    this.log("info", "deactivate:end", "Adapter deactivation completed");
+    this.descriptor = null;
+  }
+
+  async applyTheme(theme: UiThemeDescriptor): Promise<void> {
+    this.log(
+      "info",
+      "theme:apply:start",
+      `Applying theme '${theme.id ?? theme.name ?? "unknown"}'`
+    );
+    if (!theme) {
+      this.log("debug", "theme:skip", "No theme descriptor provided");
+      return;
+    }
+
+    // this.log("info", "theme:apply:start", `Applying theme '${theme}'`);
+
+    this.beforeApplyTheme(theme);
+    this.onApplyTheme(theme);
+    this.afterApplyTheme(theme);
+
+    this.log("info", "theme:apply:end", `Theme '${theme}' applied`);
+  }
+
+  /* ------------------------------------------------------------------
+   * Lifecycle hooks (override as needed)
+   * ------------------------------------------------------------------ */
+
+  protected beforeActivate(_descriptor: UiSystemDescriptor): void {}
+  protected afterActivate(_descriptor: UiSystemDescriptor): void {}
+  protected abstract onActivate(descriptor: UiSystemDescriptor): Promise<void>;
+
+  protected beforeDeactivate(): void {}
+  protected async onDeactivate(): Promise<void> {}
+  protected afterDeactivate(): void {}
+
+  protected beforeApplyTheme(theme: UiThemeDescriptor): void {
+    // optional lifecycle hook
+  }
+
+  protected abstract onApplyTheme(theme: UiThemeDescriptor): void;
+
+  protected afterApplyTheme(_theme: UiThemeDescriptor): void {
+    // optional lifecycle hook
+  }
+
+  protected createTabsSkeleton(tabsId: string): {
+    nav: HTMLUListElement;
+    content: HTMLDivElement;
+  } {
+    const nav = document.createElement("ul");
+    nav.setAttribute("role", "tablist");
+
+    const content = document.createElement("div");
+
+    return { nav, content };
+  }
+
+  protected createTabHeader(
+    tabId: string,
+    label: string,
+    icon?: string,
+    active = false
+  ): HTMLLIElement {
+    const li = document.createElement("li");
+    li.className = "nav-item";
+    li.setAttribute("role", "presentation");
+
+    const btn = document.createElement("button");
+    btn.className = `nav-link ${active ? "active" : ""}`;
+    btn.id = `${tabId}-tab`;
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(active));
+    btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+    if (icon) {
+      const i = document.createElement("i");
+      i.className = `bi bi-${icon} me-2`;
+      btn.appendChild(i);
+    }
+
+    btn.appendChild(document.createTextNode(label));
+    li.appendChild(btn);
+
+    return li;
+  }
+
+  protected createTabPane(tabId: string, active = false): HTMLDivElement {
+    const pane = document.createElement("div");
+    pane.className = `tab-pane fade ${active ? "show active" : ""}`;
+    pane.id = `${tabId}-pane`;
+    pane.setAttribute("role", "tabpanel");
+    pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+    return pane;
+  }
+
+  protected mapLayoutByDescriptor(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    if (!this.supportsLayout(descriptor.layoutType)) return;
+    this.mapLayout(descriptor, parent);
+  }
+
+  protected mapLayout(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    /* intentionally empty */
+  }
+
+  /* ------------------------------------------------------------------
+   * Capability guards (centralized + traced)
+   * ------------------------------------------------------------------ */
+
+  public getCapabilities(): Readonly<UiAdapterCapabilities> {
+    return this.capabilities;
+  }
+
+  protected supportsLayout(type: CdUiLayoutType): boolean {
+    const supported = this.capabilities.layouts?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:layout",
+        `Layout '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  protected supportsContainer(type: CdUiContainerType): boolean {
+    const supported = this.capabilities.containers?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:container",
+        `Container '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  protected supportsControl(type: CdUiControlType): boolean {
+    const supported = this.capabilities.controls?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:control",
+        `Control '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  /* ------------------------------------------------------------------
+   * Logging helpers (DO NOT override)
+   * ------------------------------------------------------------------ */
+
+  protected log(
+    level: "debug" | "info" | "warn" | "error",
+    phase: string,
+    message: string,
+    data?: unknown
+  ): void {
+    const prefix = `[UiAdapter:${this.meta.id}@${this.meta.version}]`;
+    const status =
+      this.meta.status !== UiAdapterStatus.ACTIVE
+        ? `⚠ ${this.meta.status}`
+        : "";
+
+    const payload = {
+      adapter: this.meta.id,
+      version: this.meta.version,
+      status: this.meta.status,
+      phase,
+      descriptorId: this.descriptor?.id,
+      data,
+    };
+
+    switch (level) {
+      case "debug":
+        console.debug(prefix, phase, status, message, payload);
+        break;
+      case "info":
+        console.info(prefix, phase, status, message, payload);
+        break;
+      case "warn":
+        console.warn(prefix, phase, status, message, payload);
+        break;
+      case "error":
+        console.error(prefix, phase, status, message, payload);
+        break;
+    }
+  }
+
+  /* ------------------------------------------------------------------
+   * Explicit helpers for migration clarity
+   * ------------------------------------------------------------------ */
+
+  protected logLegacy(phase: string, message: string, data?: unknown): void {
+    this.log("warn", `legacy:${phase}`, message, data);
+  }
+
+  protected logDeprecated(
+    phase: string,
+    message: string,
+    data?: unknown
+  ): void {
+    this.log("warn", `deprecated:${phase}`, message, data);
+  }
+}
+```
+
+
+```ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+  protected readonly capabilities: UiAdapterCapabilities;
+  protected readonly meta: UiAdapterMeta;
+
+  public getCapabilities(): UiAdapterCapabilities {
+    console.log(`[${this.constructor.name}] getCapabilities() `);
+    return {
+      layouts: [CdUiLayoutType.GRID],
+      containers: [
+        CdUiContainerType.TABS,
+        CdUiContainerType.TAB,
+        CdUiContainerType.CARD,
+      ],
+      controls: [
+        CdUiControlType.BUTTON,
+        CdUiControlType.TEXT_FIELD,
+        CdUiControlType.SELECT,
+        CdUiControlType.CHECKBOX,
+        CdUiControlType.SWITCH,
+      ],
+    };
+  }
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.log(
+      "info",
+      "lifecycle:activate:start",
+      "Activating Bootstrap 5.3.8 adapter",
+      { systemId: descriptor?.id }
+    );
+
+    if (!descriptor) {
+      this.log("error", "lifecycle:activate:error", "Descriptor is null");
+      return;
+    }
+
+    this.descriptor = descriptor;
+
+    if (!descriptor.conceptMappings) {
+      this.log(
+        "warn",
+        "descriptor:missing:mappings",
+        "descriptor.conceptMappings missing",
+        descriptor
+      );
+    } else {
+      this.log(
+        "debug",
+        "descriptor:loaded:mappings",
+        "Concept mappings loaded",
+        Object.keys(descriptor.conceptMappings)
+      );
+    }
+
+    // Initial mapping pass
+    this.log("debug", "map:init", "Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM mutations
+    this.observeMutations();
+
+    this.log(
+      "info",
+      "lifecycle:activate:complete",
+      "Bootstrap adapter activated",
+      { systemId: descriptor.id }
+    );
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    this.log("info", "lifecycle:deactivate:start", "Deactivating adapter");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+    } catch {
+      /* no-op */
+    }
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        this.log(
+          "debug",
+          "observer:disconnected",
+          "MutationObserver disconnected"
+        );
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    this.log("info", "lifecycle:deactivate:complete", "Adapter deactivated");
+  }
+
+  protected onApplyTheme(theme: UiThemeDescriptor): void {
+    if (!theme) {
+      this.log("warn", "theme:apply:skip", "Theme is null");
+      return;
+    }
+
+    this.log(
+      "info",
+      "theme:apply:start",
+      `Applying theme '${theme.id}'`,
+      theme
+    );
+
+    const root = document.documentElement;
+
+    // Remove previous prefixed classes
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    // CSS variables
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    // Global classes
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.log("info", "theme:apply:complete", `Theme '${theme.id}' applied`);
+  }
+
+  /**
+   * mapByConcept() is designed for idempotent, element-level decoration based on a selector + mapping
+      That matches:
+        buttons
+        inputs
+        form groups
+        checkboxes
+        selects
+        switches
+      It does not match:
+        structural transformation
+        DOM re-parenting
+        component synthesis
+        composite UI orchestration
+   * @param concept 
+   * @param selector 
+   * @returns 
+   */
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    this.log("debug", "map:concept", `Mapping concept '${concept}'`, {
+      selector,
+      count: nodes.length,
+    });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  // // ---------------------------------------------------------------------------
+  // // ACTIVATION
+  // // ---------------------------------------------------------------------------
+
+  protected decorateTabs(nav: HTMLElement, content: HTMLElement) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabs()`
+    );
+    nav.className = "nav nav-tabs mb-3";
+    content.className = "tab-content";
+  }
+
+  protected decorateTabHeader(li: HTMLElement, active: boolean) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabHeader()`
+    );
+    li.classList.add("nav-item");
+
+    const btn = li.querySelector("button")!;
+    btn.classList.add("nav-link");
+    if (active) btn.classList.add("active");
+  }
+
+  protected decorateTabPane(pane: HTMLElement, active: boolean) {
+    this.log(
+      "info",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabPane()`
+    );
+    pane.classList.add("tab-pane", "fade");
+    if (active) pane.classList.add("show", "active");
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  
+  private getMapping(concept: string): Mapping {
+    if (!this.descriptor?.conceptMappings) return undefined;
+
+    const mapping = (this.descriptor.conceptMappings as any)[concept];
+
+    this.log(
+      "debug",
+      "map:resolve",
+      `Resolved mapping for '${concept}'`,
+      mapping
+    );
+
+    return mapping;
+  }
+
+  
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Update attributes only
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    this.log("debug", "map:apply", "Applying mapping to element", {
+      tag: el.tagName,
+      mapping,
+    });
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapButtons()`);
+    this.mapByConcept("button", "button[cdButton], button.cd-button");
+  }
+
+  private mapInputs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapInputs()`);
+    this.mapByConcept(
+      "input",
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+    );
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapTabs()`);
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    this.log(
+      "info",
+      "map:concept",
+      `[${this.constructor.name}] mapFormGroups()`
+    );
+    this.mapByConcept("formGroup", ".cd-form-field");
+  }
+
+  private mapOtherConcepts() {
+    this.log(
+      "info",
+      "map:concept",
+      `[${this.constructor.name}] mapOtherConcepts()`
+    );
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  private mapByDescriptor(descriptor: CdUiDescriptor, parent?: HTMLElement) {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] mapByDescriptor('${descriptor.role}')`
+    );
+    // 1. Resolve target elements
+    const el = parent || document;
+
+    // 2. Map based on role
+    switch (descriptor.role) {
+      case CdUiRole.CONTROL:
+        this.applyControlDescriptor(
+          descriptor as CdUiControlDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.CONTAINER:
+        this.applyContainerDescriptor(
+          descriptor as CdUiContainerDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.COMPOSITE:
+        // Composite could be recursive for groups or sections
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+
+      case CdUiRole.LAYOUT:
+        // Layout mapping if needed (grid, flex, etc.)
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+    }
+  }
+
+  protected mapGridByDescriptor(
+    descriptor: CdUiGridDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] mapGridByDescriptor()`
+    );
+    const grid = document.createElement("div");
+    grid.classList.add("row");
+
+    descriptor.children?.forEach((child) => {
+      const col = document.createElement("div");
+      col.classList.add(this.resolveGridColumnClass(descriptor));
+      grid.appendChild(col);
+
+      this.mapByDescriptor(child, col);
+    });
+
+    parent.appendChild(grid);
+  }
+
+  protected resolveGridColumnClass(descriptor: CdUiGridDescriptor): string {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] resolveGridColumnClass()`
+    );
+    const classes: string[] = [];
+
+    const span = descriptor.span;
+    const responsive = descriptor.responsive;
+
+    // Default span
+    if (typeof span === "number") {
+      classes.push(`col-${span}`);
+    } else {
+      classes.push("col"); // auto
+    }
+
+    // Responsive overrides
+    if (responsive) {
+      Object.entries(responsive).forEach(([bp, value]) => {
+        if (typeof value === "number") {
+          classes.push(`col-${bp}-${value}`);
+        }
+      });
+    }
+
+    return classes.join(" ");
+  }
+
+  private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] applyControlDescriptor('${descriptor.controlType}')`
+    );
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch",
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const mapping = this.resolveControlMapping(descriptor);
+    if (!mapping) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected resolveControlMapping(
+    descriptor: CdUiControlDescriptor
+  ): UiConceptMapping | undefined {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] resolveControlMapping('${descriptor.controlType}')`
+    );
+    return this.descriptor?.conceptMappings?.controls?.[descriptor.controlType];
+  }
+
+  private mapAll() {
+    this.log("info", "map:all:start", "Running full mapping pass");
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      this.log("error", "map:all:error", "mapAll failed", err);
+    }
+
+    this.log("info", "map:all:complete", "Mapping pass complete");
+  }
+
+  private applyContainerDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ) {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] applyContainerDescriptor('${descriptor.containerType}')`
+    );
+    switch (descriptor.containerType) {
+      case CdUiContainerType.TABS:
+        this.mapTabsByDescriptor(descriptor, parent);
+        break;
+
+      case CdUiContainerType.CARD:
+        // Could add card-specific mapping
+        break;
+
+      case CdUiContainerType.SECTION:
+        // Generic container mapping
+        break;
+    }
+
+    // Recursively map children
+    descriptor.children?.forEach((child) =>
+      this.mapByDescriptor(child, parent)
+    );
+  }
+
+  private bindAction(el: HTMLElement, action?: CdUiAction) {
+    this.log("info", "map:action", `[${this.constructor.name}] bindAction()`);
+    if (!action) return;
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switch (action.type) {
+        case "navigate":
+          // your routing code here
+          break;
+        case "submit":
+          // submit form
+          break;
+        case "call_fx":
+          if (
+            action.target &&
+            typeof (window as any)[action.target] === "function"
+          ) {
+            (window as any)[action.target](action.params);
+          }
+          break;
+        case "toggle_target":
+          if (action.target) {
+            const targetEl = document.getElementById(action.target);
+            targetEl?.classList.toggle("d-none");
+          }
+          break;
+      }
+    });
+  }
+
+  protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    this.log(
+      "info",
+      "descriptor:container:tabs",
+      "Mapping tabs via descriptor",
+      descriptor
+    );
+
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (!isTabDescriptor(child)) return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${child.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  
+  private observeMutations() {
+    if (this.observer) {
+      this.log("debug", "observer:skip", "Observer already attached");
+      return;
+    }
+
+    this.log("info", "observer:attach", "Attaching MutationObserver");
+
+    this.observer = new MutationObserver(() => {
+      this.log(
+        "debug",
+        "observer:mutation",
+        "DOM mutation detected → scheduling mapAll()"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      this.log("error", "observer:error", "Failed to attach observer", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+
+//////////////////////////////////////////
+
+Below are Bootstrap538AdapterService mapAll() and observeMutations().
+You can assist to implement the instruction below (which are not clear to me):
+Gate mapAll() behind DOM stability
+In observeMutations():
+if (!this.requirePhase(UiAdapterPhase.DOM_STABLE, "mapAll")) {
+  return;
+}
+Then trigger DOM stability once from outside:
+adapter.markDomStable("menu + controller + directives ready");
+
+```ts
+private mapAll() {
+    this.log("info", "map:all:start", "Running full mapping pass");
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      this.log("error", "map:all:error", "mapAll failed", err);
+    }
+
+    this.log("info", "map:all:complete", "Mapping pass complete");
+  }
+
+private observeMutations() {
+    if (this.observer) return;
+
+    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
+
+    this.observer = new MutationObserver((mutations) => {
+      console.log(
+        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
+        "color:#ffa;"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+```
+
+/////////////////////////////////////////////
+
+The file src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts already had: 
+```ts
+export enum UiAdapterPhase {
+  INIT = "init",
+  SHELL_READY = "shell_ready",
+  MENU_READY = "menu_ready",
+  CONTROLLER_READY = "controller_ready",
+  DOM_STABLE = "dom_stable",
+}
+```
+Do we still keep it? 
+Otherwise, I have created src/CdShell/sys/cd-guig/models/ui-adapter-phase.enum.ts. And it does not have any imports.
+
+I have also noted as you suspected, there was this definition that prompted import of various adaptors:
+```ts
+export const SYSTEM_ADAPTERS: Record<string, IUiSystemAdapter> = {
+  "bootstrap-502": new Bootstrap502AdapterService(),
+  "bootstrap-538": new Bootstrap538AdapterService(),
+  "material-design": new MaterialDesignAdapterService(),
+  plain: new PlainAdapterService(),
+};
+```
+
+I have since moved it to: 
+src/CdShell/app/ui-adaptor-port/models/ui-adaptor-port.models.ts 
+from 
+src/CdShell/sys/cd-guig/models/ui-system-adaptor.model.ts
+
+////////////////////////////////////////////////
+An error is being experienced:
+[MAIN.applyStartupUiSettings] activate failed TypeError: can't access property "setMeta", We.get(...) is null
+Where we expect it to load bootstrap-538, it is loading the default settings (which is the last resort when no ui-system can be loaded)
+Let me know if you are able to detect what could be going wrong...or if you need some more information to unravel the bug.
+Below are partial logs.
+```log
+start 1 index-BxmLueT_.js:53:14445
+[SHELL] [DEBUG] [Main] init(): starting index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-BxmLueT_.js:48:1803
+[ModuleService][constructor]: starting index-BxmLueT_.js:31:5044
+[ModuleService] Running under Vite (browser). index-BxmLueT_.js:31:5117
+[ModuleService][constructor]: starting index-BxmLueT_.js:31:5044
+[ModuleService] Running under Vite (browser). index-BxmLueT_.js:31:5117
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BxmLueT_.js:48:7964
+[SHELL] [DEBUG] [Main] init(): completed index-BxmLueT_.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BxmLueT_.js:48:7964
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-BxmLueT_.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-BxmLueT_.js:31:3158
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-BxmLueT_.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-BxmLueT_.js:53:8509
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-BxmLueT_.js:53:7280
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-BxmLueT_.js:53:7280
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-BxmLueT_.js:48:1803
+[SysCacheService] Eager load starting index-BxmLueT_.js:48:4030
+[PHASE][Cache] shellConfig 
+Object { source: "static", version: 1 }
+index-BxmLueT_.js:53:12797
+[UiSystemLoaderService] Registered UI Systems: 
+Array []
+index-BxmLueT_.js:48:16345
+[SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-BxmLueT_.js:48:1803
+[SysCacheService] UI systems cached 
+Object { simpleCount: 0, fullCount: 0, source: "static" }
+index-BxmLueT_.js:48:6370
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-BxmLueT_.js:48:13612
+[SysCacheService] Load complete index-BxmLueT_.js:48:4635
+[CSS-DIAG] Cache loaded (static) 
+Object {  }
+index-BxmLueT_.js:31:3158
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] resolutionMode: FULL_CONTEXT index-BxmLueT_.js:48:1803
+[PHASE 2][ConfigService] Promote resolved shell config index-BxmLueT_.js:48:12480
+[SHELL] [DEBUG] [Main] Shell config promoted 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BxmLueT_.js:48:1803
+[PHASE][Cache] shellConfig 
+Object { source: "resolved", version: 14 }
+index-BxmLueT_.js:53:12797
+[SysCacheService] Resolved shell config applied 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", source: "resolved" }
+index-BxmLueT_.js:48:7016
+[SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] svSysCache 
+Object { configService: {…}, logger: {…}, cache: Map(11), listeners: Map(1), versionCounter: 18, _uiSystemLoader: {…}, _uiThemeLoader: {…} }
+index-BxmLueT_.js:48:1803
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] uiConfig 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-BxmLueT_.js:48:1803
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-BxmLueT_.js:31:3158
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] systemId bootstrap-538 index-BxmLueT_.js:48:1803
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "bootstrap-538" }
+index-BxmLueT_.js:31:3158
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-BxmLueT_.js:48:1803
+[UiSystemLoaderService.activate] descriptorFromCache: undefined index-BxmLueT_.js:48:17582
+[MAIN.applyStartupUiSettings] activate failed TypeError: can't access property "setMeta", We.get(...) is null
+    activate http://localhost:5173/assets/index-BxmLueT_.js:48
+index-BxmLueT_.js:48:22968
+[CSS-DIAG] [MAIN.applyStartupUiSettings] activate failed 
+Object { err: TypeError }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (2) […] }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (3) […] }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme css injected 
+Object { themeId: "dark" }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-BxmLueT_.js:31:3158
+[UiSystemLoaderService.applyTheme] adapter received: null index-BxmLueT_.js:48:20034
+[UiSystemLoaderService.applyTheme] no adapter for bootstrap-538 index-BxmLueT_.js:48:20108
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-BxmLueT_.js:31:3158
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-BxmLueT_.js:31:3158
+ThemeService::loadThemeConfig(default) index-BxmLueT_.js:48:2268
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-BxmLueT_.js:31:3158
+[ModuleService][constructor]: starting index-BxmLueT_.js:31:5044
+[ModuleService] Running under Vite (browser). index-BxmLueT_.js:31:5117
+[Preload] Loading dev-sync index-BxmLueT_.js:31:7402
+ModuleService::loadModule()/01: index-BxmLueT_.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-BxmLueT_.js:31:8204
+[ModuleService] 1 index-BxmLueT_.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-BxmLueT_.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-BxmLueT_.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-BxmLueT_.js:31:8759
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-BxmLueT_.js:31:8911
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 05/01/2026, 14:29:43 index-BxmLueT_.js:31:8999
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-BxmLueT_.js:31:7698
+[Preload] Completed IdeAgentService index-BxmLueT_.js:31:7797
+[Preload] Loading dev-sync index-BxmLueT_.js:31:7402
+ModuleService::loadModule()/01: index-BxmLueT_.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-BxmLueT_.js:31:8204
+[ModuleService] 1 index-BxmLueT_.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-BxmLueT_.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-BxmLueT_.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-BxmLueT_.js:31:8759
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-BxmLueT_.js:31:8911
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 05/01/2026, 14:29:43 index-BxmLueT_.js:31:8999
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-BxmLueT_.js:31:7698
+[Preload] Completed IdeAgentClientService index-BxmLueT_.js:31:7797
+ModuleService::loadModule()/01: index-BxmLueT_.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-BxmLueT_.js:31:8204
+[ModuleService] 1 index-BxmLueT_.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-BxmLueT_.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-BxmLueT_.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-BxmLueT_.js:31:8759
+[ModuleService] Loaded 'cd-user' (Vite mode) at 05/01/2026, 14:29:43 index-BxmLueT_.js:31:8999
+ModuleService::loadModule()/01: index-BxmLueT_.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-BxmLueT_.js:31:8204
+[ModuleService] 1 index-BxmLueT_.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-BxmLueT_.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
+index-BxmLueT_.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-BxmLueT_.js:31:8759
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-BxmLueT_.js:31:8911
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 05/01/2026, 14:29:43 index-BxmLueT_.js:31:8999
+ModuleService::loadModule()/01: index-BxmLueT_.js:31:8040
+[ModuleService] expectedPathFragment: src/CdShell/sys/moduleman/view/index.js index-BxmLueT_.js:31:8204
+[ModuleService] 1 index-BxmLueT_.js:31:8264
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/moduleman/view/index.js index-BxmLueT_.js:31:8541
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "moduleman-consumer-resource", moduleName: "consumer-resource", moduleGuid: "consr-0001-0000-0000", controllers: (2) […], menu: (1) […], isDefault: false }
+index-BxmLueT_.js:31:8700
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-BxmLueT_.js:31:8759
+[ModuleService] Loaded module metadata passively: moduleman. Setup skipped. index-BxmLueT_.js:31:8911
+[ModuleService] Loaded 'moduleman' (Vite mode) at 05/01/2026, 14:29:43 index-BxmLueT_.js:31:8999
+```
+////////////////////////////////////
+
+In your "Fix 1", you recommend "Ensure adapters are imported at startup"
+Kindly clarify "Imported by which file or component"
+As you work out the solution, there is a rule that must be obeyed.
+Remember system should not be baked with specific ui-systems in mind.
+There should even be possibility for 3rd party developers of new ui-systems or different versions.
+It is the reason we are doing auto-discovery and registration.
+Even if it is the first thing that must be done, there can be a way of crawling through the directory src/CdShell/app/ui-adaptor-port/services  to 'register' the available adaptors.
+Can you review "Fix 1" with this in mind.
+The above process can also validate whatever it finds before 'registration'...which can then be integrated with "Fix 2"
+
+/////////////////////////////////////////////////
+
+Below is the implementation of Main.run()
+
+```ts
+async run() {
+    //---------------------------------------
+    // SPLASH: Show immediately
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig);
+
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    diag_css("Main.run() started");
+
+    //---------------------------------------
+    // STEP 0: Load base shell config (LEGACY)
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    //---------------------------------------
+    // PHASE 1: Observe cache (non-invasive)
+    //---------------------------------------
+    this.svSysCache.subscribe("shellConfig", (value, meta) => {
+      console.log("%c[PHASE][Cache] shellConfig", "color:#4CAF50", {
+        source: meta.source,
+        version: meta.version,
+      });
+    });
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login
+    //---------------------------------------
+    const fx = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+
+    this.logger.debug("[Main.run] fx:", fx);
+    if (fx?.state && fx.data) {
+      this.consumerProfile = fx.data.data.consumer.consumerProfile || null;
+      this.userProfile = fx.data.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 1: Core service instantiation
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    
+
+    //---------------------------------------
+    // STEP 2: Load STATIC cache (CRITICAL)
+    //---------------------------------------
+    await this.svSysCache.loadAndCacheAll();
+    diag_css("Cache loaded (static)");
+
+    //---------------------------------------
+    // PHASE 2: Promote ACL-resolved shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.promoteResolvedShellConfig(
+      this.svSysCache,
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config promoted", this.resolvedShellConfig);
+
+    this.svSysCache.applyResolvedShellConfig(this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
+
+    if (!this.svSysCache.hasConsumerContext()) {
+      this.logger.info("[UI] Running in consumer-less mode");
+    }
+
+    //---------------------------------------
+    // STEP 3: Apply UI-System + Theme pipeline
+    //---------------------------------------
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
+
+    //---------------------------------------
+    // STEP 4: Theme config (logo + title)
+    //---------------------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    diag_css("ThemeConfig loaded", themeConfig);
+
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
+    //---------------------------------------
+    // STEP 5: Prepare menu
+    //---------------------------------------
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
+
+    //---------------------------------------
+    // STEP 6: Sidebar render
+    //---------------------------------------
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
+
+    //---------------------------------------
+    // STEP 7: Auto-load default controller
+    //---------------------------------------
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
+
+    //---------------------------------------
+    // STEP 8: Mobile UX config
+    //---------------------------------------
+    this.svUiSystemLoader.setupMobileUx();
+
+    //---------------------------------------
+    // APP READY
+    //---------------------------------------
+    this.logger.debug("[Main] app fully bootstrapped");
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
+
+    diag_css("Main.run() complete");
+  }
+```
+
+///////////////////////////////////////////////
+There are two issues with UiSystemAdapterDiscoveryService.discoverAndRegister():
+1. On the line:
+UiAdapterValidatorService.assertValid(instance);
+Error:
+Property 'assertValid' does not exist on type 'typeof UiAdapterValidatorService'.
+The method treats UiAdapterValidatorService.assertValid() as a static method but when you check the class, this is not the case.
+
+2. In the line: 
+UiSystemAdapterRegistry.register(instance);
+Error:
+ui-system-registry.service.ts(26, 31): An argument for 'adapter' was not provided.
+(method) UiSystemAdapterRegistry.register(id: string, adapter: IUiSystemAdapter): void
+
+// UiSystemAdapterDiscoveryService.discoverAndRegister()
+```ts
+static discoverAndRegister(): void {
+    // const logger = LoggerFactory.get("UiAdapterDiscovery");
+
+    const modules = import.meta.glob(
+      "/src/CdShell/app/ui-adaptor-port/services/**/*Adapter.*",
+      { eager: true }
+    );
+
+    const paths = Object.keys(modules);
+
+    this.logger.debug("Found adapter modules:", paths);
+
+    if (!paths.length) {
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check discovery paths."
+      );
+    }
+
+    for (const path of paths) {
+      const mod = modules[path] as any;
+      const AdapterClass = mod?.default;
+
+      if (!AdapterClass) {
+        this.logger.warn("Adapter has no default export", { path });
+        continue;
+      }
+
+      const instance = new AdapterClass();
+
+      UiAdapterValidatorService.assertValid(instance);
+      UiSystemAdapterRegistry.register(instance);
+
+      this.logger.info("UI adapter registered", {
+        id: instance.getMeta().id,
+        version: instance.getMeta().version,
+      });
+    }
+  }
+```
+
+```ts
+export class UiAdapterValidatorService {
+  private logger = new LoggerService();
+
+  assertValid(adapter: any): void {
+    if (!adapter) {
+      throw new Error("[UiAdapterValidator] Adapter instance is null");
+    }
+
+    this.assertMethod(adapter, "getMeta");
+    this.assertMethod(adapter, "getCapabilities");
+    this.assertMethod(adapter, "activate");
+
+    const meta = adapter.getMeta();
+
+    this.assertMeta(meta);
+
+    this.logger.debug(
+      "[UiAdapterValidator]",
+      "Adapter validated successfully",
+      meta
+    );
+  }
+
+  private assertMethod(obj: any, name: string) {
+    if (typeof obj[name] !== "function") {
+      throw new Error(
+        `[UiAdapterValidator] Missing required method: ${name}()`
+      );
+    }
+  }
+
+  private assertMeta(meta: UiAdapterMeta) {
+    if (!meta.id || !meta.name || !meta.version) {
+      throw new Error(
+        "[UiAdapterValidator] Adapter meta is incomplete"
+      );
+    }
+  }
+}
+```
+
+////////////////////////////////////////////
+We have the following method that is meant to auto discover available adaptors when the system is booting.
+The booting sequence is controlled by the Main.run() which is shared below.
+I have also shard a 'tree' query of the the directory for your assesment to confirm the given address is ok.
+See the shared output of tree src/CdShell/app/ui-adaptor-port/.
+Logs for the process ahve also been shared to show the attempt by UiSystemAdapterDiscoveryService.discoverAndRegister() to get the modules in the files is not being successfull.
+Assist me to scrutinize what could be wrong.
+
+UiSystemAdapterDiscoveryService.discoverAndRegister()
+```ts
+static discoverAndRegister(): void {
+    // const logger = LoggerFactory.get("UiAdapterDiscovery");
+    const validator = new UiAdapterValidatorService();
+
+    const modules = import.meta.glob(
+      "/src/CdShell/app/ui-adaptor-port/services/**/*Adapter.*",
+      { eager: true }
+    );
+
+    this.logger.debug("[UiAdapterDiscovery.discoverAndRegister()] modules:", modules);
+
+    const paths = Object.keys(modules);
+
+    this.logger.debug("Found adapter modules:", paths);
+
+    if (!paths.length) {
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check discovery paths."
+      );
+    }
+
+    for (const path of paths) {
+      const mod = modules[path] as any;
+      const AdapterClass = mod?.default;
+
+      if (!AdapterClass) {
+        this.logger.warn("Adapter has no default export", { path });
+        continue;
+      }
+
+      const instance = new AdapterClass();
+      const meta = instance.getMeta();
+
+
+      validator.assertValid(instance);
+      UiSystemAdapterRegistry.register(meta.id, instance);
+
+      this.logger.info("UI adapter registered", {
+        id: instance.getMeta().id,
+        version: instance.getMeta().version,
+      });
+    }
+  }
+```
+
+```log
+start 1 index-CIL2lL-7.js:53:16345
+[SHELL] [DEBUG] [Main] init(): starting index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-CIL2lL-7.js:48:1803
+[ModuleService][constructor]: starting index-CIL2lL-7.js:31:5044
+[ModuleService] Running under Vite (browser). index-CIL2lL-7.js:31:5117
+[ModuleService][constructor]: starting index-CIL2lL-7.js:31:5044
+[ModuleService] Running under Vite (browser). index-CIL2lL-7.js:31:5117
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIL2lL-7.js:48:12090
+[SHELL] [DEBUG] [Main] init(): completed index-CIL2lL-7.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIL2lL-7.js:48:12090
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-CIL2lL-7.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-CIL2lL-7.js:31:3158
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-CIL2lL-7.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-CIL2lL-7.js:53:8509
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-CIL2lL-7.js:53:7280
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-CIL2lL-7.js:53:7280
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [Main] Discovering UI system adapters index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [UiAdapterDiscovery.discoverAndRegister()] modules: 
+Object {  }
+index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] Found adapter modules: 
+Array []
+index-CIL2lL-7.js:48:1803
+[BOOTSTRAP ERROR] Error: [BOOT] No UI adapters discovered. Check discovery paths.
+    discoverAndRegister http://localhost:5173/assets/index-CIL2lL-7.js:53
+    run http://localhost:5173/assets/index-CIL2lL-7.js:53
+index-CIL2lL-7.js:53:16413
+[SHELL] [DEBUG] [Splash] animation completed index-CIL2lL-7.js:48:1803
+[SHELL] [DEBUG] [Splash] waiting 
+Object { splashAnimDone: true, appReady: false }
+index-CIL2lL-7.js:48:1803
+
+
+```
+// Main.run()
+```ts
+async run() {
+    //---------------------------------------
+    // SPLASH: Show immediately
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig);
+
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    diag_css("Main.run() started");
+
+    //---------------------------------------
+    // STEP 0: Load base shell config (LEGACY)
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    //---------------------------------------
+    // PHASE 1: Observe cache (non-invasive)
+    //---------------------------------------
+    this.svSysCache.subscribe("shellConfig", (value, meta) => {
+      console.log("%c[PHASE][Cache] shellConfig", "color:#4CAF50", {
+        source: meta.source,
+        version: meta.version,
+      });
+    });
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login
+    //---------------------------------------
+    const fx = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+
+    this.logger.debug("[Main.run] fx:", fx);
+    if (fx?.state && fx.data) {
+      this.consumerProfile = fx.data.data.consumer.consumerProfile || null;
+      this.userProfile = fx.data.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 1: Core service instantiation
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    //---------------------------------------
+    // STEP 1.5: Discover & register UI adapters (CRITICAL)
+    //---------------------------------------
+    this.logger.debug("[Main] Discovering UI system adapters");
+
+    UiSystemAdapterDiscoveryService.discoverAndRegister();
+
+    const adapters = UiSystemAdapterRegistry.list();
+    this.logger.debug("[Main] UI adapters registered", adapters);
+
+    if (!adapters.length) {
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check discovery paths."
+      );
+    }
+
+    //---------------------------------------
+    // STEP 2: Load STATIC cache (CRITICAL)
+    //---------------------------------------
+    await this.svSysCache.loadAndCacheAll();
+    diag_css("Cache loaded (static)");
+
+    //---------------------------------------
+    // PHASE 2: Promote ACL-resolved shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.promoteResolvedShellConfig(
+      this.svSysCache,
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config promoted", this.resolvedShellConfig);
+
+    this.svSysCache.applyResolvedShellConfig(this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
+
+    if (!this.svSysCache.hasConsumerContext()) {
+      this.logger.info("[UI] Running in consumer-less mode");
+    }
+
+    //---------------------------------------
+    // STEP 3: Apply UI-System + Theme pipeline
+    //---------------------------------------
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
+
+    //---------------------------------------
+    // STEP 4: Theme config (logo + title)
+    //---------------------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    diag_css("ThemeConfig loaded", themeConfig);
+
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
+    //---------------------------------------
+    // STEP 5: Prepare menu
+    //---------------------------------------
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
+
+    //---------------------------------------
+    // STEP 6: Sidebar render
+    //---------------------------------------
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
+
+    //---------------------------------------
+    // STEP 7: Auto-load default controller
+    //---------------------------------------
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
+
+    //---------------------------------------
+    // STEP 8: Mobile UX config
+    //---------------------------------------
+    this.svUiSystemLoader.setupMobileUx();
+
+    //---------------------------------------
+    // APP READY
+    //---------------------------------------
+    this.logger.debug("[Main] app fully bootstrapped");
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
+
+    diag_css("Main.run() complete");
+  }
+```
+
+```sh
+emp-12@emp-12 ~/cd-shell (main)> tree src/CdShell/app/ui-adaptor-port/
+src/CdShell/app/ui-adaptor-port/
+├── controllers
+├── models
+│   └── ui-adaptor-port.models.ts
+├── services
+│   ├── bootstrap-502-adapter.service-old22.ts
+│   ├── bootstrap-538-adapter.service-old.ts
+│   ├── bootstrap-538-adapter.service.ts
+│   ├── bulma-adapter.service.ts
+│   ├── material-design-adapter.service.ts
+│   └── plain-adapter.service.ts
+└── view
+    └── index.js
+
+```
+
+//////////////////////////////////////////////////////
+That worked but leading to new issue:
+"[SHELL] [ERROR] Failed to instantiate adapter"
+```log
+start 1 index-Dg0cePij.js:53:16659
+[SHELL] [DEBUG] [Main] init(): starting index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-Dg0cePij.js:48:1803
+[ModuleService][constructor]: starting index-Dg0cePij.js:31:5044
+[ModuleService] Running under Vite (browser). index-Dg0cePij.js:31:5117
+[ModuleService][constructor]: starting index-Dg0cePij.js:31:5044
+[ModuleService] Running under Vite (browser). index-Dg0cePij.js:31:5117
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-Dg0cePij.js:48:12201
+[SHELL] [DEBUG] [Main] init(): completed index-Dg0cePij.js:48:1803
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-Dg0cePij.js:48:12201
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] starting bootstrapShell() index-Dg0cePij.js:48:1803
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-Dg0cePij.js:31:3158
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-Dg0cePij.js:48:1803
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-Dg0cePij.js:53:8509
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-Dg0cePij.js:53:7280
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-Dg0cePij.js:53:7280
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [Main] Discovering UI system adapters index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [UiAdapterDiscovery] Raw Modules found: 
+Object { "./base-ui-adapter.service.ts": {…} }
+index-Dg0cePij.js:48:1803
+[SHELL] [ERROR] Failed to instantiate adapter 
+Object { path: "./base-ui-adapter.service.ts", error: TypeError }
+index-Dg0cePij.js:48:1925
+[SHELL] [DEBUG] [Main] UI adapters registered 
+Array []
+index-Dg0cePij.js:48:1803
+[BOOTSTRAP ERROR] Error: [BOOT] No UI adapters discovered. Check discovery paths.
+    run http://localhost:5173/assets/index-Dg0cePij.js:53
+index-Dg0cePij.js:53:16727
+[SHELL] [DEBUG] [Splash] animation completed index-Dg0cePij.js:48:1803
+[SHELL] [DEBUG] [Splash] waiting 
+Object { splashAnimDone: true, appReady: false }
+index-Dg0cePij.js:48:1803
+Error: Promised response from onMessage listener went out of scope index.js:4716:38
+
+
+```
+
+```ts
+static discoverAndRegister(): void {
+    const validator = new UiAdapterValidatorService();
+
+    // 1. Use a relative path (assuming this service is in ui-adaptor-port/services or nearby)
+    // 2. Fix the casing to match your file names (*-adapter.service.ts)
+    const modules = import.meta.glob(
+      "../services/**/*-adapter.service.ts", // Adjust '../' to point from THIS file to the services folder
+      { eager: true }
+    );
+
+    this.logger.debug("[UiAdapterDiscovery] Raw Modules found:", modules);
+
+    const paths = Object.keys(modules);
+
+    if (!paths.length) {
+      // Diagnostic log to help you fix the path
+      this.logger.error(
+        "Glob failed. Current directory hint:",
+        import.meta.url
+      );
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check glob path casing and relative depth."
+      );
+    }
+
+    for (const path of paths) {
+      const mod = modules[path] as any;
+
+      // Handle both 'export default class' and 'export class'
+      const AdapterClass = mod?.default || mod[Object.keys(mod)[0]];
+
+      if (!AdapterClass || typeof AdapterClass !== "function") {
+        this.logger.warn("Module found but no valid class export detected", {
+          path,
+        });
+        continue;
+      }
+
+      try {
+        const instance = new AdapterClass();
+
+        // Ensure the instance has the required methods before registering
+        if (typeof instance.getMeta !== "function") {
+          this.logger.warn("Adapter instance missing getMeta()", { path });
+          continue;
+        }
+
+        const meta = instance.getMeta();
+        validator.assertValid(instance);
+
+        UiSystemAdapterRegistry.register(meta.id, instance);
+
+        this.logger.info("UI adapter registered", {
+          id: meta.id,
+          version: meta.version,
+          path: path,
+        });
+      } catch (err) {
+        this.logger.error("Failed to instantiate adapter", {
+          path,
+          error: err,
+        });
+      }
+    }
+  }
+```
+
+///////////////////////////////////////////////
+The isse that was brought about after implementing some new developments has been resolved.
+The solution that was proposed took time to work due to some path addressing issue in UiSystemAdapterDiscoveryService.discoverAndRegister().
+What I need you to assist me with is to refocus on the sequence we had adopted to continue migrating from legacy to new developments in adaptor architecture.
+Let me know where we are and suggest how we continue moving progressively untill we are able to fully use the new architecture.
+
+UiSystemAdapterDiscoveryService.discoverAndRegister() with the working relative path.
+```ts
+static discoverAndRegister(): void {
+    const validator = new UiAdapterValidatorService();
+
+    // 1. Use a relative path (assuming this service is in ui-adaptor-port/services or nearby)
+    // 2. Fix the casing to match your file names (*-adapter.service.ts)
+    const modules = import.meta.glob(
+      "../../../app/ui-adaptor-port/services/**/*-adapter.service.ts",
+      { eager: true }
+    );
+
+    this.logger.debug("[UiAdapterDiscovery] Raw Modules found:", modules);
+
+    const paths = Object.keys(modules);
+
+    if (!paths.length) {
+      // Diagnostic log to help you fix the path
+      this.logger.error(
+        "Glob failed. Current directory hint:",
+        import.meta.url
+      );
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check glob path casing and relative depth."
+      );
+    }
+
+    for (const path of paths) {
+      const mod = modules[path] as any;
+
+      // Handle both 'export default class' and 'export class'
+      const AdapterClass = mod?.default || mod[Object.keys(mod)[0]];
+
+      if (!AdapterClass || typeof AdapterClass !== "function") {
+        this.logger.warn("Module found but no valid class export detected", {
+          path,
+        });
+        continue;
+      }
+
+      try {
+        const instance = new AdapterClass();
+
+        // Ensure the instance has the required methods before registering
+        if (typeof instance.getMeta !== "function") {
+          this.logger.warn("Adapter instance missing getMeta()", { path });
+          continue;
+        }
+
+        const meta = instance.getMeta();
+        validator.assertValid(instance);
+
+        UiSystemAdapterRegistry.register(meta.id, instance);
+
+        this.logger.info("UI adapter registered", {
+          id: meta.id,
+          version: meta.version,
+          path: path,
+        });
+      } catch (err) {
+        this.logger.error("Failed to instantiate adapter", {
+          path,
+          error: err,
+        });
+      }
+    }
+  }
+```
+
+/////////////////////////////////////////////
+
+While in the process of implementing the recommended UiThemeDescriptor, I found out we already have UiThemeDescriptor.
+Without loosing either, I am thinking we assume the older one exists and the new one is recommendation for upgrade.
+So we upgrade the old one with the new features.
+Take that approach while merging the two.
+You can also use the merged version to refactor the newly recommended class UiThemeNormalizer.
+You can do some comment notes for reference later.
+
+New version
+```ts
+export interface UiThemeDescriptor {
+  id: string;
+  name: string;
+
+  mode: "light" | "dark" | "auto";
+
+  css?: {
+    paths?: string[];
+    inline?: string;
+  };
+
+  variables?: Record<string, string>;
+  classes?: Record<string, string>;
+
+  layout?: {
+    density?: "compact" | "comfortable" | "spacious";
+    borderRadius?: string;
+  };
+
+  typography?: {
+    fontFamily?: string;
+    baseFontSize?: string;
+  };
+
+  meta?: {
+    source?: "legacy" | "static" | "dynamic" | "user";
+    uiSystem?: string;
+    version?: string;
+    normalizedAt?: number;
+  };
+}
+
+```
+Existing version
+```ts
+export interface UiThemeDescriptor {
+  /** Primary identifier */
+  id: string;
+
+  /** Human-readable label */
+  name: string;
+
+  /** Is default theme */
+  isDefault?: boolean;
+
+  /* ---------- Assets ---------- */
+
+  stylesheets?: string[];
+  scripts?: string[];
+
+  /* ---------- Styling ---------- */
+
+  /** CSS custom properties (without -- prefix) */
+  variables?: Record<string, string>;
+
+  /**
+   * Global classes to apply at root level.
+   * These should be treated as THEME-OWNED classes.
+   */
+  classes?: string[];
+
+  /**
+   * Optional namespace for theme-owned classes.
+   * Used to safely remove previous theme classes.
+   * Example: "theme-" or "bs-theme-"
+   */
+  classPrefix?: string;
+
+  /* ---------- Semantic Metadata ---------- */
+
+  metadata?: {
+    colorScheme?: Record<string, string>;
+    typography?: Record<string, string>;
+    spacing?: Record<string, string>;
+    animations?: Record<string, string>;
+  };
+
+  /* ---------- Governance ---------- */
+
+  author?: string;
+  license?: string;
+  repository?: string;
+
+  extensions?: Record<string, any>;
+}
+```
+
+```ts
+export interface UiThemeDescriptor {
+  /** Primary identifier */
+  id: string;
+
+  /** Human-readable label */
+  name: string;
+
+  /** Is default theme */
+  isDefault?: boolean;
+
+  /* ---------- Assets ---------- */
+
+  stylesheets?: string[];
+  scripts?: string[];
+
+  /* ---------- Styling ---------- */
+
+  /** CSS custom properties (without -- prefix) */
+  variables?: Record<string, string>;
+
+  /**
+   * Global classes to apply at root level.
+   * These should be treated as THEME-OWNED classes.
+   */
+  classes?: string[];
+
+  /**
+   * Optional namespace for theme-owned classes.
+   * Used to safely remove previous theme classes.
+   * Example: "theme-" or "bs-theme-"
+   */
+  classPrefix?: string;
+
+  /* ---------- Semantic Metadata ---------- */
+
+  metadata?: {
+    colorScheme?: Record<string, string>;
+    typography?: Record<string, string>;
+    spacing?: Record<string, string>;
+    animations?: Record<string, string>;
+  };
+
+  /* ---------- Governance ---------- */
+
+  author?: string;
+  license?: string;
+  repository?: string;
+
+  extensions?: Record<string, any>;
+}
+```
+
+///////////////////////////////////////////////////
+Much as the way you have initialized the LoggerService is invalid, it potrays a needfull feature.
+private static logger = new LoggerService("UiThemeNormalizer");
+Below is the current state of the LoggerService.
+You can refactor it to 'optionally' accept the above line for initialization.
+```ts
+export class LoggerService {
+  private context: string;
+  private level: LogLevel;
+  private silent: boolean;
+
+  constructor(options: LoggerOptions = {}) {
+    this.context = options.context || 'Shell';
+    this.level = options.level || 'debug';
+    this.silent = options.silent || false;
+  }
+
+  private shouldLog(level: LogLevel): boolean {
+    const levels: Record<LogLevel, number> = {
+      debug: 0,
+      info: 1,
+      warn: 2,
+      error: 3,
+    };
+    return levels[level] >= levels[this.level];
+  }
+
+  private log(level: LogLevel, message: string, ...args: unknown[]) {
+    if (this.silent || !this.shouldLog(level)) return;
+
+    const prefix = `[${this.context.toUpperCase()}] [${level.toUpperCase()}]`;
+
+    switch (level) {
+      case 'debug':
+        console.debug(prefix, message, ...args);
+        break;
+      case 'info':
+        console.info(prefix, message, ...args);
+        break;
+      case 'warn':
+        console.warn(prefix, message, ...args);
+        break;
+      case 'error':
+        console.error(prefix, message, ...args);
+        break;
+    }
+  }
+
+  debug(message: string, ...args: unknown[]) {
+    this.log('debug', message, ...args);
+  }
+
+  info(message: string, ...args: unknown[]) {
+    this.log('info', message, ...args);
+  }
+
+  warn(message: string, ...args: unknown[]) {
+    this.log('warn', message, ...args);
+  }
+
+  error(message: string, ...args: unknown[]) {
+    this.log('error', message, ...args);
+  }
+
+  setContext(context: string) {
+    this.context = context;
+  }
+
+  setLevel(level: LogLevel) {
+    this.level = level;
+  }
+
+  silence() {
+    this.silent = true;
+  }
+
+  unsilence() {
+    this.silent = false;
+  }
+}
+```
+
+///////////////////////////////////////
+Below is the new recommendation:
+Only ONE place should normalize themes
+Correct location:
+👉 UiSystemLoaderService.applyStartupUiSettings()
+
+Before (conceptually):
+```ts
+adapter.applyTheme(rawTheme);
+```
+
+After:
+```ts
+const normalizedTheme = UiThemeNormalizer.normalize(rawTheme, {
+  uiSystemId: systemId,
+  source: "static",
+});
+
+adapter.applyTheme(normalizedTheme);
+```
+In the legacy codes, we were mostly feeding in the systemId or themeId or both.
+In the new implementaitons, we rely on descriptors.
+We need some transitions.
+I suggest we adopt:
+getThemeById(themeId) and 
+getUiSystemById(systemId) 
+to integrate in the new setup.
+This can be worked out at the SysCacheService.
+Think through it and let me know what you think around this subject.
+
+UiSystemLoaderService.applyStartupUiSettings()
+```ts
+async applyStartupUiSettings(svSysCache: SysCacheService): Promise<void> {
+    this.logger.debug("[UiSystemLoaderService.applyStartupUiSettings()] start");
+    this.logger.debug(
+      "[UiSystemLoaderService.applyStartupUiSettings()] svSysCache",
+      svSysCache
+    );
+    // const cfgSvc = ConfigService.getInstance();
+    // ensure sys cache is ready
+    await svSysCache.ensureReady();
+
+    const uiConfig = svSysCache.get("uiConfig") as UiConfig;
+    if (!uiConfig) {
+      console.warn("[Main.applyStartupUiSettings] uiConfig missing");
+      return;
+    }
+
+    this.logger.debug(
+      "[UiSystemLoaderService.applyStartupUiSettings()] uiConfig",
+      uiConfig
+    );
+    const systemId = uiConfig.defaultUiSystemId;
+    const themeId = uiConfig.defaultThemeId;
+
+    diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
+
+    // Use singletons bound to same SysCache instance
+    const uiSystemLoader = UiSystemLoaderService.getInstance(svSysCache);
+    const uiThemeLoader = UiThemeLoaderService.getInstance(svSysCache);
+
+    // 1) Activate UI system (loads CSS + JS)
+    try {
+      this.logger.debug(
+        "[UiSystemLoaderService.applyStartupUiSettings()] systemId",
+        systemId
+      );
+      await uiSystemLoader.activate(systemId);
+      diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
+        systemId,
+      });
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] activate failed", err);
+      diag_css("[MAIN.applyStartupUiSettings] activate failed", { err });
+    }
+
+    // 2) Load structural shell CSS (base + index) AFTER system to ensure layering
+    try {
+      await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
+      await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
+      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded", {});
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] shell CSS load failed", err);
+    }
+
+    // 3) load theme override CSS
+    try {
+      await uiThemeLoader.loadThemeById(themeId);
+      diag_css("[MAIN.applyStartupUiSettings] theme css injected", { themeId });
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] theme load failed", err);
+    }
+
+    // 4) per-system applyTheme (sets data-bs-theme, md classes, etc.)
+    try {
+      await uiSystemLoader.applyTheme(systemId, themeId);
+      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete", {});
+    } catch (err) {
+      console.warn("[MAIN.applyStartupUiSettings] applyTheme failed", err);
+    }
+
+    diag_css("[MAIN.applyStartupUiSettings] done", {});
+  }
+```
+
+```ts
+import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./config.service";
+import {
+  // CacheKey,
+  CacheListener,
+  CacheMeta,
+  SysCacheMap,
+} from "../models/sys-cache.model";
+import { LoggerService } from "../../../utils/logger.service";
+
+export class SysCacheService {
+
+  private logger = new LoggerService();
+  private static instance: SysCacheService;
+
+  /** Core cache store */
+  // private cache = new Map<CacheKey | string, CacheEntry>();
+  private cache = new Map<string, any>();
+
+  /** Reactive listeners */
+  private listeners = new Map<string, Set<CacheListener<any>>>();
+
+  private versionCounter = 0;
+
+  private _uiSystemLoader!: UiSystemLoaderService;
+  private _uiThemeLoader!: UiThemeLoaderService;
+
+  constructor(private configService: ConfigService) {}
+
+  // ------------------------------------------------------------------
+  // SINGLETON
+  // ------------------------------------------------------------------
+  public static getInstance(configService?: ConfigService): SysCacheService {
+    if (!SysCacheService.instance) {
+      if (!configService) {
+        throw new Error(
+          "SysCacheService must be initialized with ConfigService on first instantiation."
+        );
+      }
+      SysCacheService.instance = new SysCacheService(configService);
+    }
+    return SysCacheService.instance;
+  }
+
+  public setLoaders(
+    systemLoader: UiSystemLoaderService,
+    themeLoader: UiThemeLoaderService
+  ): void {
+    this._uiSystemLoader = systemLoader;
+    this._uiThemeLoader = themeLoader;
+  }
+
+  // ------------------------------------------------------------------
+  // CORE CACHE API (NEW)
+  // ------------------------------------------------------------------
+  // Legacy + typed set
+  public set<T>(key: string, value: T, source?: CacheMeta["source"]): void;
+
+  public set<K extends keyof SysCacheMap>(
+    key: K,
+    value: SysCacheMap[K],
+    source?: CacheMeta["source"]
+  ): void;
+
+  // Implementation
+  public set(
+    key: string,
+    value: any,
+    source: CacheMeta["source"] = "runtime"
+  ): void {
+    const meta: CacheMeta = {
+      source,
+      version: ++this.versionCounter,
+      timestamp: Date.now(),
+    };
+
+    this.cache.set(key, { value, meta });
+    this.notify(key, value, meta);
+  }
+
+  public get(key: string): any | undefined;
+  public get<K extends keyof SysCacheMap>(key: K): SysCacheMap[K] | undefined;
+
+  public get(key: string): any | undefined {
+    const entry = this.cache.get(key);
+    return entry?.value;
+  }
+
+  public getMeta(key: string): CacheMeta | undefined {
+    const entry = this.cache.get(key);
+    return entry?.meta;
+  }
+
+  public subscribe<T>(
+    key: string,
+    listener: CacheListener<T>,
+    emitImmediately = true
+  ): () => void {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+
+    this.listeners.get(key)!.add(listener);
+
+    // Late subscriber → immediate sync
+    if (emitImmediately && this.cache.has(key)) {
+      const entry = this.cache.get(key)!;
+      listener(entry.value, entry.meta);
+    }
+
+    // Unsubscribe
+    return () => {
+      this.listeners.get(key)?.delete(listener);
+    };
+  }
+
+  private notify<T>(key, value: T, meta: CacheMeta): void {
+    this.listeners.get(key)?.forEach((listener) => listener(value, meta));
+  }
+
+  // ------------------------------------------------------------------
+  // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+  // ------------------------------------------------------------------
+  public async loadAndCacheAll(): Promise<void> {
+    this.logger.debug("[SysCacheService.loadAndCacheAll()] start");
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    // 🔑 PHASE-2 AWARE CONFIG RESOLUTION
+    const shellConfig =
+      this.get("shellConfig") ?? (await this.configService.loadConfig());
+
+    const uiConfig = shellConfig.uiConfig || {};
+
+    // Ensure canonical cache presence
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", uiConfig, "static");
+
+    // -------------------------------------------------
+    // UI SYSTEMS (authoritative descriptors)
+    // -------------------------------------------------
+    const uiSystemsData =
+      await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+
+    this.cacheUiSystems(uiSystemsData, "static");
+
+    // -------------------------------------------------
+    // UI THEMES
+    // -------------------------------------------------
+    const uiThemesData =
+      await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig, "static");
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  // ------------------------------------------------------------------
+  // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
+  // ------------------------------------------------------------------
+  public getUiSystems(): any[] {
+    return this.get("uiSystems") || [];
+  }
+
+  public getThemes(): any[] {
+    return this.get("themes") || [];
+  }
+
+  public getFormVariants(): any[] {
+    return this.get("formVariants") || [];
+  }
+
+  public getThemeDescriptors(): any[] {
+    return this.get("themeDescriptors") || [];
+  }
+
+  public getConfig(): any {
+    return this.get("uiConfigNormalized") || {};
+  }
+
+  public getEnvConfig(): any {
+    return this.get("envConfig") || {};
+  }
+
+  public getConsumerGuid(): string | undefined {
+    const env = this.getEnvConfig();
+    return env?.consumerGuid || env?.clientContext?.consumerToken;
+  }
+
+  public getApiEndpoint(): string | undefined {
+    return this.getEnvConfig()?.apiEndpoint;
+  }
+
+  public async ensureReady(): Promise<void> {
+    if (this.cache.size === 0) {
+      await this.loadAndCacheAll();
+    }
+  }
+
+  /**
+   * Normalizes UI system descriptors to legacy-compatible shape
+   * Required by UiSystemLoaderService.activate()
+   */
+  private normalizeUiSystemDescriptors(rawSystems: any[]): {
+    simple: any[];
+    full: any[];
+  } {
+    this.logger.debug("[SysCacheService.normalizeUiSystemDescriptors()] start");
+    const fullDescriptors = rawSystems.map((sys: any) => ({
+      id: sys.id,
+      name: sys.name,
+      version: sys.version,
+      description: sys.description,
+
+      cssUrl: sys.cssUrl,
+      jsUrl: sys.jsUrl,
+      assetPath: sys.assetPath,
+
+      stylesheets: sys.stylesheets || [],
+      scripts: sys.scripts || [],
+
+      themesAvailable: sys.themesAvailable || [],
+      themeActive: sys.themeActive || null,
+
+      conceptMappings: sys.conceptMappings || {},
+      directiveMap: sys.directiveMap || {},
+      tokenMap: sys.tokenMap || {},
+
+      containers: sys.containers || [],
+      components: sys.components || [],
+      renderRules: sys.renderRules || {},
+
+      metadata: sys.metadata || {},
+      extensions: sys.extensions || {},
+
+      author: sys.author,
+      license: sys.license,
+      repository: sys.repository,
+
+      displayName: sys.displayName || sys.name,
+    }));
+
+    const simpleSystems = fullDescriptors.map((sys) => ({
+      id: sys.id,
+      name: sys.name,
+      displayName: sys.displayName,
+      themesAvailable: sys.themesAvailable,
+    }));
+
+    return {
+      simple: simpleSystems,
+      full: fullDescriptors,
+    };
+  }
+
+  private cacheUiSystems(
+    rawSystems: any[],
+    source: CacheMeta["source"] = "static"
+  ): void {
+    this.logger.debug("[SysCacheService.cacheUiSystems()] start");
+    const { simple, full } = this.normalizeUiSystemDescriptors(rawSystems);
+
+    // 🔁 Legacy compatibility
+    this.set("uiSystems", simple, source);
+    this.set("uiSystemDescriptors", full, source);
+
+    // 🔮 Optional future-facing unified key
+    this.set("uiSystemsNormalized", { simple, full }, source);
+
+    console.log("[SysCacheService] UI systems cached", {
+      simpleCount: simple.length,
+      fullCount: full.length,
+      source,
+    });
+  }
+
+  public hasConsumerContext(): boolean {
+    return !!this.get("shellConfig:meta")?.hasConsumerProfile;
+  }
+
+  // ------------------------------------------------------------------
+  // PHASE-2 RESOLUTION (CONSUMER / USER OVERRIDES)
+  // ------------------------------------------------------------------
+  public applyResolvedShellConfig(
+    resolvedShellConfig: any,
+    source: CacheMeta["source"] = "resolved"
+  ): void {
+    this.logger.debug("[SysCacheService.applyResolvedShellConfig()] start");
+    this.logger.debug("[SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:", resolvedShellConfig);
+
+    if (!resolvedShellConfig) return;
+
+    const uiConfig = resolvedShellConfig.uiConfig || {};
+    const envConfig = resolvedShellConfig.envConfig || {};
+
+    // Override canonical keys
+    this.set("shellConfig", resolvedShellConfig, source);
+    this.set("uiConfig", uiConfig, source);
+    this.set("envConfig", envConfig, source);
+
+    // Optional normalized alias (used by loaders)
+    this.set("uiConfigNormalized", uiConfig, source);
+
+    // Metadata flag (used by hasConsumerContext)
+    this.set(
+      "shellConfig:meta",
+      {
+        hasConsumerProfile: true,
+        appliedAt: Date.now(),
+      },
+      source
+    );
+
+    console.log("[SysCacheService] Resolved shell config applied", {
+      defaultUiSystemId: uiConfig.defaultUiSystemId,
+      defaultThemeId: uiConfig.defaultThemeId,
+      source,
+    });
+  }
+}
+
+```
+
+////////////////////////////////////////////
+
+In the line in UiSystemLoaderService.applyStartupUiSettings():
+```ts
+await uiSystemLoader.applyThemeDescriptor(
+```
+uiSystemLoader.applyThemeDescriptor does not exist.
+Could you have meant to use public async applyTheme(systemId: string, themeId: string): Promise<void>.
+If so, we may need a revised version considering the expected signature.
+Also we may let the legacy live the create a modified version to smoothen transition.
+
+////////////////////////////////////////////////////////////
+
+The page is loading properly. However when the logs are examined, it would be good to understand the warnings and where some required values turn up undefined...and any other apparent annomaly.
+Below are the lates logs.
+
+```log
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { logger: {…}, descriptor: {…}, currentPhase: "init", observer: MutationObserver, appliedSet: WeakSet(5), adapterId: "bootstrap-538", meta: {…} }
+index-CIaugmA7.js:48:12243
+[BulmaAdapterService] constructor() index-CIaugmA7.js:53:22592
+[UiSystemAdapterRegistry] register: bulma 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
+index-CIaugmA7.js:48:12243
+[MaterialDesignAdapter] constructor() index-CIaugmA7.js:53:25075
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
+index-CIaugmA7.js:48:12243
+start 1 index-CIaugmA7.js:65:8526
+[SHELL] [DEBUG] [Main] init(): starting index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-CIaugmA7.js:48:1853
+[ModuleService][constructor]: starting index-CIaugmA7.js:31:5042
+[ModuleService] Running under Vite (browser). index-CIaugmA7.js:31:5115
+[ModuleService][constructor]: starting index-CIaugmA7.js:31:5042
+[ModuleService] Running under Vite (browser). index-CIaugmA7.js:31:5115
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIaugmA7.js:48:12947
+[SHELL] [DEBUG] [Main] init(): completed index-CIaugmA7.js:48:1853
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIaugmA7.js:48:12947
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] starting bootstrapShell() index-CIaugmA7.js:48:1853
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-CIaugmA7.js:31:3156
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-CIaugmA7.js:48:1853
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-CIaugmA7.js:53:8531
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-CIaugmA7.js:53:7301
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-CIaugmA7.js:53:7301
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [Main] Discovering UI system adapters index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UiAdapterDiscovery] Raw Modules found: 
+Object { "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/bulma-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/material-design-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/plain-adapter.service.ts": {…} }
+index-CIaugmA7.js:48:1853
+[SHELL] [ERROR] Failed to instantiate adapter 
+Object { path: "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts", error: TypeError }
+index-CIaugmA7.js:48:1975
+[BulmaAdapterService] constructor() index-CIaugmA7.js:53:22592
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/bulma-adapter.service.ts" }
+index-CIaugmA7.js:48:1934
+[MaterialDesignAdapter] constructor() index-CIaugmA7.js:53:25075
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/material-design-adapter.service.ts" }
+index-CIaugmA7.js:48:1934
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/plain-adapter.service.ts" }
+index-CIaugmA7.js:48:1934
+[SHELL] [DEBUG] [Main] UI adapters registered 
+Array(3) [ "bootstrap-538", "bulma", "material-design" ]
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-CIaugmA7.js:48:1853
+[SysCacheService] Eager load starting index-CIaugmA7.js:48:4080
+[PHASE][Cache] shellConfig 
+Object { source: "static", version: 1 }
+index-CIaugmA7.js:65:6634
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-538", "bulma", "material-design" ]
+index-CIaugmA7.js:48:22070
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-CIaugmA7.js:48:22202
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bulma/descriptor.json index-CIaugmA7.js:48:22202
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-CIaugmA7.js:48:22202
+[SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-CIaugmA7.js:48:1853
+[SysCacheService] UI systems cached 
+Object { simpleCount: 3, fullCount: 3, source: "static" }
+index-CIaugmA7.js:48:6420
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-CIaugmA7.js:48:18595
+[SysCacheService] Load complete index-CIaugmA7.js:48:4685
+[CSS-DIAG] Cache loaded (static) 
+Object {  }
+index-CIaugmA7.js:31:3156
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] resolutionMode: FULL_CONTEXT index-CIaugmA7.js:48:1853
+[PHASE 2][ConfigService] Promote resolved shell config index-CIaugmA7.js:48:17463
+[SHELL] [DEBUG] [Main] Shell config promoted 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CIaugmA7.js:48:1853
+[PHASE][Cache] shellConfig 
+Object { source: "resolved", version: 14 }
+index-CIaugmA7.js:65:6634
+[SysCacheService] Resolved shell config applied 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", source: "resolved" }
+index-CIaugmA7.js:48:7066
+[SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-CIaugmA7.js:48:1853
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "bootstrap-538" }
+index-CIaugmA7.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-CIaugmA7.js:48:1853
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-CIaugmA7.js:48:23307
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css", order: (2) […] }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bridge.css", order: (3) […] }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" }
+index-CIaugmA7.js:31:3156
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] activate:start Adapter activation started undefined index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] lifecycle:activate:start Activating Bootstrap 5.3.8 adapter 
+Object { systemId: "bootstrap-538" }
+index-CIaugmA7.js:48:1894
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] descriptor:loaded:mappings Concept mappings loaded 
+Array(4) [ "button", "card", "input", "formGroup" ]
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:init Initial mapAll() pass undefined index-CIaugmA7.js:48:1853
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:all:start Running full mapping pass undefined index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:concept [Ti] mapButtons() undefined index-CIaugmA7.js:48:1894
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:resolve Resolved mapping for 'button' 
+Object { class: "btn btn-primary" }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:concept Mapping concept 'button' 
+Object { selector: "button[cdButton], button.cd-button", count: 0 }
+index-CIaugmA7.js:48:1853
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:concept [Ti] mapInputs() undefined index-CIaugmA7.js:48:1894
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:resolve Resolved mapping for 'input' 
+Object { class: "form-control" }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:concept Mapping concept 'input' 
+Object { selector: "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]", count: 0 }
+index-CIaugmA7.js:48:1853
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:concept [Ti] mapFormGroups() undefined index-CIaugmA7.js:48:1894
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:resolve Resolved mapping for 'formGroup' 
+Object { class: "mb-3" }
+index-CIaugmA7.js:48:1853
+[SHELL] [DEBUG] [UI-ADAPTER:bootstrap-538] map:concept Mapping concept 'formGroup' 
+Object { selector: ".cd-form-field", count: 0 }
+index-CIaugmA7.js:48:1853
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:concept [Ti] mapTabs() undefined index-CIaugmA7.js:48:1894
+[CSS-DIAG] [Bootstrap538Adapter] mapTabs() 
+Object { count: 0 }
+index-CIaugmA7.js:31:3156
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:concept [Ti] mapOtherConcepts() undefined index-CIaugmA7.js:48:1894
+[CSS-DIAG] [Bootstrap538Adapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-CIaugmA7.js:31:3156
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] map:all:complete Mapping pass complete undefined index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] observer:attach Attaching MutationObserver undefined index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] lifecycle:activate:complete Bootstrap adapter activated 
+Object { systemId: "bootstrap-538" }
+index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] activate:end Adapter activation completed undefined index-CIaugmA7.js:48:1894
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "bootstrap-538" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "bootstrap-538" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "bootstrap-538" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme assets loaded 
+Object { themeId: "dark" }
+index-CIaugmA7.js:31:3156
+[UITHEMENORMALIZER] [DEBUG] Theme normalized 
+Object { id: "dark", source: "static", uiSystem: "bootstrap-538" }
+index-CIaugmA7.js:48:1853
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-CIaugmA7.js:31:3156
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { logger: {…}, descriptor: {…}, currentPhase: "init", observer: MutationObserver, appliedSet: WeakSet(5), adapterId: "bootstrap-538", meta: {…} }
+index-CIaugmA7.js:48:25759
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-CIaugmA7.js:48:25958
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-CIaugmA7.js:48:26052
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] theme:apply:start Applying theme 'dark' undefined index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] theme:apply:start Applying theme 'dark' 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] theme:apply:complete Theme 'dark' applied undefined index-CIaugmA7.js:48:1894
+[SHELL] [INFO] [UI-ADAPTER:bootstrap-538] theme:apply:end Theme '[object Object]' applied undefined index-CIaugmA7.js:48:1894
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-CIaugmA7.js:31:3156
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-CIaugmA7.js:31:3156
+ThemeService::loadThemeConfig(default) index-CIaugmA7.js:48:2318
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-CIaugmA7.js:31:3156
+[ModuleService][constructor]: starting index-CIaugmA7.js:31:5042
+[ModuleService] Running under Vite (browser). index-CIaugmA7.js:31:5115
+[Preload] Loading dev-sync index-CIaugmA7.js:31:7400
+ModuleService::loadModule()/01: index-CIaugmA7.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CIaugmA7.js:31:8202
+[ModuleService] 1 index-CIaugmA7.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-CIaugmA7.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-CIaugmA7.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-CIaugmA7.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-CIaugmA7.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 07/01/2026, 15:47:53 index-CIaugmA7.js:31:8997
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-CIaugmA7.js:31:7696
+[Preload] Completed IdeAgentService index-CIaugmA7.js:31:7795
+[Preload] Loading dev-sync index-CIaugmA7.js:31:7400
+ModuleService::loadModule()/01: index-CIaugmA7.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CIaugmA7.js:31:8202
+[ModuleService] 1 index-CIaugmA7.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-CIaugmA7.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-CIaugmA7.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-CIaugmA7.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-CIaugmA7.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 07/01/2026, 15:47:53 index-CIaugmA7.js:31:8997
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-CIaugmA7.js:31:7696
+[Preload] Completed IdeAgentClientService index-CIaugmA7.js:31:7795
+ModuleService::loadModule()/01: index-CIaugmA7.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-CIaugmA7.js:31:8202
+[ModuleService] 1 index-CIaugmA7.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-CIaugmA7.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-CIaugmA7.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-CIaugmA7.js:31:8757
+[ModuleService] Loaded 'cd-user' (Vite mode) at 07/01/2026, 15:47:53 index-CIaugmA7.js:31:8997
+ModuleService::loadModule()/01: index-CIaugmA7.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-CIaugmA7.js:31:8202
+[ModuleService] 1 index-CIaugmA7.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-CIaugmA7.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
+index-CIaugmA7.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-CIaugmA7.js:31:8757
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-CIaugmA7.js:31:8909
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 07/01/2026, 15:47:53 index-CIaugmA7.js:31:8997
+ModuleService::loadModule()/01: index-CIaugmA7.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/moduleman/view/index.js index-CIaugmA7.js:31:8202
+[ModuleService] 1 index-CIaugmA7.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/moduleman/view/index.js index-CIaugmA7.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "moduleman-consumer-resource", moduleName: "consumer-resource", moduleGuid: "consr-0001-0000-0000", controllers: (2) […], menu: (1) […], isDefault: false }
+index-CIaugmA7.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-CIaugmA7.js:31:8757
+[ModuleService] Loaded module metadata passively: moduleman. Setup skipped. index-CIaugmA7.js:31:8909
+[ModuleService] Loaded 'moduleman' (Vite mode) at 07/01/2026, 15:47:53 index-CIaugmA7.js:31:8997
+[CSS-DIAG] Modules Loaded 
+```
+
+////////////////////////////////////////////////////
+
+I am seeing the following in the logs:
+```log
+[SHELL] [ERROR] Failed to instantiate adapter 
+Object { path: "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts", error: TypeError }
+​
+error: TypeError: can't access property "id", e is null
+​
+path: "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts"
+​
+<prototype>: Object { … }
+```
+Is it ok to ignore this for now.
+
+/////////////////////////////////
+
+You had earlier given the following options for moving foward and we opted for A:
+Can we say that A is now done and is it a good time to move to B?
+
+Option A (safest)
+
+👉 Implement UiThemeNormalizer
+(low risk, high clarity)
+
+Option B (structural)
+
+👉 Fully finalize BaseUiAdapter lifecycle + phases
+
+Option C (confidence)
+
+///////////////////////////////
+
+I have noticed that we already had UiAdapterPhase.
+We need to integrate the two without breaking.
+It is good coincidence that the earlier one was already in caps snake.
+
+Existing:
+```ts
+export enum UiAdapterPhase {
+  INIT = "init",
+  SHELL_READY = "shell_ready",
+  MENU_READY = "menu_ready",
+  CONTROLLER_READY = "controller_ready",
+  DOM_STABLE = "dom_stable",
+}
+```
+
+New one
+```ts
+export enum UiAdapterPhase {
+  CREATED = "created",
+  INITIALIZED = "initialized",
+  ACTIVATED = "activated",
+  MAPPED = "mapped",
+  OBSERVING = "observing",
+  THEMED = "themed",
+}
+```
+
+////////////////////////////////////////
+Below is the current state of BaseUiAdapter.
+You can apply the facilities we have just implemented on the appropriate methods as envisioned.
+You can then output for me the whole refactored class.
+After this, I will then share Bootstrap538AdapterService for you to update so we can run and test the effects.
+
+
+```ts
+import {
+  CdUiContainerType,
+  CdUiControlType,
+  CdUiLayoutDescriptor,
+  CdUiLayoutType,
+  IUiSystemAdapter,
+  UiAdapterCapabilities,
+  UiAdapterMeta,
+  UiAdapterStatus,
+} from "../models/ui-system-adaptor.model";
+import { UiSystemDescriptor } from "../../dev-descriptor/models/ui-system-descriptor.model";
+import { UiThemeDescriptor } from "../../dev-descriptor/models/ui-theme-descriptor.model";
+import { LoggerService } from "../../../utils/logger.service";
+import {
+  UI_ADAPTER_LIFECYCLE_ORDER,
+  UiAdapterLifecycle,
+  UiAdapterPhase,
+} from "../models/ui-system-introspector.model";
+
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+  protected logger = new LoggerService({
+    context: this.constructor.name,
+  });
+  protected descriptor: UiSystemDescriptor | null = null;
+
+  abstract readonly adapterId: string;
+
+  // Must be provided by every adapter
+  // protected abstract readonly meta: UiAdapterMeta;
+  protected meta!: UiAdapterMeta;
+  protected abstract readonly capabilities: UiAdapterCapabilities;
+
+  /** Internal adapter lifecycle */
+  protected lifecycle: UiAdapterLifecycle = UiAdapterLifecycle.CREATED;
+
+  /* ------------------------------------------------------------------
+   * Phase management (NEW)
+   * ------------------------------------------------------------------ */
+
+  protected shellPhase: UiAdapterPhase = UiAdapterPhase.INIT;
+
+  protected setPhase(phase: UiAdapterPhase, reason?: string): void {
+    // const x = new Bootstrap538AdapterService();
+    if (this.shellPhase === phase) return;
+
+    const previous = this.shellPhase;
+    this.shellPhase = phase;
+
+    this.log("info", "phase:change", `Phase changed ${previous} → ${phase}`, {
+      reason,
+    });
+  }
+
+  protected isPhaseAtLeast(phase: UiAdapterPhase): boolean {
+    const order = [
+      UiAdapterPhase.INIT,
+      UiAdapterPhase.SHELL_READY,
+      UiAdapterPhase.MENU_READY,
+      UiAdapterPhase.CONTROLLER_READY,
+      UiAdapterPhase.DOM_STABLE,
+    ];
+    return order.indexOf(this.shellPhase) >= order.indexOf(phase);
+  }
+
+  protected requirePhase(phase: UiAdapterPhase, action: string): boolean {
+    if (!this.isPhaseAtLeast(phase)) {
+      this.log(
+        "debug",
+        "phase:skip",
+        `Skipped '${action}' — phase '${this.shellPhase}' < '${phase}'`
+      );
+      return false;
+    }
+    return true;
+  }
+
+  protected transition(next: UiAdapterLifecycle) {
+    this.logger.debug(
+      `[UI-ADAPTER:${this.adapterId}] lifecycle ${this.lifecycle} → ${next}`
+    );
+    this.lifecycle = next;
+  }
+
+  /** Ensures adapter is at or beyond the required lifecycle phase */
+  protected assertLifecycle(
+    required: UiAdapterLifecycle,
+    action?: string
+  ): void {
+    const currentIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(this.lifecycle);
+    const requiredIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(required);
+
+    if (currentIndex < requiredIndex) {
+      const message = [
+        `Lifecycle violation`,
+        `required=${required}`,
+        `current=${this.lifecycle}`,
+        action ? `action=${action}` : null,
+      ]
+        .filter(Boolean)
+        .join(" | ");
+
+      this.logger.error(message);
+
+      throw new Error(`[UiAdapterLifecycleError] ${message}`);
+    }
+  }
+
+  protected markInitialized() {
+    this.transitionTo(UiAdapterLifecycle.INITIALIZED);
+  }
+
+  protected markActivated() {
+    this.transitionTo(UiAdapterLifecycle.ACTIVATED);
+  }
+
+  /** Controlled lifecycle transition */
+  protected transitionTo(next: UiAdapterLifecycle): void {
+    const currentIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(this.lifecycle);
+    const nextIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(next);
+
+    if (nextIndex !== currentIndex + 1) {
+      this.logger.warn(
+        `Non-linear lifecycle transition: ${this.lifecycle} → ${next}`
+      );
+    }
+
+    this.logger.debug(`Lifecycle transition: ${this.lifecycle} → ${next}`);
+
+    this.lifecycle = next;
+  }
+
+  public onShellPhase(phase: UiAdapterPhase) {
+    this.shellPhase = phase;
+    this.logger.debug(`[UI-ADAPTER:${this.adapterId}] shell phase → ${phase}`);
+  }
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
+  }
+
+  public getMeta(): UiAdapterMeta | null {
+    return this.meta ?? null;
+  }
+
+  // optional convenience
+  public get id(): string {
+    return this.meta?.id;
+  }
+
+  public get version(): string {
+    return this.meta?.version;
+  }
+
+  public get status() {
+    return this.meta?.status;
+  }
+
+  /* ------------------------------------------------------------------
+   * Public lifecycle (stable API)
+   * ------------------------------------------------------------------ */
+
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    this.descriptor = descriptor ?? null;
+
+    this.log("info", "activate:start", "Adapter activation started");
+
+    if (this.meta.status !== UiAdapterStatus.ACTIVE) {
+      this.log(
+        "warn",
+        "adapter:status",
+        `Adapter status = ${this.meta.status}`
+      );
+    }
+
+    this.beforeActivate(descriptor);
+    await this.onActivate(descriptor);
+    this.afterActivate(descriptor);
+
+    this.log("info", "activate:end", "Adapter activation completed");
+  }
+
+  async deactivate(): Promise<void> {
+    this.log("info", "deactivate:start", "Adapter deactivation started");
+
+    await this.onDeactivate();
+
+    this.log("info", "deactivate:end", "Adapter deactivation completed");
+    this.descriptor = null;
+  }
+
+  async applyTheme(theme: UiThemeDescriptor): Promise<void> {
+    this.log(
+      "info",
+      "theme:apply:start",
+      `Applying theme '${theme.id ?? theme.name ?? "unknown"}'`
+    );
+    if (!theme) {
+      this.log("debug", "theme:skip", "No theme descriptor provided");
+      return;
+    }
+
+    // this.log("info", "theme:apply:start", `Applying theme '${theme}'`);
+
+    this.beforeApplyTheme(theme);
+    this.onApplyTheme(theme);
+    this.afterApplyTheme(theme);
+
+    this.log("info", "theme:apply:end", `Theme '${theme}' applied`);
+  }
+
+  /* ------------------------------------------------------------------
+   * Lifecycle hooks (override as needed)
+   * ------------------------------------------------------------------ */
+
+  protected beforeActivate(_descriptor: UiSystemDescriptor): void {}
+  protected afterActivate(_descriptor: UiSystemDescriptor): void {}
+  protected abstract onActivate(descriptor: UiSystemDescriptor): Promise<void>;
+
+  protected beforeDeactivate(): void {}
+  protected async onDeactivate(): Promise<void> {}
+  protected afterDeactivate(): void {}
+
+  protected beforeApplyTheme(_theme: UiThemeDescriptor): void {}
+  protected abstract onApplyTheme(theme: UiThemeDescriptor): void;
+  protected afterApplyTheme(_theme: UiThemeDescriptor): void {}
+
+  /* ------------------------------------------------------------------
+   * DOM-stable signaling (NEW, optional)
+   * ------------------------------------------------------------------ */
+
+  /**
+   * Call this once the UI shell + controllers + directives are settled.
+   * Typically triggered by Shell / Menu / Controller services.
+   */
+  public markDomStable(reason?: string): void {
+    this.setPhase(UiAdapterPhase.DOM_STABLE, reason);
+  }
+
+  protected createTabsSkeleton(tabsId: string): {
+    nav: HTMLUListElement;
+    content: HTMLDivElement;
+  } {
+    const nav = document.createElement("ul");
+    nav.setAttribute("role", "tablist");
+
+    const content = document.createElement("div");
+
+    return { nav, content };
+  }
+
+  protected createTabHeader(
+    tabId: string,
+    label: string,
+    icon?: string,
+    active = false
+  ): HTMLLIElement {
+    const li = document.createElement("li");
+    li.className = "nav-item";
+    li.setAttribute("role", "presentation");
+
+    const btn = document.createElement("button");
+    btn.className = `nav-link ${active ? "active" : ""}`;
+    btn.id = `${tabId}-tab`;
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(active));
+    btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+    if (icon) {
+      const i = document.createElement("i");
+      i.className = `bi bi-${icon} me-2`;
+      btn.appendChild(i);
+    }
+
+    btn.appendChild(document.createTextNode(label));
+    li.appendChild(btn);
+
+    return li;
+  }
+
+  protected createTabPane(tabId: string, active = false): HTMLDivElement {
+    const pane = document.createElement("div");
+    pane.className = `tab-pane fade ${active ? "show active" : ""}`;
+    pane.id = `${tabId}-pane`;
+    pane.setAttribute("role", "tabpanel");
+    pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+    return pane;
+  }
+
+  protected mapLayoutByDescriptor(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    if (!this.supportsLayout(descriptor.layoutType)) return;
+    this.mapLayout(descriptor, parent);
+  }
+
+  protected mapLayout(
+    descriptor: CdUiLayoutDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    /* intentionally empty */
+  }
+
+  /* ------------------------------------------------------------------
+   * Capability guards (centralized + traced)
+   * ------------------------------------------------------------------ */
+
+  public getCapabilities(): Readonly<UiAdapterCapabilities> {
+    return this.capabilities;
+  }
+
+  protected supportsLayout(type: CdUiLayoutType): boolean {
+    const supported = this.capabilities.layouts?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:layout",
+        `Layout '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  protected supportsContainer(type: CdUiContainerType): boolean {
+    const supported = this.capabilities.containers?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:container",
+        `Container '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  protected supportsControl(type: CdUiControlType): boolean {
+    const supported = this.capabilities.controls?.includes(type) ?? false;
+
+    if (!supported) {
+      this.log(
+        "debug",
+        "capability:control",
+        `Control '${type}' not supported — skipped`
+      );
+    }
+
+    return supported;
+  }
+
+  /* ------------------------------------------------------------------
+   * Logging helpers (DO NOT override)
+   * ------------------------------------------------------------------ */
+
+  protected log(
+    level: "debug" | "info" | "warn" | "error",
+    code: string,
+    message: string,
+    meta?: any
+  ) {
+    const prefix = `[UI-ADAPTER:${this.meta?.id ?? "unknown"}] ${code}`;
+
+    switch (level) {
+      case "debug":
+        this.logger.debug(prefix, message, meta);
+        break;
+      case "info":
+        this.logger.info(prefix, message, meta);
+        break;
+      case "warn":
+        this.logger.warn(prefix, message, meta);
+        break;
+      case "error":
+        this.logger.error(prefix, message, meta);
+        break;
+    }
+  }
+
+  /* ------------------------------------------------------------------
+   * Explicit helpers for migration clarity
+   * ------------------------------------------------------------------ */
+
+  protected logLegacy(phase: string, message: string, data?: unknown): void {
+    this.log("warn", `legacy:${phase}`, message, data);
+  }
+
+  protected logDeprecated(
+    phase: string,
+    message: string,
+    data?: unknown
+  ): void {
+    this.log("warn", `deprecated:${phase}`, message, data);
+  }
+}
+
+```
+
+////////////////////////////////////////
+Below is the latest state of Bootstrap538AdapterService.
+You can update it with the latest facilites that we have implemented - where appropriate.
+```ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+  protected readonly capabilities: UiAdapterCapabilities;
+  protected readonly meta: UiAdapterMeta;
+  readonly adapterId = "bootstrap-538";
+
+  public getCapabilities(): UiAdapterCapabilities {
+    console.log(`[${this.constructor.name}] getCapabilities() `);
+    return {
+      layouts: [CdUiLayoutType.GRID],
+      containers: [
+        CdUiContainerType.TABS,
+        CdUiContainerType.TAB,
+        CdUiContainerType.CARD,
+      ],
+      controls: [
+        CdUiControlType.BUTTON,
+        CdUiControlType.TEXT_FIELD,
+        CdUiControlType.SELECT,
+        CdUiControlType.CHECKBOX,
+        CdUiControlType.SWITCH,
+      ],
+    };
+  }
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.log(
+      "info",
+      "lifecycle:activate:start",
+      "Activating Bootstrap 5.3.8 adapter",
+      { systemId: descriptor?.id }
+    );
+
+    if (!descriptor) {
+      this.log("error", "lifecycle:activate:error", "Descriptor is null");
+      return;
+    }
+
+    this.descriptor = descriptor;
+
+    if (!descriptor.conceptMappings) {
+      this.log(
+        "warn",
+        "descriptor:missing:mappings",
+        "descriptor.conceptMappings missing",
+        descriptor
+      );
+    } else {
+      this.log(
+        "debug",
+        "descriptor:loaded:mappings",
+        "Concept mappings loaded",
+        Object.keys(descriptor.conceptMappings)
+      );
+    }
+
+    // Initial mapping pass
+    this.log("debug", "map:init", "Initial mapAll() pass");
+    this.mapAll();
+
+    // Start observing DOM mutations
+    this.observeMutations();
+
+    this.log(
+      "info",
+      "lifecycle:activate:complete",
+      "Bootstrap adapter activated",
+      { systemId: descriptor.id }
+    );
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    this.log("info", "lifecycle:deactivate:start", "Deactivating adapter");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+    } catch {
+      /* no-op */
+    }
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        this.log(
+          "debug",
+          "observer:disconnected",
+          "MutationObserver disconnected"
+        );
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    this.log("info", "lifecycle:deactivate:complete", "Adapter deactivated");
+  }
+
+  protected onApplyTheme(theme: UiThemeDescriptor): void {
+    if (!theme) {
+      this.log("warn", "theme:apply:skip", "Theme is null");
+      return;
+    }
+
+    this.log(
+      "info",
+      "theme:apply:start",
+      `Applying theme '${theme.id}'`,
+      theme
+    );
+
+    const root = document.documentElement;
+
+    // Remove previous prefixed classes
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    // CSS variables
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    // Global classes
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.log("info", "theme:apply:complete", `Theme '${theme.id}' applied`);
+  }
+
+  /**
+   * mapByConcept() is designed for idempotent, element-level decoration based on a selector + mapping
+      That matches:
+        buttons
+        inputs
+        form groups
+        checkboxes
+        selects
+        switches
+      It does not match:
+        structural transformation
+        DOM re-parenting
+        component synthesis
+        composite UI orchestration
+   * @param concept 
+   * @param selector 
+   * @returns 
+   */
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+    this.log("debug", "map:concept", `Mapping concept '${concept}'`, {
+      selector,
+      count: nodes.length,
+    });
+
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  // // ---------------------------------------------------------------------------
+  // // ACTIVATION
+  // // ---------------------------------------------------------------------------
+
+  protected decorateTabs(nav: HTMLElement, content: HTMLElement) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabs()`
+    );
+    nav.className = "nav nav-tabs mb-3";
+    content.className = "tab-content";
+  }
+
+  protected decorateTabHeader(li: HTMLElement, active: boolean) {
+    this.log(
+      "debug",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabHeader()`
+    );
+    li.classList.add("nav-item");
+
+    const btn = li.querySelector("button")!;
+    btn.classList.add("nav-link");
+    if (active) btn.classList.add("active");
+  }
+
+  protected decorateTabPane(pane: HTMLElement, active: boolean) {
+    this.log(
+      "info",
+      "map:concept",
+      `[${this.constructor.name}] decorateTabPane()`
+    );
+    pane.classList.add("tab-pane", "fade");
+    if (active) pane.classList.add("show", "active");
+  }
+
+  // ---------------------------------------------------------------------------
+  // CONCEPT MAPPING
+  // ---------------------------------------------------------------------------
+  
+  private getMapping(concept: string): Mapping {
+    if (!this.descriptor?.conceptMappings) return undefined;
+
+    const mapping = (this.descriptor.conceptMappings as any)[concept];
+
+    this.log(
+      "debug",
+      "map:resolve",
+      `Resolved mapping for '${concept}'`,
+      mapping
+    );
+
+    return mapping;
+  }
+
+  
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      // Update attributes only
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    this.log("debug", "map:apply", "Applying mapping to element", {
+      tag: el.tagName,
+      mapping,
+    });
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  // ---------------------------------------------------------------------------
+  // SPECIFIC MAPPING PASSES
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapButtons()`);
+    this.mapByConcept("button", "button[cdButton], button.cd-button");
+  }
+
+  private mapInputs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapInputs()`);
+    this.mapByConcept(
+      "input",
+      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+    );
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapTabs()`);
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapFormGroups() {
+    this.log(
+      "info",
+      "map:concept",
+      `[${this.constructor.name}] mapFormGroups()`
+    );
+    this.mapByConcept("formGroup", ".cd-form-field");
+  }
+
+  private mapOtherConcepts() {
+    this.log(
+      "info",
+      "map:concept",
+      `[${this.constructor.name}] mapOtherConcepts()`
+    );
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+
+    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+
+      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+    });
+  }
+
+  private mapByDescriptor(descriptor: CdUiDescriptor, parent?: HTMLElement) {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] mapByDescriptor('${descriptor.role}')`
+    );
+    // 1. Resolve target elements
+    const el = parent || document;
+
+    // 2. Map based on role
+    switch (descriptor.role) {
+      case CdUiRole.CONTROL:
+        this.applyControlDescriptor(
+          descriptor as CdUiControlDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.CONTAINER:
+        this.applyContainerDescriptor(
+          descriptor as CdUiContainerDescriptor,
+          el as HTMLElement
+        );
+        break;
+
+      case CdUiRole.COMPOSITE:
+        // Composite could be recursive for groups or sections
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+
+      case CdUiRole.LAYOUT:
+        // Layout mapping if needed (grid, flex, etc.)
+        descriptor.children?.forEach((child) =>
+          this.mapByDescriptor(child, el as HTMLElement)
+        );
+        break;
+    }
+  }
+
+  protected mapGridByDescriptor(
+    descriptor: CdUiGridDescriptor,
+    parent: HTMLElement | Document
+  ): void {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] mapGridByDescriptor()`
+    );
+    const grid = document.createElement("div");
+    grid.classList.add("row");
+
+    descriptor.children?.forEach((child) => {
+      const col = document.createElement("div");
+      col.classList.add(this.resolveGridColumnClass(descriptor));
+      grid.appendChild(col);
+
+      this.mapByDescriptor(child, col);
+    });
+
+    parent.appendChild(grid);
+  }
+
+  protected resolveGridColumnClass(descriptor: CdUiGridDescriptor): string {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] resolveGridColumnClass()`
+    );
+    const classes: string[] = [];
+
+    const span = descriptor.span;
+    const responsive = descriptor.responsive;
+
+    // Default span
+    if (typeof span === "number") {
+      classes.push(`col-${span}`);
+    } else {
+      classes.push("col"); // auto
+    }
+
+    // Responsive overrides
+    if (responsive) {
+      Object.entries(responsive).forEach(([bp, value]) => {
+        if (typeof value === "number") {
+          classes.push(`col-${bp}-${value}`);
+        }
+      });
+    }
+
+    return classes.join(" ");
+  }
+
+  private applyControlDescriptor(
+    descriptor: CdUiControlDescriptor,
+    parent: HTMLElement
+  ) {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] applyControlDescriptor('${descriptor.controlType}')`
+    );
+    const selectorMap: Record<CdUiControlType, string> = {
+      [CdUiControlType.BUTTON]: "button[cdButton], button.cd-button",
+      [CdUiControlType.TEXT_FIELD]:
+        "input[cdFormControl], textarea[cdFormControl]",
+      [CdUiControlType.SELECT]: "select[cdFormControl]",
+      [CdUiControlType.CHECKBOX]: "input[type=checkbox]",
+      [CdUiControlType.SWITCH]: "input[type=checkbox].cd-switch",
+    };
+
+    const selector = selectorMap[descriptor.controlType];
+    if (!selector) return;
+
+    const mapping = this.resolveControlMapping(descriptor);
+    if (!mapping) return;
+
+    const nodes = parent.querySelectorAll<HTMLElement>(selector);
+    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  protected resolveControlMapping(
+    descriptor: CdUiControlDescriptor
+  ): UiConceptMapping | undefined {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] resolveControlMapping('${descriptor.controlType}')`
+    );
+    return this.descriptor?.conceptMappings?.controls?.[descriptor.controlType];
+  }
+
+  private mapAll() {
+    this.log("info", "map:all:start", "Running full mapping pass");
+
+    try {
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      this.log("error", "map:all:error", "mapAll failed", err);
+    }
+
+    this.log("info", "map:all:complete", "Mapping pass complete");
+  }
+
+  private applyContainerDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement
+  ) {
+    this.log(
+      "info",
+      "map:descriptor",
+      `[${this.constructor.name}] applyContainerDescriptor('${descriptor.containerType}')`
+    );
+    switch (descriptor.containerType) {
+      case CdUiContainerType.TABS:
+        this.mapTabsByDescriptor(descriptor, parent);
+        break;
+
+      case CdUiContainerType.CARD:
+        // Could add card-specific mapping
+        break;
+
+      case CdUiContainerType.SECTION:
+        // Generic container mapping
+        break;
+    }
+
+    // Recursively map children
+    descriptor.children?.forEach((child) =>
+      this.mapByDescriptor(child, parent)
+    );
+  }
+
+  private bindAction(el: HTMLElement, action?: CdUiAction) {
+    this.log("info", "map:action", `[${this.constructor.name}] bindAction()`);
+    if (!action) return;
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      switch (action.type) {
+        case "navigate":
+          // your routing code here
+          break;
+        case "submit":
+          // submit form
+          break;
+        case "call_fx":
+          if (
+            action.target &&
+            typeof (window as any)[action.target] === "function"
+          ) {
+            (window as any)[action.target](action.params);
+          }
+          break;
+        case "toggle_target":
+          if (action.target) {
+            const targetEl = document.getElementById(action.target);
+            targetEl?.classList.toggle("d-none");
+          }
+          break;
+      }
+    });
+  }
+
+  protected mapTabsByDescriptor(
+    descriptor: CdUiContainerDescriptor,
+    parent: HTMLElement | Document = document
+  ): void {
+    this.log(
+      "info",
+      "descriptor:container:tabs",
+      "Mapping tabs via descriptor",
+      descriptor
+    );
+
+    if (descriptor.containerType !== CdUiContainerType.TABS) return;
+
+    const host = parent.querySelector<HTMLElement>(`cd-tabs#${descriptor.id}`);
+    if (!host || this.appliedSet.has(host)) return;
+
+    const { nav, content } = this.createTabsSkeleton(descriptor.id);
+    this.decorateTabs(nav, content);
+
+    descriptor.children?.forEach((child, index) => {
+      if (!isTabDescriptor(child)) return;
+
+      const tabId = `${descriptor.id}-${child.id}`;
+      const active = index === 0;
+
+      const li = this.createTabHeader(
+        tabId,
+        child.label ?? child.id,
+        child.icon,
+        active
+      );
+      this.decorateTabHeader(li, active);
+      nav.appendChild(li);
+
+      const pane = this.createTabPane(tabId, active);
+      this.decorateTabPane(pane, active);
+
+      const existing = host.querySelector<HTMLElement>(`cd-tab#${child.id}`);
+      if (existing) {
+        pane.append(...Array.from(existing.childNodes));
+      }
+
+      content.appendChild(pane);
+
+      child.children?.forEach((c) => this.mapByDescriptor(c, pane));
+    });
+
+    const fragment = document.createDocumentFragment();
+    fragment.append(nav, content);
+    host.replaceWith(fragment);
+
+    this.appliedSet.add(host);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM OBSERVER
+  // ---------------------------------------------------------------------------
+  
+  private observeMutations() {
+    if (this.observer) {
+      this.log("debug", "observer:skip", "Observer already attached");
+      return;
+    }
+
+    this.log("info", "observer:attach", "Attaching MutationObserver");
+
+    this.observer = new MutationObserver(() => {
+      this.log(
+        "debug",
+        "observer:mutation",
+        "DOM mutation detected → scheduling mapAll()"
+      );
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      this.log("error", "observer:error", "Failed to attach observer", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+
+/////////////////////////////////////////////
+
+Confirm where we are in opton B based on the items below.
+We seem to have done and tested most of the items in both BaseUiAdaptor and Bootstrap538AdapterService.
+Option B (structural)
+👉 Fully finalize BaseUiAdapter lifecycle + phases
+  - Enforce lifecycle transitions (assertLifecycle)
+  - Wire lifecycle into applyTheme
+  - Add adapter teardown / reapply
+  - Or mark legacy phases as @deprecated (doc-only)
+
+/////////////////////////////////////////
+
+It is good you have brought this subject up and have done some clarifications that also reminds me of important desicions I was battling with.
+I will be brief in note form:
+1. Original intent: Ability to 'switch-theme' and 'switch-ui-system' on a live system.
+2. In the earlier legacy status when everything seemed to have been working ok, all the effort to try and 'switch-theme' or 'switch-ui' was never successfull. I eventually mentally pushed the effort for later but to assume we focus on 'existing configurations before the system is launched'
+3. I eventually settled for development in phases:
+Phase 1: 
+The first is assume the 'live switching' is not a requrement for now (That is where we need to deal with now). 
+Phase 2: 
+The next phase will be to be able to replay 'system-reload' when the application is already up.
+In a simple analogy, is to assume when configurations are change, 'save' would invoke a call Main.app(). Or restart that app when necessary without relying on browser.
+Phase 3:
+When we are able to change configurations smoothly, we will then in an exclusive attempt try effect 'switch-theme' and 'switch-ui-system' without need for the whole 'system-restart'....just neat enginearing work.
+My best reference is how 'Dark Reader' is able to change any web page to dark mode very smoothly.
+But we can get to that later.
+I hope this writeup can allow you to guide the way foward in a more focused steps.
+
+///////////////////////////////////////////
+
+One important consideration that also let me to the above.
+Assuming we have the capacity to 'switch-theme' or 'switch-ui-system', you will find that the practicalities for users to have this power may create chaotic situation. Say a corporate that is unable to enforce its corporate colours because all users have the ability to change the colour scheme.
+Of course examples like 'dark'/'default' is ok for users to have the liberty.
+But when you consider that most of the settings will be a role given to privileged users, then when the privileged user changes the configurations, the effetive change is not immediate change on the privileged user instance but the eventual effect on all users. In fact the effort to do immediate changes by requirement may also mean that all the users who have their instance open would see the changes immediately.  This may tough on user experience and liberty.
+So based on the above, the need for 'live changes' is a subject that can be dealt with later but not now.
+
+///////////////////////////////////
+
+We already had design and implementation documents. With that, we need to practically get the ideas to work. Under normal cirumstances what we end up with may not be exactly what we envisioned a practical version of the original idea. For this I usually defer documentation until we are at the end of a given effort. For now we have to finnish the migration. After the migration we will need to prove that we are able to develop a config ui mapped to cd-shell-config interface. This configuration should be able to change key things in the areas of themes and ui-system - as a POC excersise. Even without completing development of the ui config page, we will be able to do a detail developer documentation.
+Following the above, we will not touch on documentationf for now so we can move to: Locking Option B and move forward to Option C (confidence / hardening),
+
+/////////////////////////////////////////
+Below is the Bootstrap538AdapterService.
+You can refactor it to reflect what is needs to be done before we test it and proceed.
+Kindly give me back the full version so we dong run the risk of introducing another bug.
+```ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+
+  readonly adapterId = "bootstrap-538";
+
+  protected readonly capabilities: UiAdapterCapabilities = {
+    layouts: [CdUiLayoutType.GRID],
+    containers: [
+      CdUiContainerType.TABS,
+      CdUiContainerType.TAB,
+      CdUiContainerType.CARD,
+    ],
+    controls: [
+      CdUiControlType.BUTTON,
+      CdUiControlType.TEXT_FIELD,
+      CdUiControlType.SELECT,
+      CdUiControlType.CHECKBOX,
+      CdUiControlType.SWITCH,
+    ],
+  };
+
+  protected readonly meta: UiAdapterMeta = {
+    id: "bootstrap-538",
+    version: "5.3.8",
+    status: UiAdapterStatus.ACTIVE,
+    vendor: "Bootstrap",
+  };
+
+  /* ======================================================================
+   * ACTIVATION
+   * ====================================================================== */
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.log(
+      "info",
+      "lifecycle:activate:start",
+      "Activating Bootstrap 5.3.8 adapter",
+      { systemId: descriptor?.id }
+    );
+
+    if (!descriptor) {
+      this.log("error", "activate:error", "Descriptor is null");
+      return;
+    }
+
+    this.descriptor = descriptor;
+
+    if (!descriptor.conceptMappings) {
+      this.log(
+        "warn",
+        "descriptor:missing:mappings",
+        "descriptor.conceptMappings missing",
+        descriptor
+      );
+    }
+
+    // Initial mapping pass
+    this.mapAll();
+
+    // DOM observer (continuous mapping)
+    this.observeMutations();
+
+    // Shell-level readiness
+    this.setPhase(
+      UiAdapterPhase.CONTROLLER_READY,
+      "Initial mapping + observer active"
+    );
+
+    // First stable signal (important for shell coordination)
+    this.markDomStable("Initial Bootstrap mapping completed");
+
+    this.log(
+      "info",
+      "lifecycle:activate:complete",
+      "Bootstrap adapter activated",
+      { systemId: descriptor.id }
+    );
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    this.log("info", "lifecycle:deactivate:start", "Deactivating adapter");
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+    } catch {
+      /* no-op */
+    }
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        this.log("debug", "observer:disconnected", "MutationObserver stopped");
+      } catch {}
+      this.observer = null;
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    this.log("info", "lifecycle:deactivate:complete", "Adapter deactivated");
+  }
+
+  /* ======================================================================
+   * THEME APPLICATION
+   * ====================================================================== */
+
+  protected override onApplyTheme(theme: UiThemeDescriptor): void {
+    if (!theme) {
+      this.log("warn", "theme:skip", "Theme descriptor is null");
+      return;
+    }
+
+    const root = document.documentElement;
+
+    // Remove previous prefixed classes
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    // CSS variables
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    // Global classes
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+  }
+
+  /* ======================================================================
+   * CONCEPT MAPPING
+   * ====================================================================== */
+
+  private getMapping(concept: string): Mapping {
+    return (this.descriptor?.conceptMappings as any)?.[concept];
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    document
+      .querySelectorAll<HTMLElement>(selector)
+      .forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    this.log("info", "map:concept", `[${this.constructor.name}] mapTabs()`);
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+    diag_css("[Bootstrap538Adapter] mapTabs()", {
+      count: tabsContainers.length,
+    });
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      // 1. Create Nav Header (ul)
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      // 2. Create Content Container (div)
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        // Create Nav Item (li)
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        // Create Tab Trigger (button)
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.setAttribute("type", "button"); // CRITICAL: Prevents form submission/reloads
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        // Note: We keep data-bs-target for Bootstrap CSS/A11y,
+        // but our listener handles the actual logic.
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        // --- ADDING THE SPA-FRIENDLY LISTENER HERE ---
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // 1. Update Header UI (Remove active from siblings, add to this)
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          // 2. Update Content Panes (Hide all, show target)
+          contentDiv.querySelectorAll(".tab-pane").forEach((p: HTMLElement) => {
+            p.classList.remove("show", "active");
+          });
+          const targetPane = contentDiv.querySelector(`#${tabId}-pane`);
+          if (targetPane) {
+            targetPane.classList.add("show", "active");
+          }
+
+          // 3. Emit Generic Event for Corpdesk Controllers
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+
+          console.log(`[BootstrapAdapter] Tab switched to: ${label}`);
+        });
+
+        // Handle Icon injection
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+        btn.appendChild(document.createTextNode(label));
+
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        // Create the Tab Content Pane
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML; // Move actual view content here
+
+        contentDiv.appendChild(pane);
+      });
+
+      // Final Assembly and Replacement
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(navUl);
+      fragment.appendChild(contentDiv);
+
+      container.replaceWith(fragment);
+
+      // Mark as processed to avoid infinite mutation loops
+      this.appliedSet.add(navUl as any);
+    });
+  }
+
+  private mapAll() {
+    try {
+      this.mapByConcept("button", "button[cdButton], button.cd-button");
+      this.mapByConcept(
+        "input",
+        "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+      );
+      this.mapByConcept("formGroup", ".cd-form-field");
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      this.log("error", "map:all:error", "Mapping failed", err);
+    }
+  }
+
+  private mapOtherConcepts() {
+    const cm = this.descriptor?.conceptMappings || {};
+    Object.keys(cm)
+      .filter((c) => !["button", "input", "formGroup"].includes(c))
+      .forEach((concept) => {
+        const selector = `[data-cd-${concept}], .cd-${concept}`;
+        document
+          .querySelectorAll<HTMLElement>(selector)
+          .forEach((el) =>
+            this.applyMappingToElement(el, (cm as any)[concept])
+          );
+      });
+  }
+
+  /* ======================================================================
+   * DOM OBSERVER
+   * ====================================================================== */
+
+  private observeMutations() {
+    if (this.observer) return;
+
+    this.observer = new MutationObserver(() => {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    } catch (err) {
+      this.log("error", "observer:error", "Failed to attach observer", err);
+      this.observer = null;
+    }
+  }
+}
+
+/* ========================================================================
+ * REGISTRATION
+ * ======================================================================== */
+
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+
+//////////////////////////////////////
+The properties for UiAdapterPhase used seem to refer to UiAdapterLifecycle.
+Was this intentional?
+Current definitions of relevant interfaces.
+```ts
+export enum UiAdapterPhase {
+  INIT = "init",
+  SHELL_READY = "shell_ready",
+  MENU_READY = "menu_ready",
+  CONTROLLER_READY = "controller_ready",
+  DOM_STABLE = "dom_stable",
+}
+
+
+// adapter-internal lifecycle
+export enum UiAdapterLifecycle {
+  CREATED = "created",
+  INITIALIZED = "initialized",
+  ACTIVATED = "activated",
+  MAPPED = "mapped",
+  OBSERVING = "observing",
+  THEMED = "themed",
+}
+
+export const ShellToLifecycleHint: Partial<Record<UiAdapterPhase, UiAdapterLifecycle>> = {
+  [UiAdapterPhase.INIT]: UiAdapterLifecycle.CREATED,
+  [UiAdapterPhase.SHELL_READY]: UiAdapterLifecycle.ACTIVATED,
+  [UiAdapterPhase.DOM_STABLE]: UiAdapterLifecycle.OBSERVING,
+};
+
+export const UI_ADAPTER_LIFECYCLE_ORDER: UiAdapterLifecycle[] = [
+  UiAdapterLifecycle.CREATED,
+  UiAdapterLifecycle.INITIALIZED,
+  UiAdapterLifecycle.ACTIVATED,
+  UiAdapterLifecycle.MAPPED,
+  UiAdapterLifecycle.OBSERVING,
+  UiAdapterLifecycle.THEMED,
+];
+
+```
+
+Instances of UiAdapterLifecycle and UiAdapterPhase as declared in BaseUiAdapter.
+```ts
+export abstract class BaseUiAdapter implements IUiSystemAdapter {
+/** ------------------------------------------------------------------
+   * Adapter lifecycle (NEW architecture)
+   * ------------------------------------------------------------------ */
+  protected lifecycle: UiAdapterLifecycle = UiAdapterLifecycle.CREATED;
+
+  /** ------------------------------------------------------------------
+   * Shell lifecycle phase (legacy + runtime coordination)
+   * ------------------------------------------------------------------ */
+  protected shellPhase: UiAdapterPhase = UiAdapterPhase.INIT;
+}
+```
+
+/////////////////////////////////////////
+In Bootstrap538AdapterService.onActivate() we have a line:
+this.setPhase(UiAdapterPhase.INITIALIZED, "Descriptor attached");
+
+But INITIALIZED is not available in UiAdapterPhase.
+When we update it to UiAdapterLifecycle.INITIALIZED, which is correct but does not match the signature for 
+protected setPhase(phase: UiAdapterPhase, reason?: string): void where it is applied.
+
+Below is the reference.
+```ts
+export class BaseUiAdaptor{
+protected setPhase(phase: UiAdapterPhase, reason?: string): void {
+    if (this.shellPhase === phase) return;
+
+    const previous = this.shellPhase;
+    this.shellPhase = phase;
+
+    this.log("info", "phase:change", `Phase changed ${previous} → ${phase}`, {
+      reason,
+    });
+  }
+}
+```
+Below is the current state of onActivate(), which has errors and requres some way foward.
+```ts
+protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.assertLifecycle(UiAdapterLifecycle.CREATED, "onActivate");
+
+    this.log(
+      "info",
+      "lifecycle:activate:start",
+      "Activating Bootstrap 5.3.8 adapter",
+      { systemId: descriptor?.id }
+    );
+
+    if (!descriptor) {
+      this.log("error", "activate:error", "Descriptor is null");
+      return;
+    }
+
+    this.descriptor = descriptor;
+    this.appliedSet = new WeakSet();
+
+    this.setPhase(UiAdapterLifecycle.INITIALIZED, "Descriptor attached");
+
+    if (!descriptor.conceptMappings) {
+      this.log(
+        "warn",
+        "descriptor:missing:mappings",
+        "descriptor.conceptMappings missing",
+        descriptor
+      );
+    }
+
+    // Initial deterministic mapping pass
+    this.mapAll();
+
+    // DOM observer (continuous mapping)
+    this.observeMutations();
+
+    this.setPhase(
+      UiAdapterPhase.ACTIVATED,
+      "Initial mapping complete and observer active"
+    );
+
+    // Shell-level readiness
+    this.setPhase(
+      UiAdapterPhase.CONTROLLER_READY,
+      "Bootstrap adapter controller ready"
+    );
+
+    // First stable signal (shell coordination)
+    this.markDomStable("Initial Bootstrap mapping completed");
+
+    this.log(
+      "info",
+      "lifecycle:activate:complete",
+      "Bootstrap adapter activated",
+      { systemId: descriptor.id }
+    );
+  }
+```
+
+//////////////////////////////////////////
+This also needs some guidance.
+After setting the right call to assertLifecycle, which requres UiAdapterLifecycle.
+UiAdapterLifecycle does not have CONTROLLER_READY.
+What equivalence do we apply from UiAdapterLifecycle.
+```ts
+this.assertLifecycle(
+      UiAdapterLifecycle.CONTROLLER_READY,
+      "Bootstrap adapter controller ready"
+    );
+
+```
+
+//////////////////////////////////
+
+It is not transitionLifecycle() but assertLifecycle()
+
+What we have is transitionTo() and not transitionLifecycle().
+And it also has just one argument, not two as suggested in the codes that you recommended.
+It is assertLifecycle() the requires two arguments.
+
+Can you redo the two methods agains with the above in mind.
+
+/////////////////////////////////////////
+
+```ts
+protected transitionTo(next: UiAdapterLifecycle): void {
+    const currentIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(this.lifecycle);
+    const nextIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(next);
+
+    if (nextIndex !== currentIndex + 1) {
+      this.logger.warn(
+        `Non-linear lifecycle transition: ${this.lifecycle} → ${next}`
+      );
+    }
+
+    this.logger.debug(`Lifecycle transition: ${this.lifecycle} → ${next}`);
+
+    this.lifecycle = next;
+  }
+
+  protected assertLifecycle(
+    required: UiAdapterLifecycle,
+    action?: string
+  ): void {
+    const currentIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(this.lifecycle);
+    const requiredIndex = UI_ADAPTER_LIFECYCLE_ORDER.indexOf(required);
+
+    if (currentIndex < requiredIndex) {
+      const message = [
+        "Lifecycle violation",
+        `required=${required}`,
+        `current=${this.lifecycle}`,
+        action ? `action=${action}` : null,
+      ]
+        .filter(Boolean)
+        .join(" | ");
+
+      this.logger.error(message);
+      throw new Error(`[UiAdapterLifecycleError] ${message}`);
+    }
+  }
+```
+
+//////////////////////////////////////////////////////
+
+When I place the following at the beginning of onActivate(), the bootstrap-538 is not loaded but the targeted error dissapears as expected.
+```ts
+// 🔑 Idempotency guard
+    if (this.lifecycle !== UiAdapterLifecycle.CREATED) {
+      this.log(
+        "warn",
+        "lifecycle:activate:skipped",
+        "Adapter already activated or activating",
+        { lifecycle: this.lifecycle }
+      );
+      return;
+    }
+
+    this.assertLifecycle(UiAdapterLifecycle.CREATED, "onActivate");
+```
+
+I have included the logs to assist in harmonising the situation.
+```log
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { logger: {…}, descriptor: {…}, lifecycle: "themed", shellPhase: "init", observer: null, appliedSet: WeakSet [], adapterId: "bootstrap-538", capabilities: {…}, meta: {…} }
+index-BphFY5Kj.js:48:13360
+[BulmaAdapterService] constructor() index-BphFY5Kj.js:53:18210
+[UiSystemAdapterRegistry] register: bulma 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
+index-BphFY5Kj.js:48:13360
+[MaterialDesignAdapter] constructor() index-BphFY5Kj.js:53:20693
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [], mdcInitQueued: false, mdcInstances: Set [] }
+index-BphFY5Kj.js:48:13360
+start 1 index-BphFY5Kj.js:65:8526
+[SHELL] [DEBUG] [Main] init(): starting index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-BphFY5Kj.js:48:1853
+[ModuleService][constructor]: starting index-BphFY5Kj.js:31:5042
+[ModuleService] Running under Vite (browser). index-BphFY5Kj.js:31:5115
+[ModuleService][constructor]: starting index-BphFY5Kj.js:31:5042
+[ModuleService] Running under Vite (browser). index-BphFY5Kj.js:31:5115
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BphFY5Kj.js:48:14064
+[SHELL] [DEBUG] [Main] init(): completed index-BphFY5Kj.js:48:1853
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BphFY5Kj.js:48:14064
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] starting bootstrapShell() index-BphFY5Kj.js:48:1853
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-BphFY5Kj.js:31:3156
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-BphFY5Kj.js:48:1853
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-BphFY5Kj.js:53:8531
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-BphFY5Kj.js:53:7301
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-BphFY5Kj.js:53:7301
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [Main] Discovering UI system adapters index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UiAdapterDiscovery] Raw Modules found: 
+Object { "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/bulma-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/material-design-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/plain-adapter.service.ts": {…} }
+index-BphFY5Kj.js:48:1853
+[SHELL] [ERROR] Failed to instantiate adapter 
+Object { path: "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts", error: Error }
+index-BphFY5Kj.js:48:1975
+[BulmaAdapterService] constructor() index-BphFY5Kj.js:53:18210
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/bulma-adapter.service.ts" }
+index-BphFY5Kj.js:48:1934
+[MaterialDesignAdapter] constructor() index-BphFY5Kj.js:53:20693
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/material-design-adapter.service.ts" }
+index-BphFY5Kj.js:48:1934
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/plain-adapter.service.ts" }
+index-BphFY5Kj.js:48:1934
+[SHELL] [DEBUG] [Main] UI adapters registered 
+Array(3) [ "bootstrap-538", "bulma", "material-design" ]
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-BphFY5Kj.js:48:1853
+[SysCacheService] Eager load starting index-BphFY5Kj.js:48:4080
+[PHASE][Cache] shellConfig 
+Object { source: "static", version: 1 }
+index-BphFY5Kj.js:65:6634
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-538", "bulma", "material-design" ]
+index-BphFY5Kj.js:48:23187
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-BphFY5Kj.js:48:23319
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bulma/descriptor.json index-BphFY5Kj.js:48:23319
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-BphFY5Kj.js:48:23319
+[SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-BphFY5Kj.js:48:1853
+[SysCacheService] UI systems cached 
+Object { simpleCount: 3, fullCount: 3, source: "static" }
+index-BphFY5Kj.js:48:6420
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-BphFY5Kj.js:48:19712
+[SysCacheService] Load complete index-BphFY5Kj.js:48:4685
+[CSS-DIAG] Cache loaded (static) 
+Object {  }
+index-BphFY5Kj.js:31:3156
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] resolutionMode: FULL_CONTEXT index-BphFY5Kj.js:48:1853
+[PHASE 2][ConfigService] Promote resolved shell config index-BphFY5Kj.js:48:18580
+[SHELL] [DEBUG] [Main] Shell config promoted 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-BphFY5Kj.js:48:1853
+[PHASE][Cache] shellConfig 
+Object { source: "resolved", version: 14 }
+index-BphFY5Kj.js:65:6634
+[SysCacheService] Resolved shell config applied 
+Object { defaultUiSystemId: "bootstrap-538", defaultThemeId: "dark", source: "resolved" }
+index-BphFY5Kj.js:48:7066
+[SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-BphFY5Kj.js:48:1853
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-BphFY5Kj.js:48:1853
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "bootstrap-538" }
+index-BphFY5Kj.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-BphFY5Kj.js:48:1853
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "bootstrap-538", name: "Bootstrap 5", version: "5.3.8", description: "Bootstrap 5.3.8 UI System with full support for data-bs-theme light/dark switching.", cssUrl: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsUrl: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", assetPath: "/assets/ui-systems/bootstrap-538", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-BphFY5Kj.js:48:24424
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js", bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bootstrap.min.css", id: "bootstrap-538", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bootstrap.min.css", order: (2) […] }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/bootstrap-538/bootstrap.min.css" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/bootstrap-538/bridge.css", id: "bootstrap-538-bridge", resolved: "http://localhost:5173/assets/ui-systems/bootstrap-538/bridge.css", order: (3) […] }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/bootstrap-538/bridge.css" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/bootstrap-538/bootstrap.bundle.min.js" }
+index-BphFY5Kj.js:31:3156
+[MI] [INFO] [UI-ADAPTER:bootstrap-538] activate:start Adapter activation started undefined index-BphFY5Kj.js:48:1894
+[MI] [DEBUG] [UI-ADAPTER:bootstrap-538] lifecycle:transition Lifecycle transition: created → initialized undefined index-BphFY5Kj.js:48:1853
+[MI] [WARN] [UI-ADAPTER:bootstrap-538] lifecycle:activate:skipped Adapter already activated or activating 
+Object { lifecycle: "initialized" }
+index-BphFY5Kj.js:48:1934
+[MI] [DEBUG] [UI-ADAPTER:bootstrap-538] lifecycle:transition Lifecycle transition: initialized → activated undefined index-BphFY5Kj.js:48:1853
+[MI] [INFO] [UI-ADAPTER:bootstrap-538] activate:end Adapter activation completed undefined index-BphFY5Kj.js:48:1894
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "bootstrap-538" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "bootstrap-538" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "bootstrap-538" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme assets loaded 
+Object { themeId: "dark" }
+index-BphFY5Kj.js:31:3156
+[UITHEMENORMALIZER] [DEBUG] Theme normalized 
+Object { id: "dark", source: "static", uiSystem: "bootstrap-538" }
+index-BphFY5Kj.js:48:1853
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-BphFY5Kj.js:31:3156
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { logger: {…}, descriptor: {…}, lifecycle: "themed", shellPhase: "init", observer: null, appliedSet: WeakSet [], adapterId: "bootstrap-538", capabilities: {…}, meta: {…} }
+index-BphFY5Kj.js:48:26876
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-BphFY5Kj.js:48:27075
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-BphFY5Kj.js:48:27169
+[MI] [INFO] [UI-ADAPTER:bootstrap-538] theme:apply:start Applying theme 'dark' undefined index-BphFY5Kj.js:48:1894
+[MI] [DEBUG] [UI-ADAPTER:bootstrap-538] lifecycle:transition Lifecycle transition: activated → themed undefined index-BphFY5Kj.js:48:1853
+[MI] [DEBUG] [UI-ADAPTER:bootstrap-538] applyTheme:done 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-BphFY5Kj.js:48:1853
+[MI] [DEBUG] [UI-ADAPTER:bootstrap-538] lifecycle:transition:skip Lifecycle unchanged (themed → themed) undefined index-BphFY5Kj.js:48:1853
+[MI] [INFO] [UI-ADAPTER:bootstrap-538] theme:apply:end Theme 'dark' applied undefined index-BphFY5Kj.js:48:1894
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "bootstrap-538", themeId: "dark" }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-BphFY5Kj.js:31:3156
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-BphFY5Kj.js:31:3156
+ThemeService::loadThemeConfig(default) index-BphFY5Kj.js:48:2318
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-BphFY5Kj.js:31:3156
+[ModuleService][constructor]: starting index-BphFY5Kj.js:31:5042
+[ModuleService] Running under Vite (browser). index-BphFY5Kj.js:31:5115
+[Preload] Loading dev-sync index-BphFY5Kj.js:31:7400
+ModuleService::loadModule()/01: index-BphFY5Kj.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-BphFY5Kj.js:31:8202
+[ModuleService] 1 index-BphFY5Kj.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-BphFY5Kj.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-BphFY5Kj.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-BphFY5Kj.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-BphFY5Kj.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 08/01/2026, 19:00:14 index-BphFY5Kj.js:31:8997
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-BphFY5Kj.js:31:7696
+[Preload] Completed IdeAgentService index-BphFY5Kj.js:31:7795
+[Preload] Loading dev-sync index-BphFY5Kj.js:31:7400
+ModuleService::loadModule()/01: index-BphFY5Kj.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-BphFY5Kj.js:31:8202
+[ModuleService] 1 index-BphFY5Kj.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-BphFY5Kj.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-BphFY5Kj.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-BphFY5Kj.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-BphFY5Kj.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 08/01/2026, 19:00:14 index-BphFY5Kj.js:31:8997
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-BphFY5Kj.js:31:7696
+[Preload] Completed IdeAgentClientService index-BphFY5Kj.js:31:7795
+ModuleService::loadModule()/01: index-BphFY5Kj.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-BphFY5Kj.js:31:8202
+[ModuleService] 1 index-BphFY5Kj.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-BphFY5Kj.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-BphFY5Kj.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-BphFY5Kj.js:31:8757
+[ModuleService] Loaded 'cd-user' (Vite mode) at 08/01/2026, 19:00:14 index-BphFY5Kj.js:31:8997
+ModuleService::loadModule()/01: index-BphFY5Kj.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-BphFY5Kj.js:31:8202
+[ModuleService] 1 index-BphFY5Kj.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-BphFY5Kj.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
+index-BphFY5Kj.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-BphFY5Kj.js:31:8757
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-BphFY5Kj.js:31:8909
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 08/01/2026, 19:00:14 index-BphFY5Kj.js:31:8997
+ModuleService::loadModule()/01: index-BphFY5Kj.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/moduleman/view/index.js index-BphFY5Kj.js:31:8202
+[ModuleService] 1 index-BphFY5Kj.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/moduleman/view/index.js index-BphFY5Kj.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "moduleman-consumer-resource", moduleName: "consumer-resource", moduleGuid: "consr-0001-0000-0000", controllers: (2) […], menu: (1) […], isDefault: false }
+index-BphFY5Kj.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-BphFY5Kj.js:31:8757
+[ModuleService] Loaded module metadata passively: moduleman. Setup skipped. index-BphFY5Kj.js:31:8909
+[ModuleService] Loaded 'moduleman' (Vite mode) at 08/01/2026, 19:00:14 index-BphFY5Kj.js:31:8997
+[CSS-DIAG] Modules Loaded 
+```
+
+//////////////////////////////////////////////
+I assume the error is being generated between the two methods below (if not, let me know).
+Before downgrading to a warning, how can we address the issue that is triggering the error/warning.
+We designed the codes to flag isses. In this case, it has fagged the issue. How do we address the issue?
+```ts
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.log("info", "lifecycle:activate:start", "Adapter activation started", {
+      lifecycle: this.lifecycle,
+    });
+
+    if (!descriptor) {
+      this.log("error", "activate:error", "Descriptor is null");
+      return;
+    }
+
+    /* ------------------------------
+     * INITIALIZED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.CREATED) {
+      this.descriptor = descriptor;
+      this.appliedSet = new WeakSet();
+
+      this.transitionTo(UiAdapterLifecycle.INITIALIZED,);
+    }
+
+    /* ------------------------------
+     * ACTIVATED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.INITIALIZED) {
+      this.transitionTo(
+        UiAdapterLifecycle.ACTIVATED,
+        // "Adapter allowed to operate on DOM"
+      );
+    }
+
+    /* ------------------------------
+     * MAPPED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.ACTIVATED) {
+      this.mapAll();
+      this.transitionTo(
+        UiAdapterLifecycle.MAPPED,
+        // "Initial deterministic mapping complete"
+      );
+    }
+
+    /* ------------------------------
+     * OBSERVING
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.MAPPED) {
+      this.observeMutations();
+      this.transitionTo(
+        UiAdapterLifecycle.OBSERVING,
+        // "Mutation observer active"
+      );
+    }
+
+    /* ------------------------------
+     * Shell coordination (PHASE)
+     * ------------------------------ */
+    if (this.lifecycle >= UiAdapterLifecycle.OBSERVING) {
+      this.setPhase(
+        UiAdapterPhase.CONTROLLER_READY,
+        "Bootstrap adapter controller ready"
+      );
+
+      this.markDomStable("Initial Bootstrap mapping completed");
+    }
+
+    this.log("info", "lifecycle:activate:end", "Adapter activation completed", {
+      lifecycle: this.lifecycle,
+    });
+  }
+
+  protected override onApplyTheme(theme: UiThemeDescriptor): void {
+    this.assertLifecycle(UiAdapterLifecycle.ACTIVATED, "applyTheme");
+
+    if (!theme) {
+      this.logger.warn(
+        `[UI-ADAPTER:${this.adapterId}] applyTheme:skipped`,
+        "No theme descriptor provided"
+      );
+      return;
+    }
+
+    const root = document.documentElement;
+
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.transitionTo(UiAdapterLifecycle.THEMED);
+
+    this.logger.debug(`[UI-ADAPTER:${this.adapterId}] applyTheme:done`, theme);
+  }
+}
+```
+
+////////////////////////////////////////////
+
+Given that we had set out to let all adaptors inherit from BaseUiAdaptor for harmonization, consistency and coding efficiency.
+1. Can we say Bootstrap538AdapterService now relient on BaseUiAdaptor at the level that is expected?
+2. Can we say Bootstrap538AdapterService is no longer used old codes that were inefficient considering replication of features to other adaptors. 
+
+//////////////////////////////////////////////
+Below is existing version of MaterialDesignAdapterService that was known to work in the lagacy way.
+I have also included the Bootstrap538AdapterService in its current working state.
+I believe you have a good context for BaseUiAdaptor.
+You can proceed to update the MaterialDesignAdapterService
+```ts
+type Mapping = UiConceptMapping | undefined;
+
+export class MaterialDesignAdapterService implements IUiSystemAdapter {
+  private descriptor: UiSystemDescriptor | null = null;
+  private observer: MutationObserver | null = null;
+  private appliedSet = new WeakSet<HTMLElement>();
+
+  private mdcInitQueued = false;
+  private mdcInstances = new Set<any>();
+
+  protected meta!: UiAdapterMeta;
+
+  constructor() {
+    console.log("%c[MaterialDesignAdapter] constructor()", "color:#8cf");
+  }
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Activation / Deactivation
+  // ---------------------------------------------------------------------------
+  async activate(descriptor: UiSystemDescriptor): Promise<void> {
+    diag_css("[MaterialDesignAdapter] activate() START", {
+      id: descriptor?.id,
+    });
+    this.descriptor = descriptor || null;
+
+    if (!descriptor?.conceptMappings) {
+      console.warn(
+        "[MaterialDesignAdapter] descriptor.conceptMappings missing!"
+      );
+    } else {
+      console.log(
+        "%c[MaterialDesignAdapter] Loaded conceptMappings:",
+        "color:#0ff",
+        descriptor.conceptMappings
+      );
+    }
+
+    // initial mapping
+    this.mapAll();
+
+    // observe DOM for new fields
+    this.observeMutations();
+
+    diag_css("[MaterialDesignAdapter] activate() COMPLETE", {
+      active: descriptor?.id,
+    });
+  }
+
+  async deactivate(): Promise<void> {
+    diag_css("[MaterialDesignAdapter] deactivate() START");
+    try {
+      document.documentElement.removeAttribute("data-md-theme");
+    } catch {}
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+      } catch {}
+      this.observer = null;
+    }
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+    // destroy MDC instances if any (best-effort)
+    try {
+      this.mdcInstances.forEach((inst: any) => {
+        try {
+          inst.destroy?.();
+        } catch {}
+      });
+      this.mdcInstances.clear();
+    } catch {}
+    diag_css("[MaterialDesignAdapter] deactivate() COMPLETE");
+  }
+
+  // ---------------------------------------------------------------------------
+  // Theme
+  // ---------------------------------------------------------------------------
+  async applyTheme(themeDescriptorOrId: any): Promise<void> {
+    diag_css("[MaterialDesignAdapter] applyTheme()", { themeDescriptorOrId });
+    try {
+      if (!themeDescriptorOrId) {
+        console.warn("[MaterialDesignAdapter] applyTheme ignored (null theme)");
+        return;
+      }
+      let mode: string | undefined;
+      if (typeof themeDescriptorOrId === "string")
+        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
+      else if (typeof themeDescriptorOrId === "object")
+        mode =
+          themeDescriptorOrId.mode ||
+          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
+      document.documentElement.setAttribute(
+        "data-md-theme",
+        mode === "dark" ? "dark" : "light"
+      );
+      diag_css("[MaterialDesignAdapter] applied Material theme", { mode });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] applyTheme error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Concept mapping helpers
+  // ---------------------------------------------------------------------------
+  private getMapping(concept: string): Mapping {
+    const mapping =
+      (this.descriptor &&
+        this.descriptor.conceptMappings &&
+        (this.descriptor.conceptMappings as any)[concept]) ||
+      undefined;
+    console.log(
+      `%c[MaterialDesignAdapter] getMapping('${concept}') =`,
+      "color:#9f9",
+      mapping
+    );
+    return mapping;
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+    if (this.appliedSet.has(el)) {
+      if (mapping.attrs)
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      return;
+    }
+
+    console.log(
+      "%c[MaterialDesignAdapter] Applying mapping to element:",
+      "color:#7ff;",
+      { tag: el.tagName, mapping }
+    );
+    if (mapping.class)
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
+    if (mapping.attrs)
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    this.appliedSet.add(el);
+  }
+
+  private prepareMdcDom(field: HTMLElement): HTMLElement | null {
+    if (!field) return null;
+    if (field.dataset.mdTransformed === "1") {
+      const existing = field.querySelector<HTMLElement>(
+        ".mdc-text-field, .cd-md-select-wrapper, .cd-md-text-field, .mdc-select"
+      );
+      return existing || null;
+    }
+
+    // find control and label
+    const control = field.querySelector<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >("input, textarea, select");
+    const labelEl = field.querySelector<HTMLLabelElement>("label");
+
+    if (!control) {
+      console.warn(
+        "[prepareMdcDom] no input/textarea/select inside field — skipping",
+        { field }
+      );
+      return null;
+    }
+
+    const labelText = (
+      labelEl?.textContent?.trim() ||
+      control.getAttribute("placeholder") ||
+      control.name ||
+      ""
+    ).trim();
+
+    // remove placeholder (floating label used instead)
+    try {
+      if ("placeholder" in control) control.placeholder = "";
+    } catch {}
+
+    // ensure id on native control
+    if (!control.id)
+      control.id = `mdc-${Math.random().toString(36).slice(2, 8)}`;
+
+    const tag = (control.tagName || "").toUpperCase();
+
+    // --------------- INPUT / TEXTAREA ----------------
+    if (tag === "INPUT" || tag === "TEXTAREA") {
+      const wrapper = document.createElement("label");
+      wrapper.className =
+        "mdc-text-field mdc-text-field--filled cd-md-text-field";
+
+      const ripple = document.createElement("span");
+      ripple.className = "mdc-text-field__ripple";
+
+      const floatingLabel = document.createElement("span");
+      floatingLabel.className = "mdc-floating-label";
+      floatingLabel.setAttribute("for", control.id);
+      floatingLabel.textContent = labelText || "";
+
+      control.classList.add("mdc-text-field__input");
+
+      const lineRipple = document.createElement("span");
+      lineRipple.className = "mdc-line-ripple";
+
+      wrapper.appendChild(ripple);
+      wrapper.appendChild(floatingLabel);
+      wrapper.appendChild(control);
+      wrapper.appendChild(lineRipple);
+
+      try {
+        field.replaceWith(wrapper);
+        wrapper.dataset.mdTransformed = "1";
+      } catch (err) {
+        console.warn("[prepareMdcDom] replaceWith failed (input)", err, {
+          field,
+          wrapper,
+        });
+        return null;
+      }
+
+      return wrapper;
+    }
+
+    // --------------- SELECT (Model-A: MDC Select structure) ----------------
+    else if (tag === "SELECT") {
+      const nativeSelect = control as HTMLSelectElement;
+
+      // --- NEW: remove default placeholder option ("") to avoid double text conflict ---
+      let placeholderText = "";
+      if (
+        nativeSelect.options.length > 0 &&
+        nativeSelect.options[0].value === ""
+      ) {
+        placeholderText = nativeSelect.options[0].text || "";
+        nativeSelect.remove(0);
+      }
+
+      // Build root wrapper with MDC-select class
+      const wrapper = document.createElement("div");
+      wrapper.className = "mdc-select mdc-select--filled cd-md-select-wrapper";
+      wrapper.setAttribute("role", "listbox");
+
+      // Hide native select
+      nativeSelect.style.display = "none";
+      nativeSelect.classList.remove("mdc-text-field__input");
+      wrapper.appendChild(nativeSelect);
+
+      // Anchor (trigger)
+      const anchor = document.createElement("div");
+      anchor.className = "mdc-select__anchor";
+      anchor.setAttribute("role", "button");
+      anchor.setAttribute("aria-haspopup", "listbox");
+      anchor.setAttribute("aria-expanded", "false");
+      anchor.setAttribute(
+        "aria-labelledby",
+        `${control.id}-label ${control.id}-selected-text`
+      );
+      anchor.tabIndex = 0;
+
+      // ripple
+      const ripple = document.createElement("span");
+      ripple.className = "mdc-select__ripple";
+      anchor.appendChild(ripple);
+
+      // floating label (acts as the true placeholder)
+      const floatingLabel = document.createElement("span");
+      floatingLabel.className = "mdc-floating-label";
+      floatingLabel.id = `${control.id}-label`;
+      floatingLabel.textContent = labelText || placeholderText;
+      anchor.appendChild(floatingLabel);
+
+      // selected text (EMPTY because user has not selected anything yet)
+      const selectedContainer = document.createElement("span");
+      selectedContainer.className = "mdc-select__selected-text-container";
+      const selectedText = document.createElement("span");
+      selectedText.className = "mdc-select__selected-text";
+      selectedText.id = `${control.id}-selected-text`;
+      selectedText.textContent = ""; // <-- NEW: always empty initially
+      selectedContainer.appendChild(selectedText);
+      anchor.appendChild(selectedContainer);
+
+      // dropdown icon
+      const dropdownIcon = document.createElement("span");
+      dropdownIcon.className = "mdc-select__dropdown-icon";
+      dropdownIcon.innerHTML = `
+      <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5" focusable="false">
+        <polygon class="mdc-select__dropdown-icon-inactive" stroke="none" fill-rule="evenodd" points="7 10 12 15 17 10"></polygon>
+        <polygon class="mdc-select__dropdown-icon-active" stroke="none" fill-rule="evenodd" points="7 15 12 10 17 15"></polygon>
+      </svg>`;
+      anchor.appendChild(dropdownIcon);
+
+      // line ripple
+      const lineRipple = document.createElement("span");
+      lineRipple.className = "mdc-line-ripple";
+      anchor.appendChild(lineRipple);
+
+      wrapper.appendChild(anchor);
+
+      // menu surface
+      const menu = document.createElement("div");
+      menu.className =
+        "mdc-select__menu mdc-menu mdc-menu-surface cd-md-select-menu";
+      menu.setAttribute("role", "presentation");
+      menu.setAttribute("aria-hidden", "true");
+
+      const list = document.createElement("ul");
+      list.className = "mdc-list";
+      list.setAttribute("role", "listbox");
+      list.setAttribute("tabindex", "-1");
+
+      // Populate options AFTER removing placeholder
+      Array.from(nativeSelect.options).forEach((opt, idx) => {
+        const li = document.createElement("li");
+        li.className = "mdc-list-item";
+        li.setAttribute("role", "option");
+        li.setAttribute("data-value", opt.value);
+        li.setAttribute("data-index", String(idx));
+        li.tabIndex = -1;
+
+        const rippleSpan = document.createElement("span");
+        rippleSpan.className = "mdc-list-item__ripple";
+
+        const textSpan = document.createElement("span");
+        textSpan.className = "mdc-list-item__text";
+        textSpan.textContent = opt.text;
+
+        li.appendChild(rippleSpan);
+        li.appendChild(textSpan);
+
+        list.appendChild(li);
+      });
+
+      menu.appendChild(list);
+      wrapper.appendChild(menu);
+
+      try {
+        field.replaceWith(wrapper);
+        wrapper.dataset.mdTransformed = "1";
+      } catch (err) {
+        console.warn("[prepareMdcDom] replaceWith failed (select)", err, {
+          field,
+          wrapper,
+        });
+        return null;
+      }
+
+      // store references
+      (wrapper as any).__cd_native_select = nativeSelect;
+      (wrapper as any).__cd_anchor = anchor;
+      (wrapper as any).__cd_selected_text = selectedText;
+      (wrapper as any).__cd_menu_el = menu;
+
+      return wrapper;
+    } else {
+      console.warn("[prepareMdcDom] unknown control tag — skipping", {
+        tag,
+        field,
+      });
+      return null;
+    }
+  }
+
+  // CSS fallback handlers for focus/blur if MDC not available (text fields)
+  private attachCssFallback(wrapper: HTMLElement) {
+    try {
+      const inputEl = wrapper.querySelector<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >("input, textarea, select");
+      if (!inputEl) return;
+
+      // If a native value exists keep label floated
+      if (
+        (inputEl as HTMLInputElement).value &&
+        (inputEl as HTMLInputElement).value.length > 0
+      ) {
+        wrapper.classList.add("mdc-text-field--focused");
+      }
+
+      if (!(inputEl as any).__cd_md_handlers_attached) {
+        inputEl.addEventListener("focus", () =>
+          wrapper.classList.add("mdc-text-field--focused")
+        );
+        inputEl.addEventListener("blur", () => {
+          if (
+            !(inputEl as HTMLInputElement).value ||
+            (inputEl as HTMLInputElement).value.length === 0
+          ) {
+            wrapper.classList.remove("mdc-text-field--focused");
+          }
+        });
+        (inputEl as any).__cd_md_handlers_attached = true;
+      }
+    } catch (err) {
+      console.warn("[attachCssFallback] error", err);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // MDC initialization (UMD)
+  // - Uses window.mdc.* families (textField, menu)
+  // ---------------------------------------------------------------------------
+  private initMdcTextField(wrapper: HTMLElement) {
+    if (!wrapper) return;
+    try {
+      const mdcGlobal = (window as any).mdc;
+      // ensure it's a text-field wrapper (label.mdc-text-field)
+      if (!wrapper.classList.contains("mdc-text-field")) return;
+
+      // avoid double-init
+      if ((wrapper as any).__cd_mdc_initialized) return;
+
+      if (
+        !mdcGlobal ||
+        !mdcGlobal.textField ||
+        !mdcGlobal.textField.MDCTextField
+      ) {
+        // MDC textfield not present — attach css fallback handlers
+        this.attachCssFallback(wrapper);
+        return;
+      }
+
+      // Guard: ensure control has .value & validity (MDCTextField expects native input)
+      const native = wrapper.querySelector<
+        HTMLInputElement | HTMLTextAreaElement
+      >(".mdc-text-field__input");
+      if (!native) {
+        this.attachCssFallback(wrapper);
+        return;
+      }
+
+      // Some MDC versions access native.validity — ensure element supports it
+      const isStandardInput =
+        typeof (native as HTMLInputElement).validity !== "undefined";
+      if (!isStandardInput) {
+        // don't attempt MDCTextField init if native doesn't support validity
+        this.attachCssFallback(wrapper);
+        return;
+      }
+
+      try {
+        const inst = new mdcGlobal.textField.MDCTextField(wrapper);
+        this.mdcInstances.add(inst);
+        (wrapper as any).__cd_mdc_initialized = true;
+        console.debug("[MaterialDesignAdapter] MDCTextField constructed", {
+          wrapper,
+          inst,
+        });
+      } catch (err) {
+        console.warn(
+          "[MaterialDesignAdapter] MDCTextField construction failed — falling back to CSS handlers",
+          err
+        );
+        (wrapper as any).__cd_mdc_initialized = false;
+        this.attachCssFallback(wrapper);
+      }
+    } catch (err) {
+      console.error("[MaterialDesignAdapter] initMdcTextField fatal", err);
+      this.attachCssFallback(wrapper);
+    }
+  }
+
+  private initMdcSelect(wrapper: HTMLElement) {
+    if (!wrapper) return;
+    try {
+      if ((wrapper as any).__cd_select_initialized) return;
+
+      const mdcGlobal = (window as any).mdc;
+      const nativeSelect = (wrapper as any)
+        .__cd_native_select as HTMLSelectElement;
+      const anchor = (wrapper as any).__cd_anchor as HTMLElement;
+      const selectedText = (wrapper as any).__cd_selected_text as HTMLElement;
+      const menuEl = (wrapper as any).__cd_menu_el as HTMLElement;
+
+      if (!nativeSelect || !anchor || !menuEl) {
+        this.initMdcSelectFallback(wrapper);
+        (wrapper as any).__cd_select_initialized = true;
+        return;
+      }
+
+      // Clean initial selected text (no default pre-selected UI text)
+      selectedText.textContent = "";
+
+      // preferred MDCSelect
+      if (mdcGlobal && mdcGlobal.select && mdcGlobal.select.MDCSelect) {
+        try {
+          const selectInst = new mdcGlobal.select.MDCSelect(wrapper);
+          this.mdcInstances.add(selectInst);
+          (wrapper as any).__cd_mdc_select_inst = selectInst;
+
+          // ensure no default is selected
+          if (
+            selectInst.selectedIndex === 0 &&
+            nativeSelect.selectedIndex > -1
+          ) {
+            selectInst.selectedIndex = -1;
+          }
+
+          selectInst.listen("MDCSelect:change", () => {
+            try {
+              const idx = selectInst.selectedIndex;
+
+              nativeSelect.selectedIndex = idx;
+
+              const ev = new Event("change", { bubbles: true });
+              nativeSelect.dispatchEvent(ev);
+
+              selectedText.textContent =
+                selectInst.selectedText ||
+                nativeSelect.options[idx]?.text ||
+                "";
+            } catch (err) {
+              console.warn(
+                "[MaterialDesignAdapter] MDCSelect change error",
+                err
+              );
+            }
+          });
+
+          nativeSelect.addEventListener("change", () => {
+            const idx = nativeSelect.selectedIndex;
+            selectedText.textContent = nativeSelect.options[idx]?.text || "";
+          });
+
+          (wrapper as any).__cd_select_initialized = true;
+          return;
+        } catch (err) {
+          console.warn("[MaterialDesignAdapter] MDCSelect init failed", err);
+        }
+      }
+
+      // fallback: MDCMenu
+      if (mdcGlobal && mdcGlobal.menu && mdcGlobal.menu.MDCMenu) {
+        try {
+          const menuInst = new mdcGlobal.menu.MDCMenu(menuEl);
+          (menuEl as any).__cd_mdc_menu_inst = menuInst;
+          this.mdcInstances.add(menuInst);
+
+          anchor.addEventListener("click", () => {
+            menuInst.open = !menuInst.open;
+          });
+
+          menuEl.querySelectorAll(".mdc-list-item").forEach((li) => {
+            li.addEventListener("click", () => {
+              const idx = Number(li.getAttribute("data-index"));
+              nativeSelect.selectedIndex = idx;
+
+              const ev = new Event("change", { bubbles: true });
+              nativeSelect.dispatchEvent(ev);
+
+              selectedText.textContent = nativeSelect.options[idx]?.text || "";
+              menuInst.open = false;
+            });
+          });
+
+          (wrapper as any).__cd_select_initialized = true;
+          return;
+        } catch (err) {
+          console.warn("[MaterialDesignAdapter] MDCMenu fallback failed", err);
+        }
+      }
+
+      // last fallback
+      this.initMdcSelectFallback(wrapper);
+      (wrapper as any).__cd_select_initialized = true;
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] initMdcSelect fatal", err);
+      this.initMdcSelectFallback(wrapper);
+      (wrapper as any).__cd_select_initialized = true;
+    }
+  }
+
+  // Plain JS fallback for select/menu behaviour (when MDC not loaded)
+  private initMdcSelectFallback(wrapper: HTMLElement) {
+    try {
+      if ((wrapper as any).__cd_select_fallback_attached) return;
+      const menuEl = (wrapper as any).__cd_menu_el as HTMLElement;
+      const trigger = (wrapper as any).__cd_trigger as HTMLButtonElement;
+      const nativeSelect = (wrapper as any)
+        .__cd_native_select as HTMLSelectElement;
+      const triggerLabel = (wrapper as any).__cd_trigger_label as HTMLElement;
+      if (!menuEl || !trigger || !nativeSelect) return;
+
+      let open = false;
+      const openMenu = () => {
+        menuEl.style.display = "block";
+        trigger.setAttribute("aria-expanded", "true");
+        open = true;
+      };
+      const closeMenu = () => {
+        menuEl.style.display = "none";
+        trigger.setAttribute("aria-expanded", "false");
+        open = false;
+      };
+      menuEl.style.display = "none";
+      // toggle
+      trigger.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        if (open) closeMenu();
+        else openMenu();
+      });
+      // click outside closes
+      document.addEventListener("click", (ev) => {
+        if (!wrapper.contains(ev.target as Node)) closeMenu();
+      });
+      // sync native select -> trigger label
+      nativeSelect.addEventListener("change", () => {
+        const selOpt = nativeSelect.options[nativeSelect.selectedIndex];
+        triggerLabel.textContent = selOpt ? selOpt.text : "";
+      });
+
+      (wrapper as any).__cd_select_fallback_attached = true;
+      console.debug("[MaterialDesignAdapter] JS fallback select/menu attached");
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] initMdcSelectFallback error", err);
+    }
+  }
+
+  private scheduleMdcInit() {
+    if (this.mdcInitQueued) return;
+    this.mdcInitQueued = true;
+    setTimeout(() => {
+      this.mdcInitQueued = false;
+      // initialize all wrappers in page
+      document
+        .querySelectorAll<HTMLElement>(
+          ".cd-md-text-field, .cd-md-select-wrapper, .mdc-select"
+        )
+        .forEach((el) => {
+          // text fields
+          if (el.classList.contains("mdc-text-field")) {
+            if (!(el as any).__cd_mdc_initialized) this.initMdcTextField(el);
+          } else if (
+            el.classList.contains("cd-md-select-wrapper") ||
+            el.classList.contains("mdc-select")
+          ) {
+            if (!(el as any).__cd_select_initialized) this.initMdcSelect(el);
+          }
+        });
+    }, 40);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Mapping passes
+  // ---------------------------------------------------------------------------
+  private mapButtons() {
+    const mapping = this.getMapping("button");
+    if (!mapping) return;
+    const selector = "button[cdButton], button.cd-button";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapButtons()", { count: nodes.length });
+    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+  }
+
+  /**
+   * mapInputs()
+   * - Finds `.cd-form-field` containers
+   * - Transforms them into MDC wrappers (label.mdc-text-field) or Model-A select wrappers
+   * - Initializes MDC (or applies CSS/JS fallback)
+   */
+  private mapInputs() {
+    const mapping = this.getMapping("input");
+    if (!mapping) return;
+
+    const formFieldNodes = Array.from(
+      document.querySelectorAll<HTMLElement>(".cd-form-field")
+    );
+    diag_css("[MaterialDesignAdapter] mapInputs()", {
+      candidates: formFieldNodes.length,
+    });
+
+    formFieldNodes.forEach((field, idx) => {
+      try {
+        console.debug(`[MaterialDesignAdapter] mapInputs: FIELD #${idx}`, {
+          field,
+        });
+
+        // Transform DOM
+        const wrapper = this.prepareMdcDom(field);
+
+        if (!wrapper) {
+          console.debug(
+            "[MaterialDesignAdapter] mapInputs: prepareMdcDom returned null (skipping)"
+          );
+          return;
+        }
+
+        // Apply mapping.attrs (if any) — apply to wrapper to allow descriptor overrides
+        if (mapping.attrs)
+          Object.entries(mapping.attrs).forEach(([k, v]) =>
+            wrapper.setAttribute(k, v as string)
+          );
+
+        // Mark as applied
+        this.appliedSet.add(wrapper);
+
+        // Initialize appropriate MDC bits depending on wrapper type
+        if (wrapper.classList.contains("mdc-text-field")) {
+          this.initMdcTextField(wrapper);
+        } else if (wrapper.classList.contains("cd-md-select-wrapper")) {
+          this.initMdcSelect(wrapper);
+        }
+
+        // schedule a global init pass to catch any wrappers that might have been missed
+        this.scheduleMdcInit();
+
+        console.debug(
+          "[MaterialDesignAdapter] mapInputs: transformed wrapper ",
+          { wrapper }
+        );
+      } catch (err) {
+        console.warn("[MaterialDesignAdapter] mapInputs error", err);
+      }
+    });
+  }
+
+  // Inside material-design-adapter.service.ts
+
+  private mapTabs() {
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 5)}`;
+
+      // 1. Build the MDC M2 Shell
+      const tabBar = document.createElement("div");
+      tabBar.className = "mdc-tab-bar";
+      tabBar.setAttribute("role", "tablist");
+
+      const scroller = document.createElement("div");
+      scroller.className = "mdc-tab-scroller";
+
+      const scrollArea = document.createElement("div");
+      scrollArea.className = "mdc-tab-scroller__scroll-area";
+
+      const scrollContent = document.createElement("div");
+      scrollContent.className = "mdc-tab-scroller__scroll-content";
+
+      const contentWrapper = document.createElement("div");
+      contentWrapper.className = "cd-md-tabs-content mt-3";
+
+      // 2. Process child <cd-tab> elements
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "Tab";
+        const isActive =
+          tab.id === activeTabId || (!activeTabId && index === 0);
+
+        // Create the Button (Force type="button" to prevent SPA reloads)
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `mdc-tab ${isActive ? "mdc-tab--active" : ""}`;
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+        btn.id = `${tabId}-btn`;
+
+        // Inner structure for MDC effects
+        btn.innerHTML = `
+        <span class="mdc-tab__content">
+          <span class="mdc-tab__text-label">${label}</span>
+        </span>
+        <span class="mdc-tab-indicator ${isActive ? "mdc-tab-indicator--active" : ""}">
+          <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+        </span>
+        <span class="mdc-tab__ripple"></span>
+      `;
+
+        // Create the Content Pane
+        const pane = document.createElement("div");
+        pane.id = `${tabId}-pane`;
+        pane.style.display = isActive ? "block" : "none";
+        pane.innerHTML = tab.innerHTML;
+        contentWrapper.appendChild(pane);
+
+        // 3. SPA-Friendly Click Handler
+        btn.addEventListener("click", (e) => {
+          e.preventDefault(); // Safety check
+
+          // Deactivate all buttons in this bar
+          scrollContent.querySelectorAll(".mdc-tab").forEach((b) => {
+            b.classList.remove("mdc-tab--active");
+            b.querySelector(".mdc-tab-indicator")?.classList.remove(
+              "mdc-tab-indicator--active"
+            );
+          });
+
+          // Activate clicked button
+          btn.classList.add("mdc-tab--active");
+          btn
+            .querySelector(".mdc-tab-indicator")
+            ?.classList.add("mdc-tab-indicator--active");
+
+          // Toggle Panes
+          Array.from(contentWrapper.children).forEach(
+            (p: any) => (p.style.display = "none")
+          );
+          pane.style.display = "block";
+
+          console.log(`[MaterialAdapter] Switched to tab: ${label}`);
+        });
+
+        scrollContent.appendChild(btn);
+      });
+
+      // Final Assembly
+      scrollArea.appendChild(scrollContent);
+      scroller.appendChild(scrollArea);
+      tabBar.appendChild(scroller);
+
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(tabBar);
+      fragment.appendChild(contentWrapper);
+
+      container.replaceWith(fragment);
+      this.appliedSet.add(tabBar as any);
+    });
+  }
+
+  private mapFormGroups() {
+    const mapping = this.getMapping("formGroup");
+    if (!mapping) return;
+    const selector = ".cd-form-field";
+    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    diag_css("[MaterialDesignAdapter] mapFormGroups()", {
+      count: nodes.length,
+    });
+    nodes.forEach((el) => {
+      this.applyMappingToElement(el, mapping);
+      try {
+        this.prepareMdcDom(el);
+      } catch {}
+    });
+  }
+
+  private mapOtherConcepts() {
+    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
+    const concepts = Object.keys(cm).filter(
+      (c) => !["button", "input", "formGroup"].includes(c)
+    );
+    diag_css("[MaterialDesignAdapter] mapOtherConcepts()", { concepts });
+    concepts.forEach((concept) => {
+      const mapping = (cm as any)[concept];
+      const selector = `[data-cd-${concept}], .cd-${concept}`;
+      const nodes = document.querySelectorAll<HTMLElement>(selector);
+      nodes.forEach((el) => {
+        this.applyMappingToElement(el, mapping);
+        try {
+          this.prepareMdcDom(el);
+        } catch {}
+      });
+    });
+  }
+
+  private _mutationCallback?: () => void;
+
+  onMutation(cb: () => void) {
+    this._mutationCallback = cb;
+  }
+
+  // master mapping pass
+  private mapAll() {
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — START",
+      "background:#223;color:#9cf;padding:2px"
+    );
+    try {
+      this._mutationCallback?.();
+      this.mapButtons();
+      this.mapInputs();
+      this.mapFormGroups();
+      this.mapTabs();
+      this.mapOtherConcepts();
+      this.scheduleMdcInit();
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] mapAll error", err);
+    }
+    console.log(
+      "%c[MaterialDesignAdapter] mapAll() — END",
+      "background:#223;color:#9cf;padding:2px"
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM observer
+  // ---------------------------------------------------------------------------
+  private observeMutations() {
+    if (this.observer) return;
+    this._mutationCallback?.();
+    diag_css("[MaterialDesignAdapter] MutationObserver ATTACH");
+    this.observer = new MutationObserver((mutations) => {
+      // lightweight debounce: schedule mapAll on idle
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 24);
+      }
+    });
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+      });
+    } catch (err) {
+      console.warn("[MaterialDesignAdapter] observer failed to attach", err);
+      this.observer = null;
+    }
+  }
+}
+
+// Self-register with the adapter registry
+UiSystemAdapterRegistry.register(
+  "material-design",
+  new MaterialDesignAdapterService()
+);
+
+```
+
+```ts
+type Mapping = UiConceptMapping | undefined;
+
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
+
+  readonly adapterId = "bootstrap-538";
+
+  protected readonly capabilities: UiAdapterCapabilities = {
+    layouts: [CdUiLayoutType.GRID],
+    containers: [
+      CdUiContainerType.TABS,
+      CdUiContainerType.TAB,
+      CdUiContainerType.CARD,
+    ],
+    controls: [
+      CdUiControlType.BUTTON,
+      CdUiControlType.TEXT_FIELD,
+      CdUiControlType.SELECT,
+      CdUiControlType.CHECKBOX,
+      CdUiControlType.SWITCH,
+    ],
+  };
+
+  protected readonly meta: UiAdapterMeta = {
+    id: "bootstrap-538",
+    version: "5.3.8",
+    status: UiAdapterStatus.ACTIVE,
+    vendor: "Bootstrap",
+  };
+
+  /* ======================================================================
+   * ACTIVATION
+   * ====================================================================== */
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.log("info", "lifecycle:activate:start", "Adapter activation started", {
+      lifecycle: this.lifecycle,
+    });
+
+    if (!descriptor) {
+      this.log("error", "activate:error", "Descriptor is null");
+      return;
+    }
+
+    /* ------------------------------
+     * INITIALIZED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.CREATED) {
+      this.descriptor = descriptor;
+      this.appliedSet = new WeakSet();
+
+      this.transitionTo(UiAdapterLifecycle.INITIALIZED);
+    }
+
+    /* ------------------------------
+     * ACTIVATED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.INITIALIZED) {
+      this.transitionTo(
+        UiAdapterLifecycle.ACTIVATED
+        // "Adapter allowed to operate on DOM"
+      );
+    }
+
+    /* ------------------------------
+     * MAPPED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.ACTIVATED) {
+      this.mapAll();
+      this.transitionTo(
+        UiAdapterLifecycle.MAPPED
+        // "Initial deterministic mapping complete"
+      );
+    }
+
+    /* ------------------------------
+     * OBSERVING
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.MAPPED) {
+      this.observeMutations();
+      this.transitionTo(
+        UiAdapterLifecycle.OBSERVING
+        // "Mutation observer active"
+      );
+    }
+
+    /* ------------------------------
+     * Shell coordination (PHASE)
+     * ------------------------------ */
+    if (this.lifecycle >= UiAdapterLifecycle.OBSERVING) {
+      this.setPhase(
+        UiAdapterPhase.CONTROLLER_READY,
+        "Bootstrap adapter controller ready"
+      );
+
+      this.markDomStable("Initial Bootstrap mapping completed");
+    }
+
+    this.log("info", "lifecycle:activate:end", "Adapter activation completed", {
+      lifecycle: this.lifecycle,
+    });
+  }
+
+  protected override async onDeactivate(): Promise<void> {
+    this.assertLifecycle(UiAdapterLifecycle.ACTIVATED, "onDeactivate");
+
+    this.log("info", "lifecycle:deactivate:start", "Deactivating adapter");
+
+    if (this.observer) {
+      try {
+        this.observer.disconnect();
+        this.log("debug", "observer:disconnected", "MutationObserver stopped");
+      } catch {
+        /* no-op */
+      }
+      this.observer = null;
+    }
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+    } catch {
+      /* no-op */
+    }
+
+    this.descriptor = null;
+    this.appliedSet = new WeakSet();
+
+    this.assertLifecycle(UiAdapterLifecycle.CREATED, "Adapter deactivated");
+
+    this.log("info", "lifecycle:deactivate:complete", "Adapter deactivated");
+  }
+
+  /* ======================================================================
+   * THEME APPLICATION
+   * ====================================================================== */
+
+  protected override onApplyTheme(theme: UiThemeDescriptor): void {
+    /**
+     * NOTE (migration):
+     * Theme application currently runs post-DOM_STABLE.
+     * Lifecycle enforcement will be revisited once
+     * theme timing policy is finalized.
+     */
+    // this.assertLifecycle(UiAdapterLifecycle.OBSERVING, "applyTheme");
+    if (this.lifecycle < UiAdapterLifecycle.ACTIVATED) {
+      this.logger.warn(
+        `[UI-ADAPTER:${this.adapterId}] applyTheme skipped – adapter not activated`,
+        { lifecycle: this.lifecycle }
+      );
+      return;
+    }
+
+    if (!theme) {
+      this.logger.warn(
+        `[UI-ADAPTER:${this.adapterId}] applyTheme:skipped`,
+        "No theme descriptor provided"
+      );
+      return;
+    }
+
+    const root = document.documentElement;
+
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.transitionTo(UiAdapterLifecycle.THEMED);
+
+    this.logger.debug(`[UI-ADAPTER:${this.adapterId}] applyTheme:done`, theme);
+  }
+
+  /* ======================================================================
+   * CONCEPT MAPPING
+   * ====================================================================== */
+
+  private getMapping(concept: string): Mapping {
+    return (this.descriptor?.conceptMappings as any)?.[concept];
+  }
+
+  private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
+    if (!mapping) return;
+
+    if (this.appliedSet.has(el)) {
+      if (mapping.attrs) {
+        Object.entries(mapping.attrs).forEach(([k, v]) =>
+          el.setAttribute(k, v)
+        );
+      }
+      return;
+    }
+
+    if (mapping.class) {
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
+    }
+
+    if (mapping.attrs) {
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+
+    this.appliedSet.add(el);
+  }
+
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
+    if (!mapping) return;
+
+    document
+      .querySelectorAll<HTMLElement>(selector)
+      .forEach((el) => this.applyMappingToElement(el, mapping));
+  }
+
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    this.log("info", "map:concept", "[Bootstrap538Adapter] mapTabs()");
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
+
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
+
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
+
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
+
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
+
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
+
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
+
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.type = "button";
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", String(isActive));
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
+
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
+
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          contentDiv
+            .querySelectorAll(".tab-pane")
+            .forEach((p) => p.classList.remove("show", "active"));
+
+          const targetPane = contentDiv.querySelector<HTMLElement>(
+            `#${tabId}-pane`
+          );
+          targetPane?.classList.add("show", "active");
+
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+        });
+
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+
+        btn.appendChild(document.createTextNode(label));
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML;
+
+        contentDiv.appendChild(pane);
+      });
+
+      const fragment = document.createDocumentFragment();
+      fragment.append(navUl, contentDiv);
+      container.replaceWith(fragment);
+
+      this.appliedSet.add(navUl);
+    });
+  }
+
+  private mapOtherConcepts() {
+    const cm = this.descriptor?.conceptMappings || {};
+    Object.keys(cm)
+      .filter((c) => !["button", "input", "formGroup"].includes(c))
+      .forEach((concept) => {
+        const selector = `[data-cd-${concept}], .cd-${concept}`;
+        document
+          .querySelectorAll<HTMLElement>(selector)
+          .forEach((el) =>
+            this.applyMappingToElement(el, (cm as any)[concept])
+          );
+      });
+  }
+
+  private mapAll() {
+    if (!this.descriptor) return;
+
+    try {
+      this.mapByConcept("button", "button[cdButton], button.cd-button");
+      this.mapByConcept(
+        "input",
+        "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+      );
+      this.mapByConcept("formGroup", ".cd-form-field");
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      this.log("error", "map:all:error", "Mapping failed", err);
+    }
+  }
+
+  /* ======================================================================
+   * DOM OBSERVER
+   * ====================================================================== */
+
+  private observeMutations() {
+    if (this.observer) return;
+
+    this.observer = new MutationObserver(() => {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => this.mapAll());
+      } else {
+        setTimeout(() => this.mapAll(), 16);
+      }
+    });
+
+    try {
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    } catch (err) {
+      this.log("error", "observer:error", "Failed to attach observer", err);
+      this.observer = null;
+    }
+  }
+}
+
+/* ========================================================================
+ * AUTO-REGISTRATION
+ * ======================================================================== */
+
+UiSystemAdapterRegistry.register(
+  "bootstrap-538",
+  new Bootstrap538AdapterService()
+);
+```
+/////////////////////////////////////////////////
+Despite all the intricate changes we have made with specific target on Bootstrap538AdapterService, it is worth noting that I have set the ui-system to material-design and it has worked smoothly.
+Besides working smoothly, I needed you to also examine how it is working so that you can mark the base on its current working path as we move foward.
+
+```log
+[UiSystemAdapterRegistry] register: bootstrap-538 
+Object { logger: {…}, descriptor: null, lifecycle: "created", shellPhase: "init", observer: null, appliedSet: WeakSet [], adapterId: "bootstrap-538", capabilities: {…}, meta: {…} }
+index-CnrRNgOU.js:48:13560
+[BulmaAdapterService] constructor() index-CnrRNgOU.js:53:17837
+[UiSystemAdapterRegistry] register: bulma 
+Object { descriptor: null, observer: null, appliedSet: WeakSet [] }
+index-CnrRNgOU.js:48:13560
+[MaterialDesignAdapter] constructor() index-CnrRNgOU.js:53:20320
+[UiSystemAdapterRegistry] register: material-design 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2), meta: {…} }
+index-CnrRNgOU.js:48:13560
+start 1 index-CnrRNgOU.js:65:8526
+[SHELL] [DEBUG] [Main] init(): starting index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [Main] Running in browser → skipping ensureInitialized() index-CnrRNgOU.js:48:1853
+[ModuleService][constructor]: starting index-CnrRNgOU.js:31:5042
+[ModuleService] Running under Vite (browser). index-CnrRNgOU.js:31:5115
+[ModuleService][constructor]: starting index-CnrRNgOU.js:31:5042
+[ModuleService] Running under Vite (browser). index-CnrRNgOU.js:31:5115
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CnrRNgOU.js:48:14264
+[SHELL] [DEBUG] [Splash] loading 
+Object { path: "/splashscreens/corpdesk-default.html", minDuration: 3400 }
+index-CnrRNgOU.js:48:1853
+[ConfigService] loaded config: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CnrRNgOU.js:48:14264
+[SHELL] [DEBUG] [Main] init(): completed index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] starting bootstrapShell() index-CnrRNgOU.js:48:1853
+[CSS-DIAG] Main.run() started 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] start index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] base: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] userShell: undefined index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [ConfigService.applyUserShellConfigWithPolicy()] consumerShell: undefined index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [ConfigService] No user shell config → base config retained index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] Performing anon login index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] consumerGuid B0B3DA99-1859-A499-90F6-1E3F69575DCD index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UserService.login] attempting login 
+Object { user: "anon", consumerGuid: "B0B3DA99-1859-A499-90F6-1E3F69575DCD" }
+index-CnrRNgOU.js:48:1853
+[HttpService] proc() → profile: cdApiLocal, endpoint: http://localhost:3001/api index-CnrRNgOU.js:53:8531
+[HttpService] Initialized Axios instance [cdApiLocal] → http://localhost:3001/api index-CnrRNgOU.js:53:7301
+[HttpService] Request Config: 
+Object { method: "POST", url: "http://localhost:3001/api", data: {…} }
+index-CnrRNgOU.js:53:7301
+[SHELL] [DEBUG] [UserService.login] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UserService.loginAnonUser] anon login success index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [Main.run] fx: 
+Object { state: true, data: {…}, message: "Request succeeded" }
+index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [Main] Discovering UI system adapters index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UiAdapterDiscovery] Raw Modules found: 
+Object { "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/bulma-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/material-design-adapter.service.ts": {…}, "../../../app/ui-adaptor-port/services/plain-adapter.service.ts": {…} }
+index-CnrRNgOU.js:48:1853
+[SHELL] [ERROR] Failed to instantiate adapter 
+Object { path: "../../../app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts", error: Error }
+index-CnrRNgOU.js:48:1975
+[BulmaAdapterService] constructor() index-CnrRNgOU.js:53:17837
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/bulma-adapter.service.ts" }
+index-CnrRNgOU.js:48:1934
+[MaterialDesignAdapter] constructor() index-CnrRNgOU.js:53:20320
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/material-design-adapter.service.ts" }
+index-CnrRNgOU.js:48:1934
+[SHELL] [WARN] Adapter instance missing getMeta() 
+Object { path: "../../../app/ui-adaptor-port/services/plain-adapter.service.ts" }
+index-CnrRNgOU.js:48:1934
+[SHELL] [DEBUG] [Main] UI adapters registered 
+Array(3) [ "bootstrap-538", "bulma", "material-design" ]
+index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.loadAndCacheAll()] start index-CnrRNgOU.js:48:1853
+[SysCacheService] Eager load starting index-CnrRNgOU.js:48:4080
+[PHASE][Cache] shellConfig 
+Object { source: "static", version: 1 }
+index-CnrRNgOU.js:65:6634
+[UiSystemLoaderService] Registered UI Systems: 
+Array(3) [ "bootstrap-538", "bulma", "material-design" ]
+index-CnrRNgOU.js:48:23387
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bootstrap-538/descriptor.json index-CnrRNgOU.js:48:23519
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/bulma/descriptor.json index-CnrRNgOU.js:48:23519
+[UiSystemLoaderService] Loading descriptor: /assets/ui-systems/material-design/descriptor.json index-CnrRNgOU.js:48:23519
+[SHELL] [DEBUG] [SysCacheService.cacheUiSystems()] start index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.normalizeUiSystemDescriptors()] start index-CnrRNgOU.js:48:1853
+[SysCacheService] UI systems cached 
+Object { simpleCount: 3, fullCount: 3, source: "static" }
+index-CnrRNgOU.js:48:6420
+[UiThemeLoaderService][fetchAvailableThemes] start 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", defaultFormVariant: "standard", uiSystemBasePath: "/assets/ui-systems/" }
+index-CnrRNgOU.js:48:19912
+[SysCacheService] Load complete index-CnrRNgOU.js:48:4685
+[CSS-DIAG] Cache loaded (static) 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] start index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [ConfigService.promoteResolvedShellConfig] resolutionMode: FULL_CONTEXT index-CnrRNgOU.js:48:1853
+[PHASE 2][ConfigService] Promote resolved shell config index-CnrRNgOU.js:48:18780
+[SHELL] [DEBUG] [Main] Shell config promoted 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] start index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [SysCacheService.applyResolvedShellConfig()] resolvedShellConfig: 
+Object { appName: "Corpdesk PWA", fallbackTitle: "Corpdesk PWA", appVersion: "1.0.0", appDescription: "Corpdesk PWA", themeConfig: {…}, defaultModulePath: "sys/cd-user", logLevel: "debug", uiConfig: {…}, splash: {…}, envConfig: {…} }
+index-CnrRNgOU.js:48:1853
+[PHASE][Cache] shellConfig 
+Object { source: "resolved", version: 14 }
+index-CnrRNgOU.js:65:6634
+[SysCacheService] Resolved shell config applied 
+Object { defaultUiSystemId: "material-design", defaultThemeId: "dark", source: "resolved" }
+index-CnrRNgOU.js:48:7066
+[SHELL] [DEBUG] [UiSystemLoaderService.bootstrapUiSystemAndTheme()] start index-CnrRNgOU.js:48:1853
+[SHELL] [DEBUG] [UiSystemLoaderService.applyStartupUiSettings()] start index-CnrRNgOU.js:48:1853
+[CSS-DIAG] [MAIN.applyStartupUiSettings] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] START 
+Object { id: "material-design" }
+index-CnrRNgOU.js:31:3156
+[SHELL] [DEBUG] [UiSystemLoaderService.getFullDescriptor()] start index-CnrRNgOU.js:48:1853
+[UiSystemLoaderService.activate] descriptorFromCache: 
+Object { id: "material-design", name: "Material Components Web", version: "1.0.0", description: "Material Components Web (MDC) UI System for Corpdesk. Provides mdc classes and theme support.", cssUrl: "/assets/ui-systems/material-design/material-components-web.min.css", jsUrl: "/assets/ui-systems/material-design/material-components-web.min.js", assetPath: "/assets/ui-systems/material-design", stylesheets: (1) […], scripts: (1) […], themesAvailable: (2) […], … }
+index-CnrRNgOU.js:48:24624
+[CSS-DIAG] [UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] RESOLVED PATHS 
+Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css", jsPath: "/assets/ui-systems/material-design/material-components-web.min.js", bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/material-components-web.min.css", id: "material-design", resolved: "http://localhost:5173/assets/ui-systems/material-design/material-components-web.min.css", order: (2) […] }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] CSS LOADED 
+Object { cssPath: "/assets/ui-systems/material-design/material-components-web.min.css" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/ui-systems/material-design/bridge.css", id: "material-design-bridge", resolved: "http://localhost:5173/assets/ui-systems/material-design/bridge.css", order: (3) […] }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] BRIDGE CSS LOADED 
+Object { bridgeCssPath: "/assets/ui-systems/material-design/bridge.css" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] SCRIPT LOADED 
+Object { jsPath: "/assets/ui-systems/material-design/material-components-web.min.js" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MaterialDesignAdapter] activate() START 
+Object { id: "material-design" }
+index-CnrRNgOU.js:31:3156
+[MaterialDesignAdapter] Loaded conceptMappings: 
+Object { button: {…}, card: {…}, input: {…}, formGroup: {…} }
+index-CnrRNgOU.js:53:20551
+[MaterialDesignAdapter] mapAll() — START index-CnrRNgOU.js:65:1540
+[MaterialDesignAdapter] getMapping('button') = 
+Object { class: "mdc-button mdc-button--raised" }
+index-CnrRNgOU.js:53:21893
+[CSS-DIAG] [MaterialDesignAdapter] mapButtons() 
+Object { count: 0 }
+index-CnrRNgOU.js:31:3156
+[MaterialDesignAdapter] getMapping('input') = 
+Object { class: "mdc-text-field__input", attrs: {} }
+index-CnrRNgOU.js:53:21893
+[CSS-DIAG] [MaterialDesignAdapter] mapInputs() 
+Object { candidates: 0 }
+index-CnrRNgOU.js:31:3156
+[MaterialDesignAdapter] getMapping('formGroup') = 
+Object { class: "mdc-form-field" }
+index-CnrRNgOU.js:53:21893
+[CSS-DIAG] [MaterialDesignAdapter] mapFormGroups() 
+Object { count: 0 }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MaterialDesignAdapter] mapOtherConcepts() 
+Object { concepts: (1) […] }
+index-CnrRNgOU.js:31:3156
+[MaterialDesignAdapter] mapAll() — END index-CnrRNgOU.js:65:1872
+[CSS-DIAG] [MaterialDesignAdapter] MutationObserver ATTACH 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MaterialDesignAdapter] activate() COMPLETE 
+Object { active: "material-design" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] ADAPTER ACTIVATED 
+Object { id: "material-design" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.activate] COMPLETE 
+Object { activeSystem: "material-design" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] ui-system activated 
+Object { systemId: "material-design" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/themes/common/base.css", id: "shell-base" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/themes/common/base.css", id: "shell-base", resolved: "http://localhost:5173/themes/common/base.css", order: (4) […] }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] REQUEST 
+Object { path: "/assets/css/index.css", id: "shell-index" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.loadCSS] LOADED 
+Object { path: "/assets/css/index.css", id: "shell-index", resolved: "http://localhost:5173/assets/css/index.css", order: (5) […] }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] shell CSS loaded 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] start 
+Object { themeId: "dark" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiThemeLoaderService.loadThemeById] loaded 
+Object { themeId: "dark", cssPath: "/themes/dark/theme.css" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] theme assets loaded 
+Object { themeId: "dark" }
+index-CnrRNgOU.js:31:3156
+[UITHEMENORMALIZER] [DEBUG] Theme normalized 
+Object { id: "dark", source: "static", uiSystem: "material-design" }
+index-CnrRNgOU.js:48:1853
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] start 
+Object { systemId: "material-design", themeId: "dark" }
+index-CnrRNgOU.js:31:3156
+[UiSystemLoaderService.applyTheme] adapter received: 
+Object { descriptor: {…}, observer: MutationObserver, appliedSet: WeakSet(3), mdcInitQueued: false, mdcInstances: Set(2), meta: {…} }
+index-CnrRNgOU.js:48:27076
+[UiSystemLoaderService][applyTheme] descriptors: 
+Array [ {…}, {…} ]
+index-CnrRNgOU.js:48:27275
+[UiSystemLoaderService][applyTheme] descriptors: 
+Object { name: "Dark Theme", id: "dark", logo: "/themes/default/logo.png", css: "/themes/dark/theme.css", mode: "dark", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-CnrRNgOU.js:48:27369
+[CSS-DIAG] [MaterialDesignAdapter] applyTheme() 
+Object { themeDescriptorOrId: {…} }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MaterialDesignAdapter] applied Material theme 
+Object { mode: "dark" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [UiSystemLoaderService.applyTheme] done 
+Object { systemId: "material-design", themeId: "dark" }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] system applyTheme complete 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] [MAIN.applyStartupUiSettings] done 
+Object {  }
+index-CnrRNgOU.js:31:3156
+[CSS-DIAG] UI-System + Theme applied 
+Object {  }
+index-CnrRNgOU.js:31:3156
+ThemeService::loadThemeConfig(default) index-CnrRNgOU.js:48:2318
+[CSS-DIAG] ThemeConfig loaded 
+Object { name: "Default Theme", id: "default", logo: "/themes/default/logo.png", css: "/themes/default/theme.css", mode: "light", font: "Arial, sans-serif", colors: {…}, layout: {…} }
+index-CnrRNgOU.js:31:3156
+[ModuleService][constructor]: starting index-CnrRNgOU.js:31:5042
+[ModuleService] Running under Vite (browser). index-CnrRNgOU.js:31:5115
+[Preload] Loading dev-sync index-CnrRNgOU.js:31:7400
+ModuleService::loadModule()/01: index-CnrRNgOU.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CnrRNgOU.js:31:8202
+[ModuleService] 1 index-CnrRNgOU.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-CnrRNgOU.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-CnrRNgOU.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-CnrRNgOU.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-CnrRNgOU.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 09/01/2026, 09:10:49 index-CnrRNgOU.js:31:8997
+[Preload] Controller component 'IdeAgentService' not found in module dev-sync. index-CnrRNgOU.js:31:7696
+[Preload] Completed IdeAgentService index-CnrRNgOU.js:31:7795
+[Preload] Loading dev-sync index-CnrRNgOU.js:31:7400
+ModuleService::loadModule()/01: index-CnrRNgOU.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/dev-sync/view/index.js index-CnrRNgOU.js:31:8202
+[ModuleService] 1 index-CnrRNgOU.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/dev-sync/view/index.js index-CnrRNgOU.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-push", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (1) […], menu: [] }
+index-CnrRNgOU.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-CnrRNgOU.js:31:8757
+[ModuleService] Loaded module metadata passively: dev-sync. Setup skipped. index-CnrRNgOU.js:31:8909
+[ModuleService] Loaded 'dev-sync' (Vite mode) at 09/01/2026, 09:10:49 index-CnrRNgOU.js:31:8997
+[Preload] Controller component 'IdeAgentClientService' not found in module dev-sync. index-CnrRNgOU.js:31:7696
+[Preload] Completed IdeAgentClientService index-CnrRNgOU.js:31:7795
+ModuleService::loadModule()/01: index-CnrRNgOU.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-user/view/index.js index-CnrRNgOU.js:31:8202
+[ModuleService] 1 index-CnrRNgOU.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-user/view/index.js index-CnrRNgOU.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", isDefault: true, moduleId: "cd-user", moduleName: "Auto-Generated Module", moduleGuid: "auto-guid", controllers: (2) […], menu: (1) […] }
+index-CnrRNgOU.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-CnrRNgOU.js:31:8757
+[ModuleService] Loaded 'cd-user' (Vite mode) at 09/01/2026, 09:10:49 index-CnrRNgOU.js:31:8997
+ModuleService::loadModule()/01: index-CnrRNgOU.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/cd-admin/view/index.js index-CnrRNgOU.js:31:8202
+[ModuleService] 1 index-CnrRNgOU.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/cd-admin/view/index.js index-CnrRNgOU.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "cd-admin", moduleName: "cd-admin", moduleGuid: "aaaa-bbbb-cccc-dddd", controllers: (1) […], menu: (1) […], isDefault: false }
+index-CnrRNgOU.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…} ]
+index-CnrRNgOU.js:31:8757
+[ModuleService] Loaded module metadata passively: cd-admin. Setup skipped. index-CnrRNgOU.js:31:8909
+[ModuleService] Loaded 'cd-admin' (Vite mode) at 09/01/2026, 09:10:49 index-CnrRNgOU.js:31:8997
+ModuleService::loadModule()/01: index-CnrRNgOU.js:31:8038
+[ModuleService] expectedPathFragment: src/CdShell/sys/moduleman/view/index.js index-CnrRNgOU.js:31:8202
+[ModuleService] 1 index-CnrRNgOU.js:31:8262
+[ModuleService][loadModule] pathKey: /src/CdShell/sys/moduleman/view/index.js index-CnrRNgOU.js:31:8539
+[ModuleService][loadModule] moduleInfo: 
+Object { ctx: "sys", moduleId: "moduleman-consumer-resource", moduleName: "consumer-resource", moduleGuid: "consr-0001-0000-0000", controllers: (2) […], menu: (1) […], isDefault: false }
+index-CnrRNgOU.js:31:8698
+[ModuleService][loadModule] moduleInfo.controllers: 
+Array [ {…}, {…} ]
+index-CnrRNgOU.js:31:8757
+[ModuleService] Loaded module metadata passively: moduleman. Setup skipped. index-CnrRNgOU.js:31:8909
+[ModuleService] Loaded 'moduleman' (Vite mode) at 09/01/2026, 09:10:49 index-CnrRNgOU.js:31:8997
+[CSS-DIAG] Modules Loaded 
+```
+
+//////////////////////////////////////////////////
+
+I am in the process for developing a framework for developers that can be used to automate software development process.
+The system is called corpdesk.
+It has various components, all are developed in node.js:
+- cd-cli: cli based orgestrator for the whole system
+- cd-api: http backend of the system
+- cd-sio: socket.io based push server (shares code base with cd-api)
+- cd-shell: configurable PWA/capacitor based gui system
+
+The vision is to have the automation process managed by ai agents.
+This writeup is currently focussing on the cd-shell.
+
+I would like to send you serries of reference that you can compile into a documentation for cd-shell.
+The topic covered will include:
+1. Generic html scripting much like what Angular developers do with the 'template'.
+2. How the generic scripting is translated via ui-adaptors
+3. How the system allow themeing.
+4. How the active ui-system and themes are controlled via configuration layers.
+5. Diagramatic representation of the birds eye view of the system
+
+Objectives and Scope of documentation:
+- The documentation primariy targets contributing developers 
+- The documentation should be done in a way that the various concepts and mechanisms can qualify for:
+  - rfc standards as protocols that can be industrially replicated in language agnostic fashion
+  - can be used as basis for patent application
+
+-----------------------------
+Corpdesk directory structure
+-----------------------------
+
+Main project directory for for corpdesk project would be src/<project-name-in-camel-case>
+So for cd-shell project is src/CdShell.
+In all such directories, independent of which project, the drectories is first split in two 'sys' and 'app'.
+'sys' hosts core module and 'app' are the developer/3rd party modules.
+All module are managed in just 3 directories:
+1. controllers
+2. models
+3. services
+In cd-shell, we have an extra one for 'views'.
+
+Below is an illustration of the current state of cd-shell.
+emp-12@emp-12 ~/cd-shell (main)> tree -d -L 3 -I "node_modules|.git|dist|dist-ts|docs|scripts|sdk" src/CdShell/
+src/CdShell/
+├── app
+│   ├── cd-ai
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-geo
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── coops
+│   │   ├── controllers
+│   │   ├── extra
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   └── ui-adaptor-port
+│       ├── controllers
+│       ├── models
+│       ├── services
+│       └── view
+├── plugins
+│   ├── app
+│   ├── data
+│   ├── location
+│   ├── media
+│   ├── notifications
+│   ├── storage
+│   ├── system
+│   └── ui
+├── sys
+│   ├── base
+│   │   └── view
+│   ├── cd-admin
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-comm
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-guig
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-platform
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-push
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-scheduler
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-store
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── cd-user
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── dev-descriptor
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── dev-sync
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── moduleman
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   ├── theme
+│   │   ├── controllers
+│   │   ├── models
+│   │   ├── services
+│   │   └── view
+│   └── utils
+│       └── view
+└── utils
+
+
+Besides the corpdesk standard structures, cd-shell has some other important files and directories worth mentioning.
+
+-----------------------------
+1. Public directory
+-----------------------------
+
+emp-12@emp-12 ~/cd-shell (main)> tree -d -L 3 -I "node_modules|.git|dist|dist-ts|docs|scripts|sdk" public/
+public/
+├── assets
+│   ├── css
+│   │   └── font-awesome-6.5.0
+│   ├── fonts
+│   ├── images
+│   └── ui-systems
+│       ├── bootstrap-502
+│       ├── bootstrap-538
+│       ├── bulma
+│       ├── flowbite
+│       ├── foundation
+│       ├── material-design
+│       └── primer
+├── splashscreens
+└── themes
+    ├── common
+    │   └── forms
+    ├── dark
+    │   └── menu-systems
+    └── default
+        └── menu-systems
+
+-----------------------------
+2. main.ts:
+-----------------------------
+
+In all corpdesk applications, the process is bootstraped from main.ts.
+And in it would be Main class and the method run(), that actually does the bootstrap.
+Below is the Main.run() for cd-shell.
+```ts
+async run() {
+    //---------------------------------------
+    // SPLASH: Show immediately
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    await this.svUiSystemLoader.showSplash(this.svConfig);
+
+    this.logger.setLevel("debug");
+    this.logger.debug("starting bootstrapShell()");
+    diag_css("Main.run() started");
+
+    //---------------------------------------
+    // STEP 0: Load base shell config (LEGACY)
+    //---------------------------------------
+    const baseShellConfig: IUserShellConfig =
+      await this.svConfig.loadShellConfig();
+
+    if (baseShellConfig.logLevel) {
+      this.logger.setLevel(baseShellConfig.logLevel);
+    }
+
+    //---------------------------------------
+    // PHASE 1: Observe cache (non-invasive)
+    //---------------------------------------
+    this.svSysCache.subscribe("shellConfig", (value, meta) => {
+      console.log("%c[PHASE][Cache] shellConfig", "color:#4CAF50", {
+        source: meta.source,
+        version: meta.version,
+      });
+    });
+
+    //---------------------------------------
+    // STEP 0.5: Anonymous login
+    //---------------------------------------
+    const fx = await this.svUser.loginAnonUser(
+      baseShellConfig.envConfig.clientContext.consumerToken
+    );
+
+    this.logger.debug("[Main.run] fx:", fx);
+    if (fx?.state && fx.data) {
+      this.consumerProfile = fx.data.data.consumer.consumerProfile || null;
+      this.userProfile = fx.data.data.userData.userProfile || null;
+    }
+
+    //---------------------------------------
+    // STEP 1: Core service instantiation
+    //---------------------------------------
+    this.svUiSystemLoader = UiSystemLoaderService.getInstance(this.svSysCache);
+    this.svUiThemeLoader = UiThemeLoaderService.getInstance(this.svSysCache);
+    this.svSysCache.setLoaders(this.svUiSystemLoader, this.svUiThemeLoader);
+
+    //---------------------------------------
+    // STEP 1.5: Discover & register UI adapters (CRITICAL)
+    //---------------------------------------
+    this.logger.debug("[Main] Discovering UI system adapters");
+
+    UiSystemAdapterDiscoveryService.discoverAndRegister();
+
+    const adapters = UiSystemAdapterRegistry.list();
+    this.logger.debug("[Main] UI adapters registered", adapters);
+
+    if (!adapters.length) {
+      throw new Error(
+        "[BOOT] No UI adapters discovered. Check discovery paths."
+      );
+    }
+
+    //---------------------------------------
+    // STEP 2: Load STATIC cache (CRITICAL)
+    //---------------------------------------
+    await this.svSysCache.loadAndCacheAll();
+    diag_css("Cache loaded (static)");
+
+    //---------------------------------------
+    // PHASE 2: Promote ACL-resolved shell config
+    //---------------------------------------
+    this.resolvedShellConfig = await this.svConfig.promoteResolvedShellConfig(
+      this.svSysCache,
+      this.consumerProfile,
+      this.userProfile
+    );
+
+    this.logger.debug("[Main] Shell config promoted", this.resolvedShellConfig);
+
+    this.svSysCache.applyResolvedShellConfig(this.resolvedShellConfig);
+
+    const shellConfig = this.resolvedShellConfig;
+
+    if (!this.svSysCache.hasConsumerContext()) {
+      this.logger.info("[UI] Running in consumer-less mode");
+    }
+
+    //---------------------------------------
+    // STEP 3: Apply UI-System + Theme pipeline
+    //---------------------------------------
+    await this.svUiSystemLoader.bootstrapUiSystemAndTheme(this.svSysCache);
+
+    //---------------------------------------
+    // STEP 4: Theme config (logo + title)
+    //---------------------------------------
+    const themeConfig = await this.svTheme.loadThemeConfig();
+    diag_css("ThemeConfig loaded", themeConfig);
+
+    document.title =
+      shellConfig.appName || shellConfig.fallbackTitle || "Corpdesk";
+
+    const logoEl = document.getElementById("cd-logo") as HTMLImageElement;
+    if (logoEl && themeConfig.logo) logoEl.src = themeConfig.logo;
+
+    //---------------------------------------
+    // STEP 5: Prepare menu
+    //---------------------------------------
+    const { preparedMenu, defaultModule } = await this.svMenu.structMenu();
+
+    //---------------------------------------
+    // STEP 6: Sidebar render
+    //---------------------------------------
+    await this.svUiSystemLoader.renderSidebar(
+      this.svMenu,
+      preparedMenu,
+      shellConfig
+    );
+
+    //---------------------------------------
+    // STEP 7: Auto-load default controller
+    //---------------------------------------
+    await this.svController.loadDefaultController(
+      this.svMenu,
+      preparedMenu,
+      defaultModule
+    );
+
+    //---------------------------------------
+    // STEP 8: Mobile UX config
+    //---------------------------------------
+    this.svUiSystemLoader.setupMobileUx();
+
+    //---------------------------------------
+    // APP READY
+    //---------------------------------------
+    this.logger.debug("[Main] app fully bootstrapped");
+    this.svUiSystemLoader.appReady = true;
+    this.svUiSystemLoader.tryHideSplash();
+
+    diag_css("Main.run() complete");
+  }
+```
+
+
+-----------------------------
+cd-shell configuration:
+-----------------------------
+Another important component of cd-shell is that one for configurations.
+interface for configuration data:
+```ts
+export interface IShellConfig {
+  appName: string;
+  fallbackTitle?: string;
+  appVersion?: string;
+  appDescription?: string;
+
+  themeConfig?: ThemeShellConfig;
+
+  /** The default module loaded on startup */
+  defaultModulePath?: string;
+
+  /** debug | info | warn | error */
+  logLevel?: LogLevel;
+
+  /** UI system preferences */
+  uiConfig?: UiShellConfig;
+
+  /**
+   * NEW:
+   * Marks configs originating from system, consumer, or user level.
+   */
+  source?: "system" | "consumer" | "user";
+
+  splash: {
+    enabled: boolean;
+    path: string;
+    minDuration: number;
+  };
+
+  envConfig?: EnvConfig;
+}
+```
+SysCacheServices is responsible for orchestrating configurations data.
+Initial source come from public/shell.config.json
+Otherwise, the authoritative configurations resides in the consumer controller.
+corpdesk being multi-tenanant system, consumer controller is in charge of tenant data management.
+So a root user at consumer level would have an interface for setting active ui-system and the themes, logo and other artefacts.
+The same interface can be used to set user privilege to control certain aspects of visuals eg dark or default theme.
+
+Use the information attached in sys-cache-ref.md to do fill up the section on SysCacheService works and how it does the configuration access and control of privileges:
+During login process, the user goes through ACL filtering for which resources he/she has access to and the api responds with data that include:
+1. user profile under user data
+2. consumer profile under consumer data
+
+Consumer profile can dictate what privileges user has over configuration control.
+See IConsumerShellConfig under consumer.model.ts shared below.
+Of the settings that has been set by the user, it would be saved in user profile.
+
+// public/shell.config.json
+```json
+{
+  "appName": "Corpdesk PWA",
+  "fallbackTitle": "Corpdesk PWA",
+  "appVersion": "1.0.0",
+  "appDescription": "Corpdesk PWA",
+
+  "themeConfig": {
+    "currentThemePath": "/themes/default/theme.json",
+    "accessibleThemes": ["default", "dark", "contrast"]
+  },
+
+  "defaultModulePath": "sys/cd-user",
+  "logLevel": "debug",
+
+  "uiConfig": {
+    "defaultUiSystemId": "material-design",
+    "defaultThemeId": "dark",
+    "defaultFormVariant": "standard",
+    "uiSystemBasePath": "/assets/ui-systems/"
+  },
+
+  "splash": {
+    "enabled": true,
+    "path": "/splashscreens/corpdesk-default.html",
+    "minDuration": 3400
+  },
+
+  "envConfig": {
+    "appId": "",
+    "production": true,
+    "apiEndpoint": "https://localhost:3001/api",
+    "sioEndpoint": "https://localhost:3002",
+    "wsEndpoint": "wss://localhost:3000",
+    "wsMode": "sio",
+
+    "pushConfig": {
+      "sio": { "enabled": true },
+      "wss": { "enabled": false },
+      "pusher": {
+        "enabled": false,
+        "apiKey": "",
+        "options": {
+          "cluster": "",
+          "forceTLS": true
+        }
+      }
+    },
+
+    "clientAppGuid": "ca0fe39f-92b2-484d-91ef-487d4fc462a2",
+    "clientContext": {
+      "entity": "ASDAP",
+      "clientAppId": 2,
+      "consumerToken": "B0B3DA99-1859-A499-90F6-1E3F69575DCD"
+    },
+
+    "USER_RESOURCES": "https://assets.corpdesk.com/user-resources",
+    "apiHost": "https://localhost",
+    "sioHost": "https://localhost",
+    "shellHost": "https://localhost",
+    "consumer": "ACME_CORP",
+
+    "clientAppId": 2,
+    "SOCKET_IO_PORT": 3002,
+    "defaultauth": "cd-auth",
+    "initialPage": "dashboard",
+    "mfManifestPath": "/assets/mf.manifest.json",
+
+    "apiOptions": {
+      "headers": { "Content-Type": "application/json" }
+    },
+
+    "sioOptions": {
+      "path": "/socket.io",
+      "transports": ["websocket", "polling"],
+      "secure": true
+    },
+
+    "logLevel": "debug"
+  }
+}
+
+```
+
+--------------
+Generic script
+--------------
+Generic html scripting much like what Angular developers do with the 'template'.
+The developer works on a script in the file src/CdShell/sys/<module-name>/controllers/<controller-name>.controller.ts
+For example src/CdShell/sys/cd-user/controllers/sign-in.controller.ts
+This script is compiled by cd-shell to views directory: src/CdShell/sys/<module-name>//view/<controller-name>.controller.js
+It is this compiled version that is processed by the adaptor via index.js file in the views directory.
+This allows developer or ai agent to use just one 'language' to produce consistent output. The ui-system or theme can be managed by end users via gui or ai agent.
+Note that we are at a development stage where we are manually developing what would have been automatically generated view files.
+This process will dictate how scripting is done by the developer and how the eventual compilations are executed.
+
+Example of a controller compiled script
+```js
+// src/CdShell/sys/cd-user/view/sign-in.controller.js
+import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
+import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
+import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
+import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
+
+export const ctlSignIn = {
+  form: null,
+  binder: null,
+
+  /**
+   * Initializes the controller — constructs the form and binder.
+   */
+  __init() {
+    this.form = new CdFormGroup({
+      userName: new CdFormControl("", [
+        CdValidators.required("Username is required"),
+      ]),
+      password: new CdFormControl("", [
+        CdValidators.required("Password is required"),
+        CdValidators.minLength(4, "Password must be at least 4 characters"),
+      ]),
+    });
+
+    // Initialize binder — form selector must match template form ID
+    this.binder = new CdDirectiveBinderService(this.form, "#signInForm", this);
+  },
+
+  /**
+   * HTML template for the view.
+   */
+  __template() {
+    return `
+      <form id="signInForm" class="cd-form">
+        <div class="cd-form-field">
+          <label for="userName">Username</label>
+          <input
+            id="userName"
+            name="userName"
+            cdFormControl
+            placeholder="Enter username"
+          />
+          <div class="error-message" data-error-for="userName"></div>
+        </div>
+
+        <div class="cd-form-field">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            cdFormControl
+            placeholder="Enter password"
+          />
+          <div class="error-message" data-error-for="password"></div>
+        </div>
+
+        <button cdButton>Sign In</button>
+      </form>
+    `;
+  },
+
+  /**
+   * Runs after template is rendered to DOM.
+   */
+  __setup() {
+    // Initialize form and binder if not already
+    if (!this.form) this.__init();
+
+    const form = document.querySelector("#signInForm");
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        this.auth();
+      });
+    }
+  },
+
+  /**
+   * Authentication handler.
+   */
+  async auth() {
+    const validationResult = this.form.validateAll();
+    this.binder.applyValidationStyles(validationResult);
+
+    if (!this.form.valid) {
+      alert("Please correct the highlighted errors.");
+      return;
+    }
+
+    const user = this.form.value;
+    console.log("Authenticating:", user);
+    alert(`Welcome, ${user.userName}!`);
+  },
+
+  // 💡 NEW: Deactivation Hook - Runs when user clicks *away*
+  __deactivate() {
+    console.log('[ctlSignIn][__deactivate] 01')
+    // Stop any active animations, remove DOM-dependent listeners, etc.
+    // The binder must provide a way to remove all listeners.
+    if (this.binder?.unbindAllDomEvents) {
+      this.binder.unbindAllDomEvents();
+    }
+  },
+
+  // 💡 NEW: Activation Hook - Runs when view is *injected*
+  async __activate() {
+    console.log('[ctlSignIn][__activate] 01')
+    // Re-establish DOM bindings and apply current form state
+    if (this.binder?.bindToDom) {
+      // This method must find the newly injected DOM (#settingsForm)
+      // and re-attach all form control listeners (input, change, blur)
+      await this.binder.bindToDom();
+    }
+    // Optional: Restore scroll position, run focus logic, etc.
+  },
+};
+
+```
+All views files have index.js file that aggregates the module menu and controller files.
+```js
+// src/CdShell/sys/cd-user/view/index.js
+// Generated by post-build.js
+import { ctlSignIn } from "./sign-in.controller.js";
+import { ctlSignUp } from "./sign-up.controller.js";
+
+export const cdUserModule = {
+  ctx: "sys",
+  isDefault: true,
+  moduleId: "cd-user",
+  moduleName: "Auto-Generated Module",
+  moduleGuid: "auto-guid",
+  controllers: [
+    { name: "sign-in", instance: ctlSignIn, template: ctlSignIn.__template(), default: true, },
+    { name: "sign-up", instance: ctlSignUp, template: ctlSignUp.__template(), default: false, },
+  ],
+  menu: [ // Menu structure is generated separately or hardcoded
+    {
+      label: 'cd-user',
+      route: 'sys/cd-user',
+      children: [
+        { label: 'sign-in', itemType: 'route',  route: 'sys/cd-user/sign-in', template: ctlSignIn.__template() },
+        { label: 'sign-up', itemType: 'route', route: 'sys/cd-user/sign-up', template: ctlSignUp.__template() }
+      ]
+    }
+  ], 
+};
+
+export const module = cdUserModule;
+
+```
+
+```js
+// src/CdShell/sys/moduleman/view/consumer-resource2.controller.js
+
+// ------------------------------------------------------------
+// consumer-resource.controller.js
+// ------------------------------------------------------------
+
+import { ConfigService } from "../../moduleman/services/config.service";
+import { SysCacheService } from "../../moduleman/services/sys-cache.service";
+
+import { CdFormGroup } from "../../cd-guig/controllers/cd-form-group.control";
+import { CdFormControl } from "../../cd-guig/controllers/cd-form.control";
+import { CdValidators } from "../../cd-guig/controllers/cd-validators.controller";
+import { CdDirectiveBinderService } from "../../cd-guig/services/cd-directive-binder.service";
+
+export const ctlConsumerResource2 = {
+  form: null,
+  binder: null,
+  svConfig: null,
+  sysCache: null,
+
+  resolvedShellConfig: null,
+
+  // ----------------------------------------------------------
+  // Lifecycle
+  // ----------------------------------------------------------
+
+  async __init() {
+    console.log("[ctlConsumerResource][__init]");
+
+    this.svConfig = new ConfigService();
+    this.sysCache = SysCacheService.getInstance(this.svConfig);
+
+    this.form = new CdFormGroup({
+      appName: new CdFormControl("", [
+        CdValidators.required("App name is required"),
+      ]),
+
+      logLevel: new CdFormControl("info"),
+
+      splashEnabled: new CdFormControl(false),
+      splashPath: new CdFormControl(""),
+      splashMinDuration: new CdFormControl(1000),
+    });
+
+    this.binder = new CdDirectiveBinderService(
+      this.form,
+      "#consumerShellConfigForm",
+      this
+    );
+  },
+
+  async __setup() {
+    console.log("[ctlConsumerResource][__setup]");
+    await this.sysCache.ensureReady();
+
+    // resolved view (system → consumer → user)
+    this.resolvedShellConfig = this.sysCache.get("shellConfig") || {};
+  },
+
+  async __activate() {
+    console.log("[ctlConsumerResource][__activate]");
+    if (this.binder?.bindToDom) await this.binder.bindToDom();
+  },
+
+  async __afterInit() {
+    console.log("[ctlConsumerResource][__afterInit]");
+
+    const cfg = this.resolvedShellConfig;
+    if (!cfg) return;
+
+    this.form.controls.appName.setValue(cfg.appName || "");
+    this.form.controls.logLevel.setValue(cfg.logLevel || "info");
+
+    this.form.controls.splashEnabled.setValue(cfg.splash?.enabled ?? false);
+    this.form.controls.splashPath.setValue(cfg.splash?.path || "");
+    this.form.controls.splashMinDuration.setValue(
+      cfg.splash?.minDuration ?? 1000
+    );
+
+    if (this.binder?.refreshView) this.binder.refreshView();
+  },
+
+  __deactivate() {
+    console.log("[ctlConsumerResource][__deactivate]");
+    if (this.binder?.unbindAllDomEvents) this.binder.unbindAllDomEvents();
+  },
+
+  // ----------------------------------------------------------
+  // Template
+  // ----------------------------------------------------------
+
+  __template() {
+    return `
+      <div class="cd-panel">
+        <h2>Consumer Shell Configuration</h2>
+
+        <form id="consumerShellConfigForm" class="cd-form">
+          
+          <cd-tabs id="shellConfigTabs" active-tab="tab-identity">
+            
+            <cd-tab id="tab-identity" icon="fingerprint" label="Identity">
+              <div class="mt-3">
+                <div class="cd-form-field">
+                  <label>Application Name</label>
+                  <input type="text" name="appName" cdFormControl />
+                </div>
+
+                <div class="cd-form-field">
+                  <label>Log Level</label>
+                  <select name="logLevel" cdFormControl>
+                    <option value="debug">debug</option>
+                    <option value="info">info</option>
+                    <option value="warn">warn</option>
+                    <option value="error">error</option>
+                  </select>
+                </div>
+              </div>
+            </cd-tab>
+
+            <cd-tab id="tab-startup" icon="rocket_launch" label="Startup">
+              <div class="mt-3">
+                <div class="cd-form-field">
+                  <label>
+                    <input type="checkbox" name="splashEnabled" cdFormControl />
+                    Enable Splash Screen
+                  </label>
+                </div>
+
+                <div class="cd-form-field">
+                  <label>Splash Asset Path</label>
+                  <input type="text" name="splashPath" cdFormControl />
+                </div>
+
+                <div class="cd-form-field">
+                  <label>Minimum Duration (ms)</label>
+                  <input type="number" name="splashMinDuration" cdFormControl />
+                </div>
+              </div>
+            </cd-tab>
+
+          </cd-tabs>
+
+          <div class="mt-4">
+            <button cdButton (click)="onSave()">Save Configuration</button>
+          </div>
+          
+        </form>
+      </div>
+    `;
+  },
+
+  // ----------------------------------------------------------
+  // Actions
+  // ----------------------------------------------------------
+
+  async onSave() {
+    console.log("[ctlConsumerResource][onSave]");
+
+    const v = this.form.value;
+
+    const patch = {
+      appName: v.appName,
+      logLevel: v.logLevel,
+      splash: {
+        enabled: v.splashEnabled,
+        path: v.splashPath,
+        minDuration: Number(v.splashMinDuration),
+      },
+      source: "consumer",
+    };
+
+    await this.svConfig.updateConsumerShellConfig(patch);
+
+    console.log("[ctlConsumerResource] consumer shellConfig updated", patch);
+  },
+};
+
+```
+
+```js
+// src/CdShell/sys/moduleman/view/index.js
+
+// ------------------------------------------------------------
+// index.js
+// ------------------------------------------------------------
+import { ctlConsumerResource } from "./consumer-resource.controller.js";
+import { ctlConsumerResource2 } from "./consumer-resource2.controller.js";
+
+export const consumerResourceModule = {
+  ctx: "sys",
+
+  moduleId: "moduleman-consumer-resource",
+  moduleName: "consumer-resource",
+  moduleGuid: "consr-0001-0000-0000",
+
+  controllers: [
+    { name: "consumer-resource", instance: ctlConsumerResource, template: ctlConsumerResource.__template(), default: false, },
+    { name: "consumer-resource2", instance: ctlConsumerResource2, template: ctlConsumerResource2.__template(), default: false, }
+  ],
+
+  menu: [
+    {
+      label: "consumer",
+      route: "sys/consumer",
+      children: [
+        {
+          label: "consumer-resource",
+          itemType: "route",
+          route: "sys/moduleman/consumer-resource",
+          template: ctlConsumerResource.__template(),
+        },
+        {
+          label: "consumer-resource2",
+          itemType: "route",
+          route: "sys/moduleman/consumer-resource2",
+          template: ctlConsumerResource2.__template(),
+        },
+      ],
+    },
+  ],
+};
+
+export const module = consumerResourceModule;
+
+```
+
+GUIG Module:
+The module in charge of ui is called cd-guig. 
+GUIG stands for Graphic User Interface Generator. This follows corpdesk phylosophy of managing the gui as a dynamic interface that can be managed autonomously.
+
+Two of the critical service include UiSystemLoaderService and UiThemeLoaderService.
+The other set of files that defines cd-shell is the design of the adaptors.
+We have a BaseUiAdaptor inherited by all other specific adaptors.
+Below are the current codedes for:
+1. UiSystemLoaderService
+2. UiThemeLoaderService
+3. BaseUiAdaptor
+Two examples of adaptors:
+- Bootstrap538AdapterService
+- MaterialDesignAdapterService
+
+```ts
+export class UiSystemLoaderService {
+  private logger = new LoggerService();
+  private static instance: UiSystemLoaderService | null = null;
+  private activeSystem: UiSystemDescriptor | null = null;
+  private sysCache!: SysCacheService;
+  splashAnimDone = false;
+  appReady = false;
+  uiReady = false;
+  private uiMutationTimer: number | null = null;
+
+  constructor(sysCache: SysCacheService) {
+    this.sysCache = sysCache;
+  }
+
+  public static getInstance(sysCache?: SysCacheService): UiSystemLoaderService {
+    if (!UiSystemLoaderService.instance) {
+      if (!sysCache)
+        throw new Error(
+          "UiSystemLoaderService.getInstance requires SysCacheService on first call."
+        );
+      UiSystemLoaderService.instance = new UiSystemLoaderService(sysCache);
+    }
+    return UiSystemLoaderService.instance;
+  }
+
+  async fetchAvailableSystems(
+    uiConfig: UiConfig
+  ): Promise<UiSystemDescriptor[]> {
+    const baseFolder =
+      uiConfig.uiSystemBasePath || "/public/assets/ui-systems/";
+
+    const systemIds = UiSystemAdapterRegistry.list();
+    console.log("[UiSystemLoaderService] Registered UI Systems:", systemIds);
+
+    const descriptors: UiSystemDescriptor[] = [];
+
+    for (const id of systemIds) {
+      const descriptorUrl = `${baseFolder}${id}/descriptor.json`;
+
+      try {
+        console.log(
+          `[UiSystemLoaderService] Loading descriptor: ${descriptorUrl}`
+        );
+
+        const res = await fetch(descriptorUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json = await res.json();
+
+        // Build absolute path prefix
+        const prefix = `${baseFolder}${id}/`;
+
+        descriptors.push({
+          ...json,
+
+          // ensure id (in case descriptor uses a different internal id)
+          id,
+
+          // Expand asset URLs
+          cssUrl: json.cssUrl ? prefix + json.cssUrl : undefined,
+          jsUrl: json.jsUrl ? prefix + json.jsUrl : undefined,
+
+          stylesheets: (json.stylesheets || []).map(
+            (file: string) => prefix + file
+          ),
+
+          scripts: (json.scripts || []).map((file: string) => prefix + file),
+
+          // keep themes as-is, they already define absolute paths typically
+          themesAvailable: json.themesAvailable || [],
+          themeActive: json.themeActive || null,
+
+          conceptMappings: json.conceptMappings || {},
+          directiveMap: json.directiveMap || {},
+        });
+      } catch (err) {
+        console.warn(
+          `[UiSystemLoaderService] Failed to load ${descriptorUrl}`,
+          err
+        );
+
+        // fallback minimal descriptor (bootstrap-538 had wrong mappings before)
+        const prefix = `${baseFolder}${id}/`;
+
+        descriptors.push({
+          id,
+          name: id,
+          version: "unknown",
+
+          cssUrl: `${prefix}${id}.min.css`,
+          jsUrl: `${prefix}${id}.min.js`,
+
+          stylesheets: [],
+          scripts: [],
+          conceptMappings: {},
+          themesAvailable: [],
+          themeActive: null,
+        });
+      }
+    }
+
+    return descriptors;
+  }
+
+  list(): UiSystemDescriptor[] {
+    return this.sysCache.get("uiSystems") || [];
+  }
+
+  getSystemById(id: string): UiSystemDescriptor | undefined {
+    const available = this.sysCache.get("uiSystems") || [];
+    return available.find((s: any) => s.id === id);
+  }
+
+  public async activate(id: string): Promise<void> {
+    diag_css("[UiSystemLoaderService.activate] START", { id });
+
+    await this.sysCache.ensureReady();
+
+    if (!id) {
+      const auto = (this as any).detectUiSystem?.();
+      if (auto?.id) id = auto.id;
+    }
+
+    // 🔥 FIXED: USE FULL DESCRIPTOR
+    const descriptorFromCache = this.getFullDescriptor(id);
+
+    console.log(
+      "[UiSystemLoaderService.activate] descriptorFromCache:",
+      descriptorFromCache
+    );
+
+    const fallbackDescriptor: any = {
+      id,
+      cssUrl: `/assets/ui-systems/${id}/${id}.min.css`,
+      jsUrl: `/assets/ui-systems/${id}/${id}.min.js`,
+      assetPath: `/assets/ui-systems/${id}`,
+      stylesheets: [],
+      scripts: [],
+      conceptMappings: {}, // included for safety
+      directiveMap: {},
+      metadata: {},
+      extensions: {},
+    };
+
+    const descriptor = descriptorFromCache || fallbackDescriptor;
+    this.activeSystem = descriptor;
+
+    const adapter = UiSystemAdapterRegistry.get(id);
+
+    adapter.setMeta({
+      id: descriptor.id,
+      name: descriptor.name,
+      version: descriptor.version,
+      status: descriptor.deprecated ? "MARKED_FOR_DEPRECATION" : "ACTIVE",
+    });
+
+    // Expose runtime descriptor (adapters/services read this)
+    try {
+      (window as any).CdActiveUiDescriptor = descriptor;
+      (window as any).CD_ACTIVE_UISYSTEM = id;
+      (window as any).CdShellActiveUiSystem = id;
+    } catch (err) {
+      console.warn(
+        "[UiSystemLoaderService.activate] Could not set global descriptor",
+        err
+      );
+    }
+
+    // 3) Remove previous ui-system assets
+    document
+      .querySelectorAll("link[data-cd-uisystem], script[data-cd-uisystem]")
+      .forEach((el) => el.remove());
+    diag_css("[UiSystemLoaderService.activate] REMOVED OLD SYSTEM ASSETS", {});
+
+    // 4) Resolve paths
+    const cssPath =
+      descriptor.cssUrl ||
+      `${descriptor.assetPath || `/assets/ui-systems/${id}`}/bootstrap.min.css`;
+    const jsPath =
+      descriptor.jsUrl ||
+      `${descriptor.assetPath || `/assets/ui-systems/${id}`}/${id}.min.js`;
+    const bridgeCssPath = `${descriptor.assetPath || `/assets/ui-systems/${id}`}/bridge.css`;
+
+    diag_css("[UiSystemLoaderService.activate] RESOLVED PATHS", {
+      cssPath,
+      jsPath,
+      bridgeCssPath,
+    });
+
+    // 5) Load main CSS
+    try {
+      await this.loadCSS(cssPath, id);
+      diag_css("[UiSystemLoaderService.activate] CSS LOADED", { cssPath });
+    } catch (err) {
+      diag_css("[UiSystemLoaderService.activate] CSS LOAD FAILED", {
+        cssPath,
+        err,
+      });
+    }
+
+    // 6) Load optional bridge.css (non-fatal)
+    try {
+      await this.loadCSS(bridgeCssPath, `${id}-bridge`);
+      diag_css("[UiSystemLoaderService.activate] BRIDGE CSS LOADED", {
+        bridgeCssPath,
+      });
+    } catch (err) {
+      console.log(
+        `[UiSystemLoaderService.activate] bridge.css not found for ${id} (optional)`
+      );
+      diag_css("[UiSystemLoaderService.activate] BRIDGE CSS LOAD FAILED", {
+        bridgeCssPath,
+        err,
+      });
+    }
+
+    // 7) Load system JS (optional)
+    try {
+      await this.loadScript(jsPath, id);
+      diag_css("[UiSystemLoaderService.activate] SCRIPT LOADED", { jsPath });
+    } catch (err) {
+      console.warn("[UiSystemLoaderService.activate] script load failed", err);
+      diag_css("[UiSystemLoaderService.activate] SCRIPT LOAD FAILED", {
+        jsPath,
+        err,
+      });
+    }
+
+    // 8) Tell the in-app adapter (registered via UiSystemAdapterRegistry) to activate
+    try {
+      // UiSystemAdapterRegistry should expose a `get(id)` (or similar) that returns a registered adapter instance
+      const { UiSystemAdapterRegistry } = await import(
+        "./ui-system-registry.service"
+      );
+      const adapter = UiSystemAdapterRegistry.get(id);
+
+      if (adapter && typeof adapter.activate === "function") {
+        await adapter.activate(descriptor);
+        diag_css("[UiSystemLoaderService.activate] ADAPTER ACTIVATED", { id });
+      } else {
+        console.log(
+          `[UiSystemLoaderService.activate] No in-app adapter registered for ${id} (skipping)`
+        );
+      }
+    } catch (err) {
+      console.warn(
+        "[UiSystemLoaderService.activate] adapter activation failed",
+        err
+      );
+    }
+
+    // 9) Done
+    diag_css("[UiSystemLoaderService.activate] COMPLETE", { activeSystem: id });
+  }
+
+  /**
+   * applyTheme(systemId, themeId)
+   * - find adapter for systemId, fetch theme descriptor via SysCacheService / UiThemeLoaderService
+   * - call adapter.applyTheme(themeDescriptor)
+   */
+  public async applyTheme(systemId: string, themeId: string): Promise<void> {
+    diag_css("[UiSystemLoaderService.applyTheme] start", { systemId, themeId });
+    // const adapter = UiSystemAdapterFactory.getAdapter(systemId);
+    const adapter = UiSystemAdapterRegistry.get(systemId);
+    console.log(
+      "[UiSystemLoaderService.applyTheme] adapter received:",
+      adapter
+    );
+    if (!adapter) {
+      console.warn(
+        "[UiSystemLoaderService.applyTheme] no adapter for",
+        systemId
+      );
+      return;
+    }
+
+    // get theme descriptor from cache
+    const descriptors = this.sysCache.get("themeDescriptors") || [];
+    console.log(
+      "[UiSystemLoaderService][applyTheme] descriptors:",
+      descriptors
+    );
+    const themeDescriptor = descriptors.find((d: any) => d.id === themeId);
+    console.log(
+      "[UiSystemLoaderService][applyTheme] descriptors:",
+      themeDescriptor
+    );
+
+    // supply descriptor if found, else just themeId
+    await adapter.applyTheme(themeDescriptor || themeId);
+    diag_css("[UiSystemLoaderService.applyTheme] done", { systemId, themeId });
+  }
+
+  public async loadCSS(path: string, id: string): Promise<string> {
+    diag_css("[UiSystemLoaderService.loadCSS] REQUEST", { path, id });
+
+    return new Promise((resolve, reject) => {
+      try {
+        const head = document.head || document.getElementsByTagName("head")[0];
+        if (!head) return reject(new Error("document.head missing"));
+
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = path;
+        link.setAttribute("data-cd-uisystem", id);
+        link.setAttribute("data-cd-origin", "ui-system");
+
+        link.onload = () => {
+          const resolved = (link as HTMLLinkElement).href;
+          diag_css("[UiSystemLoaderService.loadCSS] LOADED", {
+            path,
+            id,
+            resolved,
+            order: Array.from(head.querySelectorAll("link")).map(
+              (l) => (l as HTMLLinkElement).href
+            ),
+          });
+          resolve(resolved);
+        };
+
+        link.onerror = (ev) => {
+          diag_css("[UiSystemLoaderService.loadCSS] ERROR", { path, id, ev });
+          reject(new Error(`Failed to load CSS: ${path}`));
+        };
+
+        head.insertAdjacentElement("beforeend", link);
+      } catch (err) {
+        diag_css("[UiSystemLoaderService.loadCSS] EXCEPTION", {
+          path,
+          id,
+          err,
+        });
+        reject(err);
+      }
+    });
+  }
+
+  public async loadScript(path: string, id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        const script = document.createElement("script");
+        script.src = path;
+        script.async = true;
+        script.setAttribute("data-cd-uisystem", id);
+        script.setAttribute("data-cd-origin", "ui-system");
+        script.onload = () => resolve();
+        script.onerror = (ev) => reject(ev);
+
+        const body = document.body || document.getElementsByTagName("body")[0];
+        if (!body) return reject(new Error("document.body missing"));
+        body.appendChild(script);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  getActive(): UiSystemDescriptor | null {
+    console.log(`[UiSystemLoaderService][getActive] start.`);
+    return this.activeSystem;
+  }
+
+  private detectFromRuntime(): string | null {
+    return window.CdShellActiveUiSystem || window.CD_ACTIVE_UISYSTEM || null;
+  }
+
+  private detectFromMeta(): string | null {
+    const meta = document.querySelector(
+      'meta[name="cd-uiform"]'
+    ) as HTMLMetaElement | null;
+
+    return meta?.content || null;
+  }
+
+  public detectUiSystem(): UiSystemDescriptor {
+    const runtimeId = this.detectFromRuntime();
+    if (runtimeId) {
+      return { ...DEFAULT_SYSTEM, id: runtimeId };
+    }
+
+    const metaId = this.detectFromMeta();
+    if (metaId) {
+      return { ...DEFAULT_SYSTEM, id: metaId };
+    }
+
+    return DEFAULT_SYSTEM;
+  }
+
+  private getFullDescriptor(id: string): UiSystemDescriptor | undefined {
+    this.logger.debug("[UiSystemLoaderService.getFullDescriptor()] start");
+    const list = this.sysCache.get("uiSystemDescriptors") || [];
+    return list.find((d: any) => d.id === id);
+  }
+
+  async applyStartupUiSettings(svSysCache: SysCacheService): Promise<void> {
+    this.logger.debug("[UiSystemLoaderService.applyStartupUiSettings()] start");
+
+    // ------------------------------------------------------------------
+    // 0) Ensure cache readiness
+    // ------------------------------------------------------------------
+    await svSysCache.ensureReady();
+
+    const uiConfig = svSysCache.get("uiConfig") as UiConfig;
+    if (!uiConfig) {
+      this.logger.warn("[applyStartupUiSettings] uiConfig missing");
+      return;
+    }
+
+    const systemId = uiConfig.defaultUiSystemId;
+    const themeId = uiConfig.defaultThemeId;
+
+    diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
+
+    const uiSystemLoader = UiSystemLoaderService.getInstance(svSysCache);
+    const uiThemeLoader = UiThemeLoaderService.getInstance(svSysCache);
+
+    // ------------------------------------------------------------------
+    // 1) Activate UI system
+    // ------------------------------------------------------------------
+    try {
+      await uiSystemLoader.activate(systemId);
+      diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
+        systemId,
+      });
+    } catch (err) {
+      this.logger.error("[applyStartupUiSettings] activate failed", err);
+      return;
+    }
+
+    // ------------------------------------------------------------------
+    // 2) Structural shell CSS
+    // ------------------------------------------------------------------
+    try {
+      await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
+      await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
+      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded");
+    } catch (err) {
+      this.logger.warn("[applyStartupUiSettings] shell CSS load failed", err);
+    }
+
+    // ------------------------------------------------------------------
+    // 3) Load raw theme assets (CSS only)
+    // ------------------------------------------------------------------
+    try {
+      await uiThemeLoader.loadThemeById(themeId);
+      diag_css("[MAIN.applyStartupUiSettings] theme assets loaded", {
+        themeId,
+      });
+    } catch (err) {
+      this.logger.warn("[applyStartupUiSettings] theme load failed", err);
+    }
+
+    // ------------------------------------------------------------------
+    // 4) 🔑 Normalize ONCE (new architecture)
+    // ------------------------------------------------------------------
+    const rawTheme = svSysCache.getThemeById(themeId);
+    if (!rawTheme) {
+      this.logger.warn(
+        "[applyStartupUiSettings] theme descriptor missing",
+        themeId
+      );
+    }
+
+    const normalizedTheme = rawTheme
+      ? UiThemeNormalizer.normalize(rawTheme, {
+          uiSystemId: systemId,
+          source: "static",
+        })
+      : null;
+
+    // Cache normalized theme for downstream legacy use
+    if (normalizedTheme) {
+      svSysCache.set("theme:normalized", normalizedTheme, "runtime");
+    }
+
+    // ------------------------------------------------------------------
+    // 5) Legacy-compatible applyTheme (TRANSITION POINT)
+    // ------------------------------------------------------------------
+    try {
+      await uiSystemLoader.applyTheme(systemId, themeId);
+      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete");
+    } catch (err) {
+      this.logger.warn("[applyStartupUiSettings] applyTheme failed", err);
+    }
+
+    diag_css("[MAIN.applyStartupUiSettings] done");
+  }
+
+  async showSplash(svConfig: ConfigService): Promise<void> {
+    return new Promise(async (resolve) => {
+      const splash = document.getElementById("cd-splash");
+      if (!splash) return resolve();
+
+      const shellConfig = await svConfig.loadConfig();
+      const path = shellConfig.splash?.path;
+      const minDuration = shellConfig.splash?.minDuration ?? 3000;
+
+      this.logger.debug("[Splash] loading", { path, minDuration });
+
+      const html = await fetch(path).then((r) => r.text());
+      splash.innerHTML = html;
+      splash.style.display = "block";
+
+      // Animation latch
+      setTimeout(() => {
+        this.logger.debug("[Splash] animation completed");
+        this.splashAnimDone = true;
+        this.tryHideSplash();
+      }, minDuration);
+
+      resolve();
+    });
+  }
+
+  async tryHideSplash() {
+    if (!this.splashAnimDone || !this.appReady) {
+      this.logger.debug("[Splash] waiting", {
+        splashAnimDone: this.splashAnimDone,
+        appReady: this.appReady,
+      });
+      return;
+    }
+
+    this.logger.debug("[Splash] conditions met → hiding splash");
+    await this.hideSplash();
+  }
+
+  async hideSplash(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const splash = document.getElementById("cd-splash");
+      const root = document.getElementById("cd-root");
+
+      if (!splash) return resolve();
+
+      const container = splash.querySelector(
+        "#splash-container"
+      ) as HTMLElement;
+      container?.classList.add("fade-out");
+
+      setTimeout(() => {
+        splash.remove();
+        if (root) root.style.visibility = "visible";
+        this.logger.debug("[Splash] removed, app revealed");
+        resolve();
+      }, 800);
+    });
+  }
+
+  revealApp() {
+    const root = document.getElementById("cd-root");
+    if (root) {
+      root.style.visibility = "visible";
+    }
+  }
+
+  /////////////////////////////////////////
+  // new decomposed methods go here
+  /////////////////////////////////////////
+  /**
+   * STEP 3
+   * Purpose:
+   * Apply UI-System and Theme pipeline.
+   *
+   * IMPORTANT:
+   * - This method is a PURE extraction.
+   * - It must remain behavior-identical to the original inline code.
+   * - Do not add logic here.
+   */
+  async bootstrapUiSystemAndTheme(svSysCache: SysCacheService): Promise<void> {
+    this.logger.debug(
+      "[UiSystemLoaderService.bootstrapUiSystemAndTheme()] start"
+    );
+    await this.applyStartupUiSettings(svSysCache);
+    diag_css("UI-System + Theme applied");
+  }
+
+  /**
+   * STEP 6
+   * Purpose:
+   * Render sidebar menu.
+   *
+   * CRITICAL:
+   * - Must execute AFTER UI system + theme CSS
+   * - Must execute BEFORE default controller load
+   */
+  async renderSidebar(
+    svMenu: MenuService,
+    preparedMenu: MenuItem[],
+    shellConfig: IShellConfig
+  ): Promise<void> {
+    try {
+      const resTheme = await fetch(shellConfig.themeConfig.currentThemePath);
+      const theme = (await resTheme.json()) as ITheme;
+
+      svMenu.renderMenuWithSystem(preparedMenu, theme);
+
+      const sidebarEl = document.getElementById("cd-sidebar");
+      if (
+        sidebarEl &&
+        (!sidebarEl.innerHTML || sidebarEl.innerHTML.trim() === "")
+      ) {
+        svMenu.renderPlainMenu(preparedMenu, "cd-sidebar");
+      }
+
+      diag_css("Sidebar rendered");
+      diag_sidebar();
+    } catch (err) {
+      console.error("[Main] Failed rendering menu", err);
+    }
+  }
+
+  /**
+   * STEP 8
+   * Purpose:
+   * Wire up mobile sidebar UX (burger menu + overlay).
+   *
+   * Characteristics:
+   * - DOM-only
+   * - No async
+   * - Safe to call once
+   */
+  setupMobileUx(): void {
+    const burger = document.getElementById("cd-burger");
+    const sidebar = document.getElementById("cd-sidebar");
+    const overlay = document.getElementById("cd-overlay");
+
+    if (!burger || !sidebar || !overlay) return;
+
+    const isMobile = () => window.matchMedia("(max-width: 900px)").matches;
+
+    const applyMobileState = () => {
+      if (!isMobile()) {
+        sidebar.classList.remove("open");
+        overlay.classList.add("hidden");
+        burger.classList.remove("open");
+      }
+    };
+
+    burger.addEventListener("click", () => {
+      burger.classList.toggle("open");
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("hidden");
+    });
+
+    overlay.addEventListener("click", () => {
+      burger.classList.remove("open");
+      sidebar.classList.remove("open");
+      overlay.classList.add("hidden");
+    });
+
+    window.addEventListener("resize", applyMobileState);
+    applyMobileState();
+  }
+
+  notifyUiMutation() {
+    if (this.uiMutationTimer) {
+      clearTimeout(this.uiMutationTimer);
+    }
+
+    this.uiMutationTimer = window.setTimeout(() => {
+      this.uiReady = true;
+      this.tryReveal();
+    }, 150); // 100–200ms works well
+  }
+
+  tryReveal() {
+    if (this.appReady && this.uiReady) {
+      this.hideSplash();
+      this.revealApp();
+    }
+  }
+}
+```
+
+```ts
+export class UiThemeLoaderService {
+  private static readonly ACTIVE_THEME_KEY = "cd-active-theme-id";
+  private static readonly ACTIVE_FORM_VARIANT_KEY = "cd-active-form-variant";
+  private static instance: UiThemeLoaderService | null = null;
+  private configService = ConfigService.getInstance();
+  private sysCache!: SysCacheService;
+
+  constructor(sysCache: SysCacheService) {
+    this.sysCache = sysCache;
+  }
+
+  public static getInstance(sysCache?: SysCacheService): UiThemeLoaderService {
+    if (!UiThemeLoaderService.instance) {
+      if (!sysCache)
+        throw new Error(
+          "UiThemeLoaderService.getInstance requires SysCacheService on first call."
+        );
+      UiThemeLoaderService.instance = new UiThemeLoaderService(sysCache);
+    }
+    return UiThemeLoaderService.instance;
+  }
+
+  /**
+   * Fetch available themes:
+   * - Read uiConfig.accessibleThemes or infer
+   * - For each theme id, fetch /themes/<id>/theme.json (descriptor)
+   * - Return shape: { themes: [{id,name}], variants: [...], descriptors: [full objects], uiConfig }
+   */
+  public async fetchAvailableThemes(uiConfig: UiConfig): Promise<any> {
+    console.log("[UiThemeLoaderService][fetchAvailableThemes] start", uiConfig);
+
+    const accessible = (uiConfig && uiConfig.accessibleThemes) ||
+      (this.configService as any).config?.themeConfig?.accessibleThemes || [
+        "default",
+        "dark",
+      ];
+    const descriptors: any[] = [];
+
+    for (const id of accessible) {
+      const path = `/themes/${id}/theme.json`;
+      try {
+        const res = await fetch(path);
+        if (!res.ok) {
+          console.warn(
+            `[UiThemeLoaderService] theme descriptor not found: ${path}`
+          );
+          continue;
+        }
+        const desc = await res.json();
+        descriptors.push(desc);
+      } catch (err) {
+        console.warn(
+          `[UiThemeLoaderService] error fetching theme descriptor ${path}`,
+          err
+        );
+      }
+    }
+
+    // produce lightweight lists
+    const themes = descriptors.map((d) => ({ id: d.id, name: d.name }));
+    const variants = [
+      { id: "standard", name: "Standard" },
+      { id: "compact", name: "Compact" },
+      { id: "floating", name: "Floating" },
+    ];
+
+    return {
+      themes,
+      variants,
+      descriptors,
+      uiConfig,
+    };
+  }
+
+  /**
+   * loadThemeById - injects ONLY the theme override CSS (theme.css)
+   * base + index should be loaded by Main (or UiSystemLoader) earlier
+   */
+  public async loadThemeById(themeId: string): Promise<void> {
+    diag_css("[UiThemeLoaderService.loadThemeById] start", { themeId });
+    // remove previous theme links (data-cd-theme)
+    document.querySelectorAll("link[data-cd-theme]").forEach((l) => l.remove());
+
+    const desc = this.getThemeDescriptor(themeId);
+    if (!desc) {
+      diag_css("[UiThemeLoaderService.loadThemeById] descriptor not found", {
+        themeId,
+      });
+      // still try fallback path
+      const fallback = `/themes/${themeId}/theme.css`;
+      await this.injectStyle(fallback, themeId, "theme");
+      return;
+    }
+
+    // prefer descriptor.css or descriptor.css path
+    const cssPath = desc.css || desc.cssPath || `/themes/${themeId}/theme.css`;
+    await this.injectStyle(cssPath, themeId, "theme");
+
+    diag_css("[UiThemeLoaderService.loadThemeById] loaded", {
+      themeId,
+      cssPath,
+    });
+  }
+
+  /**
+   * Return full descriptor previously cached in SysCacheService
+   */
+  public getThemeDescriptor(themeId: string): any | undefined {
+    const descriptors = this.sysCache.get("themeDescriptors") || [];
+    return descriptors.find((d: any) => d.id === themeId);
+  }
+
+  public async loadFormVariant(formType = "standard"): Promise<void> {
+    document
+      .querySelectorAll("link[data-cd-form]")
+      .forEach((el) => el.remove());
+    const path = `/themes/common/forms/variants/cd-form-${formType}.css`;
+    await this.injectStyle(path, formType, "form");
+  }
+
+  private async injectStyle(
+    path: string,
+    key: string,
+    type: "theme" | "form" = "theme"
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        const head = document.head || document.getElementsByTagName("head")[0];
+        if (!head) return reject(new Error("document.head missing"));
+
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = path;
+
+        if (type === "theme") link.setAttribute("data-cd-theme", key);
+        else link.setAttribute("data-cd-form", key);
+
+        link.onload = () => resolve();
+        link.onerror = (ev) => reject(new Error(`failed to load ${path}`));
+
+        // preserve order: append to head end
+        head.insertAdjacentElement("beforeend", link);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  getActiveThemeId(): string {
+    console.log(`[UiThemeLoaderService][getActiveThemeId] start.`);
+    return localStorage.getItem(UiThemeLoaderService.ACTIVE_THEME_KEY) || "";
+  }
+
+  getActiveFormVariantId(): string {
+    return (
+      localStorage.getItem(UiThemeLoaderService.ACTIVE_FORM_VARIANT_KEY) ||
+      "standard"
+    );
+  }
+}
+```
+
+```ts
+import { UiSystemLoaderService } from "../../cd-guig/services/ui-system-loader.service";
+import { UiThemeLoaderService } from "../../cd-guig/services/ui-theme-loader.service";
+import { ConfigService } from "./config.service";
+import {
+  // CacheKey,
+  CacheListener,
+  CacheMeta,
+  SysCacheMap,
+} from "../models/sys-cache.model";
+import { LoggerService } from "../../../utils/logger.service";
+
+export class SysCacheService {
+  private logger = new LoggerService();
+  private static instance: SysCacheService;
+
+  /** Core cache store */
+  // private cache = new Map<CacheKey | string, CacheEntry>();
+  private cache = new Map<string, any>();
+
+  /** Reactive listeners */
+  private listeners = new Map<string, Set<CacheListener<any>>>();
+
+  private versionCounter = 0;
+
+  private _uiSystemLoader!: UiSystemLoaderService;
+  private _uiThemeLoader!: UiThemeLoaderService;
+
+  constructor(private configService: ConfigService) {}
+
+  // ------------------------------------------------------------------
+  // SINGLETON
+  // ------------------------------------------------------------------
+  public static getInstance(configService?: ConfigService): SysCacheService {
+    if (!SysCacheService.instance) {
+      if (!configService) {
+        throw new Error(
+          "SysCacheService must be initialized with ConfigService on first instantiation."
+        );
+      }
+      SysCacheService.instance = new SysCacheService(configService);
+    }
+    return SysCacheService.instance;
+  }
+
+  public setLoaders(
+    systemLoader: UiSystemLoaderService,
+    themeLoader: UiThemeLoaderService
+  ): void {
+    this._uiSystemLoader = systemLoader;
+    this._uiThemeLoader = themeLoader;
+  }
+
+  // ------------------------------------------------------------------
+  // CORE CACHE API (NEW)
+  // ------------------------------------------------------------------
+  // Legacy + typed set
+  public set<T>(key: string, value: T, source?: CacheMeta["source"]): void;
+
+  public set<K extends keyof SysCacheMap>(
+    key: K,
+    value: SysCacheMap[K],
+    source?: CacheMeta["source"]
+  ): void;
+
+  // Implementation
+  public set(
+    key: string,
+    value: any,
+    source: CacheMeta["source"] = "runtime"
+  ): void {
+    const meta: CacheMeta = {
+      source,
+      version: ++this.versionCounter,
+      timestamp: Date.now(),
+    };
+
+    this.cache.set(key, { value, meta });
+    this.notify(key, value, meta);
+  }
+
+  public get(key: string): any | undefined;
+  public get<K extends keyof SysCacheMap>(key: K): SysCacheMap[K] | undefined;
+
+  public get(key: string): any | undefined {
+    const entry = this.cache.get(key);
+    return entry?.value;
+  }
+
+  public getMeta(key: string): CacheMeta | undefined {
+    const entry = this.cache.get(key);
+    return entry?.meta;
+  }
+
+  public subscribe<T>(
+    key: string,
+    listener: CacheListener<T>,
+    emitImmediately = true
+  ): () => void {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+
+    this.listeners.get(key)!.add(listener);
+
+    // Late subscriber → immediate sync
+    if (emitImmediately && this.cache.has(key)) {
+      const entry = this.cache.get(key)!;
+      listener(entry.value, entry.meta);
+    }
+
+    // Unsubscribe
+    return () => {
+      this.listeners.get(key)?.delete(listener);
+    };
+  }
+
+  private notify<T>(key, value: T, meta: CacheMeta): void {
+    this.listeners.get(key)?.forEach((listener) => listener(value, meta));
+  }
+
+  // ------------------------------------------------------------------
+  // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+  // ------------------------------------------------------------------
+  public async loadAndCacheAll(): Promise<void> {
+    this.logger.debug("[SysCacheService.loadAndCacheAll()] start");
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    // 🔑 PHASE-2 AWARE CONFIG RESOLUTION
+    const shellConfig =
+      this.get("shellConfig") ?? (await this.configService.loadConfig());
+
+    const uiConfig = shellConfig.uiConfig || {};
+
+    // Ensure canonical cache presence
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", uiConfig, "static");
+
+    // -------------------------------------------------
+    // UI SYSTEMS (authoritative descriptors)
+    // -------------------------------------------------
+    const uiSystemsData =
+      await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+
+    this.cacheUiSystems(uiSystemsData, "static");
+
+    // -------------------------------------------------
+    // UI THEMES
+    // -------------------------------------------------
+    const uiThemesData =
+      await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig, "static");
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  // ------------------------------------------------------------------
+  // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
+  // ------------------------------------------------------------------
+  public getUiSystems(): any[] {
+    return this.get("uiSystems") || [];
+  }
+
+  public getThemes(): any[] {
+    return this.get("themes") || [];
+  }
+
+  public getFormVariants(): any[] {
+    return this.get("formVariants") || [];
+  }
+
+  public getThemeDescriptors(): any[] {
+    return this.get("themeDescriptors") || [];
+  }
+
+  public getConfig(): any {
+    return this.get("uiConfigNormalized") || {};
+  }
+
+  public getEnvConfig(): any {
+    return this.get("envConfig") || {};
+  }
+
+  public getConsumerGuid(): string | undefined {
+    const env = this.getEnvConfig();
+    return env?.consumerGuid || env?.clientContext?.consumerToken;
+  }
+
+  public getApiEndpoint(): string | undefined {
+    return this.getEnvConfig()?.apiEndpoint;
+  }
+
+  public async ensureReady(): Promise<void> {
+    if (this.cache.size === 0) {
+      await this.loadAndCacheAll();
+    }
+  }
+
+  /**
+   * Normalizes UI system descriptors to legacy-compatible shape
+   * Required by UiSystemLoaderService.activate()
+   */
+  private normalizeUiSystemDescriptors(rawSystems: any[]): {
+    simple: any[];
+    full: any[];
+  } {
+    this.logger.debug("[SysCacheService.normalizeUiSystemDescriptors()] start");
+    const fullDescriptors = rawSystems.map((sys: any) => ({
+      id: sys.id,
+      name: sys.name,
+      version: sys.version,
+      description: sys.description,
+
+      cssUrl: sys.cssUrl,
+      jsUrl: sys.jsUrl,
+      assetPath: sys.assetPath,
+
+      stylesheets: sys.stylesheets || [],
+      scripts: sys.scripts || [],
+
+      themesAvailable: sys.themesAvailable || [],
+      themeActive: sys.themeActive || null,
+
+      conceptMappings: sys.conceptMappings || {},
+      directiveMap: sys.directiveMap || {},
+      tokenMap: sys.tokenMap || {},
+
+      containers: sys.containers || [],
+      components: sys.components || [],
+      renderRules: sys.renderRules || {},
+
+      metadata: sys.metadata || {},
+      extensions: sys.extensions || {},
+
+      author: sys.author,
+      license: sys.license,
+      repository: sys.repository,
+
+      displayName: sys.displayName || sys.name,
+    }));
+
+    const simpleSystems = fullDescriptors.map((sys) => ({
+      id: sys.id,
+      name: sys.name,
+      displayName: sys.displayName,
+      themesAvailable: sys.themesAvailable,
+    }));
+
+    return {
+      simple: simpleSystems,
+      full: fullDescriptors,
+    };
+  }
+
+  private cacheUiSystems(
+    rawSystems: any[],
+    source: CacheMeta["source"] = "static"
+  ): void {
+    this.logger.debug("[SysCacheService.cacheUiSystems()] start");
+    const { simple, full } = this.normalizeUiSystemDescriptors(rawSystems);
+
+    // 🔁 Legacy compatibility
+    this.set("uiSystems", simple, source);
+    this.set("uiSystemDescriptors", full, source);
+
+    // 🔮 Optional future-facing unified key
+    this.set("uiSystemsNormalized", { simple, full }, source);
+
+    console.log("[SysCacheService] UI systems cached", {
+      simpleCount: simple.length,
+      fullCount: full.length,
+      source,
+    });
+  }
+
+  public hasConsumerContext(): boolean {
+    return !!this.get("shellConfig:meta")?.hasConsumerProfile;
+  }
+
+  // ------------------------------------------------------------------
+  // PHASE-2 RESOLUTION (CONSUMER / USER OVERRIDES)
+  // ------------------------------------------------------------------
+  public applyResolvedShellConfig(
+    resolvedShellConfig: any,
+    source: CacheMeta["source"] = "resolved"
+  ): void {
+    this.logger.debug("[SysCacheService.applyResolvedShellConfig()] start");
+    this.logger.debug(
+      "[SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:",
+      resolvedShellConfig
+    );
+
+    if (!resolvedShellConfig) return;
+
+    const uiConfig = resolvedShellConfig.uiConfig || {};
+    const envConfig = resolvedShellConfig.envConfig || {};
+
+    // Override canonical keys
+    this.set("shellConfig", resolvedShellConfig, source);
+    this.set("uiConfig", uiConfig, source);
+    this.set("envConfig", envConfig, source);
+
+    // Optional normalized alias (used by loaders)
+    this.set("uiConfigNormalized", uiConfig, source);
+
+    // Metadata flag (used by hasConsumerContext)
+    this.set(
+      "shellConfig:meta",
+      {
+        hasConsumerProfile: true,
+        appliedAt: Date.now(),
+      },
+      source
+    );
+
+    console.log("[SysCacheService] Resolved shell config applied", {
+      defaultUiSystemId: uiConfig.defaultUiSystemId,
+      defaultThemeId: uiConfig.defaultThemeId,
+      source,
+    });
+  }
+
+  public getUiSystemById(systemId: string): any | undefined {
+    const systems = this.get("uiSystemDescriptors") || [];
+    return systems.find((s: any) => s.id === systemId);
+  }
+
+  public getThemeById(themeId: string): any | undefined {
+    const themes = this.get("themeDescriptors") || [];
+    return themes.find((t: any) => t.id === themeId);
+  }
+
+  public resolveTheme(input: string | any): any | undefined {
+    if (!input) return undefined;
+    if (typeof input === "string") return this.getThemeById(input);
+    return input;
+  }
+
+  public resolveUiSystem(input: string | any): any | undefined {
+    if (!input) return undefined;
+    if (typeof input === "string") return this.getUiSystemById(input);
+    return input;
+  }
+}
+
+```
+---
+
+
+
+
+References:
+1. Directory structure of corpdesk projects
+  - src/CdShell
+  - src/CdShell/sys
+  - src/CdShell/app
+  - src/main.ts
+  - configs
+    - public/shell.config.json
+  - moduleman
+  - cd-guig
+  - cd-user
+  
+
+2. src/CdShell/sys/cd-user/view/sign-in.controller.js
+3. src/CdShell/sys/moduleman/view/consumer-resource2.controller.js
+4. src/CdShell/sys/cd-guig/services/base-ui-adapter.service.ts
+5. src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
+6. src/CdShell/app/ui-adaptor-port/services/material-design-adapter.service.ts
+
+
+//////////////////////////////////////////////////
+
+```ts
+export class SysCacheService {
+  private logger = new LoggerService();
+  private static instance: SysCacheService;
+
+  /** Core cache store */
+  // private cache = new Map<CacheKey | string, CacheEntry>();
+  private cache = new Map<string, any>();
+
+  /** Reactive listeners */
+  private listeners = new Map<string, Set<CacheListener<any>>>();
+
+  private versionCounter = 0;
+
+  private _uiSystemLoader!: UiSystemLoaderService;
+  private _uiThemeLoader!: UiThemeLoaderService;
+
+  constructor(private configService: ConfigService) {}
+
+  // ------------------------------------------------------------------
+  // SINGLETON
+  // ------------------------------------------------------------------
+  public static getInstance(configService?: ConfigService): SysCacheService {
+    if (!SysCacheService.instance) {
+      if (!configService) {
+        throw new Error(
+          "SysCacheService must be initialized with ConfigService on first instantiation."
+        );
+      }
+      SysCacheService.instance = new SysCacheService(configService);
+    }
+    return SysCacheService.instance;
+  }
+
+  public setLoaders(
+    systemLoader: UiSystemLoaderService,
+    themeLoader: UiThemeLoaderService
+  ): void {
+    this._uiSystemLoader = systemLoader;
+    this._uiThemeLoader = themeLoader;
+  }
+
+  // ------------------------------------------------------------------
+  // CORE CACHE API (NEW)
+  // ------------------------------------------------------------------
+  // Legacy + typed set
+  public set<T>(key: string, value: T, source?: CacheMeta["source"]): void;
+
+  public set<K extends keyof SysCacheMap>(
+    key: K,
+    value: SysCacheMap[K],
+    source?: CacheMeta["source"]
+  ): void;
+
+  // Implementation
+  public set(
+    key: string,
+    value: any,
+    source: CacheMeta["source"] = "runtime"
+  ): void {
+    const meta: CacheMeta = {
+      source,
+      version: ++this.versionCounter,
+      timestamp: Date.now(),
+    };
+
+    this.cache.set(key, { value, meta });
+    this.notify(key, value, meta);
+  }
+
+  public get(key: string): any | undefined;
+  public get<K extends keyof SysCacheMap>(key: K): SysCacheMap[K] | undefined;
+
+  public get(key: string): any | undefined {
+    const entry = this.cache.get(key);
+    return entry?.value;
+  }
+
+  public getMeta(key: string): CacheMeta | undefined {
+    const entry = this.cache.get(key);
+    return entry?.meta;
+  }
+
+  public subscribe<T>(
+    key: string,
+    listener: CacheListener<T>,
+    emitImmediately = true
+  ): () => void {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+
+    this.listeners.get(key)!.add(listener);
+
+    // Late subscriber → immediate sync
+    if (emitImmediately && this.cache.has(key)) {
+      const entry = this.cache.get(key)!;
+      listener(entry.value, entry.meta);
+    }
+
+    // Unsubscribe
+    return () => {
+      this.listeners.get(key)?.delete(listener);
+    };
+  }
+
+  private notify<T>(key, value: T, meta: CacheMeta): void {
+    this.listeners.get(key)?.forEach((listener) => listener(value, meta));
+  }
+
+  // ------------------------------------------------------------------
+  // EXISTING LOAD PIPELINE (UNCHANGED BEHAVIOR)
+  // ------------------------------------------------------------------
+  public async loadAndCacheAll(): Promise<void> {
+    this.logger.debug("[SysCacheService.loadAndCacheAll()] start");
+    if (!this._uiSystemLoader || !this._uiThemeLoader) {
+      throw new Error("SysCacheService: loaders must be set before load.");
+    }
+
+    if (this.cache.size > 0) return;
+
+    console.log("[SysCacheService] Eager load starting");
+
+    // 🔑 PHASE-2 AWARE CONFIG RESOLUTION
+    const shellConfig =
+      this.get("shellConfig") ?? (await this.configService.loadConfig());
+
+    const uiConfig = shellConfig.uiConfig || {};
+
+    // Ensure canonical cache presence
+    this.set("shellConfig", shellConfig, "static");
+    this.set("envConfig", shellConfig.envConfig || {}, "static");
+    this.set("uiConfig", uiConfig, "static");
+
+    // -------------------------------------------------
+    // UI SYSTEMS (authoritative descriptors)
+    // -------------------------------------------------
+    const uiSystemsData =
+      await this._uiSystemLoader.fetchAvailableSystems(uiConfig);
+
+    this.cacheUiSystems(uiSystemsData, "static");
+
+    // -------------------------------------------------
+    // UI THEMES
+    // -------------------------------------------------
+    const uiThemesData =
+      await this._uiThemeLoader.fetchAvailableThemes(uiConfig);
+
+    this.set("themes", uiThemesData.themes || [], "static");
+    this.set("formVariants", uiThemesData.variants || [], "static");
+    this.set("themeDescriptors", uiThemesData.descriptors || [], "static");
+    this.set("uiConfigNormalized", uiThemesData.uiConfig || uiConfig, "static");
+
+    console.log("[SysCacheService] Load complete");
+  }
+
+  // ------------------------------------------------------------------
+  // BACKWARD-COMPAT GETTERS (NO BREAKING CHANGES)
+  // ------------------------------------------------------------------
+  public getUiSystems(): any[] {
+    return this.get("uiSystems") || [];
+  }
+
+  public getThemes(): any[] {
+    return this.get("themes") || [];
+  }
+
+  public getFormVariants(): any[] {
+    return this.get("formVariants") || [];
+  }
+
+  public getThemeDescriptors(): any[] {
+    return this.get("themeDescriptors") || [];
+  }
+
+  public getConfig(): any {
+    return this.get("uiConfigNormalized") || {};
+  }
+
+  public getEnvConfig(): any {
+    return this.get("envConfig") || {};
+  }
+
+  public getConsumerGuid(): string | undefined {
+    const env = this.getEnvConfig();
+    return env?.consumerGuid || env?.clientContext?.consumerToken;
+  }
+
+  public getApiEndpoint(): string | undefined {
+    return this.getEnvConfig()?.apiEndpoint;
+  }
+
+  public async ensureReady(): Promise<void> {
+    if (this.cache.size === 0) {
+      await this.loadAndCacheAll();
+    }
+  }
+
+  /**
+   * Normalizes UI system descriptors to legacy-compatible shape
+   * Required by UiSystemLoaderService.activate()
+   */
+  private normalizeUiSystemDescriptors(rawSystems: any[]): {
+    simple: any[];
+    full: any[];
+  } {
+    this.logger.debug("[SysCacheService.normalizeUiSystemDescriptors()] start");
+    const fullDescriptors = rawSystems.map((sys: any) => ({
+      id: sys.id,
+      name: sys.name,
+      version: sys.version,
+      description: sys.description,
+
+      cssUrl: sys.cssUrl,
+      jsUrl: sys.jsUrl,
+      assetPath: sys.assetPath,
+
+      stylesheets: sys.stylesheets || [],
+      scripts: sys.scripts || [],
+
+      themesAvailable: sys.themesAvailable || [],
+      themeActive: sys.themeActive || null,
+
+      conceptMappings: sys.conceptMappings || {},
+      directiveMap: sys.directiveMap || {},
+      tokenMap: sys.tokenMap || {},
+
+      containers: sys.containers || [],
+      components: sys.components || [],
+      renderRules: sys.renderRules || {},
+
+      metadata: sys.metadata || {},
+      extensions: sys.extensions || {},
+
+      author: sys.author,
+      license: sys.license,
+      repository: sys.repository,
+
+      displayName: sys.displayName || sys.name,
+    }));
+
+    const simpleSystems = fullDescriptors.map((sys) => ({
+      id: sys.id,
+      name: sys.name,
+      displayName: sys.displayName,
+      themesAvailable: sys.themesAvailable,
+    }));
+
+    return {
+      simple: simpleSystems,
+      full: fullDescriptors,
+    };
+  }
+
+  private cacheUiSystems(
+    rawSystems: any[],
+    source: CacheMeta["source"] = "static"
+  ): void {
+    this.logger.debug("[SysCacheService.cacheUiSystems()] start");
+    const { simple, full } = this.normalizeUiSystemDescriptors(rawSystems);
+
+    // 🔁 Legacy compatibility
+    this.set("uiSystems", simple, source);
+    this.set("uiSystemDescriptors", full, source);
+
+    // 🔮 Optional future-facing unified key
+    this.set("uiSystemsNormalized", { simple, full }, source);
+
+    console.log("[SysCacheService] UI systems cached", {
+      simpleCount: simple.length,
+      fullCount: full.length,
+      source,
+    });
+  }
+
+  public hasConsumerContext(): boolean {
+    return !!this.get("shellConfig:meta")?.hasConsumerProfile;
+  }
+
+  // ------------------------------------------------------------------
+  // PHASE-2 RESOLUTION (CONSUMER / USER OVERRIDES)
+  // ------------------------------------------------------------------
+  public applyResolvedShellConfig(
+    resolvedShellConfig: any,
+    source: CacheMeta["source"] = "resolved"
+  ): void {
+    this.logger.debug("[SysCacheService.applyResolvedShellConfig()] start");
+    this.logger.debug(
+      "[SysCacheService.applyResolvedShellConfig()] resolvedShellConfig:",
+      resolvedShellConfig
+    );
+
+    if (!resolvedShellConfig) return;
+
+    const uiConfig = resolvedShellConfig.uiConfig || {};
+    const envConfig = resolvedShellConfig.envConfig || {};
+
+    // Override canonical keys
+    this.set("shellConfig", resolvedShellConfig, source);
+    this.set("uiConfig", uiConfig, source);
+    this.set("envConfig", envConfig, source);
+
+    // Optional normalized alias (used by loaders)
+    this.set("uiConfigNormalized", uiConfig, source);
+
+    // Metadata flag (used by hasConsumerContext)
+    this.set(
+      "shellConfig:meta",
+      {
+        hasConsumerProfile: true,
+        appliedAt: Date.now(),
+      },
+      source
+    );
+
+    console.log("[SysCacheService] Resolved shell config applied", {
+      defaultUiSystemId: uiConfig.defaultUiSystemId,
+      defaultThemeId: uiConfig.defaultThemeId,
+      source,
+    });
+  }
+
+  public getUiSystemById(systemId: string): any | undefined {
+    const systems = this.get("uiSystemDescriptors") || [];
+    return systems.find((s: any) => s.id === systemId);
+  }
+
+  public getThemeById(themeId: string): any | undefined {
+    const themes = this.get("themeDescriptors") || [];
+    return themes.find((t: any) => t.id === themeId);
+  }
+
+  public resolveTheme(input: string | any): any | undefined {
+    if (!input) return undefined;
+    if (typeof input === "string") return this.getThemeById(input);
+    return input;
+  }
+
+  public resolveUiSystem(input: string | any): any | undefined {
+    if (!input) return undefined;
+    if (typeof input === "string") return this.getUiSystemById(input);
+    return input;
+  }
+}
+```
+
+///////////////////////////////////////////
+
+Use the following notes to do a git commit message marking a milestone:
+Summary being able to complete 
+1. internals for front configuration, centered at SysCacheService.
+2. adaptor mechanism for ui-systems
+
+Development notes showing itemized accomplishment:
+---
+
+- mitigate FOUC (Flash Of Unformatted Content)
+
+---
+
+- add envConfig: EnvConfig to shell config
+
+---
+
+- confirm if splashscreen is running
+
+---
+
+- confirm the system can fetch and use config from backend
+
+---
+
+- modify backend config via api call
+  - review updateUserProfile then used similar principle for updating consumerProfile
+
+---
+
+- do gui for controlling config from front end
+  - set up how tabs can be intepreted by all adaptors
+  - set up how adaptors can be intepreted by all adptors
+
+---
+
+Phase 3 — Incremental Migration (Descriptor-Led)
+Migrate by surface area, not by files.
+Best order:
+- Layouts (grid, stack)
+- Containers (tabs, cards, sections)
+- Controls
+- Themes
+- Actions
+
+---
+
+- Tests
+  - test switching of ui-system from backend via consumer.consumerProfile
+  - test switching of theme from backend via user.userProfile
+  - test locking/unloacking of themesetting at user.userProfile
+  - test two users connected via seperate consumers and getting different ui-settings
+  - test two users connected via same consumer but have different theme settings
+
+---
+
+- enable/diable https
+
+---
+
+- design SysCacheService data sync mechanims
+  - upgrade SysCacheService to 'subscibable' and 'syncable'
+  - test subscibers (phase 1)
+  - test subscibers (phase 2)
+
+---
+
+- track and confirm config is working as expected
+
+---
+
+- test switching of ui-system and theme when system is already running
+  Config Sources
+  - consumer profile
+    - replicate user-profile crud for consumer-profile
+  - user profile
+  - shell.config.json
+
+---
+
+Option A (safest)
+👉 Implement UiThemeNormalizer
+(low risk, high clarity)
+
+Option B (structural)
+👉 Fully finalize BaseUiAdapter lifecycle + phases
+  - Enforce lifecycle transitions (assertLifecycle)
+  - Wire lifecycle into applyTheme
+
+    - Option B.1 (Hardening pass) — short, controlled:
+    - Decide if applyTheme() must require ACTIVATED
+    - Decide lifecycle terminal state (DEACTIVATED vs reuse)
+    - Add a comment block documenting legacy vs modern phases
+
+  - Add adapter teardown / reapply
+  - Or mark legacy phases as @deprecated (doc-only)
+
+  ////
+  ✅ UiThemeNormalizer
+
+  ✅ Descriptor normalization
+
+  ✅ Adapter capability convergence
+
+  ✅ Remaining adapter migrations
+
+  ✅ Shell → Adapter coordination cleanup
+
+Option C (confidence)
+
+---
 
 
 
 
 //////////////////////////////////////////////////////////////////
+
+
 
 ## Completed:
 
@@ -22536,7 +40622,9 @@ Git update:
 - mitigate FOUC (Flash Of Unformatted Content)
 - add envConfig: EnvConfig to shell config
 - set configurable splash screen feature
+
 ---
+
 - mitigate FOUC (Flash Of Unformatted Content)
 - add envConfig: EnvConfig to shell config
 - confirm if splashscreen is running
@@ -22546,8 +40634,7 @@ Git update:
 - modify backend config via api call
   - review updateUserProfile then used similar principle for updating consumerProfile
 
-
---- 
+---
 
 Next Milestone:
 
@@ -22590,7 +40677,7 @@ RawUiComponentMeta not yet implemented-
   - navigation background
   - body background
   - Themes to be designed in a way that they can be packaged and commercialized
-  Design SysCacheService data sync mechanims
+    Design SysCacheService data sync mechanims
     - upgrade SysCacheService to 'subscibable' and 'syncable'
 
 ///////////////////////////////////////
@@ -22614,67 +40701,8 @@ Now that you have a good understanding how the api works, we are going to be fig
   I notice this does not happen in most modern applications but a long time a ago this was a normal occurence.
   How can we only show the page after every page has rendered properly.
 
----
 
-- mitigate FOUC (Flash Of Unformatted Content)
 
----
-
-- add envConfig: EnvConfig to shell config
-
----
-
-- confirm if splashscreen is running
-
----
-
-- confirm the system can fetch and use config from backend
-
----
-
-- modify backend config via api call
-  - review updateUserProfile then used similar principle for updating consumerProfile
-
----
-
-- do gui for controlling config from front end
-  - set up how tabs can be intepreted by all adaptors
-  - set up how adaptors can be intepreted by all adptors
-
----
-
-- Tests
-  - test switching of ui-system from backend via consumer.consumerProfile
-  - test switching of theme from backend via user.userProfile
-  - test locking/unloacking of themesetting at user.userProfile
-  - test two users connected via seperate consumers and getting different ui-settings
-  - test two users connected via same consumer but have different theme settings
-
----
-
-- enable/diable https
-
----
-
-- design SysCacheService data sync mechanims
-  - upgrade SysCacheService to 'subscibable' and 'syncable'
-  - test subscibers (phase 1)
-  - test subscibers (phase 2)
-
----
-
-- track and confirm config is working as expected
-
----
-
-- test switching of ui-system and theme when system is already running
-  Config Sources
-  - consumer profile
-    - replicate user-profile crud for consumer-profile
-  - user profile
-  - shell.config.json
-
----
 
 Notes for improvement of rfc:
 

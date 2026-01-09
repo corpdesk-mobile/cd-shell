@@ -4,107 +4,230 @@
  * Represents metadata and configuration for a UI theme.
  */
 
-// export interface ThemeDescriptor {
-//   id: string;
-//   name: string;
-//   assetPath?: string; // Path to theme CSS file
-//   variables?: Record<string, string>; // CSS custom properties
-//   compatibleWith?: string[]; // List of compatible UI systems
-// }
 
-/**
- * Theme descriptor for color, typography, and variable configuration.
- */
 // export interface UiThemeDescriptor {
+//   /** Primary identifier */
 //   id: string;
+
+//   /** Human-readable label */
 //   name: string;
-//   cssPath?: string; // Path to theme CSS file
-//   variables?: Record<string, string>; // CSS custom properties
-//   compatibleWith?: string[]; // List of compatible UI systems
 
-//   themeName: string;
-//   colorScheme?: Record<string, string>;
-//   typography?: Record<string, string>;
-//   spacing?: Record<string, string>;
-//   animations?: Record<string, string>;
+//   /** Is default theme */
+//   isDefault?: boolean;
 
-// /* Duplicate interface removed. Properties merged above. */
-//   scripts?: string[];
+//   /* ---------- Assets ---------- */
+
 //   stylesheets?: string[];
+//   scripts?: string[];
 
-//   // Integration metadata
+//   /* ---------- Styling ---------- */
+
+//   /** CSS custom properties (without -- prefix) */
+//   variables?: Record<string, string>;
+
+//   /**
+//    * Global classes to apply at root level.
+//    * These should be treated as THEME-OWNED classes.
+//    */
+//   classes?: string[];
+
+//   /**
+//    * Optional namespace for theme-owned classes.
+//    * Used to safely remove previous theme classes.
+//    * Example: "theme-" or "bs-theme-"
+//    */
+//   classPrefix?: string;
+
+//   /* ---------- Semantic Metadata ---------- */
+
+//   metadata?: {
+//     colorScheme?: Record<string, string>;
+//     typography?: Record<string, string>;
+//     spacing?: Record<string, string>;
+//     animations?: Record<string, string>;
+//   };
+
+//   /* ---------- Governance ---------- */
+
 //   author?: string;
 //   license?: string;
 //   repository?: string;
 
-//   // Custom system extensions (AI metadata, metrics, etc.)
 //   extensions?: Record<string, any>;
 // }
 
+/**
+ * Canonical UI Theme Descriptor
+ *
+ * NOTE:
+ * - This interface is intentionally backward-compatible.
+ * - Legacy themes may populate only a subset of fields.
+ * - New architecture components should prefer newer fields
+ *   (mode, css, layout, meta) but MUST tolerate legacy ones.
+ */
+
+/**
+ * MIGRATION NOTES:
+ *
+ * 1. stylesheets[] → css.paths[]
+ *    - Normalizer will merge both
+ *
+ * 2. classes[] remains authoritative for DOM root
+ *
+ * 3. mode is OPTIONAL
+ *    - Absence means legacy / auto
+ *
+ * 4. metadata is SEMANTIC, not imperative
+ *    - Adapters may ignore unsupported keys
+ *
+ * 5. meta is RUNTIME-ONLY
+ *    - Never store in JSON theme files
+ */
+
 export interface UiThemeDescriptor {
-  /** * Primary identifier used for selection (e.g., 'dark', 'light', 'bootstrap-compact'). 
-   * This is used as the <option value> in the dropdown.
+  /* ============================================================
+   * Identity
+   * ============================================================
    */
+
+  /** Primary identifier */
   id: string;
 
-  /** * Human-readable name used for display (e.g., 'Dark Mode', 'Classic'). 
-   * This is used as the visible text in the dropdown.
-   */
+  /** Human-readable label */
   name: string;
 
-  /** * Flag indicating if this is the default theme for its parent UI System. */
-  isDefault?: boolean; // NEW PROPERTY
+  /** Marks the default theme (legacy + supported) */
+  isDefault?: boolean;
 
-  /** * Array of paths to CSS files specific to this theme (relative to the public/assets/ path).
-   * This is the asset the UiThemeLoaderService will inject into the <head>.
+  /* ============================================================
+   * Mode & System Awareness (NEW)
+   * ============================================================
    */
-  stylesheets?: string[]; 
 
-  /** * Array of paths to JS files specific to this theme (e.g., initialization scripts).
+  /**
+   * Theme mode preference.
+   * - auto: system / OS decides
+   * - light | dark: explicit
+   *
+   * NOTE: Legacy themes may not define this.
    */
-  scripts?: string[]; 
+  mode?: "light" | "dark" | "auto";
 
-  /** * Key-value pairs for CSS custom properties that should be set globally 
-   * (e.g., {'--primary-color': '#007bff'}).
+  /* ============================================================
+   * Assets (LEGACY + EXTENDED)
+   * ============================================================
    */
-  variables?: Record<string, string>; 
-  
-  /** * Metadata defining the visual and behavioral aspects of the theme.
-   * Consolidates color, typography, spacing, etc., into an optional structure.
+
+  /**
+   * Legacy flat stylesheet list.
+   * Still supported.
+   */
+  stylesheets?: string[];
+
+  /**
+   * Legacy scripts (rare but preserved).
+   */
+  scripts?: string[];
+
+  /**
+   * New structured CSS descriptor.
+   * Preferred by new adapters.
+   */
+  css?: {
+    paths?: string[];
+    inline?: string;
+  };
+
+  /* ============================================================
+   * Styling
+   * ============================================================
+   */
+
+  /**
+   * CSS custom properties (without -- prefix).
+   * Shared by legacy and new systems.
+   */
+  variables?: Record<string, string>;
+
+  /**
+   * Theme-owned global classes.
+   *
+   * LEGACY: string[]
+   * NEW SYSTEMS may namespace or map internally.
+   */
+  classes?: string[];
+
+  /**
+   * Namespace for theme-owned classes.
+   * Used to safely remove previous theme classes.
+   */
+  classPrefix?: string;
+
+  /* ============================================================
+   * Layout & Typography (NEW, NON-BREAKING)
+   * ============================================================
+   */
+
+  layout?: {
+    density?: "compact" | "comfortable" | "spacious";
+    borderRadius?: string;
+  };
+
+  typography?: {
+    fontFamily?: string;
+    baseFontSize?: string;
+  };
+
+  /* ============================================================
+   * Semantic Metadata (LEGACY, STRUCTURED)
+   * ============================================================
+   */
+
+  /**
+   * High-level semantic hints.
+   * Used by adapters, inspectors, editors.
    */
   metadata?: {
     colorScheme?: Record<string, string>;
     typography?: Record<string, string>;
     spacing?: Record<string, string>;
     animations?: Record<string, string>;
-    // Any other high-level theme configurations
   };
 
-  // --- Integration Metadata (optional) ---
+  /* ============================================================
+   * Governance (LEGACY)
+   * ============================================================
+   */
+
   author?: string;
   license?: string;
   repository?: string;
-  
-  /** * Custom system extensions for AI, telemetry, etc.
+
+  /* ============================================================
+   * Extensions & Experimental
+   * ============================================================
+   */
+
+  /**
+   * Free-form extension point.
+   * NEVER interpreted by core directly.
    */
   extensions?: Record<string, any>;
+
+  /* ============================================================
+   * Normalization & Provenance (NEW)
+   * ============================================================
+   */
+
+  /**
+   * Runtime metadata added by UiThemeNormalizer.
+   * NOT expected to be present in static definitions.
+   */
+  meta?: {
+    source?: "legacy" | "static" | "dynamic" | "user";
+    uiSystem?: string;
+    version?: string;
+    normalizedAt?: number;
+  };
 }
-
-// export interface UiThemeDescriptor {
-//   id: string; // e.g., 'dark', 'light', 'bootstrap-compact'
-//   name: string; // e.g., 'Dark Mode', 'Classic'
-  
-//   /** * Flag indicating if this is the default theme for its parent UI System. */
-//   isDefault?: boolean; // NEW PROPERTY
-
-//   stylesheets?: string[]; 
-//   scripts?: string[]; 
-//   variables?: Record<string, string>; 
-//   metadata?: {
-//     colorScheme?: Record<string, string>;
-//     // ...
-//   };
-//   // ... (other properties) ...
-// }
-
 

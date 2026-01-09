@@ -1,4 +1,7 @@
-import { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import {
+  IUiSystemAdapter,
+  UiAdapterMeta,
+} from "../../../sys/cd-guig/models/ui-system-adaptor.model";
 import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
 
@@ -6,6 +9,12 @@ import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system
  * MaterialAdapter — applies Material Design theme logic
  */
 export class PlainAdapterService implements IUiSystemAdapter {
+  protected meta!: UiAdapterMeta;
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
+  }
+
   async activate(descriptor: UiSystemDescriptor): Promise<void> {
     console.log(
       `[${this.constructor.name}] activate() descriptor.id =`,

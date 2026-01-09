@@ -8,17 +8,10 @@ import { MenuService } from "../../moduleman/services/menu.service";
 import { SysCacheService } from "../../moduleman/services/sys-cache.service";
 import { ITheme } from "../../theme/models/themes.model";
 import { diag_css, diag_sidebar } from "../../utils/diagnosis";
-import {
-  DEFAULT_SYSTEM,
-  // DEFAULT_SYSTEM,
-  IUiSystemAdapter,
-  SYSTEM_ADAPTERS,
-} from "../models/ui-system-adaptor.model";
-import { STATIC_UI_SYSTEM_REGISTRY } from "../models/ui-system-schema.model";
-import { PlainAdapter } from "./plain-adaptor.service";
-// import { UiSystemAdapterFactory } from "./ui-system-adapters";
+import { DEFAULT_SYSTEM } from "../models/ui-system-adaptor.model";
 import { UiSystemAdapterRegistry } from "./ui-system-registry.service";
 import { UiThemeLoaderService } from "./ui-theme-loader.service";
+import { UiThemeNormalizer } from "./ui-theme-normailizer.service";
 
 /**
  * @class UiSystemLoaderService
@@ -186,6 +179,15 @@ export class UiSystemLoaderService {
 
     const descriptor = descriptorFromCache || fallbackDescriptor;
     this.activeSystem = descriptor;
+
+    const adapter = UiSystemAdapterRegistry.get(id);
+
+    adapter.setMeta({
+      id: descriptor.id,
+      name: descriptor.name,
+      version: descriptor.version,
+      status: descriptor.deprecated ? "MARKED_FOR_DEPRECATION" : "ACTIVE",
+    });
 
     // Expose runtime descriptor (adapters/services read this)
     try {
@@ -425,18 +427,17 @@ export class UiSystemLoaderService {
     return list.find((d: any) => d.id === id);
   }
 
-  /**
-   * Purpose: Load UI System + Load Theme + Activate UI-System-specific logic.
-   */
   async applyStartupUiSettings(svSysCache: SysCacheService): Promise<void> {
     this.logger.debug("[UiSystemLoaderService.applyStartupUiSettings()] start");
-    // const cfgSvc = ConfigService.getInstance();
-    // ensure sys cache is ready
+
+    // ------------------------------------------------------------------
+    // 0) Ensure cache readiness
+    // ------------------------------------------------------------------
     await svSysCache.ensureReady();
 
     const uiConfig = svSysCache.get("uiConfig") as UiConfig;
     if (!uiConfig) {
-      console.warn("[Main.applyStartupUiSettings] uiConfig missing");
+      this.logger.warn("[applyStartupUiSettings] uiConfig missing");
       return;
     }
 
@@ -445,47 +446,79 @@ export class UiSystemLoaderService {
 
     diag_css("[MAIN.applyStartupUiSettings] start", { systemId, themeId });
 
-    // Use singletons bound to same SysCache instance
     const uiSystemLoader = UiSystemLoaderService.getInstance(svSysCache);
     const uiThemeLoader = UiThemeLoaderService.getInstance(svSysCache);
 
-    // 1) Activate UI system (loads CSS + JS)
+    // ------------------------------------------------------------------
+    // 1) Activate UI system
+    // ------------------------------------------------------------------
     try {
       await uiSystemLoader.activate(systemId);
       diag_css("[MAIN.applyStartupUiSettings] ui-system activated", {
         systemId,
       });
     } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] activate failed", err);
-      diag_css("[MAIN.applyStartupUiSettings] activate failed", { err });
+      this.logger.error("[applyStartupUiSettings] activate failed", err);
+      return;
     }
 
-    // 2) Load structural shell CSS (base + index) AFTER system to ensure layering
+    // ------------------------------------------------------------------
+    // 2) Structural shell CSS
+    // ------------------------------------------------------------------
     try {
       await uiSystemLoader.loadCSS("/themes/common/base.css", "shell-base");
       await uiSystemLoader.loadCSS("/assets/css/index.css", "shell-index");
-      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded", {});
+      diag_css("[MAIN.applyStartupUiSettings] shell CSS loaded");
     } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] shell CSS load failed", err);
+      this.logger.warn("[applyStartupUiSettings] shell CSS load failed", err);
     }
 
-    // 3) load theme override CSS
+    // ------------------------------------------------------------------
+    // 3) Load raw theme assets (CSS only)
+    // ------------------------------------------------------------------
     try {
       await uiThemeLoader.loadThemeById(themeId);
-      diag_css("[MAIN.applyStartupUiSettings] theme css injected", { themeId });
+      diag_css("[MAIN.applyStartupUiSettings] theme assets loaded", {
+        themeId,
+      });
     } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] theme load failed", err);
+      this.logger.warn("[applyStartupUiSettings] theme load failed", err);
     }
 
-    // 4) per-system applyTheme (sets data-bs-theme, md classes, etc.)
+    // ------------------------------------------------------------------
+    // 4) 🔑 Normalize ONCE (new architecture)
+    // ------------------------------------------------------------------
+    const rawTheme = svSysCache.getThemeById(themeId);
+    if (!rawTheme) {
+      this.logger.warn(
+        "[applyStartupUiSettings] theme descriptor missing",
+        themeId
+      );
+    }
+
+    const normalizedTheme = rawTheme
+      ? UiThemeNormalizer.normalize(rawTheme, {
+          uiSystemId: systemId,
+          source: "static",
+        })
+      : null;
+
+    // Cache normalized theme for downstream legacy use
+    if (normalizedTheme) {
+      svSysCache.set("theme:normalized", normalizedTheme, "runtime");
+    }
+
+    // ------------------------------------------------------------------
+    // 5) Legacy-compatible applyTheme (TRANSITION POINT)
+    // ------------------------------------------------------------------
     try {
       await uiSystemLoader.applyTheme(systemId, themeId);
-      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete", {});
+      diag_css("[MAIN.applyStartupUiSettings] system applyTheme complete");
     } catch (err) {
-      console.warn("[MAIN.applyStartupUiSettings] applyTheme failed", err);
+      this.logger.warn("[applyStartupUiSettings] applyTheme failed", err);
     }
 
-    diag_css("[MAIN.applyStartupUiSettings] done", {});
+    diag_css("[MAIN.applyStartupUiSettings] done");
   }
 
   async showSplash(svConfig: ConfigService): Promise<void> {
@@ -569,7 +602,9 @@ export class UiSystemLoaderService {
    * - Do not add logic here.
    */
   async bootstrapUiSystemAndTheme(svSysCache: SysCacheService): Promise<void> {
-    this.logger.debug("[UiSystemLoaderService.bootstrapUiSystemAndTheme()] start");
+    this.logger.debug(
+      "[UiSystemLoaderService.bootstrapUiSystemAndTheme()] start"
+    );
     await this.applyStartupUiSettings(svSysCache);
     diag_css("UI-System + Theme applied");
   }

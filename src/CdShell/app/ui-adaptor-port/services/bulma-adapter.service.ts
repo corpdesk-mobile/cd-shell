@@ -1,4 +1,4 @@
-import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import type { UiAdapterMeta, UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
 import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
 import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
@@ -11,8 +11,14 @@ export class BulmaAdapterService implements IUiSystemAdapter {
   private observer: MutationObserver | null = null;
   private appliedSet = new WeakSet<HTMLElement>();
 
+  protected meta!: UiAdapterMeta;
+
   constructor() {
     console.log("%c[BulmaAdapterService] constructor()", "color:#6cf");
+  }
+
+  public setMeta(meta: UiAdapterMeta): void {
+    this.meta = meta;
   }
 
   async activate(descriptor: UiSystemDescriptor): Promise<void> {
@@ -70,9 +76,7 @@ export class BulmaAdapterService implements IUiSystemAdapter {
     }
 
     if (mapping.attrs) {
-      Object.entries(mapping.attrs).forEach(([k, v]) =>
-        el.setAttribute(k, v)
-      );
+      Object.entries(mapping.attrs).forEach(([k, v]) => el.setAttribute(k, v));
     }
 
     this.appliedSet.add(el);
@@ -142,7 +146,7 @@ export class BulmaAdapterService implements IUiSystemAdapter {
 
     this.observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   }
 }

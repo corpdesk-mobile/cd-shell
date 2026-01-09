@@ -2,6 +2,9 @@
  * MaterialAdapter — applies Material Design theme logic
  */
 export class PlainAdapterService {
+    setMeta(meta) {
+        this.meta = meta;
+    }
     async activate(descriptor) {
         console.log(`[${this.constructor.name}] activate() descriptor.id =`, descriptor?.id);
         console.log(`[${this.constructor.name}] activate() descriptor.version =`, descriptor?.version);

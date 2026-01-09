@@ -7,6 +7,9 @@ export class BulmaAdapterService {
         this.appliedSet = new WeakSet();
         console.log("%c[BulmaAdapterService] constructor()", "color:#6cf");
     }
+    setMeta(meta) {
+        this.meta = meta;
+    }
     async activate(descriptor) {
         diag_css("[BulmaAdapter] activate()", { id: descriptor.id });
         this.descriptor = descriptor || null;
@@ -96,7 +99,7 @@ export class BulmaAdapterService {
         });
         this.observer.observe(document.body, {
             childList: true,
-            subtree: true
+            subtree: true,
         });
     }
 }

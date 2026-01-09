@@ -1,137 +1,226 @@
 // src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
-import type { UiConceptMapping } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
-import type { IUiSystemAdapter } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import {
+  CdUiAction,
+  CdUiContainerDescriptor,
+  CdUiContainerType,
+  CdUiGridDescriptor,
+  CdUiLayoutType,
+  CdUiRole,
+  isTabDescriptor,
+  UiAdapterCapabilities,
+  UiAdapterMeta,
+  UiAdapterStatus,
+  type CdUiControlDescriptor,
+  type CdUiDescriptor,
+  type UiConceptMapping,
+} from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import { CdUiControlType } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
+import {
+  UiAdapterLifecycle,
+  UiAdapterPhase,
+} from "../../../sys/cd-guig/models/ui-system-introspector.model";
+import { BaseUiAdapter } from "../../../sys/cd-guig/services/base-ui-adapter.service";
 import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
+import { UiThemeDescriptor } from "../../../sys/dev-descriptor/models/ui-theme-descriptor.model";
 import { diag_css } from "../../../sys/utils/diagnosis";
+
 
 type Mapping = UiConceptMapping | undefined;
 
-export class Bootstrap538AdapterService implements IUiSystemAdapter {
-  private descriptor: UiSystemDescriptor | null = null;
-  private observer: MutationObserver | null = null;
-  private appliedSet = new WeakSet<HTMLElement>();
+export class Bootstrap538AdapterService extends BaseUiAdapter {
+  protected descriptor: UiSystemDescriptor | null = null;
+  protected observer: MutationObserver | null = null;
+  protected appliedSet = new WeakSet<HTMLElement>();
 
-  constructor() {
-    console.log("%c[Bootstrap538AdapterService] constructor()", "color:#6cf");
-  }
+  readonly adapterId = "bootstrap-538";
 
-  // ---------------------------------------------------------------------------
-  // ACTIVATION
-  // ---------------------------------------------------------------------------
-  async activate(descriptor: UiSystemDescriptor): Promise<void> {
-    diag_css("[Bootstrap538Adapter] activate() START", { id: descriptor?.id });
+  protected readonly capabilities: UiAdapterCapabilities = {
+    layouts: [CdUiLayoutType.GRID],
+    containers: [
+      CdUiContainerType.TABS,
+      CdUiContainerType.TAB,
+      CdUiContainerType.CARD,
+    ],
+    controls: [
+      CdUiControlType.BUTTON,
+      CdUiControlType.TEXT_FIELD,
+      CdUiControlType.SELECT,
+      CdUiControlType.CHECKBOX,
+      CdUiControlType.SWITCH,
+    ],
+  };
 
-    this.descriptor = descriptor || null;
+  protected readonly meta: UiAdapterMeta = {
+    id: "bootstrap-538",
+    version: "5.3.8",
+    status: UiAdapterStatus.ACTIVE,
+    vendor: "Bootstrap",
+  };
 
-    if (!descriptor?.conceptMappings) {
-      console.warn(
-        "%c[Bootstrap538Adapter] descriptor.conceptMappings missing!",
-        "color:orange"
-      );
-    } else {
-      console.log(
-        "%c[Bootstrap538Adapter] Loaded conceptMappings:",
-        "color:#0ff",
-        descriptor.conceptMappings
+  /* ======================================================================
+   * ACTIVATION
+   * ====================================================================== */
+
+  protected override async onActivate(
+    descriptor: UiSystemDescriptor
+  ): Promise<void> {
+    this.log("info", "lifecycle:activate:start", "Adapter activation started", {
+      lifecycle: this.lifecycle,
+    });
+
+    if (!descriptor) {
+      this.log("error", "activate:error", "Descriptor is null");
+      return;
+    }
+
+    /* ------------------------------
+     * INITIALIZED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.CREATED) {
+      this.descriptor = descriptor;
+      this.appliedSet = new WeakSet();
+
+      this.transitionTo(UiAdapterLifecycle.INITIALIZED);
+    }
+
+    /* ------------------------------
+     * ACTIVATED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.INITIALIZED) {
+      this.transitionTo(
+        UiAdapterLifecycle.ACTIVATED
+        // "Adapter allowed to operate on DOM"
       );
     }
 
-    // Initial mapping
-    diag_css("[Bootstrap538Adapter] Initial mapAll() pass");
-    this.mapAll();
+    /* ------------------------------
+     * MAPPED
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.ACTIVATED) {
+      this.mapAll();
+      this.transitionTo(
+        UiAdapterLifecycle.MAPPED
+        // "Initial deterministic mapping complete"
+      );
+    }
 
-    // Start observing DOM changes
-    this.observeMutations();
+    /* ------------------------------
+     * OBSERVING
+     * ------------------------------ */
+    if (this.lifecycle === UiAdapterLifecycle.MAPPED) {
+      this.observeMutations();
+      this.transitionTo(
+        UiAdapterLifecycle.OBSERVING
+        // "Mutation observer active"
+      );
+    }
 
-    diag_css("[Bootstrap538Adapter] activate() COMPLETE", {
-      active: descriptor?.id,
+    /* ------------------------------
+     * Shell coordination (PHASE)
+     * ------------------------------ */
+    if (this.lifecycle >= UiAdapterLifecycle.OBSERVING) {
+      this.setPhase(
+        UiAdapterPhase.CONTROLLER_READY,
+        "Bootstrap adapter controller ready"
+      );
+
+      this.markDomStable("Initial Bootstrap mapping completed");
+    }
+
+    this.log("info", "lifecycle:activate:end", "Adapter activation completed", {
+      lifecycle: this.lifecycle,
     });
   }
 
-  // ---------------------------------------------------------------------------
-  // DEACTIVATION
-  // ---------------------------------------------------------------------------
-  async deactivate(): Promise<void> {
-    diag_css("[Bootstrap538Adapter] deactivate() START");
+  protected override async onDeactivate(): Promise<void> {
+    this.assertLifecycle(UiAdapterLifecycle.ACTIVATED, "onDeactivate");
 
-    try {
-      document.documentElement.removeAttribute("data-bs-theme");
-      console.log("[Bootstrap538Adapter] removed data-bs-theme");
-    } catch {}
+    this.log("info", "lifecycle:deactivate:start", "Deactivating adapter");
 
     if (this.observer) {
       try {
         this.observer.disconnect();
-        console.log("[Bootstrap538Adapter] MutationObserver disconnected");
-      } catch {}
+        this.log("debug", "observer:disconnected", "MutationObserver stopped");
+      } catch {
+        /* no-op */
+      }
       this.observer = null;
+    }
+
+    try {
+      document.documentElement.removeAttribute("data-bs-theme");
+    } catch {
+      /* no-op */
     }
 
     this.descriptor = null;
     this.appliedSet = new WeakSet();
 
-    diag_css("[Bootstrap538Adapter] deactivate() COMPLETE");
+    this.assertLifecycle(UiAdapterLifecycle.CREATED, "Adapter deactivated");
+
+    this.log("info", "lifecycle:deactivate:complete", "Adapter deactivated");
   }
 
-  // ---------------------------------------------------------------------------
-  // THEME APPLICATION
-  // ---------------------------------------------------------------------------
-  async applyTheme(themeDescriptorOrId: any): Promise<void> {
-    diag_css("[Bootstrap538Adapter] applyTheme()", { themeDescriptorOrId });
+  /* ======================================================================
+   * THEME APPLICATION
+   * ====================================================================== */
 
-    try {
-      if (!themeDescriptorOrId) {
-        console.warn("[Bootstrap538Adapter] applyTheme ignored (null theme)");
-        return;
-      }
-
-      let mode: string | undefined;
-
-      if (typeof themeDescriptorOrId === "string") {
-        mode = themeDescriptorOrId === "dark" ? "dark" : "light";
-      } else if (typeof themeDescriptorOrId === "object") {
-        mode =
-          themeDescriptorOrId.mode ||
-          (themeDescriptorOrId.id === "dark" ? "dark" : "light");
-      }
-
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        mode === "dark" ? "dark" : "light"
+  protected override onApplyTheme(theme: UiThemeDescriptor): void {
+    /**
+     * NOTE (migration):
+     * Theme application currently runs post-DOM_STABLE.
+     * Lifecycle enforcement will be revisited once
+     * theme timing policy is finalized.
+     */
+    // this.assertLifecycle(UiAdapterLifecycle.OBSERVING, "applyTheme");
+    if (this.lifecycle < UiAdapterLifecycle.ACTIVATED) {
+      this.logger.warn(
+        `[UI-ADAPTER:${this.adapterId}] applyTheme skipped – adapter not activated`,
+        { lifecycle: this.lifecycle }
       );
-
-      diag_css("[Bootstrap538Adapter] applied Bootstrap theme", { mode });
-    } catch (err) {
-      console.warn("[Bootstrap538Adapter] applyTheme error", err);
+      return;
     }
+
+    if (!theme) {
+      this.logger.warn(
+        `[UI-ADAPTER:${this.adapterId}] applyTheme:skipped`,
+        "No theme descriptor provided"
+      );
+      return;
+    }
+
+    const root = document.documentElement;
+
+    if (theme.classPrefix) {
+      Array.from(root.classList)
+        .filter((cls) => cls.startsWith(theme.classPrefix))
+        .forEach((cls) => root.classList.remove(cls));
+    }
+
+    Object.entries(theme.variables ?? {}).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+
+    theme.classes?.forEach((cls) => root.classList.add(cls));
+
+    this.transitionTo(UiAdapterLifecycle.THEMED);
+
+    this.logger.debug(`[UI-ADAPTER:${this.adapterId}] applyTheme:done`, theme);
   }
 
-  // ---------------------------------------------------------------------------
-  // CONCEPT MAPPING
-  // ---------------------------------------------------------------------------
+  /* ======================================================================
+   * CONCEPT MAPPING
+   * ====================================================================== */
+
   private getMapping(concept: string): Mapping {
-    console.log('[Bootstrap538Adapter] getMapping() this.descriptor:', this.descriptor);
-    const mapping =
-      (this.descriptor &&
-        this.descriptor.conceptMappings &&
-        (this.descriptor.conceptMappings as any)[concept]) ||
-      undefined;
-
-    console.log(
-      `%c[Bootstrap538Adapter] getMapping('${concept}') =`,
-      "color:#9f9",
-      mapping
-    );
-
-    return mapping;
+    return (this.descriptor?.conceptMappings as any)?.[concept];
   }
 
   private applyMappingToElement(el: HTMLElement, mapping?: Mapping) {
     if (!mapping) return;
 
     if (this.appliedSet.has(el)) {
-      // Already mapped but update attributes if any
       if (mapping.attrs) {
         Object.entries(mapping.attrs).forEach(([k, v]) =>
           el.setAttribute(k, v)
@@ -140,16 +229,8 @@ export class Bootstrap538AdapterService implements IUiSystemAdapter {
       return;
     }
 
-    console.log(
-      "%c[Bootstrap538Adapter] Applying mapping to element:",
-      "color:#7ff;",
-      { tag: el.tagName, mapping }
-    );
-
     if (mapping.class) {
-      mapping.class.split(/\s+/).forEach((c) => {
-        if (c) el.classList.add(c);
-      });
+      mapping.class.split(/\s+/).forEach((c) => c && el.classList.add(c));
     }
 
     if (mapping.attrs) {
@@ -159,99 +240,155 @@ export class Bootstrap538AdapterService implements IUiSystemAdapter {
     this.appliedSet.add(el);
   }
 
-  // ---------------------------------------------------------------------------
-  // SPECIFIC MAPPING PASSES
-  // ---------------------------------------------------------------------------
-  private mapButtons() {
-    const mapping = this.getMapping("button");
+  private mapByConcept(concept: string, selector: string): void {
+    const mapping = this.getMapping(concept);
     if (!mapping) return;
 
-    const selector = "button[cdButton], button.cd-button";
-    const nodes = document.querySelectorAll<HTMLElement>(selector);
-
-    diag_css("[Bootstrap538Adapter] mapButtons()", { count: nodes.length });
-
-    nodes.forEach((btn) => this.applyMappingToElement(btn, mapping));
+    document
+      .querySelectorAll<HTMLElement>(selector)
+      .forEach((el) => this.applyMappingToElement(el, mapping));
   }
 
-  private mapInputs() {
-    const mapping = this.getMapping("input");
-    if (!mapping) return;
+  /**
+   * mapTabs()
+   * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   */
+  private mapTabs() {
+    this.log("info", "map:concept", "[Bootstrap538Adapter] mapTabs()");
+    const tabsContainers = document.querySelectorAll<HTMLElement>("cd-tabs");
 
-    const selector =
-      "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]";
-    const nodes = document.querySelectorAll<HTMLElement>(selector);
+    tabsContainers.forEach((container) => {
+      if (this.appliedSet.has(container)) return;
 
-    diag_css("[Bootstrap538Adapter] mapInputs()", { count: nodes.length });
+      const tabsId =
+        container.id || `tabs-${Math.random().toString(36).slice(2, 7)}`;
+      const activeTabId = container.getAttribute("active-tab");
+      const cdTabs = Array.from(
+        container.querySelectorAll<HTMLElement>("cd-tab")
+      );
 
-    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
-  }
+      const navUl = document.createElement("ul");
+      navUl.className = "nav nav-tabs mb-3";
+      navUl.id = `${tabsId}-nav`;
+      navUl.setAttribute("role", "tablist");
 
-  private mapFormGroups() {
-    const mapping = this.getMapping("formGroup");
-    if (!mapping) return;
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "tab-content";
+      contentDiv.id = `${tabsId}-content`;
 
-    const selector = ".cd-form-field";
-    const nodes = document.querySelectorAll<HTMLElement>(selector);
+      cdTabs.forEach((tab, index) => {
+        const tabId = tab.id || `${tabsId}-t-${index}`;
+        const label = tab.getAttribute("label") || "";
+        const icon = tab.getAttribute("icon");
+        const isActive = tabId === activeTabId || (!activeTabId && index === 0);
 
-    diag_css("[Bootstrap538Adapter] mapFormGroups()", { count: nodes.length });
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.setAttribute("role", "presentation");
 
-    nodes.forEach((el) => this.applyMappingToElement(el, mapping));
-  }
+        const btn = document.createElement("button");
+        btn.className = `nav-link ${isActive ? "active" : ""}`;
+        btn.id = `${tabId}-tab`;
+        btn.type = "button";
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", String(isActive));
+        btn.setAttribute("data-bs-target", `#${tabId}-pane`);
 
-  private mapOtherConcepts() {
-    const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
-    const concepts = Object.keys(cm).filter(
-      (c) => !["button", "input", "formGroup"].includes(c)
-    );
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
 
-    diag_css("[Bootstrap538Adapter] mapOtherConcepts()", { concepts });
+          navUl.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.remove("active");
+            l.setAttribute("aria-selected", "false");
+          });
 
-    concepts.forEach((concept) => {
-      const mapping = (cm as any)[concept];
-      const selector = `[data-cd-${concept}], .cd-${concept}`;
-      const nodes = document.querySelectorAll<HTMLElement>(selector);
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
 
-      nodes.forEach((el) => this.applyMappingToElement(el, mapping));
+          contentDiv
+            .querySelectorAll(".tab-pane")
+            .forEach((p) => p.classList.remove("show", "active"));
+
+          const targetPane = contentDiv.querySelector<HTMLElement>(
+            `#${tabId}-pane`
+          );
+          targetPane?.classList.add("show", "active");
+
+          container.dispatchEvent(
+            new CustomEvent("cd-tab-change", {
+              detail: { tabId, label },
+              bubbles: true,
+            })
+          );
+        });
+
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = `bi bi-${icon} me-2`;
+          btn.appendChild(iconEl);
+        }
+
+        btn.appendChild(document.createTextNode(label));
+        li.appendChild(btn);
+        navUl.appendChild(li);
+
+        const pane = document.createElement("div");
+        pane.className = `tab-pane fade ${isActive ? "show active" : ""}`;
+        pane.id = `${tabId}-pane`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", `${tabId}-tab`);
+        pane.innerHTML = tab.innerHTML;
+
+        contentDiv.appendChild(pane);
+      });
+
+      const fragment = document.createDocumentFragment();
+      fragment.append(navUl, contentDiv);
+      container.replaceWith(fragment);
+
+      this.appliedSet.add(navUl);
     });
   }
 
-  // master mapping pass
-  private mapAll() {
-    console.log(
-      "%c[Bootstrap538Adapter] mapAll() — START",
-      "background:#444;color:#aaf;padding:2px"
-    );
-
-    try {
-      this.mapButtons();
-      this.mapInputs();
-      this.mapFormGroups();
-      this.mapOtherConcepts();
-    } catch (err) {
-      console.warn("[Bootstrap538Adapter] mapAll error", err);
-    }
-
-    console.log(
-      "%c[Bootstrap538Adapter] mapAll() — END",
-      "background:#444;color:#aaf;padding:2px"
-    );
+  private mapOtherConcepts() {
+    const cm = this.descriptor?.conceptMappings || {};
+    Object.keys(cm)
+      .filter((c) => !["button", "input", "formGroup"].includes(c))
+      .forEach((concept) => {
+        const selector = `[data-cd-${concept}], .cd-${concept}`;
+        document
+          .querySelectorAll<HTMLElement>(selector)
+          .forEach((el) =>
+            this.applyMappingToElement(el, (cm as any)[concept])
+          );
+      });
   }
 
-  // ---------------------------------------------------------------------------
-  // DOM OBSERVER
-  // ---------------------------------------------------------------------------
+  private mapAll() {
+    if (!this.descriptor) return;
+
+    try {
+      this.mapByConcept("button", "button[cdButton], button.cd-button");
+      this.mapByConcept(
+        "input",
+        "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+      );
+      this.mapByConcept("formGroup", ".cd-form-field");
+      this.mapTabs();
+      this.mapOtherConcepts();
+    } catch (err) {
+      this.log("error", "map:all:error", "Mapping failed", err);
+    }
+  }
+
+  /* ======================================================================
+   * DOM OBSERVER
+   * ====================================================================== */
+
   private observeMutations() {
     if (this.observer) return;
 
-    diag_css("[Bootstrap538Adapter] MutationObserver ATTACH");
-
-    this.observer = new MutationObserver((mutations) => {
-      console.log(
-        "%c[Bootstrap538Adapter] Mutation detected → scheduling mapAll()",
-        "color:#ffa;"
-      );
-
+    this.observer = new MutationObserver(() => {
       if ("requestIdleCallback" in window) {
         window.requestIdleCallback(() => this.mapAll());
       } else {
@@ -263,16 +400,18 @@ export class Bootstrap538AdapterService implements IUiSystemAdapter {
       this.observer.observe(document.body, {
         childList: true,
         subtree: true,
-        attributes: false,
       });
     } catch (err) {
-      console.warn("[Bootstrap538Adapter] observer failed to attach", err);
+      this.log("error", "observer:error", "Failed to attach observer", err);
       this.observer = null;
     }
   }
 }
 
-// Self-register
+/* ========================================================================
+ * AUTO-REGISTRATION
+ * ======================================================================== */
+
 UiSystemAdapterRegistry.register(
   "bootstrap-538",
   new Bootstrap538AdapterService()
