@@ -41,7 +41,8 @@ export class Main {
   constructor() {
     // intentionally empty — setup moved to init()
     this.svConfig = new ConfigService();
-    this.svSysCache = new SysCacheService(this.svConfig);
+    // this.svSysCache = new SysCacheService(this.svConfig);
+    this.svSysCache = SysCacheService.getInstance(this.svConfig);
   }
 
   /**
@@ -50,6 +51,17 @@ export class Main {
    */
   async init() {
     this.logger.debug("[Main] init(): starting");
+
+    // 1. Instantiate the ConfigService first
+    this.svConfig = new ConfigService();
+
+    // 2. Use getInstance to ensure we are using/initializing the global singleton
+    this.svSysCache = SysCacheService.getInstance(this.svConfig);
+
+    this.svModule = new ModuleService();
+    this.svMenu = new MenuService();
+    this.svController = new ControllerService();
+    this.svTheme = new ThemeService();
 
     // ✅ Ensure ModuleService is properly initialized
     if (typeof window === "undefined") {
@@ -65,7 +77,8 @@ export class Main {
 
     // ✅ Instantiate services
     this.svConfig = new ConfigService();
-    this.svSysCache = new SysCacheService(this.svConfig);
+    // this.svSysCache = new SysCacheService(this.svConfig);
+    this.svSysCache = SysCacheService.getInstance(this.svConfig);
     this.svModule = new ModuleService();
     this.svMenu = new MenuService();
     this.svController = new ControllerService();

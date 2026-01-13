@@ -1500,7 +1500,8 @@ export class UserService {
 
   constructor() {
     this.svConfig = new ConfigService();
-    this.cache = new SysCacheService(this.svConfig);
+    // this.cache = new SysCacheService(this.svConfig);
+    this.cache = SysCacheService.getInstance(this.svConfig);
   }
 
   // ---------------------------------------------

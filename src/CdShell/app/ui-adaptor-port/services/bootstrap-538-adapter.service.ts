@@ -1,17 +1,10 @@
 // src/CdShell/app/ui-adaptor-port/services/bootstrap-538-adapter.service.ts
 import {
-  CdUiAction,
-  CdUiContainerDescriptor,
   CdUiContainerType,
-  CdUiGridDescriptor,
   CdUiLayoutType,
-  CdUiRole,
-  isTabDescriptor,
   UiAdapterCapabilities,
   UiAdapterMeta,
   UiAdapterStatus,
-  type CdUiControlDescriptor,
-  type CdUiDescriptor,
   type UiConceptMapping,
 } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
 import { CdUiControlType } from "../../../sys/cd-guig/models/ui-system-adaptor.model";
@@ -23,8 +16,6 @@ import { BaseUiAdapter } from "../../../sys/cd-guig/services/base-ui-adapter.ser
 import { UiSystemAdapterRegistry } from "../../../sys/cd-guig/services/ui-system-registry.service";
 import { UiSystemDescriptor } from "../../../sys/dev-descriptor/models/ui-system-descriptor.model";
 import { UiThemeDescriptor } from "../../../sys/dev-descriptor/models/ui-theme-descriptor.model";
-import { diag_css } from "../../../sys/utils/diagnosis";
-
 
 type Mapping = UiConceptMapping | undefined;
 
@@ -241,6 +232,10 @@ export class Bootstrap538AdapterService extends BaseUiAdapter {
   }
 
   private mapByConcept(concept: string, selector: string): void {
+    // this.logger.debug(
+    //   "[Bootstrap538Adapter.mapByConcept()] concept:)",
+    //   concept
+    // );
     const mapping = this.getMapping(concept);
     if (!mapping) return;
 
@@ -250,8 +245,94 @@ export class Bootstrap538AdapterService extends BaseUiAdapter {
   }
 
   /**
+   * mapUploaderConcept()
+   * Transforms <gvp-uploader> based on the 'uploader' concept in the descriptor.
+   */
+  private mapUploaderConcept() {
+    const concept = "uploader";
+    const mapping = this.getMapping(concept);
+    const nodes = document.querySelectorAll<HTMLElement>("gvp-uploader");
+
+    nodes.forEach((el) => {
+      // Avoid re-processing
+      if (this.appliedSet.has(el)) return;
+
+      // Extract metadata from the generic element
+      const currentUrl = el.getAttribute("data-current-preview") || "";
+      const name = el.getAttribute("name") || "file-upload";
+      const accept = el.getAttribute("accept") || "image/*";
+
+      // Build the Bootstrap 5 DOM Structure
+      const container = document.createElement("div");
+      // Apply mapping classes from descriptor if they exist (e.g., "d-flex align-items-center gap-3")
+      if (mapping?.class) {
+        mapping.class.split(" ").forEach((c) => container.classList.add(c));
+      } else {
+        container.className =
+          "d-flex align-items-center gap-3 p-3 border rounded bg-light";
+      }
+
+      // 1. Preview Area
+      const img = document.createElement("img");
+      img.src = currentUrl;
+      img.className = "img-thumbnail cd-uploader-preview";
+      img.style.width = "80px";
+      img.style.height = "80px";
+      img.style.objectFit = "contain";
+
+      // 2. Control Area
+      const input = document.createElement("input");
+      input.type = "file";
+      input.name = name;
+      input.className = "form-control";
+      input.accept = accept;
+
+      // Logic: Bi-directional value sync via CustomEvent (Handshake with CdDirectiveBinder)
+      input.addEventListener("change", (event: any) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => (img.src = e.target?.result as string);
+          reader.readAsDataURL(file);
+
+          // Dispatch to GVP Protocol Binder
+          el.dispatchEvent(
+            new CustomEvent("cd-value-change", {
+              detail: { file, name: name },
+              bubbles: true,
+            })
+          );
+        }
+      });
+
+      // Assemble and Swap
+      container.append(img, input);
+      el.innerHTML = "";
+      el.appendChild(container);
+
+      // Register as applied in the WeakSet
+      this.applyMappingToElement(el, mapping);
+    });
+  }
+
+  /**
    * mapTabs()
    * Transforms <cd-tabs> into Bootstrap 5.3 nav-tabs and tab-panes.
+   * 
+   * <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Active</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+    </ul>
    */
   private mapTabs() {
     this.log("info", "map:concept", "[Bootstrap538Adapter] mapTabs()");
@@ -364,17 +445,46 @@ export class Bootstrap538AdapterService extends BaseUiAdapter {
       });
   }
 
+  // private mapAll() {
+  //   if (!this.descriptor) return;
+
+  //   try {
+  //     this.mapUploader();
+  //     this.mapByConcept("button", "button[cdButton], button.cd-button");
+  //     this.mapByConcept(
+  //       "input",
+  //       "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
+  //     );
+  //     this.mapByConcept("formGroup", ".cd-form-field");
+  //     this.mapUploader();
+  //     this.mapOtherConcepts();
+  //   } catch (err) {
+  //     this.log("error", "map:all:error", "Mapping failed", err);
+  //   }
+  // }
+
+  /**
+   * Refined mapAll() following the Descriptor-driven pattern.
+   */
   private mapAll() {
     if (!this.descriptor) return;
 
     try {
+      // 1. Map Atomic Controls (Buttons, Inputs) via Descriptors
       this.mapByConcept("button", "button[cdButton], button.cd-button");
       this.mapByConcept(
         "input",
         "input[cdFormControl], textarea[cdFormControl], select[cdFormControl]"
       );
       this.mapByConcept("formGroup", ".cd-form-field");
+
+      // 2. Map Complex Structural Concepts
       this.mapTabs();
+
+      // 3. Map the Uploader Concept (Descriptor-driven transformation)
+      this.mapUploaderConcept();
+
+      // 4. Map any remaining arbitrary concepts defined in the descriptor
       this.mapOtherConcepts();
     } catch (err) {
       this.log("error", "map:all:error", "Mapping failed", err);

@@ -12,7 +12,8 @@ export class UserService {
         this.logger = new LoggerService();
         this.cdToken = "";
         this.svConfig = new ConfigService();
-        this.cache = new SysCacheService(this.svConfig);
+        // this.cache = new SysCacheService(this.svConfig);
+        this.cache = SysCacheService.getInstance(this.svConfig);
     }
     // ---------------------------------------------
     // Token handling (mirrors ModuleRegisterService)

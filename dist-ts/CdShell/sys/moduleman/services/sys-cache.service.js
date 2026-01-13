@@ -123,9 +123,25 @@ export class SysCacheService {
     getApiEndpoint() {
         return this.getEnvConfig()?.apiEndpoint;
     }
+    // public async ensureReady(): Promise<void> {
+    //   if (this.cache.size === 0) {
+    //     await this.loadAndCacheAll();
+    //   }
+    // }
+    // Refined ensureReady in SysCacheService.ts
     async ensureReady() {
-        if (this.cache.size === 0) {
+        // Check if the config exists in the cache via the public get() method
+        const existingConfig = this.get("shellConfig");
+        if (existingConfig) {
+            this.logger.debug("SysCache: Already ready (shellConfig present)");
+            return;
+        }
+        // If we have loaders, we can try to recover
+        if (this._uiSystemLoader && this._uiThemeLoader) {
             await this.loadAndCacheAll();
+        }
+        else {
+            this.logger.warn("SysCache: Not ready and no loaders available to fetch data.");
         }
     }
     /**

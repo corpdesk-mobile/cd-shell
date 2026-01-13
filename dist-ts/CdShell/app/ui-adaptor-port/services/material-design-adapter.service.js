@@ -808,6 +808,84 @@ export class MaterialDesignAdapterService extends BaseUiAdapter {
             catch { }
         });
     }
+    mapByConcept(concept, selector) {
+        // this.logger.debug(
+        //   "[Bootstrap538Adapter.mapByConcept()] concept:)",
+        //   concept
+        // );
+        const mapping = this.getMapping(concept);
+        if (!mapping)
+            return;
+        document
+            .querySelectorAll(selector)
+            .forEach((el) => this.applyMappingToElement(el, mapping));
+    }
+    /**
+     * mapUploaderConcept()
+     * Transforms <gvp-uploader> into a Material Design compliant uploader.
+     */
+    mapUploaderConcept() {
+        const concept = "uploader";
+        const mapping = this.getMapping(concept);
+        const nodes = document.querySelectorAll("gvp-uploader");
+        nodes.forEach((el) => {
+            if (this.appliedSet.has(el))
+                return;
+            const currentUrl = el.getAttribute("data-current-preview") || "";
+            const name = el.getAttribute("name") || "file-upload";
+            // 1. Create Material Surface Container
+            const container = document.createElement("div");
+            // Use mapping from descriptor if available, else default to MDC-style box
+            if (mapping?.class) {
+                mapping.class.split(" ").forEach((c) => container.classList.add(c));
+            }
+            else {
+                // Standard MDC-like layout: Horizontal alignment with shadow and padding
+                container.className =
+                    "mdc-card p-2 d-flex align-items-center gap-3 bg-surface border";
+            }
+            // 2. Material-Style Preview (Circular or Rounded)
+            const previewWrapper = document.createElement("div");
+            previewWrapper.className = "mdc-avatar mdc-avatar--large border";
+            previewWrapper.style.width = "64px";
+            previewWrapper.style.height = "64px";
+            previewWrapper.style.overflow = "hidden";
+            previewWrapper.style.borderRadius = "8px"; // Material M3 standard
+            const img = document.createElement("img");
+            img.src = currentUrl;
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "cover";
+            previewWrapper.appendChild(img);
+            // 3. The Input Control
+            const input = document.createElement("input");
+            input.type = "file";
+            input.name = name;
+            input.className = "mdc-text-field__input"; // Hook into MDC text field styles if available
+            input.style.padding = "10px";
+            input.accept = el.getAttribute("accept") || "image/*";
+            // 4. Handshake Logic (Reusing the GVP Event Protocol)
+            input.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => (img.src = e.target?.result);
+                    reader.readAsDataURL(file);
+                    // Notify CorpDesk Binder
+                    el.dispatchEvent(new CustomEvent("cd-value-change", {
+                        detail: { file, name: name },
+                        bubbles: true,
+                    }));
+                }
+            });
+            // Assemble
+            container.append(previewWrapper, input);
+            el.innerHTML = "";
+            el.appendChild(container);
+            // Register as applied
+            this.applyMappingToElement(el, mapping);
+        });
+    }
     mapOtherConcepts() {
         const cm = (this.descriptor && this.descriptor.conceptMappings) || {};
         const concepts = Object.keys(cm).filter((c) => !["button", "input", "formGroup"].includes(c));
@@ -828,22 +906,47 @@ export class MaterialDesignAdapterService extends BaseUiAdapter {
     onMutation(cb) {
         this._mutationCallback = cb;
     }
-    // master mapping pass
+    // // master mapping pass
+    // private mapAll() {
+    //   console.log(
+    //     "%c[MaterialDesignAdapter] mapAll() — START",
+    //     "background:#223;color:#9cf;padding:2px"
+    //   );
+    //   try {
+    //     this._mutationCallback?.();
+    //     this.mapButtons();
+    //     this.mapInputs();
+    //     this.mapFormGroups();
+    //     this.mapTabs();
+    //     this.mapOtherConcepts();
+    //     this.scheduleMdcInit();
+    //   } catch (err) {
+    //     console.warn("[MaterialDesignAdapter] mapAll error", err);
+    //   }
+    //   console.log(
+    //     "%c[MaterialDesignAdapter] mapAll() — END",
+    //     "background:#223;color:#9cf;padding:2px"
+    //   );
+    // }
+    /**
+     * Updated mapAll to include the uploader
+     */
     mapAll() {
-        console.log("%c[MaterialDesignAdapter] mapAll() — START", "background:#223;color:#9cf;padding:2px");
+        if (!this.descriptor)
+            return;
         try {
-            this._mutationCallback?.();
-            this.mapButtons();
-            this.mapInputs();
-            this.mapFormGroups();
+            this.mapByConcept("button", ".mdc-button, button[cdButton]");
+            this.mapByConcept("input", ".mdc-text-field__input, input[cdFormControl]");
+            // Trigger the Material Uploader transformation
+            this.mapUploaderConcept();
             this.mapTabs();
             this.mapOtherConcepts();
+            // Material specific: Ensure MDC components are hydrated
             this.scheduleMdcInit();
         }
         catch (err) {
-            console.warn("[MaterialDesignAdapter] mapAll error", err);
+            this.log("error", "map:all:error", "Material Mapping failed", err);
         }
-        console.log("%c[MaterialDesignAdapter] mapAll() — END", "background:#223;color:#9cf;padding:2px");
     }
     // ---------------------------------------------------------------------------
     // DOM observer

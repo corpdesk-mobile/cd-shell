@@ -1206,104 +1206,6 @@ const loginResponse = {
 };
 ```
 
-#### **9.2.3.2 ACL Filtering Process**
-```typescript
-/**
- * ACL Filtering Algorithm for Configuration Access
- */
-class ConfigurationACLService {
-  /**
-   * Determine if user can access a specific configuration field
-   */
-  canAccessConfigField(
-    user: IUserProfile,
-    consumer: IConsumerProfile,
-    field: string,
-    action: 'read' | 'write' | 'execute'
-  ): boolean {
-    // 1. Check user-specific permissions
-    const userPerm = user.fieldPermissions?.userPermissions
-      .find(p => p.userId === user.userData.userId && p.field === field);
-    
-    if (userPerm) {
-      switch (action) {
-        case 'read': return userPerm.read;
-        case 'write': return userPerm.write;
-        case 'execute': return userPerm.execute;
-      }
-    }
-
-    // 2. Check group permissions (user's groups)
-    const userGroups = this.getUserGroups(user.userId);
-    const groupPerm = user.fieldPermissions?.groupPermissions
-      .find(p => userGroups.includes(p.groupId) && p.field === field);
-    
-    if (groupPerm) {
-      switch (action) {
-        case 'read': return groupPerm.read;
-        case 'write': return groupPerm.write;
-        case 'execute': return groupPerm.execute;
-      }
-    }
-
-    // 3. Check consumer-level permissions
-    const consumerUserPerm = consumer.fieldPermissions?.userPermissions
-      .find(p => p.userId === user.userData.userId && p.field === field);
-    
-    if (consumerUserPerm) {
-      switch (action) {
-        case 'read': return consumerUserPerm.read;
-        case 'write': return consumerUserPerm.write;
-        case 'execute': return consumerUserPerm.execute;
-      }
-    }
-
-    // 4. Default to consumer group permissions
-    const consumerGroupPerm = consumer.fieldPermissions?.groupPermissions
-      .find(p => userGroups.includes(p.groupId) && p.field === field);
-    
-    if (consumerGroupPerm) {
-      switch (action) {
-        case 'read': return consumerGroupPerm.read;
-        case 'write': return consumerGroupPerm.write;
-        case 'execute': return consumerGroupPerm.execute;
-      }
-    }
-
-    // 5. Default deny
-    return false;
-  }
-
-  /**
-   * Filter configuration based on user privileges
-   */
-  filterConfiguration(
-    fullConfig: IShellConfig,
-    user: IUserProfile,
-    consumer: IConsumerProfile
-  ): IShellConfig {
-    const filteredConfig: IShellConfig = { ...fullConfig };
-    
-    // Check each configuration field
-    Object.keys(fullConfig).forEach(key => {
-      if (!this.canAccessConfigField(user, consumer, key, 'read')) {
-        delete filteredConfig[key];
-      } else if (!this.canAccessConfigField(user, consumer, key, 'write')) {
-        // Mark as read-only
-        Object.defineProperty(filteredConfig, key, {
-          value: fullConfig[key],
-          writable: false,
-          enumerable: true,
-          configurable: false
-        });
-      }
-    });
-
-    return filteredConfig;
-  }
-}
-```
-
 ### **9.2.4 Enhanced SysCacheService with Privilege Management**
 
 #### **9.2.4.1 Revised SysCacheService Implementation**
@@ -1656,6 +1558,8 @@ sequenceDiagram
     end
 ```
 
+---
+
 ### **9.2.6 Privilege Enforcement Examples**
 
 #### **9.2.6.1 Consumer Locking UI System**
@@ -1840,67 +1744,7 @@ class ConfigurationConflictManager {
 
 This enhanced configuration system transforms cd-shell from a simple UI framework into an enterprise-grade, privilege-aware platform suitable for multi-tenant SaaS applications with strict security and compliance requirements.
 
-### **9.3 Configuration Layer Implementations**
 
-```typescript
-export class ConsumerConfigurationLayer implements IConfigurationLayer {
-    readonly priority = 2;
-    readonly source = 'consumer';
-    readonly scope = 'tenant';
-    private store: Map<string, any> = new Map();
-    
-    async initialize(consumerId: string): Promise<void> {
-        // Fetch consumer-specific configuration from API
-        const response = await fetch(`/api/consumer/${consumerId}/config`);
-        const config = await response.json();
-        
-        // Store configuration
-        Object.entries(config).forEach(([key, value]) => {
-            this.store.set(key, value);
-        });
-        
-        // Apply UI system preferences
-        if (config.uiSystem) {
-            this.store.set('uiConfig.defaultUiSystemId', config.uiSystem);
-        }
-        
-        // Apply theme preferences
-        if (config.theme) {
-            this.store.set('uiConfig.defaultThemeId', config.theme);
-        }
-    }
-    
-    get<T>(key: string): T | undefined {
-        return this.store.get(key);
-    }
-    
-    set<T>(key: string, value: T): void {
-        this.store.set(key, value);
-        
-        // Persist to backend
-        this.persistChange(key, value);
-    }
-    
-    has(key: string): boolean {
-        return this.store.has(key);
-    }
-    
-    merge(config: Partial<IShellConfig>): void {
-        Object.entries(config).forEach(([key, value]) => {
-            this.store.set(key, value);
-        });
-    }
-    
-    private async persistChange(key: string, value: any): Promise<void> {
-        // Implementation for persisting consumer config changes
-        await fetch('/api/consumer/config', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ [key]: value })
-        });
-    }
-}
-```
 
 ---
 

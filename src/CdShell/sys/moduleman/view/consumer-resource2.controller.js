@@ -1,3 +1,4 @@
+// src/CdShell/sys/moduleman/view/consumer-resource2.controller.js
 // ------------------------------------------------------------
 // consumer-resource.controller.js
 // ------------------------------------------------------------
@@ -53,6 +54,7 @@ export const ctlConsumerResource2 = {
 
     // resolved view (system → consumer → user)
     this.resolvedShellConfig = this.sysCache.get("shellConfig") || {};
+    console.log("[ctlConsumerResource] resolvedShellConfig:", this.resolvedShellConfig);
   },
 
   async __activate() {
@@ -64,6 +66,7 @@ export const ctlConsumerResource2 = {
     console.log("[ctlConsumerResource][__afterInit]");
 
     const cfg = this.resolvedShellConfig;
+    console.log("[ctlConsumerResource] resolvedShellConfig:", cfg);
     if (!cfg) return;
 
     this.form.controls.appName.setValue(cfg.appName || "");
@@ -88,64 +91,139 @@ export const ctlConsumerResource2 = {
   // ----------------------------------------------------------
 
   __template() {
-    return `
-      <div class="cd-panel">
-        <h2>Consumer Shell Configuration</h2>
+  return `
+    <div class="cd-panel">
+      <div class="cd-panel-header">
+        <h2><i class="bi bi-gear-wide-connected"></i> Tenant Shell Administration</h2>
+        <p class="text-muted">Manage corporate branding, UI enforcement policies, and user permissions.</p>
+      </div>
 
-        <form id="consumerShellConfigForm" class="cd-form">
+      <form id="consumerShellConfigForm" class="cd-form">
+        
+        <cd-tabs id="shellConfigTabs" active-tab="tab-identity">
           
-          <cd-tabs id="shellConfigTabs" active-tab="tab-identity">
-            
-            <cd-tab id="tab-identity" icon="fingerprint" label="Identity">
-              <div class="mt-3">
-                <div class="cd-form-field">
-                  <label>Application Name</label>
-                  <input type="text" name="appName" cdFormControl />
+          <cd-tab id="tab-identity" icon="fingerprint" label="Identity">
+            <div class="cd-section-box mt-3">
+              <div class="cd-form-field">
+                <label>Application Display Name</label>
+                <input type="text" name="appName" cdFormControl placeholder="e.g. CorpDesk Enterprise" />
+              </div>
+              <div class="cd-form-field">
+                <label>Application Description</label>
+                <textarea name="appDescription" cdFormControl rows="2"></textarea>
+              </div>
+              <div class="cd-form-field mt-4">
+                  <label class="fw-bold">Corporate Logo</label>
+                  <p class="text-muted small">Update your organization's visual identity. Supported: PNG, JPG (Max 2MB).</p>
+                  
+                  <gvp-uploader 
+                    name="tenantLogo" 
+                    cdFormControl 
+                    accept=".png,.jpg,.jpeg"
+                    max-size="2048"
+                    data-current-preview="${this.form?.controls?.tenantLogo?.value || 'http://localhost:5173/themes/default/logo.png'}">
+                  </gvp-uploader>
                 </div>
+            </div>
+          </cd-tab>
 
+          <cd-tab id="tab-environment" icon="cpu" label="Environment">
+            <div class="cd-section-box mt-3">
+              <div class="cd-form-field">
+                <label>Default Startup Module</label>
+                <input type="text" name="defaultModulePath" cdFormControl placeholder="sys/dashboard" />
+              </div>
+              
+              <div class="cd-grid col-2">
                 <div class="cd-form-field">
-                  <label>Log Level</label>
+                  <label>Log Verbosity</label>
                   <select name="logLevel" cdFormControl>
-                    <option value="debug">debug</option>
-                    <option value="info">info</option>
-                    <option value="warn">warn</option>
-                    <option value="error">error</option>
+                    <option value="debug">Debug (Development)</option>
+                    <option value="info">Info (Standard)</option>
+                    <option value="warn">Warn (Production)</option>
+                    <option value="error">Error (Critical Only)</option>
                   </select>
                 </div>
-              </div>
-            </cd-tab>
-
-            <cd-tab id="tab-startup" icon="rocket_launch" label="Startup">
-              <div class="mt-3">
                 <div class="cd-form-field">
-                  <label>
-                    <input type="checkbox" name="splashEnabled" cdFormControl />
-                    Enable Splash Screen
-                  </label>
-                </div>
-
-                <div class="cd-form-field">
-                  <label>Splash Asset Path</label>
-                  <input type="text" name="splashPath" cdFormControl />
-                </div>
-
-                <div class="cd-form-field">
-                  <label>Minimum Duration (ms)</label>
+                  <label>Splash Duration (ms)</label>
                   <input type="number" name="splashMinDuration" cdFormControl />
                 </div>
               </div>
-            </cd-tab>
 
-          </cd-tabs>
+              <div class="cd-form-field checkbox-group">
+                <label>
+                  <input type="checkbox" name="splashEnabled" cdFormControl />
+                  Enable Animated Boot Sequence (Splash)
+                </label>
+              </div>
+            </div>
+          </cd-tab>
 
-          <div class="mt-4">
-            <button cdButton (click)="onSave()">Save Configuration</button>
-          </div>
-          
-        </form>
-      </div>
-    `;
-  },
+          <cd-tab id="tab-governance" icon="shield-lock" label="UI Governance">
+            <div class="cd-section-box mt-3">
+              <h5>Default Visual Experience</h5>
+              <div class="cd-grid col-3">
+                <div class="cd-form-field">
+                  <label>System Adaptor</label>
+                  <select name="defaultUiSystemId" cdFormControl>
+                    <option value="bootstrap-538">Bootstrap 5</option>
+                    <option value="material">Material Design</option>
+                  </select>
+                </div>
+                <div class="cd-form-field">
+                  <label>Corporate Theme</label>
+                  <select name="defaultThemeId" cdFormControl>
+                    <option value="default">Light (Default)</option>
+                    <option value="dark">Dark Mode</option>
+                  </select>
+                </div>
+                <div class="cd-form-field">
+                  <label>Form Style</label>
+                  <select name="defaultFormVariant" cdFormControl>
+                    <option value="standard">Standard</option>
+                    <option value="outlined">Outlined</option>
+                    <option value="filled">Filled</option>
+                  </select>
+                </div>
+              </div>
+
+              <h5 class="mt-4 text-danger">Enforced Policies (Locks)</h5>
+              <div class="cd-policy-grid">
+                <div class="cd-form-field">
+                  <label><input type="checkbox" name="lockUiSystem" cdFormControl /> Lock UI Framework</label>
+                </div>
+                <div class="cd-form-field">
+                  <label><input type="checkbox" name="lockTheme" cdFormControl /> Lock Corporate Theme</label>
+                </div>
+              </div>
+            </div>
+          </cd-tab>
+
+          <cd-tab id="tab-personalization" icon="person-gear" label="Personalization">
+            <div class="cd-section-box mt-3">
+              <div class="cd-form-field">
+                <label class="cd-switch">
+                  <input type="checkbox" name="userPersonalizationAllowed" cdFormControl />
+                  <span class="cd-slider"></span>
+                  Allow Users to customize their own Theme/UI
+                </label>
+                <p class="text-small text-muted">If disabled, the "User Preferences" menu will be hidden for all non-admin users.</p>
+              </div>
+            </div>
+          </cd-tab>
+
+        </cd-tabs>
+
+        <div class="cd-action-bar mt-4">
+          <button cdButton class="btn-save" (click)="onSave()">
+            <i class="bi bi-cloud-check"></i> Commit Tenant Configuration
+          </button>
+        </div>
+        
+      </form>
+    </div>
+  `;
+},
 
   // ----------------------------------------------------------
   // Actions
